@@ -80,7 +80,10 @@ public:
     bool windowShouldClose() override;
     void pollEvents() override;
     GLFWwindow* getWindow() const { return _mainWindow; }
+    
+    // STEVE
     GLFWmonitor* getMonitor() const { return _monitor; }
+    
 
     bool isFullscreen() const;
     void setFullscreen();
