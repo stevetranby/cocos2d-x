@@ -103,6 +103,7 @@ private:
     */
 
     /**Get macro define for lights in current openGL driver.*/
+public:
     std::string getShaderMacrosForLight() const;
 
     /**Predefined shaders.*/

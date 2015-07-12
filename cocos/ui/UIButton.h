@@ -352,6 +352,10 @@ private:
 
     int _fontSize;
     FontType _type;
+
+    // STEVE
+public:
+    virtual void setPositionZ(float z) override;
 };
 
 }

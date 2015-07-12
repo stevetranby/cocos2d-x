@@ -53,6 +53,12 @@ Value::Value(int v)
     _field.intVal = v;
 }
 
+Value::Value(unsigned v)
+: _type(Type::UNSIGNED)
+{
+    _field.intVal = v;
+}
+
 Value::Value(float v)
 : _type(Type::FLOAT)
 {
@@ -159,6 +165,9 @@ Value& Value::operator= (const Value& other)
             case Type::INTEGER:
                 _field.intVal = other._field.intVal;
                 break;
+            case Type::UNSIGNED:
+                _field.unsignedVal = other._field.unsignedVal;
+                break;
             case Type::FLOAT:
                 _field.floatVal = other._field.floatVal;
                 break;
@@ -216,6 +225,9 @@ Value& Value::operator= (Value&& other)
             case Type::INTEGER:
                 _field.intVal = other._field.intVal;
                 break;
+            case Type::UNSIGNED:
+                _field.unsignedVal = other._field.unsignedVal;
+                break;
             case Type::FLOAT:
                 _field.floatVal = other._field.floatVal;
                 break;
@@ -260,6 +272,13 @@ Value& Value::operator= (int v)
 {
     reset(Type::INTEGER);
     _field.intVal = v;
+    return *this;
+}
+
+Value& Value::operator= (unsigned v)
+{
+    reset(Type::UNSIGNED);
+    _field.unsignedVal = v;
     return *this;
 }
 
@@ -363,6 +382,7 @@ bool Value::operator== (const Value& v) const
     {
     case Type::BYTE:    return v._field.byteVal   == this->_field.byteVal;
     case Type::INTEGER: return v._field.intVal    == this->_field.intVal;
+    case Type::UNSIGNED: return v._field.unsignedVal    == this->_field.unsignedVal;
     case Type::BOOLEAN: return v._field.boolVal   == this->_field.boolVal;
     case Type::STRING:  return *v._field.strVal   == *this->_field.strVal;
     case Type::FLOAT:   return fabs(v._field.floatVal  - this->_field.floatVal)  <= FLT_EPSILON;
@@ -431,6 +451,11 @@ unsigned char Value::asByte() const
         return static_cast<unsigned char>(_field.intVal);
     }
 
+    if (_type == Type::UNSIGNED)
+    {
+        return static_cast<unsigned char>(_field.unsignedVal);
+    }
+
     if (_type == Type::STRING)
     {
         return static_cast<unsigned char>(atoi(_field.strVal->c_str()));
@@ -462,6 +487,12 @@ int Value::asInt() const
         return _field.intVal;
     }
 
+    if (_type == Type::UNSIGNED)
+    {
+        CCASSERT(_field.unsignedVal < INT_MAX, "Can only convert values < INT_MAX");
+        return (int)_field.unsignedVal;
+    }
+
     if (_type == Type::BYTE)
     {
         return _field.byteVal;
@@ -490,6 +521,50 @@ int Value::asInt() const
     return 0;
 }
 
+
+unsigned int Value::asUnsignedInt() const
+{
+    CCASSERT(_type != Type::VECTOR && _type != Type::MAP && _type != Type::INT_KEY_MAP, "Only base type (bool, string, float, double, int) could be converted");
+    if (_type == Type::UNSIGNED)
+    {
+        return _field.unsignedVal;
+    }
+
+    if (_type == Type::INTEGER)
+    {
+        CCASSERT(_field.intVal >= 0, "Only values >= 0 can be converted to unsigned");
+        return static_cast<unsigned>(_field.intVal);
+    }
+
+    if (_type == Type::BYTE)
+    {
+        return static_cast<unsigned>(_field.byteVal);
+    }
+
+    if (_type == Type::STRING)
+    {
+        // NOTE: strtoul is required (need to augment on unsupported platforms)
+        return static_cast<unsigned int>(strtoul(_field.strVal->c_str(), NULL, 10));
+    }
+
+    if (_type == Type::FLOAT)
+    {
+        return static_cast<unsigned int>(_field.floatVal);
+    }
+
+    if (_type == Type::DOUBLE)
+    {
+        return static_cast<unsigned int>(_field.doubleVal);
+    }
+
+    if (_type == Type::BOOLEAN)
+    {
+        return _field.boolVal ? 1u : 0u;
+    }
+
+    return 0u;
+}
+
 float Value::asFloat() const
 {
     CCASSERT(_type != Type::VECTOR && _type != Type::MAP && _type != Type::INT_KEY_MAP, "Only base type (bool, string, float, double, int) could be converted");
@@ -511,6 +586,11 @@ float Value::asFloat() const
     if (_type == Type::INTEGER)
     {
         return static_cast<float>(_field.intVal);
+    }
+
+    if (_type == Type::UNSIGNED)
+    {
+        return static_cast<float>(_field.unsignedVal);
     }
 
     if (_type == Type::DOUBLE)
@@ -549,6 +629,11 @@ double Value::asDouble() const
         return static_cast<double>(_field.intVal);
     }
 
+    if (_type == Type::UNSIGNED)
+    {
+        return static_cast<double>(_field.unsignedVal);
+    }
+
     if (_type == Type::FLOAT)
     {
         return static_cast<double>(_field.floatVal);
@@ -585,6 +670,11 @@ bool Value::asBool() const
         return _field.intVal == 0 ? false : true;
     }
 
+    if (_type == Type::UNSIGNED)
+    {
+        return _field.unsignedVal == 0 ? false : true;
+    }
+
     if (_type == Type::FLOAT)
     {
         return _field.floatVal == 0.0f ? false : true;
@@ -616,6 +706,9 @@ std::string Value::asString() const
             break;
         case Type::INTEGER:
             ret << _field.intVal;
+            break;
+        case Type::UNSIGNED:
+            ret << _field.unsignedVal;
             break;
         case Type::FLOAT:
             ret << std::fixed << std::setprecision( 7 )<< _field.floatVal;
@@ -733,6 +826,7 @@ static std::string visit(const Value& v, int depth)
         case Value::Type::NONE:
         case Value::Type::BYTE:
         case Value::Type::INTEGER:
+        case Value::Type::UNSIGNED:
         case Value::Type::FLOAT:
         case Value::Type::DOUBLE:
         case Value::Type::BOOLEAN:
@@ -773,6 +867,9 @@ void Value::clear()
             break;
         case Type::INTEGER:
             _field.intVal = 0;
+            break;
+        case Type::UNSIGNED:
+            _field.unsignedVal = 0u;
             break;
         case Type::FLOAT:
             _field.floatVal = 0.0f;
