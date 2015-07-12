@@ -606,6 +606,12 @@ namespace ui {
 
         Scale9Sprite::State _brightState;
         Scale9Sprite::RenderingType _renderingType;
+        
+#error STEVE
+        // STEVE
+    public:
+        virtual void setPositionZ(float z) override;
+        bool _isPatch9;
     };
     
 }}  //end of namespace

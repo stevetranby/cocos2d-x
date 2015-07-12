@@ -58,7 +58,13 @@ void LinearHorizontalLayoutManager::doLayout(LayoutProtocol* layout)
             {
                 LinearLayoutParameter::LinearGravity childGravity = layoutParameter->getGravity();
                 Vec2 ap = child->getAnchorPoint();
+               
+#error STEVE
                 Size cs = child->getBoundingBox().size;
+                    // STEVE
+                    Size cs = child->boundingBox().size;
+                    //                Size cs = child->getContentSize();
+                
                 float finalPosX = leftBoundary + (ap.x * cs.width);
                 float finalPosY = layoutSize.height - (1.0f - ap.y) * cs.height;
                 switch (childGravity)
@@ -116,7 +122,13 @@ void LinearVerticalLayoutManager::doLayout(LayoutProtocol* layout)
             {
                 LinearLayoutParameter::LinearGravity childGravity = layoutParameter->getGravity();
                 Vec2 ap = subWidget->getAnchorPoint();
+
+#error STEVE
                 Size cs = subWidget->getBoundingBox().size;
+                    // STEVE
+                    Size cs = subWidget->boundingBox().size;
+                    //                Size cs = subWidget->getContentSize();
+                
                 float finalPosX = ap.x * cs.width;
                 float finalPosY = topBoundary - ((1.0f-ap.y) * cs.height);
                 switch (childGravity)

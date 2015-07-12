@@ -173,6 +173,9 @@ protected:
     bool _isRetinaEnabled;
     int  _retinaFactor;  // Should be 1 or 2
 
+    // STEVE
+    cocos2d::Size _monitorSize;
+
     float _frameZoomFactor;
 
     GLFWwindow* _mainWindow;
