@@ -411,7 +411,7 @@ void Layout::drawFullScreenQuadClearStencil()
 void Layout::onAfterDrawStencil()
 {
     glDepthMask(_currentDepthWriteMask);
-    RenderState::StateBlock::_defaultState->setDepthWrite(_currentDepthWriteMask);
+    RenderState::StateBlock::_defaultState->setDepthWrite(_currentDepthWriteMask != 0);
 
     glStencilFunc(GL_EQUAL, _mask_layer_le, _mask_layer_le);
 //    RenderState::StateBlock::_defaultState->setStencilFunction(
@@ -1978,7 +1978,14 @@ Widget* Layout::findNextFocusedWidget(FocusDirection direction, Widget* current)
         return current;
     }
 }
-
+    
+void Layout::setCameraMask(unsigned short mask, bool applyChildren)
+{
+    Widget::setCameraMask(mask, applyChildren);
+    if (_clippingStencil){
+        _clippingStencil->setCameraMask(mask, applyChildren);
+    }
+}
 
     // STEVE
     void Layout::appendCubicBezier(int startPoint, std::vector<Vec2>& verts, const Vec2& from, const Vec2& control1, const Vec2& control2, const Vec2& to, int segments)
@@ -2060,5 +2067,6 @@ Widget* Layout::findNextFocusedWidget(FocusDirection direction, Widget* current)
         if(_gradientRender) { _gradientRender->setPositionZ(positionZ - .1f); }
     }
 
+    
 }
 NS_CC_END

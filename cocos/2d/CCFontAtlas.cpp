@@ -46,6 +46,7 @@ FontAtlas::FontAtlas(Font &theFont)
 , _rendererRecreatedListener(nullptr)
 //STEVE
 , _antialiasEnabled(false)
+, _currLineHeight(0)
 {
     _font->retain();
 
@@ -70,7 +71,7 @@ FontAtlas::FontAtlas(Font &theFont)
         {
             _commonLineHeight += 2 * outlineSize;
             _currentPageDataSize *= 2;
-        }    
+        }
 
         _currentPageData = new unsigned char[_currentPageDataSize];
         memset(_currentPageData, 0, _currentPageDataSize);
@@ -202,9 +203,14 @@ bool FontAtlas::prepareLetterDefinitions(const std::u16string& utf16String)
                 tempDef.offsetY          = _fontAscender + tempRect.origin.y - offsetAdjust;
                 tempDef.clipBottom     = bottomHeight - (tempDef.height + tempRect.origin.y + offsetAdjust);
 
+                if (bitmapHeight > _currLineHeight)
+                {
+                    _currLineHeight = static_cast<int>(bitmapHeight) + 1;
+                }
                 if (_currentPageOrigX + tempDef.width > CacheTextureWidth)
                 {
-                    _currentPageOrigY += _commonLineHeight;
+                    _currentPageOrigY += _currLineHeight;
+                    _currLineHeight = 0;
                     _currentPageOrigX = 0;
                     if(_currentPageOrigY + _commonLineHeight >= CacheTextureHeight)
                     {
