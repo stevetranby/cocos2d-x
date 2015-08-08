@@ -636,7 +636,8 @@ protected:
     Type _layoutType;
     ClippingType _clippingType;
     DrawNode* _clippingStencil;
-    bool _scissorRectDirty;
+    bool _scissorOldState;
+    Rect _clippingOldRect;
     Rect _clippingRect;
     Layout* _clippingParent;
     bool _clippingRectDirty;

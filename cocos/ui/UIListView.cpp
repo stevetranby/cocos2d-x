@@ -507,12 +507,16 @@ void ListView::selectedItemEvent(TouchEventType event)
 void ListView::interceptTouchEvent(TouchEventType event, Widget *sender, Touch* touch)
 {
     ScrollView::interceptTouchEvent(event, sender, touch);
+    if (!_touchEnabled)
+    {
+        return;
+    }
     if (event != TouchEventType::MOVED)
     {
         Widget* parent = sender;
         while (parent)
         {
-            if (parent && parent->getParent() == _innerContainer)
+            if (parent && (parent->getParent() == _innerContainer))
             {
                 _curSelectedIndex = getIndex(parent);
                 break;
