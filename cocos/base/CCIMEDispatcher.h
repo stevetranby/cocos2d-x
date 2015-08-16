@@ -65,6 +65,8 @@ public:
      * @lua NA
      */
     void dispatchDeleteBackward();
+    void dispatchCursorLeft();
+    void dispatchCursorRight();
 
     /**
     * @brief Dispatches the press control key operation.

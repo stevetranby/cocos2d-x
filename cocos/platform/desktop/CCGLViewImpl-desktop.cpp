@@ -765,10 +765,40 @@ void GLViewImpl::onGLFWKeyCallback(GLFWwindow *window, int key, int scancode, in
             break;
         }
     }
+
+    if (GLFW_RELEASE != action && g_keyCodeMap[key] == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
+    {
+        IMEDispatcher::sharedDispatcher()->dispatchCursorLeft();
+    }
+    if (GLFW_RELEASE != action && g_keyCodeMap[key] == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
+    {
+        IMEDispatcher::sharedDispatcher()->dispatchCursorRight();
+    }
+
+    auto keycodes = std::vector<EventKeyboard::KeyCode> {
+        EventKeyboard::KeyCode::KEY_RIGHT_ARROW,
+        EventKeyboard::KeyCode::KEY_LEFT_ARROW,
+        EventKeyboard::KeyCode::KEY_UP_ARROW,
+        EventKeyboard::KeyCode::KEY_DOWN_ARROW,
+    };
+    _preventCharCallback = false;
+    for(auto keycode : keycodes) {
+        if (g_keyCodeMap[key] == keycode) {
+            _preventCharCallback = true;
+            break;
+        }
+    }
 }
 
 void GLViewImpl::onGLFWCharCallback(GLFWwindow *window, unsigned int character)
 {
+    // prevent non-print characters
+    if(_preventCharCallback) {
+        log("preventing charcter [%u] from dispatching", character);
+        _preventCharCallback = false;
+        return;
+    }
+
     char16_t wcharString[2] = { (char16_t) character, 0 };
     std::string utf8String;
 
