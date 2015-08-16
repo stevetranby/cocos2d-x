@@ -498,6 +498,31 @@ Console::Command::~Command()
         delete e.second;
     }
 }
+#else
+void SendLogToWindow(const char *log)
+{
+}
+#endif
+
+//
+// Free functions to log
+//
+
+// STEVE
+static std::string logFilePath = "";
+void setLogFilePath(std::string& filepath)
+{
+    //    auto unix_timestamp = std::chrono::seconds(std::time(NULL));
+    //    auto unix_timestamp_x_1000 = std::chrono::milliseconds(unix_timestamp).count();
+    logFilePath = filepath + "scgame_log_test.txt";
+    printf("logfile: %s\n", logFilePath.c_str());
+}
+// ENDSTEVE
+
+static void _log(const char *format, va_list args)
+{
+    int bufferSize = MAX_LOG_LENGTH;
+    char* buf = nullptr;
 
 Console::Command& Console::Command::operator=(const Command& o)
 {
@@ -513,112 +538,85 @@ Console::Command& Console::Command::operator=(const Command& o)
         _subCommands.clear();
         for (const auto& e : o._subCommands)
         {
-            Command* subCommand = e.second;
-            auto newCommand = new (std::nothrow) Command(*subCommand);
-            _subCommands[e.first] = newCommand;
+            bufferSize *= 2;
+
+            delete [] buf;
         }
-    }
+        else
+            break;
 
-    return *this;
-}
+    } while (true);
 
-Console::Command& Console::Command::operator=(Command&& o)
-{
-    if (this != &o)
+    strcat(buf, "\n");
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "%s", buf);
+
+#elif CC_TARGET_PLATFORM ==  CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
+
+    int pos = 0;
+    int len = strlen(buf);
+    char tempBuf[MAX_LOG_LENGTH + 1] = { 0 };
+    WCHAR wszBuf[MAX_LOG_LENGTH + 1] = { 0 };
+
+    do
     {
-        _name = std::move(o._name);
-        _help = std::move(o._help);
-        _callback = std::move(o._callback);
-        o._callback = nullptr;
+        std::copy(buf + pos, buf + pos + MAX_LOG_LENGTH, tempBuf);
 
-        for (const auto& e : _subCommands)
-            delete e.second;
+        tempBuf[MAX_LOG_LENGTH] = 0;
 
-        _subCommands.clear();
-        _subCommands = std::move(o._subCommands);
-    }
+        MultiByteToWideChar(CP_UTF8, 0, tempBuf, -1, wszBuf, sizeof(wszBuf));
+        OutputDebugStringW(wszBuf);
+        WideCharToMultiByte(CP_ACP, 0, wszBuf, -1, tempBuf, sizeof(tempBuf), nullptr, FALSE);
+        printf("%s", tempBuf);
 
-    return *this;
+        pos += MAX_LOG_LENGTH;
+
+    } while (pos < len);
+    SendLogToWindow(buf);
+    fflush(stdout);
+#else
+    // Linux, Mac, iOS, etc
+    fprintf(stdout, "%s", buf);
+    fflush(stdout);
+#endif
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#else
+    // STEVE
+    //#if (SCGAME_DEBUG_LEVEL > 0)
+    // Write to file
+    //    bool _writeToFile = true;
+    //    if(_writeToFile)
+    //    {
+    std::string msg(buf);
+    std::ofstream myfile;
+    myfile.open (logFilePath, std::ios_base::app);
+    myfile << ":" << msg;
+    //    }
+    //#endif
+    // ENDSTEVE
+
+    Director::getInstance()->getConsole()->log(buf);
+#endif
+    delete [] buf;
 }
 
-void Console::Command::addCallback(const Callback& callback)
+// FIXME: Deprecated
+void CCLog(const char * format, ...)
 {
-    _callback = callback;
+    va_list args;
+    va_start(args, format);
+    _log(format, args);
+    va_end(args);
 }
 
-void Console::Command::addSubCommand(const Command& subCmd)
+void log(const char * format, ...)
 {
-    auto iter = _subCommands.find(subCmd._name);
-    if (iter != _subCommands.end())
-    {
-        delete iter->second;
-        _subCommands.erase(iter);
-    }
-
-    Command* cmd = new (std::nothrow) Command();
-    *cmd = subCmd;
-    _subCommands[subCmd._name] = cmd;
-}
-
-const Console::Command* Console::Command::getSubCommand(const std::string& subCmdName) const
-{
-    auto it = _subCommands.find(subCmdName);
-    if(it != _subCommands.end()) {
-        auto& subCmd = it->second;
-        return subCmd;
-    }
-    return nullptr;
-}
-
-void Console::Command::delSubCommand(const std::string& subCmdName)
-{
-    auto iter = _subCommands.find(subCmdName);
-    if (iter != _subCommands.end()) {
-        delete iter->second;
-        _subCommands.erase(iter);
-    }
-}
-
-void Console::Command::commandHelp(int fd, const std::string& /*args*/)
-{
-    if (! _help.empty()) {
-        Console::Utility::mydprintf(fd, "%s\n", _help.c_str());
-    }
-    
-    if (! _subCommands.empty()) {
-        sendHelp(fd, _subCommands, "");
-    }
-}
-
-void Console::Command::commandGeneric(int fd, const std::string& args)
-{
-    // The first argument (including the empty)
-    std::string key(args);
-    auto pos = args.find(' ');
-    if ((pos != std::string::npos) && (0 < pos)) {
-        key = args.substr(0, pos);
-    }
-    
-    // help
-    if (key == "help" || key == "-h") {
-        commandHelp(fd, args);
-        return;
-    }
-    
-    // find sub command
-    auto it = _subCommands.find(key);
-    if (it != _subCommands.end()) {
-        auto subCmd = it->second;
-        if (subCmd->_callback) {
-            subCmd->_callback(fd, args);
-        }
-        return;
-    }
-    
-    // can not find
-    if (_callback) {
-        _callback(fd, args);
-    }
+    va_list args;
+    va_start(args, format);
+    _log(format, args);
+    va_end(args);
 }
 
 //
