@@ -124,6 +124,9 @@ protected:
     */
     virtual void deleteBackward() {}
 
+    virtual void cursorLeft() {}
+    virtual void cursorRight() {}
+
     /**
     @brief    Called by IMEDispatcher for text stored in delegate.
     * @js NA

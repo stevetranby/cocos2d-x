@@ -57,6 +57,7 @@ TextFieldTTF::TextFieldTTF()
 , _placeHolder("")   // prevent Label initWithString assertion
 , _colorText(Color4B::WHITE)
 , _secureTextEntry(false)
+, _cursorIndex(0)
 {
     _colorSpaceHolder.r = _colorSpaceHolder.g = _colorSpaceHolder.b = 127;
     _colorSpaceHolder.a = 255;
@@ -193,10 +194,21 @@ void TextFieldTTF::insertText(const char * text, size_t len)
             return;
         }
 
-        _charCount += _calcCharCount(insert.c_str());
         std::string sText(_inputText);
-        sText.append(insert);
+        if(_cursorIndex < sText.length()) {
+            log("inserting at %d", _cursorIndex);
+            sText.insert(_cursorIndex, insert);
+        } else {
+            _cursorIndex = (int)sText.length();
+            sText.append(insert);
+            log("[insert] appending _cursorIndex = %d, _charCount = %d", _cursorIndex, _charCount);
+        }
         setString(sText);
+
+        auto addedCount = _calcCharCount(insert.c_str());
+//        _charCount += addedCount;
+        _cursorIndex += addedCount;
+        log("[insert] _cursorIndex = %d, _charCount = %d", _cursorIndex, _charCount);
     }
 
     if ((int)insert.npos == pos) {
@@ -216,21 +228,25 @@ void TextFieldTTF::insertText(const char * text, size_t len)
 void TextFieldTTF::deleteBackward()
 {
     size_t len = _inputText.length();
-    if (! len)
-    {
+    if (! len) {
         // there is no string
         return;
     }
 
-    // get the delete byte number
-    size_t deleteLen = 1;    // default, erase 1 byte
-
-    while(0x80 == (0xC0 & _inputText.at(len - deleteLen)))
-    {
-        ++deleteLen;
+    if(_cursorIndex <= 0) {
+        // nothing to delete to the left of the cursor
+        return;
     }
 
-    if (_delegate && _delegate->onTextFieldDeleteBackward(this, _inputText.c_str() + len - deleteLen, static_cast<int>(deleteLen)))
+    // get the delete byte number
+    size_t deleteLen = 1; // default, erase 1 byte
+
+    while(0x80 == (0xC0 & _inputText.at(_cursorIndex - deleteLen)))
+    {
+            ++deleteLen;
+    }
+
+    if (_delegate && _delegate->onTextFieldDeleteBackward(this, _inputText.c_str() + _cursorIndex - deleteLen, static_cast<int>(deleteLen)))
     {
         // delegate doesn't want to delete backwards
         return;
@@ -241,14 +257,45 @@ void TextFieldTTF::deleteBackward()
     {
         _inputText = "";
         _charCount = 0;
+        _cursorIndex = 0;
+        log("[set 0] _cursorIndex = %d, _charCount = %d", _cursorIndex, _charCount);
         Label::setTextColor(_colorSpaceHolder);
         Label::setString(_placeHolder);
         return;
     }
 
+    if((_cursorIndex - (int)deleteLen) < 0) {
+        log("WARNING: trying to delete too much???");
+    }
+
     // set new input text
-    std::string text(_inputText.c_str(), len - deleteLen);
+    std::string text(_inputText.c_str(), _cursorIndex - deleteLen);
+    if(_cursorIndex < len)
+        text.append(_inputText.c_str(), _cursorIndex, len - _cursorIndex);
     setString(text);
+
+    if(deleteLen < _cursorIndex) {
+        _cursorIndex -= deleteLen;
+    } else {
+        _cursorIndex = 0;
+    }
+    log("[delete %d] _cursorIndex = %d, _charCount = %d", (int)deleteLen, _cursorIndex, (int)_charCount);
+}
+
+void TextFieldTTF::cursorLeft()
+{
+    log("arrow LEFT in textfield!");
+    if(_inputText.empty()) { return; }
+    if(_cursorIndex > 0) _cursorIndex--;
+    log("[left] _cursorIndex = %d, _charCount = %d", _cursorIndex, (int)_charCount);
+}
+
+void TextFieldTTF::cursorRight()
+{
+    log("arrow RIGHT in textfield!");
+    if(_inputText.empty()) { return; }
+    if(_cursorIndex < _charCount) _cursorIndex++;
+    log("[right] _cursorIndex = %d, _charCount = %d", _cursorIndex, (int)_charCount);
 }
 
 const std::string& TextFieldTTF::getContentText()
@@ -340,7 +387,9 @@ void TextFieldTTF::setString(const std::string &text)
         Label::setTextColor(_colorText);
         Label::setString(displayText);
     }
-    _charCount = _calcCharCount(_inputText.c_str());
+    auto n = _calcCharCount(_inputText.c_str());;
+    log("[setstring] _charcount = %d", n);
+    _charCount = n;
 }
 
 const std::string& TextFieldTTF::getString() const

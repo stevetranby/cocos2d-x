@@ -114,6 +114,11 @@ public:
 
     void ProcessEvents();
 
+    //// STEVE
+    //GLFWwindow* getWindow() const { return _mainWindow; } 
+    //GLFWmonitor* getMonitor() const { return _monitor; }
+    //Size getMonitorSize() const { return _monitorSize; }
+
 protected:
     GLViewImpl();
     virtual ~GLViewImpl();

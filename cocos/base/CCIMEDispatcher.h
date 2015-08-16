@@ -65,6 +65,8 @@ public:
      * @lua NA
      */
     void dispatchDeleteBackward();
+    void dispatchCursorLeft();
+    void dispatchCursorRight();
 
     /**
      * @brief Get the content text from IMEDelegate, retrieved previously from IME.

@@ -239,6 +239,8 @@ protected:
     virtual bool canDetachWithIME() override;
     virtual void insertText(const char * text, size_t len) override;
     virtual void deleteBackward() override;
+    virtual void cursorLeft() override;
+    virtual void cursorRight() override;
     virtual const std::string& getContentText() override;
 
     TextFieldDelegate * _delegate;
@@ -251,6 +253,11 @@ protected:
     Color4B _colorText;
 
     bool _secureTextEntry;
+
+public:
+//    // cursor
+//    bool _cursorWasLastDispatch;
+    int _cursorIndex;
 
 private:
     class LengthStack;

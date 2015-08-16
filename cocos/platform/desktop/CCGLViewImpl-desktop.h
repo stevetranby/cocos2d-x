@@ -146,6 +146,7 @@ protected:
 
     // STEVE
     cocos2d::Size _monitorSize;
+    bool _preventCharCallback;
 
     float _frameZoomFactor;
 
