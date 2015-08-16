@@ -719,6 +719,11 @@ namespace ui {
         
         bool _flippedX;
         bool _flippedY;
+
+
+        // STEVE
+    public:
+        virtual void setPositionZ(float z) override;
         bool _isPatch9;
         State _brightState;
         Vec2 _nonSliceSpriteAnchor;
