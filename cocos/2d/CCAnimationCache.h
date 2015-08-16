@@ -139,6 +139,12 @@ private:
 private:
     Map<std::string, Animation*> _animations;
     static AnimationCache* s_sharedAnimationCache;
+
+
+    // STEVE
+public:
+    void addAnimationWithName(const std::string& animName, const std::string& animFrameName, const std::vector<std::string>& animFrameIndicies, float frameDelay = 0.1f);
+    void addAnimWithName(const std::string& animName, const std::string& frameFormat, const std::vector<std::string>& frameIndicies, float frameDelay = 0.1f);
 };
 
 // end of sprite_nodes group
