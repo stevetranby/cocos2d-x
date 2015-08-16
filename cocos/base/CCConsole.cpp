@@ -30,6 +30,11 @@
 #include <cctype>
 #include <locale>
 #include <sstream>
+// STEVE
+//#include <iostream>
+#include <chrono>
+#include <fstream>
+// ENDSTEVE
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -233,6 +238,17 @@ void SendLogToWindow(const char *log)
 // Free functions to log
 //
 
+// STEVE
+static std::string logFilePath = "";
+void setLogFilePath(std::string& filepath)
+{
+    //    auto unix_timestamp = std::chrono::seconds(std::time(NULL));
+    //    auto unix_timestamp_x_1000 = std::chrono::milliseconds(unix_timestamp).count();
+    logFilePath = filepath + "scgame_log_test.txt";
+    printf("logfile: %s\n", logFilePath.c_str());
+}
+// ENDSTEVE
+
 static void _log(const char *format, va_list args)
 {
     int bufferSize = MAX_LOG_LENGTH;
@@ -290,7 +306,24 @@ static void _log(const char *format, va_list args)
     fflush(stdout);
 #endif
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#else
+    // STEVE
+    //#if (SCGAME_DEBUG_LEVEL > 0)
+    // Write to file
+    //    bool _writeToFile = true;
+    //    if(_writeToFile)
+    //    {
+    std::string msg(buf);
+    std::ofstream myfile;
+    myfile.open (logFilePath, std::ios_base::app);
+    myfile << ":" << msg;
+    //    }
+    //#endif
+    // ENDSTEVE
+
     Director::getInstance()->getConsole()->log(buf);
+#endif
     delete [] buf;
 }
 

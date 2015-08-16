@@ -59,6 +59,7 @@ static const int MAX_LOG_LENGTH = 16*1024;
 /**
  @brief Output Debug message.
  */
+void CC_DLL setLogFilePath(std::string& filepath);
 void CC_DLL log(const char * format, ...) CC_FORMAT_PRINTF(1, 2);
 
 /** Console is helper class that lets the developer control the game from TCP connection.
@@ -130,6 +131,7 @@ protected:
     void commandUpload(int fd);
     void commandAllocator(int fd, const std::string &args);
     // file descriptor: socket, console, etc.
+    int _logfd;
     int _listenfd;
     int _maxfd;
     std::vector<int> _fds;
@@ -139,6 +141,8 @@ protected:
 
     bool _running;
     bool _endThread;
+
+    std::string _writablePath;
 
     std::map<std::string, Command> _commands;
 
