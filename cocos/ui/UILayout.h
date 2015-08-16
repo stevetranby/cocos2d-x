@@ -464,7 +464,15 @@ public:
 CC_CONSTRUCTOR_ACCESS:
     //override "init" method of widget.
     virtual bool init() override;
-    
+
+
+public:
+    void appendCubicBezier(int startPoint, std::vector<Vec2>& verts, const Vec2& from, const Vec2& control1, const Vec2& control2, const Vec2& to, int segments);
+    //    float getStencilRadius() { return _stencilRadius; }
+    void setStencilRadius(float v) { _stencilRadius = v; }
+protected:
+    float _stencilRadius;
+
 protected:
     //override "onSizeChanged" method of widget.
     virtual void onSizeChanged() override;
@@ -650,6 +658,10 @@ protected:
     bool _passFocusToChild;
      //when finding the next focused widget, use this variable to pass focus between layout & widget
     bool _isFocusPassing;
+
+public:
+    // STEVE
+    void setPositionZ(float z) override;
 };
     
 }
