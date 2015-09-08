@@ -39,7 +39,7 @@
 #include "base/CCEventType.h"
 #include "2d/CCCamera.h"
 
-#define DUMP_LISTENER_ITEM_PRIORITY_INFO 0
+#define DUMP_LISTENER_ITEM_PRIORITY_INFO 1
 
 namespace
 {
@@ -1332,6 +1332,7 @@ void EventDispatcher::sortEventListenersOfSceneGraphPriority(const EventListener
     log("-----------------------------------");
     for (auto& l : *sceneGraphListeners)
     {
+        if(! l->_node) continue;
         log("listener priority: node ([%s]%p), priority (%d)", typeid(*l->_node).name(), l->_node, _nodePriorityMap[l->_node]);
     }
 #endif
