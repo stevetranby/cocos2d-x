@@ -274,9 +274,9 @@ public:
     void insert(const K& key, V object)
     {
         CCASSERT(object != nullptr, "Object is nullptr!");
+        object->retain();
         erase(key);
         _data.insert(std::make_pair(key, object));
-        object->retain();
     }
     
     /** 
