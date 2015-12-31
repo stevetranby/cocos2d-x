@@ -57,9 +57,9 @@ void LinearHorizontalLayoutManager::doLayout(LayoutProtocol* layout)
             {
                 LinearLayoutParameter::LinearGravity childGravity = layoutParameter->getGravity();
                 Vec2 ap = child->getAnchorPoint();
-                    // STEVE
-                    Size cs = child->boundingBox().size;
-                    //                Size cs = child->getContentSize();
+                // STEVE
+                Size cs = child->getBoundingBox().size;
+                // Size cs = child->getContentSize();
                 float finalPosX = leftBoundary + (ap.x * cs.width);
                 float finalPosY = layoutSize.height - (1.0f - ap.y) * cs.height;
                 switch (childGravity)

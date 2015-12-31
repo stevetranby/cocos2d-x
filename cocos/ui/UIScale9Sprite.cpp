@@ -1475,11 +1475,6 @@ namespace ui {
         {
             _scale9Image->setPositionZ(z);
         }
-
-        for(const auto &child : _protectedChildren)
-        {
-            child->setPositionZ(z);
-        }
     }
 
 }}
