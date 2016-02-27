@@ -59,6 +59,7 @@ TileMapTests::TileMapTests()
     ADD_TEST_CASE(TMXHexTest);
     ADD_TEST_CASE(TMXReadWriteTest);
     ADD_TEST_CASE(TMXTilesetTest);
+    ADD_TEST_CASE(TMXTilesetImageCollectionTest);
     ADD_TEST_CASE(TMXOrthoObjectsTest);
     ADD_TEST_CASE(TMXIsoObjectsTest);
     ADD_TEST_CASE(TMXResizeTest);
@@ -753,6 +754,36 @@ std::string TMXCvsFormatTest::title() const
 {
     return "TMX CSV Parsing test";
 }
+
+//------------------------------------------------------------------
+//
+// TMXTilesetImageCollectionTest
+//
+//------------------------------------------------------------------
+TMXTilesetImageCollectionTest::TMXTilesetImageCollectionTest()
+{
+    auto map = TMXTiledMap::create("TileMaps/ortho-collection-images.tmx");
+    addChild(map, 0, kTagTileMap);
+
+    Size CC_UNUSED s = map->getContentSize();
+    CCLOG("ContentSize: %f, %f", s.width,s.height);
+
+    TMXLayer* layer;
+    layer = map->getLayer("Layer 0");
+    layer->getTexture()->setAntiAliasTexParameters();
+
+    layer = map->getLayer("Layer 1");
+    layer->getTexture()->setAntiAliasTexParameters();
+
+    layer = map->getLayer("Layer 2");
+    layer->getTexture()->setAntiAliasTexParameters();
+}
+
+std::string TMXTilesetImageCollectionTest::title() const
+{
+    return "TMX Tileset Collection of Images test";
+}
+
 
 //------------------------------------------------------------------
 //

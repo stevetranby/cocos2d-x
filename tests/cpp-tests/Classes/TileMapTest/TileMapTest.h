@@ -178,6 +178,14 @@ public:
     virtual std::string title() const override;
 };
 
+class TMXTilesetImageCollectionTest : public TileDemo
+{
+public:
+    CREATE_FUNC(TMXTilesetImageCollectionTest);
+    TMXTilesetImageCollectionTest();
+    virtual std::string title() const override;
+};
+
 class TMXOrthoObjectsTest : public TileDemo
 {
 public:
