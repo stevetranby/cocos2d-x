@@ -620,3 +620,15 @@ Rect Scale9Sprite::getCapInsets() const
                 _originalContentSize.width - _insetLeft - _insetRight,
                 _originalContentSize.height - _insetTop - _insetBottom);
 }
+
+
+    // STEVE
+    void Scale9Sprite::setPositionZ(float z)
+    {
+        Node::setPositionZ(z);
+
+        if(_scale9Image)
+        {
+            _scale9Image->setPositionZ(z);
+        }
+    }

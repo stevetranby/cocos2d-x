@@ -98,6 +98,10 @@ const char* GLView::EVENT_WINDOW_RESIZED = "glview_window_resized";
 const char* GLView::EVENT_WINDOW_FOCUSED = "glview_window_focused";
 const char* GLView::EVENT_WINDOW_UNFOCUSED = "glview_window_unfocused";
 
+const char* GLView::EVENT_WINDOW_RESIZED = "glview_window_resized";
+const char* GLView::EVENT_WINDOW_FOCUSED = "glview_window_focused";
+const char* GLView::EVENT_WINDOW_UNFOCUSED = "glview_window_unfocused";
+
 void GLView::setGLContextAttrs(GLContextAttrs& glContextAttrs)
 {
     _glContextAttrs = glContextAttrs;
