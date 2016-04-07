@@ -628,6 +628,13 @@ protected:
 
     // GLView will recreate stats labels to fit visible rect
     friend class GLView;
+
+    // STEVE
+protected:
+    bool _spriteDebugDraw;
+public:
+    void setSpriteDebugDraw(bool enable) { _spriteDebugDraw = enable; }
+    bool getSpriteDebugDraw() const { return _spriteDebugDraw; }
 };
 
 // FIXME: Added for backward compatibility in case

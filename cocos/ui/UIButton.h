@@ -385,6 +385,10 @@ private:
     int _fontSize;
     FontType _type;
     std::string _fontName;
+
+    // STEVE
+public:
+    virtual void setPositionZ(float z) override;
 };
 
 }

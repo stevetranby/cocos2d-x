@@ -30,6 +30,13 @@
 #include <cctype>
 #include <locale>
 #include <sstream>
+
+// STEVE
+//#include <iostream>
+#include <chrono>
+#include <fstream>
+// ENDSTEVE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -124,17 +131,21 @@ namespace {
     }
 #endif
     
+//
+// Free functions to log
+//
+
     void _log(const char *format, va_list args)
     {
         int bufferSize = MAX_LOG_LENGTH;
         char* buf = nullptr;
-        
+
         do
         {
             buf = new (std::nothrow) char[bufferSize];
             if (buf == nullptr)
                 return; // not enough memory
-            
+
             int ret = vsnprintf(buf, bufferSize - 3, format, args);
             if (ret < 0)
             {
@@ -181,7 +192,10 @@ namespace {
         fflush(stdout);
 #endif
         
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#else
         Director::getInstance()->getConsole()->log(buf);
+#endif
         delete [] buf;
     }
 }

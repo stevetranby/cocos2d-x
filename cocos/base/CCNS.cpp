@@ -57,7 +57,7 @@ static inline void split(const std::string& src, const std::string& token, strAr
 // if the form is right,the string will be split into the parameter strs;
 // or the parameter strs will be empty.
 // if the form is right return true,else return false.
-static bool splitWithForm(const std::string& content, strArray& strs)
+static bool splitWithForm(const std::string& content, strArray& strs, int n)
 {
     bool bRet = false;
 
@@ -83,7 +83,7 @@ static bool splitWithForm(const std::string& content, strArray& strs)
         CC_BREAK_IF(nPos1 != std::string::npos || nPos2 != std::string::npos);
 
         split(pointStr, ",", strs);
-        if (strs.size() != 2 || strs[0].length() == 0 || strs[1].length() == 0)
+        if (strs.size() != n || strs[0].length() == 0 || strs[1].length() == 0)
         {
             strs.clear();
             break;
@@ -93,6 +93,11 @@ static bool splitWithForm(const std::string& content, strArray& strs)
     } while (0);
 
     return bRet;
+}
+
+static bool splitWithForm(const std::string& content, strArray& strs)
+{
+    return splitWithForm(content, strs, 2);
 }
 
 // implement the functions
@@ -148,7 +153,30 @@ Rect RectFromString(const std::string& str)
 
 Vec2 PointFromString(const std::string& str)
 {
-    Vec2 ret;
+    return Vec2FromString(str);
+}
+
+Size SizeFromString(const std::string& pszContent)
+{
+    Size ret = Size::ZERO;
+
+    do
+    {
+        strArray strs;
+        CC_BREAK_IF(!splitWithForm(pszContent, strs));
+
+        float width  = (float) utils::atof(strs[0].c_str());
+        float height = (float) utils::atof(strs[1].c_str());
+
+        ret = Size(width, height);
+    } while (0);
+
+    return ret;
+}
+
+Vec2 Vec2FromString(const std::string& str)
+{
+    Vec2 ret = Vec2::ZERO;
 
     do 
     {
@@ -158,25 +186,46 @@ Vec2 PointFromString(const std::string& str)
         float x = (float) utils::atof(strs[0].c_str());
         float y = (float) utils::atof(strs[1].c_str());
 
-        ret.set(x, y);
+        ret = Vec2(x, y);
     } while (0);
 
     return ret;
 }
 
-Size SizeFromString(const std::string& pszContent)
+Vec3 Vec3FromString(const std::string& str)
 {
-    Size ret = Size::ZERO;
+    Vec3 ret = Vec3::ZERO;
+
+    do
+    {
+        strArray strs;
+        CC_BREAK_IF(!splitWithForm(str, strs, 3));
+
+        float x = utils::atof(strs[0].c_str());
+        float y = utils::atof(strs[1].c_str());
+        float z = utils::atof(strs[2].c_str());
+
+        ret = Vec3(x, y, z);
+    } while (0);
+
+    return ret;
+}
+
+Vec4 Vec4FromString(const std::string& str)
+{
+    Vec4 ret = Vec4::ZERO;
 
     do 
     {
         strArray strs;
-        CC_BREAK_IF(!splitWithForm(pszContent, strs));
+        CC_BREAK_IF(!splitWithForm(str, strs, 4));
 
-        float width  = (float) utils::atof(strs[0].c_str());
-        float height = (float) utils::atof(strs[1].c_str());
+        float x = utils::atof(strs[0].c_str());
+        float y = utils::atof(strs[1].c_str());
+        float z = utils::atof(strs[2].c_str());
+        float w = utils::atof(strs[3].c_str());
 
-        ret = Size(width, height);
+        ret = Vec4(x, y, z, w);
     } while (0);
 
     return ret;

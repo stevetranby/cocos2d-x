@@ -78,6 +78,9 @@ public:
     bool windowShouldClose() override;
     void pollEvents() override;
     GLFWwindow* getWindow() const { return _mainWindow; }
+    // STEVE
+    GLFWmonitor* getMonitor() const { return _monitor; }
+    Size getMonitorSize() const { return _monitorSize; }
 
     /* override functions */
     virtual bool isOpenGLReady() override;
@@ -143,6 +146,10 @@ protected:
     bool _isRetinaEnabled;
     int  _retinaFactor;  // Should be 1 or 2
 
+    // STEVE
+    cocos2d::Size _monitorSize;
+    bool _preventCharCallback;
+
     float _frameZoomFactor;
 
     GLFWwindow* _mainWindow;
@@ -155,6 +162,12 @@ protected:
 
     friend class GLFWEventHandler;
     
+public:
+    // View will trigger an event when window is resized, gains or loses focus
+    static const std::string EVENT_WINDOW_RESIZED;
+    static const std::string EVENT_WINDOW_FOCUSED;
+    static const std::string EVENT_WINDOW_UNFOCUSED;
+
 public:
     // View will trigger an event when window is resized, gains or loses focus
     static const std::string EVENT_WINDOW_RESIZED;
