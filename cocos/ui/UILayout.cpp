@@ -79,7 +79,8 @@ _doLayoutDirty(true),
 _isInterceptTouch(false),
 _loopFocus(false),
 _passFocusToChild(true),
-_isFocusPassing(false)
+_isFocusPassing(false),
+    _stencilRadius(0.0f)
 {
     //no-op
 }
@@ -428,21 +429,21 @@ Layout::ClippingType Layout::getClippingType()const
     return _clippingType;
 }
     
-void Layout::setStencilClippingSize(const Size &size)
-{
-    if (_clippingEnabled && _clippingType == ClippingType::STENCIL)
-    {
-        Vec2 rect[4];
-        // rect[0].setZero(); Zero default
-        rect[1].set(_contentSize.width, 0.0f);
-        rect[2].set(_contentSize.width, _contentSize.height);
-        rect[3].set(0.0f, _contentSize.height);
-        Color4F green(0.0f, 1.0f, 0.0f, 1.0f);
-        _clippingStencil->clear();
-        _clippingStencil->drawPolygon(rect, 4, green, 0, green);
-    }
-}
-    
+//void Layout::setStencilClippingSize(const Size &size)
+//{
+//    if (_clippingEnabled && _clippingType == ClippingType::STENCIL)
+//    {
+//        Vec2 rect[4];
+//        // rect[0].setZero(); Zero default
+//        rect[1].set(_contentSize.width, 0.0f);
+//        rect[2].set(_contentSize.width, _contentSize.height);
+//        rect[3].set(0.0f, _contentSize.height);
+//        Color4F green(0.0f, 1.0f, 0.0f, 1.0f);
+//        _clippingStencil->clear();
+//        _clippingStencil->drawPolygon(rect, 4, green, 0, green);
+//    }
+//}
+
 const Rect& Layout::getClippingRect() 
 {
     if (_clippingRectDirty)
@@ -1892,6 +1893,89 @@ void Layout::setCameraMask(unsigned short mask, bool applyChildren)
     }
 }
     
+    // STEVE
+    void Layout::appendCubicBezier(int startPoint, std::vector<Vec2>& verts, const Vec2& from, const Vec2& control1, const Vec2& control2, const Vec2& to, int segments)
+    {
+        float t = 0;
+        for(int i = 0; i < segments; i++)
+        {
+            float x = powf(1 - t, 3) * from.x + 3.0f * powf(1 - t, 2) * t * control1.x + 3.0f * (1 - t) * t * t * control2.x + t * t * t * to.x;
+            float y = powf(1 - t, 3) * from.y + 3.0f * powf(1 - t, 2) * t * control1.y + 3.0f * (1 - t) * t * t * control2.y + t * t * t * to.y;
+            verts[startPoint + i] = Vec2(x,y);
+            t += 1.0f / segments;
+        }
+    }
+
+    void Layout::setStencilClippingSize(const Size &size)
+    {
+        if (_clippingEnabled && _clippingType == ClippingType::STENCIL)
+        {
+            Color4F green(0, 1, 0, 1);
+            _clippingStencil->clear();
+
+            if(_stencilRadius == 0.0f) {
+                Vec2 rect[4];
+                // rect[0].setZero(); Zero default
+                rect[1].set(_contentSize.width, 0.0f);
+                rect[2].set(_contentSize.width, _contentSize.height);
+                rect[3].set(0.0f, _contentSize.height);
+                Color4F green(0.0f, 1.0f, 0.0f, 1.0f);
+                _clippingStencil->clear();
+                _clippingStencil->drawPolygon(rect, 4, green, 0, green);
+            } else {
+                const float kappa = 0.552228474;
+                float oneMinusKappa = (1.0f-kappa);
+
+                // define corner control points
+                std::vector<Vec2> verts(16);
+
+                float radius = _stencilRadius;
+                int cornerSegments = 32;
+                verts[0] = Vec2(0, radius);
+                verts[1] = Vec2(0, radius * oneMinusKappa);
+                verts[2] = Vec2(radius * oneMinusKappa, 0);
+                verts[3] = Vec2(radius, 0);
+
+                verts[4] = Vec2(size.width - radius, 0);
+                verts[5] = Vec2(size.width - radius * oneMinusKappa, 0);
+                verts[6] = Vec2(size.width, radius * oneMinusKappa);
+                verts[7] = Vec2(size.width, radius);
+
+                verts[8] = Vec2(size.width, size.height - radius);
+                verts[9] = Vec2(size.width, size.height - radius * oneMinusKappa);
+                verts[10] = Vec2(size.width - radius * oneMinusKappa, size.height);
+                verts[11] = Vec2(size.width - radius, size.height);
+
+                verts[12] = Vec2(radius, size.height);
+                verts[13] = Vec2(radius * oneMinusKappa, size.height);
+                verts[14] = Vec2(0, size.height - radius * oneMinusKappa);
+                verts[15] = Vec2(0, size.height - radius);
+
+                // result
+                std::vector<Vec2> polyVerts(4 * cornerSegments + 1);
+
+                // add corner arcs
+                appendCubicBezier(0 * cornerSegments, polyVerts, verts[0], verts[1], verts[2], verts[3], cornerSegments);
+                appendCubicBezier(1 * cornerSegments, polyVerts, verts[4], verts[5], verts[6], verts[7], cornerSegments);
+                appendCubicBezier(2 * cornerSegments, polyVerts, verts[8], verts[9], verts[10], verts[11], cornerSegments);
+                appendCubicBezier(3 * cornerSegments, polyVerts, verts[12], verts[13], verts[14], verts[15], cornerSegments);
+                // close path
+                polyVerts[4 * cornerSegments] = verts[0];
+
+                // draw final poly into mask
+                _clippingStencil->drawPolygon(&polyVerts[0], (int)polyVerts.size(), green, 0, green);
+            }
+        }
+    }
+
+    void Layout::setPositionZ(float positionZ)
+    {
+        Widget::setPositionZ(positionZ);
+        if(_colorRender) { _colorRender->setPositionZ(positionZ - .1f); }
+        if(_gradientRender) { _gradientRender->setPositionZ(positionZ - .1f); }
+    }
+
+
 ResourceData Layout::getRenderFile()
 {
     ResourceData rData;

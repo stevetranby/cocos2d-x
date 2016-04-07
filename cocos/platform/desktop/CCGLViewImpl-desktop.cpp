@@ -113,6 +113,14 @@ public:
         }
     }
 
+    static void onGLFWWindowFocusCallback(GLFWwindow* window, int focused)
+    {
+        if (_view)
+        {
+            _view->onGLFWWindowFocusCallback(window, focused);
+        }
+    }
+
 private:
     static GLViewImpl* _view;
 };
@@ -838,6 +846,7 @@ void GLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int 
         setFrameSize(frameWidth, frameHeight);
         setDesignResolutionSize(baseDesignSize.width, baseDesignSize.height, baseResolutionPolicy);
         Director::getInstance()->setViewport();
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLView::EVENT_WINDOW_RESIZED, nullptr);
     }
 }
 
@@ -850,6 +859,18 @@ void GLViewImpl::onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified)
     else
     {
         Application::getInstance()->applicationWillEnterForeground();
+    }
+}
+
+void GLViewImpl::onGLFWWindowFocusCallback(GLFWwindow* window, int focused)
+{
+    if (focused == GL_TRUE)
+    {
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLView::EVENT_WINDOW_FOCUSED, nullptr);
+    }
+    else
+    {
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLView::EVENT_WINDOW_UNFOCUSED, nullptr);
     }
 }
 

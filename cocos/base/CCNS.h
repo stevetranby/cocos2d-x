@@ -58,6 +58,9 @@ Rect CC_DLL RectFromString(const std::string& str);
  *      If the string is not well-formed, the function returns Vec2::ZERO.
  */
 Vec2 CC_DLL PointFromString(const std::string& str);
+Vec2 CC_DLL Vec2FromString(const std::string& str);
+Vec3 CC_DLL Vec3FromString(const std::string& str);
+Vec4 CC_DLL Vec4FromString(const std::string& str);
 
 /**
  * @brief Returns a Core Graphics size structure corresponding to the data in a given string.

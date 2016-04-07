@@ -355,7 +355,16 @@ void TMXMapInfo::startElement(void *ctx, const char *name, const char **atts)
         {
             TMXLayerInfo* layer = tmxMapInfo->getLayers().back();
             Size layerSize = layer->_layerSize;
-            uint32_t gid = static_cast<uint32_t>(attributeDict["gid"].asInt());
+
+            // Approx. Line 320 (CCTMXXMLParser.cpp)
+            // Erroneous
+            //uint32_t gid = static_cast<uint32_t>(attributeDict["gid"].asInt());
+            // #1 don't need to change Value
+            //const char * gidStr = attributeDict["gid"];
+            //uint32_t gid = strtol(gidStr, NULL, 10);
+            // #2 add asUInt() to VAlue
+            uint32_t gid = static_cast<uint32_t>(attributeDict["gid"].asUnsignedInt());
+
             int tilesAmount = layerSize.width*layerSize.height;
             
             if (_xmlTileIndex < tilesAmount)

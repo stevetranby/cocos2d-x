@@ -666,6 +666,28 @@ void Sprite::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     if(_insideBounds)
 #endif
     {
+
+#if CC_SPRITE_DEBUG_DRAW
+        // STEVE
+        if(_debugDrawNode) {
+            if(Director::getInstance()->getSpriteDebugDraw()) {
+                _debugDrawNode->setVisible(true);
+                _debugDrawNode->clear();
+                Vec2 vertices[4] = {
+                    Vec2( _quad.bl.vertices.x, _quad.bl.vertices.y ),
+                    Vec2( _quad.br.vertices.x, _quad.br.vertices.y ),
+                    Vec2( _quad.tr.vertices.x, _quad.tr.vertices.y ),
+                    Vec2( _quad.tl.vertices.x, _quad.tl.vertices.y ),
+                };
+                _debugDrawNode->drawPoly(vertices, 4, true, Color4F(1.0, 1.0, 1.0, 1.0));
+            } else {
+                // TODO: should clear and only when toggled off, but
+                //_debugDrawNode->clear();
+                _debugDrawNode->clear();// setVisible(false);
+            }
+        }
+#endif //CC_SPRITE_DEBUG_DRAW
+
         _trianglesCommand.init(_globalZOrder, 
             _texture, 
             getGLProgramState(), 

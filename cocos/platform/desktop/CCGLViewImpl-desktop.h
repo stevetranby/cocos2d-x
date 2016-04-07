@@ -78,6 +78,9 @@ public:
     bool windowShouldClose() override;
     void pollEvents() override;
     GLFWwindow* getWindow() const { return _mainWindow; }
+    // STEVE
+    GLFWmonitor* getMonitor() const { return _monitor; }
+    Size getMonitorSize() const { return _monitorSize; }
 
     /* override functions */
     virtual bool isOpenGLReady() override;
@@ -135,12 +138,17 @@ protected:
     void onGLFWframebuffersize(GLFWwindow* window, int w, int h);
     void onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height);
     void onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified);
+    void onGLFWWindowFocusCallback(GLFWwindow* window, int focused);
 
     bool _captured;
     bool _supportTouch;
     bool _isInRetinaMonitor;
     bool _isRetinaEnabled;
     int  _retinaFactor;  // Should be 1 or 2
+
+    // STEVE
+    cocos2d::Size _monitorSize;
+    bool _preventCharCallback;
 
     float _frameZoomFactor;
 
