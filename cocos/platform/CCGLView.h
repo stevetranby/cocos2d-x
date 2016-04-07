@@ -100,6 +100,13 @@ class VRIRenderer;
 class CC_DLL GLView : public Ref
 {
 public:
+    /** View will trigger an event when window loses focus */
+    static const char* EVENT_WINDOW_RESIZED;
+    /** View will trigger an event when window loses focus */
+    static const char* EVENT_WINDOW_FOCUSED;
+    /** View will trigger an event when window loses focus */
+    static const char* EVENT_WINDOW_UNFOCUSED;
+
     /**
      * @js ctor
      */

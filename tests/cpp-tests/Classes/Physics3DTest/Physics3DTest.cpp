@@ -39,7 +39,9 @@ enum
     IDC_RESTART
 };
 
+#if CC_USE_3D_PHYSICS == 1
 static cocos2d::Scene* physicsScene = nullptr;
+#endif
 
 #define START_POS_X -0.5
 #define START_POS_Y -2.5
