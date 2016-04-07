@@ -40,7 +40,7 @@
 #include "base/CCEventType.h"
 #include "2d/CCCamera.h"
 
-#define DUMP_LISTENER_ITEM_PRIORITY_INFO 0
+#define DUMP_LISTENER_ITEM_PRIORITY_INFO 1
 
 namespace
 {

@@ -327,7 +327,10 @@ namespace {
         fflush(stdout);
 #endif
         
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#else
         Director::getInstance()->getConsole()->log(buf);
+#endif
         delete [] buf;
     }
 }

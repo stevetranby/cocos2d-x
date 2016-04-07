@@ -385,12 +385,12 @@ protected:
 
 private:
     std::string _fontName;
+    float _buttonScale;
+    float _titleScale;
 
     // STEVE
 public:
     virtual void setPositionZ(float z) override;
-    float _buttonScale;
-    float _titleScale;
 };
 
 }

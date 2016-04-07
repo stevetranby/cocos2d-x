@@ -606,6 +606,29 @@ namespace ui {
 
         Scale9Sprite::State _brightState;
         Scale9Sprite::RenderingType _renderingType;
+        
+#error
+        // STEVE
+    public:
+        virtual void setPositionZ(float z) override;
+        bool _isPatch9;
+        State _brightState;
+        Vec2 _nonSliceSpriteAnchor;
+        
+        V3F_C4B_T2F* _sliceVertices;
+        unsigned short* _sliceIndices;
+        bool _sliceSpriteDirty;
+        RenderingType _renderingType;
+        
+#if CC_SPRITE_DEBUG_DRAW
+        DrawNode *_debugDrawNode;
+#endif //CC_SPRITE_DEBUG_DRAW
+        bool _insideBounds;   /// whether or not the sprite was inside bounds the previous frame
+        TrianglesCommand _trianglesCommand;     ///
+
+#error - end of what should mostly be removed by now
+        
+        
     };
     
 }}  //end of namespace

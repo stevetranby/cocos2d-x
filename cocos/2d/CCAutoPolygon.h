@@ -242,7 +242,7 @@ public:
      * auto sp2 = Sprite::create(myInfo2);
      * @endcode
      */
-    PolygonInfo generateTriangles(const Rect& rect = Rect::ZERO, float epsilon = 2.0f, float threshold = 0.05f);
+    PolygonInfo generateTriangles(const Rect& rect = Rect::ZERO, const float& epsilon = 2.0f, const float& threshold = 0.05f);
     
     /**
      * a helper function, packing autoPolygon creation, trace, reduce, expand, triangulate and calculate uv in one function
@@ -256,7 +256,7 @@ public:
      * auto sp = Sprite::create(AutoPolygon::generatePolygon("grossini.png"));
      * @endcode
      */
-    static PolygonInfo generatePolygon(const std::string& filename, const Rect& rect = Rect::ZERO, float epsilon = 2.0f, float threshold = 0.05f);
+    static PolygonInfo generatePolygon(const std::string& filename, const Rect& rect = Rect::ZERO, const float epsilon = 2.0f, const float threshold = 0.05f);
 protected:
     Vec2 findFirstNoneTransparentPixel(const Rect& rect, float threshold);
     std::vector<cocos2d::Vec2> marchSquare(const Rect& rect, const Vec2& first, float threshold);

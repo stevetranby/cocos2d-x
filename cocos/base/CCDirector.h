@@ -661,6 +661,9 @@ protected:
     float _animationInterval = 0.0f;
     float _oldAnimationInterval = 0.0f;
     
+    /* landscape mode ? */
+    bool _landscape;
+    
     bool _displayStats = false;
     float _accumDt = 0.0f;
     float _frameRate = 0.0f;
