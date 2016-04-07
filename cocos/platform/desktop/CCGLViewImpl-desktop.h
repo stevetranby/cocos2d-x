@@ -176,12 +176,6 @@ public:
     static const std::string EVENT_WINDOW_FOCUSED;
     static const std::string EVENT_WINDOW_UNFOCUSED;
 
-public:
-    // View will trigger an event when window is resized, gains or loses focus
-    static const std::string EVENT_WINDOW_RESIZED;
-    static const std::string EVENT_WINDOW_FOCUSED;
-    static const std::string EVENT_WINDOW_UNFOCUSED;
-
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(GLViewImpl);
 };
