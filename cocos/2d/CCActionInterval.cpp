@@ -1246,7 +1246,22 @@ void MoveBy::update(float t)
 
 MoveTo* MoveTo::create(float duration, const Vec2& position)
 {
-    return MoveTo::create(duration, Vec3(position.x, position.y, 0));
+    MoveTo *ret = new (std::nothrow) MoveTo();
+
+    if (ret)
+    {
+        if (ret->initWithDuration(duration, position))
+        {
+            ret->autorelease();
+        }
+        else
+        {
+            delete ret;
+            ret = nullptr;
+        }
+    }
+
+    return ret;
 }
 
 MoveTo* MoveTo::create(float duration, const Vec3& position)
@@ -1265,7 +1280,16 @@ MoveTo* MoveTo::create(float duration, const Vec3& position)
 
 bool MoveTo::initWithDuration(float duration, const Vec2& position)
 {
-    return initWithDuration(duration, Vec3(position.x, position.y, 0));
+    bool ret = false;
+
+    if (ActionInterval::initWithDuration(duration))
+    {
+        _use2D = true;
+        _endPosition = Vec3(position.x, position.y, 0);
+        ret = true;
+    }
+
+    return ret;
 }
 
 bool MoveTo::initWithDuration(float duration, const Vec3& position)
@@ -1274,6 +1298,7 @@ bool MoveTo::initWithDuration(float duration, const Vec3& position)
     
     if (ActionInterval::initWithDuration(duration))
     {
+        _use2D = false;
         _endPosition = position;
         ret = true;
     }
@@ -1284,13 +1309,22 @@ bool MoveTo::initWithDuration(float duration, const Vec3& position)
 MoveTo* MoveTo::clone() const
 {
     // no copy constructor
-    return MoveTo::create(_duration, _endPosition);
+    auto a = new (std::nothrow) MoveTo();
+    a->initWithDuration(_duration, _endPosition);
+    a->_use2D = _use2D;
+    a->autorelease();
+    return a;
 }
 
 void MoveTo::startWithTarget(Node *target)
 {
     MoveBy::startWithTarget(target);
-    _positionDelta = _endPosition - target->getPosition3D();
+    if(_use2D) {
+        auto endPosition = Vec3(_endPosition.x, _endPosition.y, target->getPositionZ());
+        _positionDelta = endPosition - target->getPosition3D();
+    } else {
+        _positionDelta = _endPosition - target->getPosition3D();
+    }
 }
 
 MoveTo* MoveTo::reverse() const

@@ -50,7 +50,8 @@ FontAtlas::FontAtlas(Font &theFont)
 , _currentPageData(nullptr)
 , _fontAscender(0)
 , _rendererRecreatedListener(nullptr)
-, _antialiasEnabled(true)
+//STEVE
+, _antialiasEnabled(false)
 , _currLineHeight(0)
 {
     _font->retain();
