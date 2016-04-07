@@ -680,6 +680,7 @@ CC_CONSTRUCTOR_ACCESS:
 
 protected:
     Vec3 _endPosition;
+    bool _use2D;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(MoveTo);

@@ -28,6 +28,11 @@ THE SOFTWARE.
 #include "2d/CCSpriteFrameCache.h"
 #include "platform/CCFileUtils.h"
 
+// STEVE
+#include "base/CCDirector.h"
+#include "renderer/CCTextureCache.h"
+#include "base/ccUTF8.h"
+
 using namespace std;
 
 NS_CC_BEGIN
@@ -238,5 +243,94 @@ void AnimationCache::addAnimationsWithFile(const std::string& plist)
     addAnimationsWithDictionary(dict,plist);
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+// MARK - STEVE Extensions
+
+void AnimationCache::addAnimationWithName(const string& animName, const string& animFrameName, const vector<string>& animFrameIndicies, float frameDelay)
+{
+    AnimationCache *animCache = AnimationCache::getInstance();
+    if(animCache->getAnimation(animName)) {
+        return;
+    }
+    if(animFrameIndicies.empty()) {
+        return;
+    }
+
+    Vector<SpriteFrame*> animSpriteFrames;
+    for(auto frameStr : animFrameIndicies)
+    {
+        int index;
+        stringstream(frameStr) >> index;
+        auto frameName = StringUtils::format("%s-%03d.png", animFrameName.c_str(), index);
+        SpriteFrame *spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName);
+        if(spriteFrame) {
+            animSpriteFrames.pushBack(spriteFrame);
+        }
+    }
+
+    if(! animSpriteFrames.empty())
+    {
+        Animation *anim = Animation::createWithSpriteFrames(animSpriteFrames, frameDelay);
+        animCache->addAnimation(anim, animName);
+    }
+}
+
+#pragma  mark - spritesheet sequence
+
+void AnimationCache::addAnimWithName(const string& animName, const string& frameFormat, const vector<string>& frameIndicies, float frameDelay)
+{
+    AnimationCache *animCache = AnimationCache::getInstance();
+    if(animCache->getAnimation(animName))
+    {
+        CCLOG("already in cache");
+        return;
+    }
+    if(frameIndicies.empty()) {
+        return;
+    }
+
+    SpriteFrameCache *frameCache = SpriteFrameCache::getInstance();
+    Vector<SpriteFrame*> animSpriteFrames;
+
+    for(auto frameStr : frameIndicies)
+    {
+        int index;
+        stringstream(frameStr) >> index;
+        auto frameName = StringUtils::format(frameFormat.c_str(), index);
+        auto nameOrFile = frameName;
+        SpriteFrame* spriteFrame = frameCache->getSpriteFrameByName(nameOrFile);
+        if (spriteFrame && spriteFrame->getTexture())
+        {
+            // CCLOG("adding spriteframe with franemname %s", frameName->getCString());
+            animSpriteFrames.pushBack(spriteFrame);
+        }
+        else
+        {
+            auto tex = Director::getInstance()->getTextureCache()->addImage(nameOrFile);
+            if(tex)
+            {
+                Rect rect;
+                rect.size = tex->getContentSize();
+                spriteFrame = SpriteFrame::create(nameOrFile, rect);
+                if(spriteFrame) {
+                    animSpriteFrames.pushBack(spriteFrame);
+                }
+            }
+        }
+    }
+
+    if(animSpriteFrames.size() > 0)
+    {
+        //CCLOG("adding animation with name = %s", animName->getCString());
+        auto anim = Animation::createWithSpriteFrames(animSpriteFrames, frameDelay);
+        animCache->addAnimation(anim, animName);
+    }
+    else
+    {
+        CCLOG("no frames");
+    }
+}
 
 NS_CC_END

@@ -125,6 +125,9 @@ protected:
     */
     virtual void deleteBackward() {}
 
+    virtual void cursorLeft() {}
+    virtual void cursorRight() {}
+
     /**
     @brief    Called by IMEDispatcher after the user press control key.
     * @js NA
