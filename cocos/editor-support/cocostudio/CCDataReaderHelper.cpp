@@ -873,7 +873,10 @@ MovementBoneData *DataReaderHelper::decodeMovementBone(tinyxml2::XMLElement *mov
 
     int totalDuration = 0;
 
-    std::string name = movBoneXml->Attribute(A_NAME);
+    std::string name;
+    if(movBoneXml) {
+        name = movBoneXml->Attribute(A_NAME);
+    }
 
     movBoneData->name = name;
 
@@ -1068,8 +1071,8 @@ FrameData *DataReaderHelper::decodeFrame(tinyxml2::XMLElement *frameXML,  tinyxm
     tinyxml2::XMLElement *colorTransformXML = frameXML->FirstChildElement(A_COLOR_TRANSFORM);
     if (colorTransformXML)
     {
-        int alpha, red, green, blue = 100;
-        int alphaOffset, redOffset, greenOffset, blueOffset = 0;
+        int alpha = 100, red = 100, green = 100, blue = 100;
+        int alphaOffset = 0, redOffset = 0, greenOffset = 0, blueOffset = 0;
 
         colorTransformXML->QueryIntAttribute(A_ALPHA, &alpha);
         colorTransformXML->QueryIntAttribute(A_RED, &red);
@@ -1147,7 +1150,10 @@ TextureData *DataReaderHelper::decodeTexture(tinyxml2::XMLElement *textureXML, D
         textureData->name = textureXML->Attribute(A_NAME);
     }
 
-    float px, py, width, height = 0;
+    float px = 0;
+    float py = 0;
+    float width = 0;
+    float height = 0;
 
     if(dataInfo->flashToolVersion >= VERSION_2_0)
     {

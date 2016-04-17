@@ -362,7 +362,7 @@ cocos2d::Node* SceneReader::createObject(CocoLoader *cocoLoader, stExpCocoNode *
     {
         className = pNodeArray[1].GetValue(cocoLoader);
     }
-    if(strcmp(className, "CCNode") == 0)
+    if(className && strcmp(className, "CCNode") == 0)
     {
         Node* gb = nullptr;
         std::vector<Component*> _vecComs;
@@ -437,19 +437,21 @@ cocos2d::Node* SceneReader::createObject(CocoLoader *cocoLoader, stExpCocoNode *
             }
             parent->addChild(gb);
         }
-        setPropertyFromJsonDict(cocoLoader, cocoNode, gb);
-        for (std::vector<Component*>::iterator iter = _vecComs.begin(); iter != _vecComs.end(); ++iter)
-        {
-            gb->addComponent(*iter);
-        }
-        
-        stExpCocoNode *pGameObjects = pNodeArray[12].GetChildArray(cocoLoader);
-        if (pGameObjects != nullptr)
-        {
-            int length = pNodeArray[12].GetChildNum();
-            for (int i = 0; i < length; ++i)
+        if (gb) {
+            setPropertyFromJsonDict(cocoLoader, cocoNode, gb);
+            for (std::vector<Component*>::iterator iter = _vecComs.begin(); iter != _vecComs.end(); ++iter)
             {
-                createObject(cocoLoader, &pGameObjects[i], gb, attachComponent);
+                gb->addComponent(*iter);
+            }
+
+            stExpCocoNode *pGameObjects = pNodeArray[12].GetChildArray(cocoLoader);
+            if (pGameObjects != nullptr)
+            {
+                int length = pNodeArray[12].GetChildNum();
+                for (int i = 0; i < length; ++i)
+                {
+                    createObject(cocoLoader, &pGameObjects[i], gb, attachComponent);
+                }
             }
         }
         return gb;

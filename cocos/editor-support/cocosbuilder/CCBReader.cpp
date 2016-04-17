@@ -559,6 +559,7 @@ Node * CCBReader::readNodeGraph(Node * pParent)
     }
 
     Node *node = ccNodeLoader->loadNode(pParent, this);
+    CCASSERT(node != nullptr, "node should never be null!");
 
     // Set root node
     if (! _animationManager->getRootNode())

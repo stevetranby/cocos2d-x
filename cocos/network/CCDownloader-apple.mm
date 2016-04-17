@@ -398,6 +398,7 @@ namespace cocos2d { namespace network {
 
     // clean wrapper C++ object
     DownloadTaskWrapper *wrapper = [self.taskDict objectForKey:task];
+    [wrapper retain];
 
     if(_outer)
     {

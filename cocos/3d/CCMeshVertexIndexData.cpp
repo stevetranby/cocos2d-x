@@ -84,6 +84,7 @@ MeshVertexData* MeshVertexData::create(const MeshData& meshdata)
 {
     auto vertexdata = new (std::nothrow) MeshVertexData();
     int pervertexsize = meshdata.getPerVertexSize();
+    CCASSERT(pervertexsize != 0, "shouldn't have ZERO vertex attribute size");
     vertexdata->_vertexBuffer = VertexBuffer::create(pervertexsize, (int)(meshdata.vertex.size() / (pervertexsize / 4)));
     vertexdata->_vertexData = VertexData::create();
     CC_SAFE_RETAIN(vertexdata->_vertexData);

@@ -130,13 +130,13 @@ bool ComAudio::serialize(void* r)
             }
 			filePath.assign(cocos2d::FileUtils::getInstance()->fullPathForFilename(file));
 		}
-		if (strcmp(className, "CCBackgroundAudio") == 0)
+		if (className && strcmp(className, "CCBackgroundAudio") == 0)
 		{
 			preloadBackgroundMusic(filePath.c_str());
 			setLoop(loop);
 			playBackgroundMusic(filePath.c_str(), loop);
 		}
-		else if(strcmp(className, COMPONENT_NAME.c_str()) == 0)
+		else if(className && strcmp(className, COMPONENT_NAME.c_str()) == 0)
 		{
 			preloadEffect(filePath.c_str());
 		}

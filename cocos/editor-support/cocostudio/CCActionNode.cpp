@@ -222,23 +222,26 @@ void ActionNode::initWithDictionary(const rapidjson::Value& dic, Ref* root)
             std::string value = stChildNode[i].GetValue(cocoLoader);
             if (key == "ActionTag") {
                 setActionTag(valueToInt(value));
-            }else if (key == "actionframelist"){
+            } else if (key == "actionframelist") {
                 frameListNode = &stChildNode[i];
             }
         }
-        
+
+        // TODO: may want to just return if null, silent error?
+        CCASSERT(frameListNode != nullptr, "frameListNode should not be null!");
+
         int actionFrameCount = frameListNode->GetChildNum();
         stExpCocoNode *stFrameChildNode = frameListNode->GetChildArray(cocoLoader);
         for (int i=0; i<actionFrameCount; i++) {
             
-            int frameIndex;
-            int frameTweenType;
-            float positionX;
-            float positionY;
-            float scaleX;
-            float scaleY;
-            float rotation;
-            int opacity;
+            int frameIndex = -1;
+            int frameTweenType = -1;
+            float positionX = 0;
+            float positionY = 0;
+            float scaleX = 0;
+            float scaleY = 0;
+            float rotation = 0;
+            int opacity = -1;
             int colorR = -1;
             int colorG = -1;
             int colorB = -1;

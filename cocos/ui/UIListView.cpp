@@ -640,6 +640,7 @@ void ListView::selectedItemEvent(TouchEventType event)
     
 void ListView::interceptTouchEvent(TouchEventType event, Widget *sender, Touch* touch)
 {
+    CCASSERT(sender != nullptr, "sender should not be NULL!");
     ScrollView::interceptTouchEvent(event, sender, touch);
     if (!_touchEnabled)
     {
