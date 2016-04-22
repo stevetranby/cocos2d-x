@@ -766,7 +766,8 @@ void GLViewImpl::onGLFWKeyCallback(GLFWwindow *window, int key, int scancode, in
         }
     }
 
-    if (GLFW_RELEASE != action && g_keyCodeMap[key] == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
+/*
+ if (GLFW_RELEASE != action && g_keyCodeMap[key] == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
     {
         IMEDispatcher::sharedDispatcher()->dispatchCursorLeft();
     }
@@ -774,6 +775,7 @@ void GLViewImpl::onGLFWKeyCallback(GLFWwindow *window, int key, int scancode, in
     {
         IMEDispatcher::sharedDispatcher()->dispatchCursorRight();
     }
+*/
 
     auto keycodes = std::vector<EventKeyboard::KeyCode> {
         EventKeyboard::KeyCode::KEY_RIGHT_ARROW,
