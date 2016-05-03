@@ -689,6 +689,49 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
     {
         CCLOG("Unknown element '%s' while parsing TMX Map.", elementName.c_str());
     }
+
+#error FIXME: MERGE/REBASE
+    else if (elementName == "tileoffset") { }
+    else if (elementName == "terraintypes") { }
+    else if (elementName == "terrain") { }
+    else if (elementName == "animation")
+    {
+    }
+    else if (elementName == "frame")
+    {
+        // ValueMap Fill
+        {
+            TMXAnimation* tileAnimation = _tileAnimations.back();
+            ValueMap& dict = tileAnimation->getAnimationValues().rbegin()->asValueMap();
+
+            if(attributeDict["tileid"].isNull()
+               || attributeDict["duration"].isNull())
+            {
+                derr("Parsing Error with <frame> element inside <animation>");
+                return;
+            }
+
+                float duration = attributeDict["duration"].asFloat();
+                dict["duration"] = duration;
+            }
+        }
+
+
+        // Direct Struct Fill
+        {
+            struct TMXAnimation {};
+            animation =
+            struct TMXAimationFrame { size_t tileid; float duration; };
+            TMXAimationFrame frame;
+            frame.tileid = attributeDict["tileid"].asFloat();
+            frame.duration = attributeDict["duration"].asFloat();
+            animation.frames.push_back(frame);
+        }
+    }
+    else if (elementName == "ellipse") { }
+    else if (elementName == "imagelayer") { }
+
+    #warning TODO: is there a way to do this w/compile time checks
 }
 
 void TMXMapInfo::endElement(void* /*ctx*/, const char *name)
