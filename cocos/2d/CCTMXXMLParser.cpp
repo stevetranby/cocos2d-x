@@ -680,10 +680,54 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
     }
     else if(elementName == "frame")
     {
+    	// ORIGINAL
         TMXTilesetInfo* info = tmxMapInfo->getTilesets().back();
         auto animInfo = info->_animationInfo.at(tmxMapInfo->getParentGID());
         // calculate gid of frame
         animInfo->_frames.emplace_back(TMXTileAnimFrame(info->_firstGid + attributeDict["tileid"].asInt(), attributeDict["duration"].asFloat()));
+
+#error // STEVE: WIP
+#errro // TODO(stevetranby): is there a way to do this w/compile time checks???? NOT SURE WHAT I MEANT HERE?
+
+        // ValueMap Fill
+        {
+            TMXAnimation* tileAnimation = _tileAnimations.back();
+            ValueMap& dict = tileAnimation->getAnimationValues().rbegin()->asValueMap();
+
+            if(attributeDict["tileid"].isNull()
+               || attributeDict["duration"].isNull())
+            {
+                derr("Parsing Error with <frame> element inside <animation>");
+                return;
+            }
+
+                float duration = attributeDict["duration"].asFloat();
+                dict["duration"] = duration;
+            }
+        }
+
+        // Direct Struct Fill
+        {
+            struct TMXAnimation {};
+            animation =
+            struct TMXAimationFrame { size_t tileid; float duration; };
+            TMXAimationFrame frame;
+            frame.tileid = attributeDict["tileid"].asFloat();
+            frame.duration = attributeDict["duration"].asFloat();
+            animation.frames.push_back(frame);
+        }
+    }
+    
+	// STEVE: New Fields for .... WIP
+    else if (elementName == "tileoffset") { }
+    else if (elementName == "terraintypes") { }
+    else if (elementName == "terrain") { }
+    else if (elementName == "animation") {}
+    else if (elementName == "ellipse") { }
+    else if (elementName == "imagelayer") { }
+    else
+    {
+        CCLOG("Unknown element '%s' while parsing TMX Map.", elementName.c_str());
     }
 }
 
@@ -808,6 +852,10 @@ void TMXMapInfo::endElement(void* /*ctx*/, const char *name)
     else if (elementName == "animation")
     {
         tmxMapInfo->setParentElement(TMXPropertyNone);
+    }
+    else
+    {
+        CCLOG("Try to end Unknown element '%s' while parsing TMX Map.", elementName.c_str());
     }
 }
 
