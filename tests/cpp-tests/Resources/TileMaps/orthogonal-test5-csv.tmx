@@ -2,6 +2,11 @@
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="101" tileheight="81" nextobjectid="1">
  <tileset firstgid="1" name="Untitled" tilewidth="101" tileheight="171" spacing="2" margin="2" tilecount="45" columns="9">
   <image source="ortho-test1.png" width="1024" height="1024"/>
+  <tile id="0">
+   <properties>
+    <property name="testme" value="asdf"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="46" name="tileset2" tilewidth="101" tileheight="171" spacing="2" margin="2" tilecount="45" columns="9">
   <image source="ortho-test1_bw.png" width="1024" height="1024"/>
