@@ -149,7 +149,7 @@ void NavMeshBaseTestDemo::initScene()
     auto component = Physics3DComponent::create(rigidBody);
     auto sprite = Sprite3D::create("NavMesh/scene.obj");
     sprite->addComponent(component);
-    sprite->setCameraMask((unsigned short)CameraFlag::USER1);
+//    sprite->setCameraMask((unsigned short)CameraFlag::USER1);
     this->addChild(sprite);
     setPhysics3DDebugCamera(_camera);
 
@@ -160,11 +160,11 @@ void NavMeshBaseTestDemo::initScene()
 
 
     auto ambientLight = AmbientLight::create(Color3B(64, 64, 64));
-    ambientLight->setCameraMask((unsigned short)CameraFlag::USER1);
+//    ambientLight->setCameraMask((unsigned short)CameraFlag::USER1);
     this->addChild(ambientLight);
 
     auto dirLight = DirectionLight::create(Vec3(1.2f, -1.1f, 0.5f), Color3B(255, 255, 255));
-    dirLight->setCameraMask((unsigned short)CameraFlag::USER1);
+//    dirLight->setCameraMask((unsigned short)CameraFlag::USER1);
     this->addChild(dirLight);
 }
 
@@ -186,7 +186,7 @@ void NavMeshBaseTestDemo::createAgent(const Vec3 &pos)
     auto node = Node::create();
     node->addChild(agentNode);
     node->setPosition3D(pos);
-    node->setCameraMask((unsigned short)CameraFlag::USER1);
+//    node->setCameraMask((unsigned short)CameraFlag::USER1);
     this->addChild(node);
 
 
@@ -208,7 +208,7 @@ void NavMeshBaseTestDemo::createObstacle(const Vec3 &pos)
     obstacleNode->setRotation3D(Vec3(-90.0f, 0.0f, 0.0f));
     obstacleNode->setScale(0.3f);
     obstacleNode->addComponent(obstacle);
-    obstacleNode->setCameraMask((unsigned short)CameraFlag::USER1);
+//    obstacleNode->setCameraMask((unsigned short)CameraFlag::USER1);
     this->addChild(obstacleNode);
 }
 

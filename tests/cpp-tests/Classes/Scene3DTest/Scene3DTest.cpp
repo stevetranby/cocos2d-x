@@ -564,6 +564,7 @@ void Scene3DTestScene::createPlayerDlg()
     playerBg->setContentSize(bgSize);
     playerBg->setAnchorPoint(Vec2(0, 0.5));
     playerBg->setPosition(bgPos);
+    playerBg->setCameraMask(s_CM[LAYER_TOP]);
     _playerDlg->addChild(playerBg);
 
     // item background and item
@@ -605,7 +606,8 @@ void Scene3DTestScene::createPlayerDlg()
     });
     zoomIn->setTitleText("Zoom In");
     zoomIn->setName("Zoom In");
-    zoomIn->setCameraMask(s_CM[LAYER_TOP]);
+    zoomIn->setCameraMask(s_CM[LAYER_MIDDLE]);
+    //zoomIn->setCameraMask(s_CM[LAYER_TOP]);
     playerBg->addChild(zoomIn);
 
     ui::Button* zoomOut = ui::Button::create("cocosui/animationbuttonnormal.png",
@@ -618,7 +620,8 @@ void Scene3DTestScene::createPlayerDlg()
     });
     zoomOut->setTitleText("Zoom Out");
     zoomOut->setName("Zoom Out");
-    zoomOut->setCameraMask(s_CM[LAYER_TOP]);
+    zoomOut->setCameraMask(s_CM[LAYER_MIDDLE]);
+    //zoomOut->setCameraMask(s_CM[LAYER_TOP]);
     playerBg->addChild(zoomOut);
     
     // forth, add slider bar
