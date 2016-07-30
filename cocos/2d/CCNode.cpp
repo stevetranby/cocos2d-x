@@ -992,6 +992,7 @@ void Node::addChildHelper(Node* child, int localZOrder, int tag, const std::stri
         child->setName(name);
     
     child->setParent(this);
+    child->setCameraMask(getCameraMask(), false);
 
     child->updateOrderOfArrival();
 
