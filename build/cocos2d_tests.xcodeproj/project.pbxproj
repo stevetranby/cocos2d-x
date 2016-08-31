@@ -1225,7 +1225,6 @@
 		50FC18F41C3372DB00DD15A3 /* Icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = 50FC18141C3371C000DD15A3 /* Icon-57.png */; };
 		50FC18F51C3372DB00DD15A3 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 50FC18151C3371C000DD15A3 /* Icon-72.png */; };
 		50FC18F61C3372DB00DD15A3 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 50FC18161C3371C000DD15A3 /* Icon-76.png */; };
-		50FC18F71C3372DB00DD15A3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50FC18171C3371C000DD15A3 /* Info.plist */; };
 		50FC18F81C3372DB00DD15A3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC18181C3371C000DD15A3 /* main.m */; };
 		50FC18F91C3372DB00DD15A3 /* NativeOcClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FC181A1C3371C000DD15A3 /* NativeOcClass.m */; };
 		50FC18FA1C3372DB00DD15A3 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50FC181D1C3371C000DD15A3 /* RootViewController.mm */; };
@@ -1386,11 +1385,9 @@
 		FA94B1FD1B8EF8250074B261 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = FA94B1E51B8EF8250074B261 /* Icon-72.png */; };
 		FA94B1FE1B8EF8250074B261 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = FA94B1E61B8EF8250074B261 /* Icon-76.png */; };
 		FA94B1FF1B8EF8250074B261 /* Icon-80.png in Resources */ = {isa = PBXBuildFile; fileRef = FA94B1E71B8EF8250074B261 /* Icon-80.png */; };
-		FA94B2001B8EF8250074B261 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA94B1E81B8EF8250074B261 /* Info.plist */; };
 		FA94B2011B8EF8250074B261 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FA94B1E91B8EF8250074B261 /* main.m */; };
 		FA94B2021B8EF8250074B261 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA94B1EC1B8EF8250074B261 /* RootViewController.mm */; };
 		FA94B2081B8EF8430074B261 /* Icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FA94B2041B8EF8430074B261 /* Icon.icns */; };
-		FA94B2091B8EF8430074B261 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA94B2051B8EF8430074B261 /* Info.plist */; };
 		FA94B20A1B8EF8430074B261 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA94B2061B8EF8430074B261 /* main.cpp */; };
 		FA94B2261B8EF9C50074B261 /* CloseNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = FA94B2211B8EF9C50074B261 /* CloseNormal.png */; };
 		FA94B2271B8EF9C50074B261 /* CloseNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = FA94B2211B8EF9C50074B261 /* CloseNormal.png */; };
@@ -5803,7 +5800,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0730;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = U7E7529TA5;
@@ -6459,7 +6456,6 @@
 				50FC18EA1C3372B900DD15A3 /* src in Resources */,
 				50FC18F31C3372DB00DD15A3 /* Icon-152.png in Resources */,
 				50FC18ED1C3372DB00DD15A3 /* Default-568h@2x.png in Resources */,
-				50FC18F71C3372DB00DD15A3 /* Info.plist in Resources */,
 				50FC18F51C3372DB00DD15A3 /* Icon-72.png in Resources */,
 				50FC18E81C3372B300DD15A3 /* script in Resources */,
 				50FC18F01C3372DB00DD15A3 /* Icon-114.png in Resources */,
@@ -6563,7 +6559,6 @@
 				FA94B1F21B8EF8250074B261 /* Default@2x.png in Resources */,
 				FA94B1F01B8EF8250074B261 /* Default-736h@3x.png in Resources */,
 				FADE786C1B942DE30061590D /* fonts in Resources */,
-				FA94B2001B8EF8250074B261 /* Info.plist in Resources */,
 				FADE78AE1B9E88420061590D /* Particles in Resources */,
 				FA94B1F41B8EF8250074B261 /* Icon-114.png in Resources */,
 				FA94B1F81B8EF8250074B261 /* Icon-29.png in Resources */,
@@ -6587,7 +6582,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA94B24E1B93EF7B0074B261 /* Images in Resources */,
-				FA94B2091B8EF8430074B261 /* Info.plist in Resources */,
 				FA94B2261B8EF9C50074B261 /* CloseNormal.png in Resources */,
 				FADE78AD1B9E88420061590D /* Particles in Resources */,
 				FADE786B1B942DE30061590D /* fonts in Resources */,
