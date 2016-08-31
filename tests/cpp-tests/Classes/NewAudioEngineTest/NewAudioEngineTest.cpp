@@ -33,6 +33,7 @@ using namespace cocos2d::experimental;
 
 AudioEngineTests::AudioEngineTests()
 {
+    ADD_TEST_CASE(AudioSeekTest);
     ADD_TEST_CASE(AudioIssue18597Test);
     ADD_TEST_CASE(AudioIssue11143Test);
     ADD_TEST_CASE(AudioControlTest);
@@ -453,7 +454,7 @@ bool PlaySimultaneouslyTest::init()
         _files[index] = text;
     }
     _playingcount = 0;
-    
+
     auto playItem = TextButton::create("play-simultaneously", [&](TextButton* button){
         int audioId;
         _playingcount = 0;
@@ -742,6 +743,83 @@ std::string AudioIssue11143Test::title() const
 std::string AudioIssue11143Test::subtitle() const
 {
     return "2 seconds after first sound play,you should hear another sound.";
+}
+
+bool AudioSeekTest::init()
+{
+    if (AudioEngineTestDemo::init())
+    {
+        auto& layerSize = this->getContentSize();
+
+        auto playItem = TextButton::create("play range of sound", [this](TextButton* button){
+            AudioEngine::stopAll();
+
+            auto audioFile = "audio/LuckyDay.mp3";
+            AudioEngine::preload(audioFile, [this,audioFile](bool isSuccess){
+                if(! isSuccess) { CCLOG("failed to preload!"); return; }
+
+                auto audioId = AudioEngine::play2d(audioFile);
+                if(audioId != AudioEngine::INVALID_AUDIO_ID) {
+
+                    auto start = 30.f; // seconds
+                    auto end = 45.f; // seconds
+
+                    this->schedule([=](float) {
+
+                        // gotta wait 'til playing :(
+                        if(AudioEngine::getState(audioId) == AudioEngine::AudioState::PLAYING)
+                        {
+                            AudioEngine::setCurrentTime(audioId, start);
+
+                            // create a callback or track time in update method
+                            // (ideally pool this with a mixer)
+                            auto duration = end - start;
+
+                            this->scheduleOnce([=](float) {
+                                AudioEngine::stop(audioId);
+                            }, duration, "stupid_unique_key_required_1");
+
+                            this->scheduleOnce([=](float) {
+                                AudioEngine::setCurrentTime(audioId, start);
+                            }, 0, "stupid_unique_key_required_2");
+
+                            this->schedule([=](float) {
+                                auto timestamp = AudioEngine::getCurrentTime(audioId);
+                                CCLOG("aid: %d, timestamp: %f", audioId, timestamp);
+                            }, .2f, "stupid_unique_update_key_2");
+
+                            // remove self
+                            this->unschedule("stupid_unique_update_key_1");
+                        }
+                        else
+                        {
+                            CCLOGWARN("STATE still not PLAYING!");
+                        }
+                    }, "stupid_unique_update_key_1");
+                }
+                else
+                {
+                    CCASSERT(false, "err failed to play");
+                }
+            });
+        });
+        playItem->setPosition(layerSize.width * 0.5f, layerSize.height * 0.5f);
+        addChild(playItem);
+
+        return true;
+    }
+
+    return false;
+}
+
+std::string AudioSeekTest::title() const
+{
+    return "Test Seeking";
+}
+
+std::string AudioSeekTest::subtitle() const
+{
+    return "You should hear the sound for 1.5 minute to 1.63 minute";
 }
 
 // Enable profiles for this file
