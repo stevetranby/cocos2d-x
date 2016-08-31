@@ -455,7 +455,11 @@ float AudioEngine::getDuration(int audioID)
 bool AudioEngine::setCurrentTime(int audioID, float time)
 {
     auto it = _audioIDInfoMap.find(audioID);
-    if (it != _audioIDInfoMap.end() && it->second.state != AudioState::INITIALIZING) {
+    bool a = it != _audioIDInfoMap.end();
+    bool b = it->second.state != AudioState::INITIALZING;
+    CCLOG("it->second.state = %d", it->second.state);
+    if(a && b)  {
+    //if (it != _audioIDInfoMap.end() && it->second.state != AudioState::INITIALZING){
         return _audioEngineImpl->setCurrentTime(audioID, time);
     }
 
