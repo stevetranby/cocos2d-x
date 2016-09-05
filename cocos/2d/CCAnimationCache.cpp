@@ -31,9 +31,7 @@ THE SOFTWARE.
 // STEVE
 #include "base/CCDirector.h"
 #include "renderer/CCTextureCache.h"
-#include "deprecated/CCString.h"
-#include "deprecated/CCInteger.h"
-#include "deprecated/CCArray.h"
+#include "base/ccUTF8.h"
 
 using namespace std;
 
@@ -326,7 +324,7 @@ void AnimationCache::addAnimWithName(const string& animName, const string& frame
     if(animSpriteFrames.size() > 0)
     {
         //CCLOG("adding animation with name = %s", animName->getCString());
-        Animation *anim = Animation::createWithSpriteFrames(animSpriteFrames, frameDelay);
+        auto anim = Animation::createWithSpriteFrames(animSpriteFrames, frameDelay);
         animCache->addAnimation(anim, animName);
     }
     else

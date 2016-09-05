@@ -113,6 +113,14 @@ public:
         }
     }
 
+    static void onGLFWWindowFocusCallback(GLFWwindow* window, int focused)
+    {
+        if (_view)
+        {
+            _view->onGLFWWindowFocusCallback(window, focused);
+        }
+    }
+
 private:
     static GLViewImpl* _view;
 };
@@ -765,42 +773,10 @@ void GLViewImpl::onGLFWKeyCallback(GLFWwindow *window, int key, int scancode, in
             break;
         }
     }
-
-/*
- if (GLFW_RELEASE != action && g_keyCodeMap[key] == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
-    {
-        IMEDispatcher::sharedDispatcher()->dispatchCursorLeft();
-    }
-    if (GLFW_RELEASE != action && g_keyCodeMap[key] == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
-    {
-        IMEDispatcher::sharedDispatcher()->dispatchCursorRight();
-    }
-*/
-
-    auto keycodes = std::vector<EventKeyboard::KeyCode> {
-        EventKeyboard::KeyCode::KEY_RIGHT_ARROW,
-        EventKeyboard::KeyCode::KEY_LEFT_ARROW,
-        EventKeyboard::KeyCode::KEY_UP_ARROW,
-        EventKeyboard::KeyCode::KEY_DOWN_ARROW,
-    };
-    _preventCharCallback = false;
-    for(auto keycode : keycodes) {
-        if (g_keyCodeMap[key] == keycode) {
-            _preventCharCallback = true;
-            break;
-        }
-    }
 }
 
 void GLViewImpl::onGLFWCharCallback(GLFWwindow *window, unsigned int character)
 {
-    // prevent non-print characters
-    if(_preventCharCallback) {
-        log("preventing charcter [%u] from dispatching", character);
-        _preventCharCallback = false;
-        return;
-    }
-
     char16_t wcharString[2] = { (char16_t) character, 0 };
     std::string utf8String;
 
@@ -870,6 +846,7 @@ void GLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int 
         setFrameSize(frameWidth, frameHeight);
         setDesignResolutionSize(baseDesignSize.width, baseDesignSize.height, baseResolutionPolicy);
         Director::getInstance()->setViewport();
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLView::EVENT_WINDOW_RESIZED, nullptr);
     }
 }
 
@@ -882,6 +859,18 @@ void GLViewImpl::onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified)
     else
     {
         Application::getInstance()->applicationWillEnterForeground();
+    }
+}
+
+void GLViewImpl::onGLFWWindowFocusCallback(GLFWwindow* window, int focused)
+{
+    if (focused == GL_TRUE)
+    {
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLView::EVENT_WINDOW_FOCUSED, nullptr);
+    }
+    else
+    {
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLView::EVENT_WINDOW_UNFOCUSED, nullptr);
     }
 }
 

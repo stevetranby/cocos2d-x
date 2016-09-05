@@ -473,10 +473,14 @@ public:
 protected:
     float _stencilRadius;
 
-protected:
+public:
+    // steve: protected:
     //override "onSizeChanged" method of widget.
     virtual void onSizeChanged() override;
-    
+
+    //steve: added
+protected:
+
     //init background image renderer.
     void addBackGroundImage();
     

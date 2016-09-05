@@ -30,11 +30,13 @@
 #include <cctype>
 #include <locale>
 #include <sstream>
+
 // STEVE
 //#include <iostream>
 #include <chrono>
 #include <fstream>
 // ENDSTEVE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -129,17 +131,21 @@ namespace {
     }
 #endif
     
+//
+// Free functions to log
+//
+
     void _log(const char *format, va_list args)
     {
         int bufferSize = MAX_LOG_LENGTH;
         char* buf = nullptr;
-        
+
         do
         {
             buf = new (std::nothrow) char[bufferSize];
             if (buf == nullptr)
                 return; // not enough memory
-            
+
             int ret = vsnprintf(buf, bufferSize - 3, format, args);
             if (ret < 0)
             {
@@ -186,7 +192,10 @@ namespace {
         fflush(stdout);
 #endif
         
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#else
         Director::getInstance()->getConsole()->log(buf);
+#endif
         delete [] buf;
     }
 }
@@ -207,102 +216,6 @@ void log(const char * format, ...)
     _log(format, args);
     va_end(args);
 }
-
-
-//
-// Free functions to log
-//
-
-// STEVE
-static std::string logFilePath = "";
-void setLogFilePath(std::string& filepath)
-{
-    //    auto unix_timestamp = std::chrono::seconds(std::time(NULL));
-    //    auto unix_timestamp_x_1000 = std::chrono::milliseconds(unix_timestamp).count();
-    logFilePath = filepath + "scgame_log_test.txt";
-    printf("logfile: %s\n", logFilePath.c_str());
-}
-// ENDSTEVE
-
-static void _log(const char *format, va_list args)
-{
-    int bufferSize = MAX_LOG_LENGTH;
-    char* buf = nullptr;
-
-    do
-    {
-        buf = new (std::nothrow) char[bufferSize];
-        if (buf == nullptr)
-            return; // not enough memory
-
-        int ret = vsnprintf(buf, bufferSize - 3, format, args);
-        if (ret < 0)
-        {
-            bufferSize *= 2;
-
-            delete [] buf;
-        }
-        else
-            break;
-
-    } while (true);
-
-    strcat(buf, "\n");
-
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-    __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "%s", buf);
-
-#elif CC_TARGET_PLATFORM ==  CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
-
-    int pos = 0;
-    int len = strlen(buf);
-    char tempBuf[MAX_LOG_LENGTH + 1] = { 0 };
-    WCHAR wszBuf[MAX_LOG_LENGTH + 1] = { 0 };
-
-    do
-    {
-        std::copy(buf + pos, buf + pos + MAX_LOG_LENGTH, tempBuf);
-
-        tempBuf[MAX_LOG_LENGTH] = 0;
-
-        MultiByteToWideChar(CP_UTF8, 0, tempBuf, -1, wszBuf, sizeof(wszBuf));
-        OutputDebugStringW(wszBuf);
-        WideCharToMultiByte(CP_ACP, 0, wszBuf, -1, tempBuf, sizeof(tempBuf), nullptr, FALSE);
-        printf("%s", tempBuf);
-
-        pos += MAX_LOG_LENGTH;
-
-    } while (pos < len);
-    SendLogToWindow(buf);
-    fflush(stdout);
-#else
-    // Linux, Mac, iOS, etc
-    fprintf(stdout, "%s", buf);
-    fflush(stdout);
-#endif
-
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#else
-    // STEVE
-    //#if (SCGAME_DEBUG_LEVEL > 0)
-    // Write to file
-    //    bool _writeToFile = true;
-    //    if(_writeToFile)
-    //    {
-    std::string msg(buf);
-    std::ofstream myfile;
-    myfile.open (logFilePath, std::ios_base::app);
-    myfile << ":" << msg;
-    //    }
-    //#endif
-    // ENDSTEVE
-
-    Director::getInstance()->getConsole()->log(buf);
-#endif
-    delete [] buf;
-}
-
-
 
 //
 //  Utility code

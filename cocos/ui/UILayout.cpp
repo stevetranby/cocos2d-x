@@ -1915,10 +1915,12 @@ void Layout::setCameraMask(unsigned short mask, bool applyChildren)
 
             if(_stencilRadius == 0.0f) {
                 Vec2 rect[4];
-                rect[0] = Vec2::ZERO;
-                rect[1] = Vec2(_contentSize.width, 0);
-                rect[2] = Vec2(_contentSize.width, _contentSize.height);
-                rect[3] = Vec2(0, _contentSize.height);
+                // rect[0].setZero(); Zero default
+                rect[1].set(_contentSize.width, 0.0f);
+                rect[2].set(_contentSize.width, _contentSize.height);
+                rect[3].set(0.0f, _contentSize.height);
+                Color4F green(0.0f, 1.0f, 0.0f, 1.0f);
+                _clippingStencil->clear();
                 _clippingStencil->drawPolygon(rect, 4, green, 0, green);
             } else {
                 const float kappa = 0.552228474;
@@ -1973,7 +1975,7 @@ void Layout::setCameraMask(unsigned short mask, bool applyChildren)
         if(_gradientRender) { _gradientRender->setPositionZ(positionZ - .1f); }
     }
 
-    
+
 ResourceData Layout::getRenderFile()
 {
     ResourceData rData;
