@@ -242,21 +242,21 @@ bool Sprite::initWithSpriteFrame(SpriteFrame *spriteFrame)
     return ret;
 }
 
-bool Sprite::initWithPolygon(const cocos2d::PolygonInfo &info)
-{
-    bool ret = false;
-
-    Texture2D *texture = _director->getTextureCache()->addImage(info.getFilename());
-    if(texture && initWithTexture(texture))
-    {
-        _polyInfo = info;
-        _renderMode = RenderMode::POLYGON;
-        Node::setContentSize(_polyInfo.getRect().size / _director->getContentScaleFactor());
-        ret = true;
-    }
-
-    return ret;
-}
+//bool Sprite::initWithPolygon(const cocos2d::PolygonInfo &info)
+//{
+//    bool ret = false;
+//
+//    Texture2D *texture = _director->getTextureCache()->addImage(info.getFilename());
+//    if(texture && initWithTexture(texture))
+//    {
+//        _polyInfo = info;
+//        _renderMode = RenderMode::POLYGON;
+//        Node::setContentSize(_polyInfo.getRect().size / _director->getContentScaleFactor());
+//        ret = true;
+//    }
+//
+//    return ret;
+//}
 
 // designated initializer
 bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
@@ -377,14 +377,27 @@ void Sprite::setTexture(Texture2D *texture)
     CCASSERT(! _batchNode || (texture &&  texture->getName() == _batchNode->getTexture()->getName()), "CCSprite: Batched sprites should use the same texture as the batchnode");
     // accept texture==nil as argument
     CCASSERT( !texture || dynamic_cast<Texture2D*>(texture), "setTexture expects a Texture2D. Invalid argument");
+    
+    
+#error STEVE: Need to fix this so that it supports all textures AND custom shaders
+    
     // ETC1Alpha -> other not supported
-    CCASSERT( ! (texture && texture->getAlphaTextureName() == 0 && _texture && _texture->getAlphaTextureName() != 0)
+#error    CCASSERT(_texture->getAlphaTextureName() == 0 && texture->getAlphaTextureName() != 0
+#error    CCASSERT( ! (texture && texture->getAlphaTextureName() == 0 && _texture && _texture->getAlphaTextureName() != 0)
              , "Setting a non-ETC1Alpha texture on a Sprite that has an ETC1Alpha texture is not currently supported!");
-    if ( texture && texture->getAlphaTextureName() != 0 )
+    
+    if (texture && texture->getAlphaTextureName() != 0)
     {
         setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, texture));
     }
+    
 #error STEVE: Need to fix this so that it supports all textures AND custom shaders
+
+    
+    
+    
+    
+    
 
     if (texture == nullptr)
     {
