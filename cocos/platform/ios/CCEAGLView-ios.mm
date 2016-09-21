@@ -538,23 +538,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     cocos2d::IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
 }
 
-- (void)cursorLeft
-{
-//    if (nil != markedText_) {
-//        [markedText_ release];
-//        markedText_ = nil;
-//    }
-    cocos2d::IMEDispatcher::sharedDispatcher()->dispatchCursorLeft();
-}
-- (void)cursorRight
-{
-//    if (nil != markedText_) {
-//        [markedText_ release];
-//        markedText_ = nil;
-//    }
-    cocos2d::IMEDispatcher::sharedDispatcher()->dispatchCursorRight();
-}
-
 #pragma mark - UITextInputTrait protocol
 
 -(UITextAutocapitalizationType) autocapitalizationType
