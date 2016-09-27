@@ -363,7 +363,7 @@ public:
      * @brief Set current selected widget's index and call TouchEventType::ENDED event.
      * @param itemIndex A index of a selected item.
      */
-     void setCurSelectedIndex(int itemIndex);
+     void setCurSelectedIndex(size_t itemIndex);
     
     /**
      * Add an event click callback to ListView, then one item of Listview is clicked, the callback will be called.
