@@ -605,6 +605,7 @@ void WebSocket::onSubThreadStarted()
     // since 'libwebsockets' passed AutoBahn stressed Test.
 
 //    info.extensions = exts;
+    CC_UNUSED_PARAM(exts);
 
     info.gid = -1;
     info.uid = -1;
