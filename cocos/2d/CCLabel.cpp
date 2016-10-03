@@ -2109,6 +2109,19 @@ void Label::setGlobalZOrder(float globalZOrder)
     }
 }
 
+void Label::setPositionZ(float z)
+{
+    Node::setPositionZ(z);
+    if (_textSprite)
+    {
+        _textSprite->setPositionZ(z);
+        if (_shadowNode)
+        {
+            _shadowNode->setPositionZ(z);
+        }
+    }
+}
+
 float Label::getRenderingFontSize()const
 {
     float fontSize;

@@ -303,6 +303,14 @@ public:
     virtual bool init() override;
 };
 
+class UIS9PositionZTest: public UIScene
+{
+public:
+    CREATE_FUNC(UIS9PositionZTest);
+
+    virtual bool init() override;
+};
+
 class UIS9EnableScale9FalseTest: public UIScene
 {
 public:

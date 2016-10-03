@@ -661,6 +661,7 @@ namespace ui {
         using Node::getScaleZ;
         virtual void setCameraMask(unsigned short mask, bool applyChildren = true) override;
         virtual void setGlobalZOrder(float globalZOrder) override;
+        virtual void setPositionZ(float z) override;
 
         /**
          * Set the slice sprite rendering type.

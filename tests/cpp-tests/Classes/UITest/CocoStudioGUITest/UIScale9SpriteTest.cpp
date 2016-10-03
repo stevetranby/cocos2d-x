@@ -58,6 +58,7 @@ UIScale9SpriteTests::UIScale9SpriteTests()
     ADD_TEST_CASE(UIS9BatchTest);
     ADD_TEST_CASE(UIS9ToggleRenderingTypeTest);
     ADD_TEST_CASE(UIS9GlobalZOrderTest);
+    ADD_TEST_CASE(UIS9PositionZTest);
     ADD_TEST_CASE(UIS9EnableScale9FalseTest);
     ADD_TEST_CASE(UIS9GrayStateOpacityTest);
 }
@@ -1097,6 +1098,50 @@ bool UIS9GlobalZOrderTest::init()
     return false;
 }
 
+bool UIS9PositionZTest::init()
+{
+    if (UIScene::init()) {
+
+        Director::getInstance()->setProjection(cocos2d::Director::Projection::_2D);
+        Director::getInstance()->setDepthTest(true);
+
+        auto winSize = Director::getInstance()->getWinSize();
+        float x = winSize.width / 2;
+        float y = 0 + (winSize.height / 2 - 20);
+
+        auto label = Label::createWithSystemFont("The green scale9sprite is in the back.", "Arial", 15);
+        label->setPosition(Vec2(winSize.width/2, winSize.height - 60));
+        this->addChild(label);
+
+        auto blocks = ui::Scale9Sprite::create("Images/blocks9.png");
+
+        blocks->setPosition(Vec2(x, y));
+        blocks->setPreferredSize(Size(96*.75f, 96*.75f));
+        blocks->setColor(Color3B::RED);
+        //blocks->setGlobalZOrder(1);
+        blocks->setPositionZ(10);
+        this->addChild(blocks);
+
+        auto blocks2 = ui::Scale9Sprite::create("Images/blocks9.png");
+        blocks2->setPosition(Vec2(x, y));
+        blocks2->setPreferredSize(Size(96*3, 96));
+        //blocks2->setGlobalZOrder(0);
+        blocks2->setPositionZ(1);
+        blocks2->setColor(Color3B::GREEN);
+        this->addChild(blocks2);
+
+        auto blocks3 = ui::Scale9Sprite::create("Images/blocks9.png");
+        blocks3->setPosition(Vec2(x, y));
+        blocks3->setPreferredSize(Size(96, 96*2));
+        //blocks3->setGlobalZOrder(0);
+        blocks3->setPositionZ(3);
+        blocks3->setColor(Color3B::BLUE);
+        this->addChild(blocks3);
+
+        return true;
+    }
+    return false;
+}
 
 bool UIS9EnableScale9FalseTest::init()
 {

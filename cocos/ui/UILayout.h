@@ -461,6 +461,8 @@ public:
 
     ResourceData getRenderFile();
 
+    virtual void setPositionZ(float z) override;
+
 CC_CONSTRUCTOR_ACCESS:
     //override "init" method of widget.
     virtual bool init() override;
