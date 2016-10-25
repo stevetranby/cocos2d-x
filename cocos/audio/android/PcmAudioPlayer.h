@@ -63,6 +63,8 @@ public:
 
     virtual float getVolume() const override;
 
+    virtual void setPitch(float pitch) override;
+
     virtual void setAudioFocus(bool isFocus) override;
 
     virtual void setLoop(bool isLoop) override;
