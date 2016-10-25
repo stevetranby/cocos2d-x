@@ -135,6 +135,7 @@ private:
      bool _loop;
      bool _ready;
      float _volume;
+     float _pitch;
      float _current;
      float _duration;
      bool _criticalError;

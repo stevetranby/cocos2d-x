@@ -61,6 +61,8 @@ UrlAudioPlayer::UrlAudioPlayer(SLEngineItf engineItf, SLObjectItf outputMixObjec
         : _engineItf(engineItf), _outputMixObj(outputMixObject),
           _callerThreadUtils(callerThreadUtils), _id(-1), _assetFd(nullptr),
           _playObj(nullptr), _playItf(nullptr), _seekItf(nullptr), _volumeItf(nullptr),
+#error STEVE: need to add isAudioFocus
+    _volume(0.0f), _pitch(1.0f), _duration(0.0f), _isLoop(false), _state(State::INVALID),
           _volume(0.0f), _duration(0.0f), _isLoop(false), _isAudioFocus(true), _state(State::INVALID),
           _playEventCallback(nullptr), _isDestroyed(std::make_shared<bool>(false))
 {
@@ -246,6 +248,28 @@ void UrlAudioPlayer::setAudioFocus(bool isFocus)
     _isAudioFocus = isFocus;
     float volume = _isAudioFocus ? _volume : 0.0f;
     setVolumeToSLPlayer(volume);
+}
+
+void UrlAudioPlayer::setPitch(float pitch)
+{
+    CCASSERT("Not implemented in UrlAudioPlayer");
+
+    //Pitch
+    typedef const float SLpermille;
+    //static SLPitchItf uriPlaybackPitch;
+    static SLpermille playbackMinPitch = 500/1000;
+    static SLpermille playbackMaxPitch = 2000/1000;
+
+    _pitch = clampf(pitch, playbackMinPitch, playbackMaxPitch);
+
+ /*  // get playback pitch interface
+     result = (*uriPlayerObject)->GetInterface(uriPlayerObject, SL_IID_PITCH, &uriPlaybackPitch);
+     assert(SL_RESULT_SUCCESS == result);*/
+
+     // TODO: references
+     // http://source.android.com/devices/audio/latency.html
+     // http://source.android.com/devices/audio/latency_measurements.html
+     // http://stackoverflow.com/questions/11094377/android-how-to-change-playback-rate-of-music-using-opensl-es
 }
 
 float UrlAudioPlayer::getDuration() const
