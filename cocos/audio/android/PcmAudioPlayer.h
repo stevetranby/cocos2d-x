@@ -62,6 +62,8 @@ public:
 
     virtual float getVolume() const override;
 
+    virtual void setPitch(float pitch) override;
+
     virtual void setLoop(bool isLoop) override;
 
     virtual bool isLoop() const override;

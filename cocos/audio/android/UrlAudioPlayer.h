@@ -68,6 +68,8 @@ public:
 
     virtual float getVolume() const override;
 
+    virtual void setPitch(float pitch) override;
+
     virtual void setLoop(bool isLoop) override;
 
     virtual bool isLoop() const override;
@@ -113,6 +115,7 @@ private:
     SLVolumeItf _volumeItf;
 
     float _volume;
+    float _pitch;
     float _duration;
     bool _isLoop;
     State _state;
