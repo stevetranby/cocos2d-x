@@ -4890,6 +4890,7 @@
 					"\"$(SRCROOT)/../external/uv/prebuilt/mac\"",
 				);
 				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-llibsql3";
 			};
 			name = Release;
@@ -4989,6 +4990,7 @@
 					"$(OTHER_CFLAGS)",
 					"-faligned-allocation",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-llibsql3";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;

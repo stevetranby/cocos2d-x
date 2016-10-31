@@ -525,11 +525,6 @@ protected:
 #pragma warning (pop)
 #endif
     ccListViewCallback _eventCallback;
-
-
-    // STEVE
-public:
-    void setCurSelectedIndex(ssize_t index) { _curSelectedIndex = index; }
 };
 
 }

@@ -298,18 +298,19 @@ float expoEaseIn(float time)
 {
     return time == 0 ? 0 : powf(2, 10 * (time/1 - 1)) - 1 * 0.001f;
 }
+
 float expoEaseOut(float time)
 {
     return time == 1 ? 1 : (-powf(2, -10 * time / 1) + 1);
 }
 float expoEaseInOut(float time)
 {
-    if(time == 0 || time == 1) 
+    if(time == 0 || time == 1) {
         return time;
-    
-    if (time < 0.5f)
+    }
+    if (time < 0.5f) {
         return 0.5f * powf(2, 10 * (time * 2 - 1));
-
+    }
     return 0.5f * (-powf(2, -10 * (time * 2 - 1)) + 2);
 }
 
