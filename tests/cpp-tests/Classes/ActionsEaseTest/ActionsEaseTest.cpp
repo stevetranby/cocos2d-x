@@ -232,6 +232,32 @@ std::string SpriteEaseExponentialInOut::subtitle() const
 {
     return "EaseExponentialInOut action";
 }
+
+//------------------------------------------------------------------
+//
+// SpriteEaseExponentialInOut
+//
+//------------------------------------------------------------------
+
+void SpriteExponentialInOutActionTween::onEnter()
+{
+    EaseSpriteDemo::onEnter();
+
+    auto* updateFunc = EaseExponentialInOut::create(CCActionTween::create(0.7f, "test", 0, 10000));
+    updateFunc->setTarget(this);
+    this->runAction(updateFunc);
+}
+
+std::string SpriteExponentialInOutActionTween::subtitle() const
+{
+    return "EaseExponentialInOut action";
+}
+
+void SpriteExponentialInOutActionTween::updateTweenAction(float value, const std::string & key)
+{
+    CCLOG("%d"m,value)
+}
+
 //------------------------------------------------------------------
 //
 // SpriteEaseSine
@@ -980,6 +1006,7 @@ ActionsEaseTests::ActionsEaseTests()
     ADD_TEST_CASE(SpriteEaseInOut);
     ADD_TEST_CASE(SpriteEaseExponential);
     ADD_TEST_CASE(SpriteEaseExponentialInOut);
+    ADD_TEST_CASE(SpriteExponentialInOutActionTween);
     ADD_TEST_CASE(SpriteEaseSine);
     ADD_TEST_CASE(SpriteEaseSineInOut);
     ADD_TEST_CASE(SpriteEaseElastic);

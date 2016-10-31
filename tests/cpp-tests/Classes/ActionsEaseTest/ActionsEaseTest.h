@@ -89,6 +89,16 @@ public:
     virtual std::string subtitle() const override;
 };
 
+class SpriteExponentialInOutActionTween : public EaseSpriteDemo
+{
+public:
+    CREATE_FUNC(SpriteExponentialInOutActionTween);
+
+    void onEnter() override;
+    virtual std::string subtitle() const override;
+    void updateTweenAction(float value, const std::string & key);
+};
+
 class SpriteEaseSine : public EaseSpriteDemo
 {
 public:
