@@ -305,7 +305,6 @@ void TemplateVectorTest::onEnter()
         CCASSERT(child->getReferenceCount() == 2, "child's reference count is 2.");
     }
 
-    vecSelfAssign = std::move(vecSelfAssign);
     CCASSERT(vecSelfAssign.size() == 20, "vecSelfAssign's size is 20.");
 
     for (const auto& child : vecSelfAssign)
@@ -504,7 +503,6 @@ void TemplateMapTest::onEnter()
         CCASSERT(e.second->getReferenceCount() == 2, "e.second's reference count is 2.");
     }
 
-    mapForSelfAssign = std::move(mapForSelfAssign);
     CCASSERT(mapForSelfAssign.size() == 20, "mapForSelfAssign's size is 20.");
 
     for (const auto& e : mapForSelfAssign)
