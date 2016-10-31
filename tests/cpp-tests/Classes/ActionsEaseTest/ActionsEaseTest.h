@@ -89,14 +89,15 @@ public:
     virtual std::string subtitle() const override;
 };
 
-class SpriteExponentialInOutActionTween : public EaseSpriteDemo
+class SpriteExponentialInOutActionTween : public EaseSpriteDemo, public cocos2d::ActionTweenDelegate
 {
 public:
     CREATE_FUNC(SpriteExponentialInOutActionTween);
 
     void onEnter() override;
     virtual std::string subtitle() const override;
-    void updateTweenAction(float value, const std::string & key);
+
+    void updateTweenAction(float value, const std::string & key) override;
 };
 
 class SpriteEaseSine : public EaseSpriteDemo

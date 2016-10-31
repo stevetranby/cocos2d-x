@@ -292,29 +292,24 @@ float quintEaseInOut(float time)
 
 
 // Expo Ease
+
 float expoEaseIn(float time)
 {
     return time == 0 ? 0 : powf(2, 10 * (time/1 - 1)) - 1 * 0.001f;
 }
+
 float expoEaseOut(float time)
 {
     return time == 1 ? 1 : (-powf(2, -10 * time / 1) + 1);
 }
 float expoEaseInOut(float time)
 {
-    time /= 0.5f;
-    if (time < 1)
-    {
-        time = 0.5f * powf(2, 10 * (time - 1));
+    if(time == 0 || time == 1) return time;
+    if (time < 0.5f) {
+        return 0.5f * powf(2, 10 * (time / 0.5f - 1));
     }
-    else
-    {
-        time = 0.5f * (-powf(2, -10 * (time - 1)) + 2);
-    }
-
-    return time;
+    return 0.5f * (-powf(2, -10 * (time / 0.5f - 1)) + 2);
 }
-
 
 // Circ Ease
 float circEaseIn(float time)

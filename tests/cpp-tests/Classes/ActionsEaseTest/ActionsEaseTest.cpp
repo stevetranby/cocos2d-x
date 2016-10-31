@@ -243,9 +243,10 @@ void SpriteExponentialInOutActionTween::onEnter()
 {
     EaseSpriteDemo::onEnter();
 
-    auto* updateFunc = EaseExponentialInOut::create(CCActionTween::create(0.7f, "test", 0, 10000));
-    updateFunc->setTarget(this);
-    this->runAction(updateFunc);
+    auto inner = ActionTween::create(0.7f, "test", 0, 10000);
+    auto ease = EaseExponentialInOut::create(inner);
+    ease->setTarget(this);
+    this->runAction(ease);
 }
 
 std::string SpriteExponentialInOutActionTween::subtitle() const
@@ -255,7 +256,8 @@ std::string SpriteExponentialInOutActionTween::subtitle() const
 
 void SpriteExponentialInOutActionTween::updateTweenAction(float value, const std::string & key)
 {
-    CCLOG("%d"m,value)
+    if(value > 9900)
+        CCLOG("%f", value);
 }
 
 //------------------------------------------------------------------
