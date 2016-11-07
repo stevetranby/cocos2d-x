@@ -78,9 +78,7 @@ public:
     bool windowShouldClose() override;
     void pollEvents() override;
     GLFWwindow* getWindow() const { return _mainWindow; }
-    // STEVE
     GLFWmonitor* getMonitor() const { return _monitor; }
-    Size getMonitorSize() const { return _monitorSize; }
 
     bool isFullscreen() const;
     void setFullscreen();
@@ -153,10 +151,6 @@ protected:
     bool _isInRetinaMonitor;
     bool _isRetinaEnabled;
     int  _retinaFactor;  // Should be 1 or 2
-
-    // STEVE
-    cocos2d::Size _monitorSize;
-    bool _preventCharCallback;
 
     float _frameZoomFactor;
 
