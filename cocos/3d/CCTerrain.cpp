@@ -436,7 +436,7 @@ void Terrain::calculateNormal()
             _indices.push_back (nLocIndex + _imageWidth+1);
         }
     }
-    for (unsigned int i = 0, size = _indices.size(); i < size; i += 3) {
+    for (size_t i = 0, size = _indices.size(); i < size; i += 3) {
         unsigned int Index0 = _indices[i];
         unsigned int Index1 = _indices[i + 1];
         unsigned int Index2 = _indices[i + 2];
@@ -450,7 +450,7 @@ void Terrain::calculateNormal()
         _vertices[Index2]._normal += Normal;
     }
 
-    for (unsigned int i = 0, size = _vertices.size(); i < size; ++i) {
+    for (size_t i = 0, size = _vertices.size(); i < size; ++i) {
         _vertices[i]._normal.normalize();
     }
     //global indices no need at all

@@ -463,7 +463,7 @@ void SIOClientImpl::handshakeResponse(HttpClient* /*sender*/, HttpResponse *resp
     std::stringstream s;
     s.str("");
 
-    for (unsigned int i = 0, size = buffer->size(); i < size; ++i)
+    for (size_t i = 0, size = buffer->size(); i < size; ++i)
     {
         s << (*buffer)[i];
     }
