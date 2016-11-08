@@ -355,6 +355,7 @@ void EditBoxImplCommon::editBoxEditingDidEnd(const std::string& text, EditBoxDel
     if (pDelegate != nullptr)
     {
         pDelegate->editBoxEditingDidEndWithAction(_editBox, action);
+        // Note: deprecated, but called for code that still hasn't upgraded
         pDelegate->editBoxEditingDidEnd(_editBox);
         pDelegate->editBoxReturn(_editBox);
     }

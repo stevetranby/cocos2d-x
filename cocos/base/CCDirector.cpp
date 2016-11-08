@@ -479,7 +479,7 @@ void Director::initProjectionMatrixStack(size_t stackCount)
 
 size_t Director::getProjectionMatrixStackSize()
 {
-    return _projectionMatrixStackList.size();
+    return static_cast<unsigned int>(_projectionMatrixStackList.size());
 }
 
 void Director::popMatrix(MATRIX_STACK_TYPE type)
