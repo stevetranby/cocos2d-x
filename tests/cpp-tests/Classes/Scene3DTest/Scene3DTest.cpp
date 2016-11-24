@@ -734,7 +734,6 @@ void Scene3DTestScene::createDescDlg()
     desdDlg->setTouchEnabled(true);
     _descDlg = desdDlg;
 
-    
     // title
     auto title = Label::createWithTTF("Description Dialog","fonts/arial.ttf",16);
     title->setPosition(dlgSize.width / 2, dlgSize.height - margin * 2);

@@ -6,4 +6,5 @@
 
 #pragma once
 
+// func decl
 std::string getCurAppName();
