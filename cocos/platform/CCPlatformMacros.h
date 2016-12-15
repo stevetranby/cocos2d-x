@@ -266,6 +266,7 @@ private: varType varName; public: virtual inline varType get##funName(void) cons
     TypeName();                                        \
     CC_DISALLOW_COPY_AND_ASSIGN(TypeName)
 
+// TODO: c++14 use [[deprecated]] where supported
 /** @def CC_DEPRECATED_ATTRIBUTE
  * Only certain compilers support __attribute__((deprecated)).
  */
