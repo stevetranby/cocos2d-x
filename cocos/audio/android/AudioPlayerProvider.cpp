@@ -83,7 +83,13 @@ AudioPlayerProvider::AudioPlayerProvider(SLEngineItf engineItf, SLObjectItf outp
           _deviceSampleRate(deviceSampleRate), _bufferSizeInFrames(bufferSizeInFrames),
           _fdGetterCallback(fdGetterCallback), _callerThreadUtils(callerThreadUtils),
           _pcmAudioService(nullptr), _mixController(nullptr),
+          // STEVE: apparently multi-threading is botched??
+          // https://github.com/cocos2d/cocos2d-x/issues/16849#issuecomment-264671802
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+          _threadPool(ThreadPool::newSingleThreadPool())
+#else
           _threadPool(ThreadPool::newCachedThreadPool(1, 8, 5, 2, 2))
+#endif
 {
     ALOGI("deviceSampleRate: %d, bufferSizeInFrames: %d", _deviceSampleRate, _bufferSizeInFrames);
     if (getSystemAPILevel() >= 17)
