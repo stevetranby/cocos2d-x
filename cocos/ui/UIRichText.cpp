@@ -1722,7 +1722,7 @@ void RichText::addNewLine()
     _elementRenders.push_back(new Vector<Node*>());
 }
     
-void RichText::formarRenderers()
+void RichText::formatRenderers()
 {
     if (_ignoreSize)
     {

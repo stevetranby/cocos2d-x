@@ -555,7 +555,8 @@ protected:
                             const Color3B& glowColor = Color3B::WHITE);
     void handleImageRenderer(const std::string& filePath, const Color3B& color, GLubyte opacity, int width, int height, const std::string& url);
     void handleCustomRenderer(Node* renderer);
-    void formarRenderers();
+    void formatRenderers();
+    CC_DEPRECATED_ATTRIBUTE inline void formarRenderers() { formatRenderers(); }
     void addNewLine();
     int findSplitPositionForWord(cocos2d::Label* label, const std::string& text);
     int findSplitPositionForChar(cocos2d::Label* label, const std::string& text);
