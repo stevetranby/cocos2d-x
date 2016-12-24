@@ -538,6 +538,14 @@ public:
      */
     virtual const Vec2& getAnchorPointInPoints() const;
 
+    virtual void setPositionBasis(Vec2 positionBasis);
+    virtual const Vec2& getPositionBasis() const;
+    virtual const Vec2& getPositionBasisInPoints() const;
+    virtual bool isUsingPositionBasis() const;
+
+    virtual void setPositionAnchor(Vec2 positionAnchor);
+    virtual const Vec2& getPositionAnchor() const;
+    virtual const Vec2& getPositionAnchorInPoints() const;
 
     /**
      * Sets the untransformed size of the node.
@@ -1913,12 +1921,19 @@ protected:
     Vec2 _normalizedPosition;
     bool _usingNormalizedPosition;
     bool _normalizedPositionDirty;
+    bool _usingPositionBasis;
 
     float _skewX;                   ///< skew angle on x-axis
     float _skewY;                   ///< skew angle on y-axis
 
     Vec2 _anchorPointInPoints;      ///< anchor point in points
     Vec2 _anchorPoint;              ///< anchor point normalized (NOT in points)
+
+    Vec2 _positionAnchor;           ///<
+    Vec2 _positionAnchorInPoints;   ///<
+
+    Vec2 _positionBasis;            ///<
+    Vec2 _positionBasisInPoints;    ///<
 
     Size _contentSize;              ///< untransformed size of the node
     bool _contentSizeDirty;         ///< whether or not the contentSize is dirty

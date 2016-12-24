@@ -97,6 +97,7 @@ Node::Node()
 , _running(false)
 , _visible(true)
 , _ignoreAnchorPointForPosition(false)
+, _usingPositionBasis(false)
 , _reorderChildDirty(false)
 , _isTransitionFinished(false)
 #if CC_ENABLE_SCRIPT_BINDING
@@ -621,6 +622,53 @@ void Node::setAnchorPoint(const Vec2& point)
     }
 }
 
+void Node::setPositionBasis(Vec2 positionBasis)
+{
+    if (!positionBasis.equals(_positionBasis) || !_usingPositionBasis)
+    {
+        _positionBasis = std::move(positionBasis);
+        _positionBasisInPoints.set(_contentSize.width * _positionBasis.x, _contentSize.height * _positionBasis.y);
+        _transformUpdated = _transformDirty = _inverseDirty = true;
+        _usingPositionBasis = true;
+    }
+}
+
+const Vec2& Node::getPositionBasis() const
+{
+    return _positionBasis;
+}
+
+const Vec2& Node::getPositionBasisInPoints() const
+{
+    return _positionBasisInPoints;
+}
+
+bool Node::isUsingPositionBasis() const
+{
+    return _usingPositionBasis;
+}
+
+void Node::setPositionAnchor(Vec2 positionAnchor)
+{
+    if (!positionAnchor.equals(_positionAnchor) || !_ignoreAnchorPointForPosition)
+    {
+        _positionAnchor = std::move(positionAnchor);
+        _positionAnchorInPoints.set(_contentSize.width * _positionAnchor.x, _contentSize.height * _positionAnchor.y);
+        _transformUpdated = _transformDirty = _inverseDirty = true;
+        _ignoreAnchorPointForPosition = true;
+    }
+}
+
+const Vec2& Node::getPositionAnchor() const
+{
+    return _positionAnchor;
+}
+
+const Vec2& Node::getPositionAnchorInPoints() const
+{
+    return _positionAnchorInPoints;
+}
+
 /// contentSize getter
 const Size& Node::getContentSize() const
 {
@@ -634,7 +682,17 @@ void Node::setContentSize(const Size & size)
         _contentSize = size;
 
         _anchorPointInPoints.set(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y);
+        _positionAnchorInPoints.set(_contentSize.width * _positionAnchor.x, _contentSize.height * _positionAnchor.y);
         _transformUpdated = _transformDirty = _inverseDirty = _contentSizeDirty = true;
+    }
+
+    if (_usingPositionBasis)
+    {
+        _positionBasisInPoints.set(_contentSize.width * _positionBasis.x, _contentSize.height * _positionBasis.y);
+        for (auto&& child : _children)
+        {
+            child->_transformUpdated = child->_transformDirty = child->_inverseDirty = true;
+        }
     }
 }
 
@@ -660,11 +718,12 @@ bool Node::isIgnoreAnchorPointForPosition() const
 /// isRelativeAnchorPoint setter
 void Node::setIgnoreAnchorPointForPosition(bool newValue)
 {
-    if (newValue != _ignoreAnchorPointForPosition) 
+    if (newValue)
     {
-        _ignoreAnchorPointForPosition = newValue;
-        _transformUpdated = _transformDirty = _inverseDirty = true;
+        setPositionAnchor(Vec2(0, 0));
     }
+
+    _ignoreAnchorPointForPosition = newValue;
 }
 
 /// tag getter
@@ -1689,13 +1748,24 @@ const Mat4& Node::getNodeToParentTransform() const
         float x = _position.x;
         float y = _position.y;
         float z = _positionZ;
-        
+
+        if (_parent && _parent->_usingPositionBasis)
+        {
+            const auto& p = _parent->_positionBasisInPoints;
+            // If positionBasis > 0, we need to invert our x,y
+            // Otherwise we keep them the same
+            x *= std::copysign(1.0, 1 - (2 * _parent->_positionBasis.x));
+            y *= std::copysign(1.0, 1 - (2 * _parent->_positionBasis.y));
+            x += p.x;
+            y += p.y;
+        }
+
         if (_ignoreAnchorPointForPosition)
         {
-            x += _anchorPointInPoints.x;
-            y += _anchorPointInPoints.y;
+            x += _anchorPointInPoints.x - _positionAnchorInPoints.x;
+            y += _anchorPointInPoints.y - _positionAnchorInPoints.y;
         }
-        
+
         bool needsSkewMatrix = ( _skewX || _skewY );
 
         // Build Transform Matrix = translation * rotation * scale
