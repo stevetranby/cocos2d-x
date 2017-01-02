@@ -285,7 +285,7 @@ bool FileUtilsApple::isFileExistInternal(const std::string& filePath) const
     return ret;
 }
 
-static int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
+static int unlink_cb(const char *fpath, const struct stat * /* sb */, int /* typeflag */, struct FTW * /* ftwbuf */)
 {
     auto ret = remove(fpath);
     if (ret)

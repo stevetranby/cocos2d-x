@@ -38,42 +38,42 @@ NS_CC_BEGIN
 
 class PUParticle3DBeamVisualData : public Ref
 {
-    public:
-        PUParticle3DBeamVisualData (size_t index, PUBillboardChain* bbChain) :
-            chainIndex(index),
-            timeSinceLastUpdate(0.0f),
-            billboardChain(bbChain){};
-
-        // Set the chain visible or invisible (PU 1.4)
-        void setVisible(bool visible){/* No implementation */};
-
-        /** The is no decent way to make the individual chains/elements invisible. The width of each element is set to 0 to make it invisible.
-            PU 1.4
-        */
-        void setVisible(bool visible, float width)
+public:
+    PUParticle3DBeamVisualData (size_t index, PUBillboardChain* bbChain) :
+    chainIndex(index),
+    timeSinceLastUpdate(0.0f),
+    billboardChain(bbChain){};
+    
+    // Set the chain visible or invisible (PU 1.4)
+    void setVisible(bool visible){ (void)visible; }
+    
+    /** The is no decent way to make the individual chains/elements invisible. The width of each element is set to 0 to make it invisible.
+     PU 1.4
+     */
+    void setVisible(bool visible, float width)
+    {
+        if (!billboardChain)
+            return;
+        
+        // Set width to 0 if not visible
+        width = visible ? width : 0;
+        
+        size_t max = billboardChain->getMaxChainElements();
+        PUBillboardChain::Element element;
+        for (size_t j = 0; j < max; j++)
         {
-            if (!billboardChain)
-                return;
-
-            // Set width to 0 if not visible
-            width = visible ? width : 0;
-                
-            size_t max = billboardChain->getMaxChainElements();
-            PUBillboardChain::Element element;
-            for (size_t j = 0; j < max; j++)
-            {
-                element = billboardChain->getChainElement(chainIndex, j);
-                element.width = width;
-                billboardChain->updateChainElement(chainIndex, j, element);
-            }
+            element = billboardChain->getChainElement(chainIndex, j);
+            element.width = width;
+            billboardChain->updateChainElement(chainIndex, j, element);
         }
-
-        // Index of the chain
-        size_t chainIndex;
-        Vec3 half[100];
-        Vec3 destinationHalf[100];
-        float timeSinceLastUpdate;
-        PUBillboardChain* billboardChain;
+    }
+    
+    // Index of the chain
+    size_t chainIndex;
+    Vec3 half[100];
+    Vec3 destinationHalf[100];
+    float timeSinceLastUpdate;
+    PUBillboardChain* billboardChain;
 };
 
 // particle render for quad

@@ -355,6 +355,8 @@ bool Controller::isConnected() const
 
 void Controller::receiveExternalKeyEvent(int externalKeyCode,bool receive)
 {
+    (void)externalKeyCode;
+    (void)receive;
 }
 
 NS_CC_END

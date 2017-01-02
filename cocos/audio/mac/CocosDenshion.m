@@ -1526,7 +1526,7 @@ static BOOL _mixerRateSet = NO;
 }    
 
 -(void) _setTargetProperty:(float) newVal {
-
+    (void)newVal;
 }    
 
 -(float) _getTargetProperty {

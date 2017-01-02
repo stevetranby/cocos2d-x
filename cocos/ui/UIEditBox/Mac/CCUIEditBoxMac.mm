@@ -165,6 +165,7 @@
 
 - (void)controlTextDidBeginEditing:(NSNotification *)notification
 {
+    (void)notification;
     _editState = YES;
     
     getEditBoxImplMac()->editBoxEditingDidBegin();
@@ -187,6 +188,7 @@
  */
 - (void)controlTextDidChange:(NSNotification *)notification
 {
+    (void)notification;
     getEditBoxImplMac()->editBoxEditingChanged([self getText]);
 }
 
@@ -255,6 +257,7 @@
 
 - (void)setReturnType:(cocos2d::ui::EditBox::KeyboardReturnType)returnType
 {
+    (void)returnType;
     CCLOG("setReturnType not implemented");
 }
 
@@ -305,6 +308,7 @@
 
 - (BOOL)textShouldBeginEditing:(NSText *)textObject        // YES means do it
 {
+    (void)textObject;
     _editState = YES;
     
     getEditBoxImplMac()->editBoxEditingDidBegin();

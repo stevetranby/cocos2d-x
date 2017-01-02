@@ -191,6 +191,9 @@ NSString * const kCDN_AudioManagerInitialised = @"kCDN_AudioManagerInitialised";
 }    
 
 - (void)audioPlayerDidFinishPlaying:(CCAudioPlayer *)player successfully:(BOOL)flag {
+    (void)player;
+    (void)flag;
+    
     CDLOGINFO(@"Denshion::CDLongAudioSource - audio player finished");
 #if TARGET_IPHONE_SIMULATOR    
     CDLOGINFO(@"Denshion::CDLongAudioSource - workaround for OpenAL clobbered audio issue");
@@ -209,6 +212,7 @@ NSString * const kCDN_AudioManagerInitialised = @"kCDN_AudioManagerInitialised";
 }    
 
 -(void)audioPlayerBeginInterruption:(CCAudioPlayer *)player {
+    (void)player;
     CDLOGINFO(@"Denshion::CDLongAudioSource - audio player interrupted");
 }
 
@@ -659,6 +663,7 @@ static BOOL configured = FALSE;
 //Called when application resigns active only if setResignBehavior has been called
 - (void) applicationWillResignActive:(NSNotification *) notification
 {
+    (void)notification;
     [self applicationWillResignActive];
 }    
 
@@ -703,12 +708,14 @@ static BOOL configured = FALSE;
 //Called when application terminates only if setResignBehavior has been called 
 - (void) applicationWillTerminate:(NSNotification *) notification
 {
+    (void)notification;
     CDLOGINFO(@"Denshion::CDAudioManager - audio manager handling terminate");
     [self stopBackgroundMusic];
 }
 
 /** The audio source completed playing */
 - (void) cdAudioSourceDidFinishPlaying:(CDLongAudioSource *) audioSource {
+    (void)audioSource;
     CDLOGINFO(@"Denshion::CDAudioManager - audio manager got told background music finished");
     if (backgroundMusicCompletionSelector != nil) {
         [backgroundMusicCompletionListener performSelector:backgroundMusicCompletionSelector];

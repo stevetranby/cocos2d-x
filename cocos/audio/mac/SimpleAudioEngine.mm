@@ -190,7 +190,7 @@ void SimpleAudioEngine::playBackgroundMusic(const char* pszFilePath, bool bLoop)
     static_playBackgroundMusic(fullPath.c_str(), bLoop);
 }
 
-void SimpleAudioEngine::stopBackgroundMusic(bool bReleaseData)
+void SimpleAudioEngine::stopBackgroundMusic(bool /* bReleaseData */)
 {
     static_stopBackgroundMusic();
 }

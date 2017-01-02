@@ -591,6 +591,8 @@ void AudioEngineImpl::setFinishCallback(int audioID, const std::function<void (i
 
 void AudioEngineImpl::update(float dt)
 {
+    CC_UNUSED_PARAM(dt);
+    
     ALint sourceState;
     int audioID;
     AudioPlayer* player;

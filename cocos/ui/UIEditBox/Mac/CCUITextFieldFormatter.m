@@ -48,6 +48,7 @@
 
 - (BOOL)getObjectValue:(id *)object forString:(NSString *)string errorDescription:(NSString **)error
 {
+    (void)error;
     *object = string;
     return YES;
 }
@@ -58,11 +59,17 @@
        originalSelectedRange:(NSRange)origSelRange
             errorDescription:(NSString **)error
 {
+    (void)proposedSelRangePtr;
+    (void)origString;
+    (void)origSelRange;
+    (void)error;
     return (*partialStringPtr).length <= self.maximumLength;
 }
 
 - (NSAttributedString *)attributedStringForObjectValue:(id)anObject withDefaultAttributes:(NSDictionary *)attributes
 {
+    (void)anObject;
+    (void)attributes;
     return nil;
 }
 @end

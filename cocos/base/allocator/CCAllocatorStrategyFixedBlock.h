@@ -76,6 +76,7 @@ public:
         , _pageSize(pageSize)
         , _allocated(0)
     {
+        (void)tag;
 #if CC_ENABLE_ALLOCATOR_DIAGNOSTICS
         _highestCount = 0;
         AllocatorDiagnostics::instance()->trackAllocator(this);

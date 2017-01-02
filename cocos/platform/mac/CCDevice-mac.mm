@@ -41,6 +41,7 @@ static NSAttributedString* __attributedStringWithFontSize(NSMutableAttributedStr
         [attributedString beginEditing];
         
         [attributedString enumerateAttribute:NSFontAttributeName inRange:NSMakeRange(0, attributedString.length) options:0 usingBlock:^(id value, NSRange range, BOOL *stop) {
+            (void)stop;
             
             NSFont* font = value;
             font = [[NSFontManager sharedFontManager] convertFont:font toSize:fontSize];
@@ -65,12 +66,12 @@ int Device::getDPI()
     return ((displayPixelSize.width / displayPhysicalSize.width) * 25.4f);
 }
 
-void Device::setAccelerometerEnabled(bool isEnabled)
+void Device::setAccelerometerEnabled(bool /* isEnabled */)
 {
 
 }
 
-void Device::setAccelerometerInterval(float interval)
+void Device::setAccelerometerInterval(float /* interval */)
 {
 
 }
@@ -84,7 +85,7 @@ typedef struct
     unsigned char* data;
 } tImageInfo;
 
-static NSSize _calculateStringSize(NSAttributedString *str, id font, CGSize *constrainSize, bool enableWrap, int overflow)
+static NSSize _calculateStringSize(NSAttributedString *str, id /* font */, CGSize *constrainSize, bool enableWrap, int overflow)
 {
     NSSize textRect = NSZeroSize;
     textRect.width = constrainSize->width > 0 ? constrainSize->width
@@ -359,11 +360,11 @@ Data Device::getTextureDataForText(const char * text, const FontDefinition& text
     return ret;
 }
 
-void Device::setKeepScreenOn(bool value)
+void Device::setKeepScreenOn(bool /* value */)
 {
 }
 
-void Device::vibrate(float duration)
+void Device::vibrate(float /* duration */)
 {
 }
 

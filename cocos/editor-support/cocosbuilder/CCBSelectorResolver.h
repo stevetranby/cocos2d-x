@@ -26,9 +26,11 @@ class CC_DLL CCBSelectorResolver {
      */
     virtual ~CCBSelectorResolver() {};
     virtual cocos2d::SEL_MenuHandler onResolveCCBCCMenuItemSelector(cocos2d::Ref * pTarget, const char* pSelectorName) = 0;
-    virtual cocos2d::SEL_CallFuncN onResolveCCBCCCallFuncSelector(cocos2d::Ref * pTarget, const char* pSelectorName) { return NULL; };
+    virtual cocos2d::SEL_CallFuncN onResolveCCBCCCallFuncSelector(cocos2d::Ref * pTarget, const char* pSelectorName);
     virtual cocos2d::extension::Control::Handler onResolveCCBCCControlSelector(cocos2d::Ref * pTarget, const char* pSelectorName) = 0;
 };
+
+cocos2d::SEL_CallFuncN CCBSelectorResolver::onResolveCCBCCCallFuncSelector(cocos2d::Ref * /* pTarget */, const char* /* pSelectorName */) { return NULL; }
 
 
 class CC_DLL CCBScriptOwnerProtocol {

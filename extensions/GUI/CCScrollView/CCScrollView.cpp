@@ -50,6 +50,8 @@ static float convertDistanceFromPointToInch(float pointDis)
     return pointDis * factor / Device::getDPI();
 }
 
+void ScrollViewDelegate::scrollViewDidScroll(ScrollView* /* view */) {}
+void ScrollViewDelegate::scrollViewDidZoom(ScrollView* /* view */) {}
 
 ScrollView::ScrollView()
 : _delegate(nullptr)
