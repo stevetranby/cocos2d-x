@@ -48,6 +48,7 @@ public:
     
     CC_ALLOCATOR_INLINE void deallocate(void* address, size_t size = 0)
     {
+        (void)size; //unused
         if (nullptr != address)
             free(address);
     }

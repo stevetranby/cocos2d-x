@@ -38,7 +38,10 @@ NSString *const AVAudioSessionCategoryPlayAndRecord = @"AVAudioSessionCategoryPl
 NSString *const AVAudioSessionCategoryAudioProcessing = @"AVAudioSessionCategoryAudioProcessing";
 
 OSStatus AudioSessionGetProperty(UInt32 inID, UInt32 *ioDataSize, void *outData) {
-	//TODO: set outData appropriately
+	(void)inID;
+    (void)ioDataSize;
+    (void)outData;
+    //TODO: set outData appropriately
 	return 0;
 }    
 
@@ -47,7 +50,8 @@ OSStatus AudioSessionGetProperty(UInt32 inID, UInt32 *ioDataSize, void *outData)
 @synthesize delegate, numberOfChannels, pan, deviceCurrentTime, url, data;
 
 - (id)initWithContentsOfURL:(NSURL *)theUrl error:(NSError **)outError {
-	if ((self = [super init])) {
+	(void)outError;
+    if ((self = [super init])) {
 		_player = [[NSSound alloc] initWithContentsOfURL:theUrl byReference:YES];
 		if (_player != nil) {
 			_player.delegate = self;
@@ -57,7 +61,8 @@ OSStatus AudioSessionGetProperty(UInt32 inID, UInt32 *ioDataSize, void *outData)
 	return self;
 }
 
-- (id)initWithData:(NSData *)theData error:(NSError **)outError { 
+- (id)initWithData:(NSData *)theData error:(NSError **)outError {
+    (void)outError;
 	if ((self = [super init])) {
 		_player = [[NSSound alloc] initWithData:theData];
 		if (_player != nil) {
@@ -75,6 +80,8 @@ OSStatus AudioSessionGetProperty(UInt32 inID, UInt32 *ioDataSize, void *outData)
 }	
 
 - (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)finished {
+    (void)sound;
+    (void)finished;
 	if (self.delegate && [self.delegate respondsToSelector:@selector(audioPlayerDidFinishPlaying:successfully:)]) {
 		[self.delegate audioPlayerDidFinishPlaying:self successfully:finished];
 	}	
@@ -149,16 +156,18 @@ OSStatus AudioSessionGetProperty(UInt32 inID, UInt32 *ioDataSize, void *outData)
 	return YES;
 }	
 -(BOOL)playAtTime:(NSTimeInterval)time {
+    (void)time;
 	return YES;
 }	
 -(void) setMeteringEnabled:(BOOL) enabled {
+    (void)enabled;
 }	
 -(BOOL) isMeteringEnabled {
 	return NO;
 }	
 - (void)updateMeters{}
-- (float)peakPowerForChannel:(NSUInteger)channelNumber{return 0.0f;} 
-- (float)averagePowerForChannel:(NSUInteger)channelNumber{return 0.0f;}
+- (float)peakPowerForChannel:(NSUInteger)channelNumber { (void)channelNumber; return 0.0f;}
+- (float)averagePowerForChannel:(NSUInteger)channelNumber { (void)channelNumber; return 0.0f; }
 @end
 
 /**
@@ -172,11 +181,11 @@ OSStatus AudioSessionGetProperty(UInt32 inID, UInt32 *ioDataSize, void *outData)
 	return nil;
 }	
 
-- (BOOL)setActive:(BOOL)beActive error:(NSError**)outError {return YES;}
-- (BOOL)setActive:(BOOL)beActive withFlags:(NSInteger)flags error:(NSError**)outError {return YES;}
-- (BOOL)setCategory:(NSString*)theCategory error:(NSError**)outError {return YES;}
-- (BOOL)setPreferredHardwareSampleRate:(double)sampleRate error:(NSError**)outError {return YES;}
-- (BOOL)setPreferredIOBufferDuration:(NSTimeInterval)duration error:(NSError**)outError {return YES;}
+- (BOOL)setActive:(BOOL)beActive error:(NSError**)outError { (void)beActive; (void)outError; return YES; }
+- (BOOL)setActive:(BOOL)beActive withFlags:(NSInteger)flags error:(NSError**)outError { (void)beActive; (void)flags; (void)outError; return YES; }
+- (BOOL)setCategory:(NSString*)theCategory error:(NSError**)outError { (void)theCategory; (void)outError; return YES; }
+- (BOOL)setPreferredHardwareSampleRate:(double)sampleRate error:(NSError**)outError { (void)sampleRate; (void)outError; return YES; }
+- (BOOL)setPreferredIOBufferDuration:(NSTimeInterval)duration error:(NSError**)outError { (void)duration; (void)outError; return YES; }
 
 @end
 #endif

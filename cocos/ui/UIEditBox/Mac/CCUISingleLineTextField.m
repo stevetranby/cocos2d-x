@@ -120,6 +120,7 @@
 -(void)ccui_setPlaceholderFont:(NSFont *)font
 {
     //TODO:
+    (void)font;
 }
 
 
@@ -127,6 +128,7 @@
 -(void)ccui_setPlaceholder:(NSString *)text
 {
     //TODO:
+    (void)text;
 }
 
 -(NSString*)ccui_placeholder
@@ -148,6 +150,7 @@
 -(void)ccui_setPlaceholderColor:(NSColor *)color
 {
     //TODO:
+    (void)color;
 }
 
 - (NSString *)ccui_text

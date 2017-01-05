@@ -39,7 +39,7 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 struct FileUtilsApple::IMPL {
-    IMPL(NSBundle* bundle):bundle_([NSBundle mainBundle]) {}
+    IMPL(NSBundle* bundle):bundle_([NSBundle mainBundle]) { (void)bundle; }
     void setBundle(NSBundle* bundle) {
         bundle_ = bundle;
     }

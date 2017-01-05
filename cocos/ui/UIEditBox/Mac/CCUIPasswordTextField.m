@@ -130,6 +130,7 @@
 -(void)ccui_setPlaceholderFont:(NSFont *)font
 {
     //TODO:
+    (void)font;
 }
 
 -(NSString*)ccui_placeholder
@@ -150,11 +151,13 @@
 -(void)ccui_setPlaceholder:(NSString *)text
 {
     //TODO:
+    (void)text;
 }
 
 -(void)ccui_setPlaceholderColor:(NSColor *)color
 {
     //TODO;
+    (void)color;
 }
 
 #pragma mark - CCUITextInput

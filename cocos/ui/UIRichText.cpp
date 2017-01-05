@@ -1454,7 +1454,7 @@ void RichText::formatText()
                 }
             }
         }
-        formarRenderers();
+        formatRenderers();
         _formatTextDirty = false;
     }
 }

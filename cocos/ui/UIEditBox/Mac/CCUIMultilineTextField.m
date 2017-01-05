@@ -45,6 +45,7 @@
 -(void)ccui_setPlaceholderFont:(NSFont *)font
 {
     //TODO
+    (void)font;
 }
 
 -(NSFont*)ccui_placeholderFont
@@ -65,6 +66,7 @@
 -(void)ccui_setPlaceholderColor:(NSColor *)color
 {
     //TODO
+    (void)color;
 }
 
 -(NSColor*)ccui_placeholderColor
@@ -123,9 +125,12 @@
 - (void)ccui_setMaxLength:(int)ccui_maxLength
 {
     //noop
+    (void)ccui_maxLength;
 }
+
 -(int)ccui_maxLength
 {
     return 0;
 }
+
 @end

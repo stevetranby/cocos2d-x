@@ -95,7 +95,9 @@
  * of this method.
  **/
 - (void) connection:(NSURLConnection *)connection 
- didReceiveResponse:(NSURLResponse *)response {
+ didReceiveResponse:(NSURLResponse *)response
+{
+    (void)connection;
 #ifdef COCOS2D_DEBUG
     NSLog(@"Received response from request to url %@", srcURL);
 #endif
@@ -132,9 +134,10 @@
  * This delegate method is called for each chunk of data received from the server.  The chunk size
  * is dependent on the network type and the server configuration.  
  */
-- (void)connection:(NSURLConnection *)connection 
+- (void)connection:(NSURLConnection *)connection
     didReceiveData:(NSData *)data
 {
+    (void)connection;
     //NSLog(@"get some data");
     [responseData appendData:data];
     getDataTime++;
@@ -147,6 +150,7 @@
 - (void)connection:(NSURLConnection *)connection 
   didFailWithError:(NSError *)error
 {
+    (void)connection;
     //NSLog(@"Load failed with error %@", [error localizedDescription]);
     self.connError = error;
     
@@ -159,6 +163,7 @@
  **/
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    (void)connection;
     finish = true;
 }
 
@@ -204,6 +209,8 @@
 
 - (void) connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
+    (void)connection;
+    
     id <NSURLAuthenticationChallengeSender> sender = challenge.sender;
     NSURLProtectionSpace *protectionSpace = challenge.protectionSpace;
     

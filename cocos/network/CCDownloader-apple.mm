@@ -388,6 +388,8 @@ namespace cocos2d { namespace network {
 - (void)URLSession:(NSURLSession *)session task :(NSURLSessionTask *)task
                             didCompleteWithError:(NSError *)error
 {
+    (void)session;
+    
     DLLOG("DownloaderAppleImpl task: \"%s\" didCompleteWithError: %d errDesc: %s"
           , [task.originalRequest.URL.absoluteString cStringUsingEncoding:NSUTF8StringEncoding]
           , (error ? (int)error.code: 0)
@@ -486,6 +488,8 @@ namespace cocos2d { namespace network {
 - (void)URLSession:(NSURLSession *)session dataTask :(NSURLSessionDataTask *)dataTask
                                       didReceiveData:(NSData *)data
 {
+    (void)session;
+    
     DLLOG("DownloaderAppleImpl dataTask: \"%s\" didReceiveDataLen %d",
           [dataTask.originalRequest.URL.absoluteString cStringUsingEncoding:NSUTF8StringEncoding],
           (int)data.length);
@@ -529,6 +533,8 @@ namespace cocos2d { namespace network {
 - (void)URLSession:(NSURLSession *)session downloadTask :(NSURLSessionDownloadTask *)downloadTask
                                didFinishDownloadingToURL:(NSURL *)location
 {
+    (void)session;
+    
     DLLOG("DownloaderAppleImpl downloadTask: \"%s\" didFinishDownloadingToURL %s",
           [downloadTask.originalRequest.URL.absoluteString cStringUsingEncoding:NSUTF8StringEncoding],
           [location.absoluteString cStringUsingEncoding:NSUTF8StringEncoding]);
