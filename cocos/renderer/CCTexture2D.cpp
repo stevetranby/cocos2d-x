@@ -107,6 +107,7 @@ namespace {
         PixelFormatInfoMapValue(Texture2D::PixelFormat::ATC_INTERPOLATED_ALPHA, Texture2D::PixelFormatInfo(GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD,
             0xFFFFFFFF, 0xFFFFFFFF, 8, true, false)),
 #endif
+        PixelFormatInfoMapValue(Texture2D::PixelFormat::NONE, Texture2D::PixelFormatInfo(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 8, false, false)),
     };
 }
 
@@ -799,8 +800,14 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
 
         pixelFormat = convertDataToFormat(tempData, tempDataLen, renderFormat, pixelFormat, &outTempData, &outTempDataLen);
 
-        initWithData(outTempData, outTempDataLen, pixelFormat, imageWidth, imageHeight, imageSize);
-
+        if (outTempData && outTempDataLen > 0 && imageWidth > 0 && imageHeight > 0)
+        {
+            initWithData(outTempData, outTempDataLen, pixelFormat, imageWidth, imageHeight, imageSize);
+        }
+        else
+        {
+            CCLOGERROR("cocos2d: Texture2D. Can't initWithData. data is NULL!");
+        }
 
         if (outTempData != nullptr && outTempData != tempData)
         {
