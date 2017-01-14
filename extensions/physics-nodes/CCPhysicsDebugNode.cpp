@@ -177,6 +177,8 @@ void PhysicsDebugNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t 
     cpSpaceEachConstraint(_spacePtr, (cpSpaceConstraintIteratorFunc)DrawConstraint, this);
     
     DrawNode::draw(renderer, transform, flags);
+#else
+    (void)renderer; (void)transform; (void)flags; //unused
 #endif
 }
 
@@ -193,6 +195,7 @@ PhysicsDebugNode* PhysicsDebugNode::create(cpSpace *space)
 #if CC_ENABLE_CHIPMUNK_INTEGRATION
         node->_spacePtr = space;
 #else
+        (void)space; //unused
         CCASSERT(false, "CC_ENABLE_CHIPMUNK_INTEGRATION was not enabled!");
 #endif
         node->autorelease();
@@ -224,6 +227,7 @@ void PhysicsDebugNode::setSpace(cpSpace *space)
 #if CC_ENABLE_CHIPMUNK_INTEGRATION
     _spacePtr = space;
 #else
+    (void)space; //unused
     CCASSERT(false, "Can't call chipmunk methods when Chipmunk is disabled");
 #endif
 }

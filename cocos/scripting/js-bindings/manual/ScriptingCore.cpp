@@ -2386,7 +2386,7 @@ void jsb_ref_init(JSContext* cx, JS::Heap<JSObject*> *obj, Ref* ref, const char*
 {
 //    CCLOG("jsb_ref_init: JSObject address =  %p. %s", obj->get(), debug);
 #if CC_ENABLE_GC_FOR_NATIVE_OBJECTS
-    (void)ref;
+    (void)ref; //unused
     JS::RootedObject jsObj(cx, *obj);
     js_add_FinalizeHook(cx, jsObj, true);
     // don't retain it, already retained
@@ -2404,8 +2404,8 @@ void jsb_ref_autoreleased_init(JSContext* cx, JS::Heap<JSObject*> *obj, Ref* ref
 {
     //    CCLOG("jsb_ref_init: JSObject address =  %p. %s", obj->get(), debug);
 #if CC_ENABLE_GC_FOR_NATIVE_OBJECTS
-    (void)cx;
-    (void)obj;
+    (void)cx; //unused
+    (void)obj; //unused
     ref->retain();
     JS::RootedObject jsObj(cx, *obj);
     js_add_FinalizeHook(cx, jsObj, true);
