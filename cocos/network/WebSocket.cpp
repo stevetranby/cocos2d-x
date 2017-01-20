@@ -213,7 +213,8 @@ static lws_context_creation_info convertToContextCreationInfo(const struct lws_p
     info.protocols = protocols;
 
     // FIXME: Disable 'permessage-deflate' extension temporarily because of issues:
-    // https://github.com/cocos2d/cocos2d-x/issues/16045, https://github.com/cocos2d/cocos2d-x/issues/15767
+    // https://github.com/cocos2d/cocos2d-x/issues/16045
+    // https://github.com/cocos2d/cocos2d-x/issues/15767
     // libwebsockets issue: https://github.com/warmcat/libwebsockets/issues/593
     // Currently, we couldn't find out the exact reason.
     // libwebsockets official said it's probably an issue of user code
@@ -292,7 +293,7 @@ private:
 class WebSocketCallbackWrapper {
 public:
 
-    static int onSocketCallback(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len)
+    static int onSocketCallback(struct lws *wsi, enum lws_callback_reasons reason, void * /*user*/, void *in, size_t len)
     {
         // Gets the user data from context. We know that it's a 'WebSocket' instance.
         if (wsi == nullptr) {
@@ -1280,9 +1281,7 @@ int WebSocket::onConnectionClosed()
     return 0;
 }
 
-int WebSocket::onSocketCallback(struct lws *wsi,
-                     int reason,
-                     void *in, ssize_t len)
+int WebSocket::onSocketCallback(struct lws * /*wsi*/, int reason, void *in, ssize_t len)
 {
     //LOGD("socket callback for %d reason\n", reason);
 
