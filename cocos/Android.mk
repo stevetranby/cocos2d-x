@@ -300,6 +300,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := cocos2dx_static
 LOCAL_MODULE_FILENAME := libcocos2d
+LOCAL_ARM_MODE := arm
 
 LOCAL_STATIC_LIBRARIES := cocostudio_static
 LOCAL_STATIC_LIBRARIES += cocosbuilder_static
