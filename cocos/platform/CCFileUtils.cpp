@@ -129,7 +129,7 @@ public:
         return _rootArray;
     }
 
-    void startElement(void *ctx, const char *name, const char **atts)
+    void startElement(void *ctx, const char *name, const char **atts) override
     {
         const std::string sName(name);
         if( sName == "dict" )

@@ -56,7 +56,7 @@ typedef struct CC_DLL PhysicsMaterial
     {}
 }PhysicsMaterial;
 
-const PhysicsMaterial PHYSICSSHAPE_MATERIAL_DEFAULT;
+const PhysicsMaterial PHYSICSSHAPE_MATERIAL_DEFAULT(0,0,0);
 
 /**
  *  @addtogroup physics
