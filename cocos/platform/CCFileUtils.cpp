@@ -623,7 +623,8 @@ void FileUtils::purgeCachedEntries()
 std::string FileUtils::getStringFromFile(const std::string& filename)
 {
     std::string s;
-    getContents(filename, &s);
+    auto status = getContents(filename, &s);
+    CCLOG("[steve] status = %d", status);
     return s;
 }
 
@@ -664,8 +665,10 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
         return Status::NotExists;
 
     FILE *fp = fopen(fs->getSuitableFOpen(fullPath).c_str(), "rb");
-    if (!fp)
+    if (!fp) {
+        CCLOG("[steve] Error: %d (%s)\n", errno, strerror(errno));
         return Status::OpenFailed;
+    }
 
 #if defined(_MSC_VER)
     auto descriptor = _fileno(fp);

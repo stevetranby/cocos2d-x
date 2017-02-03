@@ -89,7 +89,7 @@ FileUtilsAndroid::~FileUtilsAndroid()
 bool FileUtilsAndroid::init()
 {
     _defaultResRootPath = ASSETS_FOLDER_NAME;
-    
+
     std::string assetsPath(getApkPath());
     if (assetsPath.find("/obb/") != std::string::npos)
     {
@@ -165,9 +165,16 @@ bool FileUtilsAndroid::isFileExistInternal(const std::string& strFilePath) const
     {
         const char* s = strFilePath.c_str();
 
+		CCLOG("[FileUtilsAndroid::isFileExistInternal] [steve] _defaultResRootPath: %s", _defaultResRootPath.c_str());
+
         // Found "assets/" at the beginning of the path and we don't want it
-        if (strFilePath.find(_defaultResRootPath) == 0) s += _defaultResRootPath.length();
-        
+        if (strFilePath.find(_defaultResRootPath) == 0) {
+	        CCLOG("[steve] strFilePath: %s", strFilePath.c_str());
+            s += _defaultResRootPath.length();
+        }
+
+        CCLOG("[FileUtilsAndroid::isFileExistInternal] [steve] find in apk dirPath(%s)", s);
+
         if (obbfile && obbfile->fileExists(s))
         {
             bFound = true;
@@ -180,7 +187,7 @@ bool FileUtilsAndroid::isFileExistInternal(const std::string& strFilePath) const
                 bFound = true;
                 AAsset_close(aa);
             } else {
-                // CCLOG("[AssetManager] ... in APK %s, found = false!", strFilePath.c_str());
+                CCLOG("[FileUtilsAndroid::isFileExistInternal] [steve] [AssetManager] ... in APK %s, found = false!", strFilePath.c_str());
             }
         }
     }
@@ -204,11 +211,11 @@ bool FileUtilsAndroid::isDirectoryExistInternal(const std::string& dirPath) cons
     }
 
     const char* s = dirPath.c_str();
-    
+
     // find absolute path in flash memory
     if (s[0] == '/')
     {
-        CCLOG("find in flash memory dirPath(%s)", s);
+        CCLOG("[FileUtilsAndroid::isDirectoryExistInternal] find in flash memory dirPath(%s)", s);
         struct stat st;
         if (stat(s, &st) == 0)
         {
@@ -219,7 +226,7 @@ bool FileUtilsAndroid::isDirectoryExistInternal(const std::string& dirPath) cons
     {
         // find it in apk's assets dir
         // Found "assets/" at the beginning of the path and we don't want it
-        CCLOG("find in apk dirPath(%s)", s);
+        CCLOG("[FileUtilsAndroid::isDirectoryExistInternal] find in apk dirPath(%s)", s);
         if (dirPath.find(ASSETS_FOLDER_NAME) == 0)
         {
             s += ASSETS_FOLDER_NAME_LENGTH;
@@ -234,7 +241,7 @@ bool FileUtilsAndroid::isDirectoryExistInternal(const std::string& dirPath) cons
             }
         }
     }
-    
+
     return false;
 }
 
@@ -285,18 +292,22 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
 
     string fullPath = fullPathForFilename(filename);
 
-    if (fullPath[0] == '/')
+    if (fullPath[0] == '/') {
         return FileUtils::getContents(fullPath, buffer);
+    }
 
     string relativePath = string();
     size_t position = fullPath.find(apkprefix);
     if (0 == position) {
+	    CCLOG("[sctest] find in apk dirPath(%s)", fullPath.c_str());
         // "assets/" is at the beginning of the path and we don't want it
         relativePath += fullPath.substr(apkprefix.size());
     } else {
         relativePath = fullPath;
     }
-    
+
+	CCLOG("[sctest] relativePath: %s", relativePath.c_str());
+
     if (obbfile)
     {
         if (obbfile->getFileData(relativePath, buffer))
@@ -304,13 +315,13 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
     }
 
     if (nullptr == assetmanager) {
-        LOGD("... FileUtilsAndroid::assetmanager is nullptr");
+        LOGD("[sctest] ... FileUtilsAndroid::assetmanager is nullptr");
         return FileUtils::Status::NotInitialized;
     }
 
     AAsset* asset = AAssetManager_open(assetmanager, relativePath.data(), AASSET_MODE_UNKNOWN);
     if (nullptr == asset) {
-        LOGD("asset is nullptr");
+        LOGD("[sctest] asset is nullptr: %s", relativePath.c_str());
         return FileUtils::Status::OpenFailed;
     }
 
@@ -326,6 +337,7 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
         return FileUtils::Status::ReadFailed;
     }
 
+	CCLOG("[sctest] file found OK", relativePath.c_str());
     return FileUtils::Status::OK;
 }
 

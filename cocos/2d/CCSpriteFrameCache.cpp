@@ -292,6 +292,7 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dictionary, Textu
         }
         // add sprite frame
         _spriteFrames.insert(spriteFrameName, spriteFrame);
+        //STEVE CCLOG("[sctest] spriteFrameName = %s", spriteFrameName.c_str());
     }
     CC_SAFE_DELETE(image);
 }
@@ -352,6 +353,7 @@ void SpriteFrameCache::addSpriteFramesWithFile(const std::string& plist, Texture
 {
     if (_loadedFileNames->find(plist) != _loadedFileNames->end())
     {
+        CCLOG("[todo: move to LOGINFO] sprite sheet already exists in cache!");
         return; // We already added it
     }
     
