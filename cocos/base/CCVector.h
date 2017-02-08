@@ -481,7 +481,7 @@ public:
         CCASSERT(index >= 0 && index < size(), "Invalid index!");
         CCASSERT(object != nullptr, "The object should not be nullptr");
         
-        _data[index]->release();
+        CC_SAFE_RELEASE(_data[index]);
         _data[index] = object;
         object->retain();
     }
