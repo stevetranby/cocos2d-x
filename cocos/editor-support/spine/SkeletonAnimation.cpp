@@ -116,6 +116,7 @@ void SkeletonAnimation::initialize () {
 	_state->listener = animationCallback;
 
 	_spAnimationState* stateInternal = (_spAnimationState*)_state;
+    (void)stateInternal; //STEVE: unused
 }
 
 SkeletonAnimation::SkeletonAnimation ()

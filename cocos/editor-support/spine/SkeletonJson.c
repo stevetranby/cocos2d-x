@@ -410,9 +410,9 @@ static spAnimation* _spSkeletonJson_readAnimation (spSkeletonJson* self, Json* r
 						}
 						memset(deform2 + v, 0, sizeof(float) * (deformLength - v));
 						if (!weighted) {
-							float* vertices = attachment->vertices;
+							float* vertices2 = attachment->vertices;
 							for (v = 0; v < deformLength; ++v)
-								deform2[v] += vertices[v];
+								deform2[v] += vertices2[v];
 						}
 					}
 					spDeformTimeline_setFrame(timeline, frameIndex, Json_getFloat(valueMap, "time", 0), deform2);
@@ -431,16 +431,16 @@ static spAnimation* _spSkeletonJson_readAnimation (spSkeletonJson* self, Json* r
 		spDrawOrderTimeline* timeline = spDrawOrderTimeline_create(drawOrder->size, skeletonData->slotsCount);
 		for (valueMap = drawOrder->child, frameIndex = 0; valueMap; valueMap = valueMap->next, ++frameIndex) {
 			int ii;
-			int* drawOrder = 0;
+			int* drawOrder2 = 0;
 			Json* offsets = Json_getItem(valueMap, "offsets");
 			if (offsets) {
 				Json* offsetMap;
 				int* unchanged = MALLOC(int, skeletonData->slotsCount - offsets->size);
 				int originalIndex = 0, unchangedIndex = 0;
 
-				drawOrder = MALLOC(int, skeletonData->slotsCount);
+				drawOrder2 = MALLOC(int, skeletonData->slotsCount);
 				for (ii = skeletonData->slotsCount - 1; ii >= 0; --ii)
-					drawOrder[ii] = -1;
+					drawOrder2[ii] = -1;
 
 				for (offsetMap = offsets->child; offsetMap; offsetMap = offsetMap->next) {
 					int slotIndex = spSkeletonData_findSlotIndex(skeletonData, Json_getString(offsetMap, "slot", 0));
@@ -453,7 +453,7 @@ static spAnimation* _spSkeletonJson_readAnimation (spSkeletonJson* self, Json* r
 					while (originalIndex != slotIndex)
 						unchanged[unchangedIndex++] = originalIndex++;
 					/* Set changed items. */
-					drawOrder[originalIndex + Json_getInt(offsetMap, "offset", 0)] = originalIndex;
+					drawOrder2[originalIndex + Json_getInt(offsetMap, "offset", 0)] = originalIndex;
 					originalIndex++;
 				}
 				/* Collect remaining unchanged items. */
@@ -461,11 +461,11 @@ static spAnimation* _spSkeletonJson_readAnimation (spSkeletonJson* self, Json* r
 					unchanged[unchangedIndex++] = originalIndex++;
 				/* Fill in unchanged items. */
 				for (ii = skeletonData->slotsCount - 1; ii >= 0; ii--)
-					if (drawOrder[ii] == -1) drawOrder[ii] = unchanged[--unchangedIndex];
+					if (drawOrder2[ii] == -1) drawOrder2[ii] = unchanged[--unchangedIndex];
 				FREE(unchanged);
 			}
-			spDrawOrderTimeline_setFrame(timeline, frameIndex, Json_getFloat(valueMap, "time", 0), drawOrder);
-			FREE(drawOrder);
+			spDrawOrderTimeline_setFrame(timeline, frameIndex, Json_getFloat(valueMap, "time", 0), drawOrder2);
+			FREE(drawOrder2);
 		}
 		animation->timelines[animation->timelinesCount++] = SUPER_CAST(spTimeline, timeline);
 		animation->duration = MAX(animation->duration, timeline->frames[drawOrder->size - 1]);
