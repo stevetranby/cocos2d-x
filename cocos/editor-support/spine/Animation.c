@@ -604,20 +604,21 @@ void spColorTimeline_setFrame (spColorTimeline* self, int frameIndex, float time
 
 void _spAttachmentTimeline_apply (const spTimeline* timeline, spSkeleton* skeleton, float lastTime, float time,
 		spEvent** firedEvents, int* eventsCount, float alpha, int setupPose, int mixingOut) {
-	const char* attachmentName;
+
 	spAttachmentTimeline* self = (spAttachmentTimeline*)timeline;
 	int frameIndex;
 	spSlot* slot = skeleton->slots[self->slotIndex];
 
 	if (mixingOut && setupPose) {
-		const char* attachmentName = slot->data->attachmentName;
-        spSlot_setAttachment(slot, attachmentName ? spSkeleton_getAttachmentForSlotIndex(skeleton, self->slotIndex, attachmentName) : 0);
+        const char* attachmentName = slot->data->attachmentName;
+        spSlot_setAttachment(slot,
+                             attachmentName ? spSkeleton_getAttachmentForSlotIndex(skeleton, self->slotIndex, attachmentName) : 0);
 		return;
 	}
 
 	if (time < self->frames[0]) {
 		if (setupPose) {
-			attachmentName = slot->data->attachmentName;
+            const char* attachmentName = slot->data->attachmentName;
 			spSlot_setAttachment(skeleton->slots[self->slotIndex],
 								 attachmentName ? spSkeleton_getAttachmentForSlotIndex(skeleton, self->slotIndex, attachmentName) : 0);
 		}
@@ -629,7 +630,7 @@ void _spAttachmentTimeline_apply (const spTimeline* timeline, spSkeleton* skelet
 	else
 		frameIndex = binarySearch1(self->frames, self->framesCount, time) - 1;
 
-	attachmentName = self->attachmentNames[frameIndex];
+	const char* attachmentName = self->attachmentNames[frameIndex];
 	spSlot_setAttachment(skeleton->slots[self->slotIndex],
 			attachmentName ? spSkeleton_getAttachmentForSlotIndex(skeleton, self->slotIndex, attachmentName) : 0);
 

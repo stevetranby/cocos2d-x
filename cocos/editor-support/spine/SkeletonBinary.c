@@ -290,7 +290,6 @@ static spAnimation* _spSkeletonBinary_readAnimation (spSkeletonBinary* self, con
 					break;
 				}
 				default: {
-					int i;
 					for (i = 0; i < kv_size(timelines); ++i)
 						spTimeline_dispose(kv_A(timelines, i));
 					kv_destroy(timelines);

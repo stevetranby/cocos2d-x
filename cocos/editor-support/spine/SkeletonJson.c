@@ -389,33 +389,33 @@ static spAnimation* _spSkeletonJson_readAnimation (spSkeletonJson* self, Json* r
 
 				for (valueMap = timelineMap->child, frameIndex = 0; valueMap; valueMap = valueMap->next, ++frameIndex) {
 					Json* vertices = Json_getItem(valueMap, "vertices");
-					float* deform;
+					float* deform2;
 					if (!vertices) {
 						if (weighted) {
-							deform = tempDeform;
-							memset(deform, 0, sizeof(float) * deformLength);
+							deform2 = tempDeform;
+							memset(deform2, 0, sizeof(float) * deformLength);
 						} else
-							deform = attachment->vertices;
+							deform2 = attachment->vertices;
 					} else {
 						int v, start = Json_getInt(valueMap, "offset", 0);
 						Json* vertex;
-						deform = tempDeform;
-						memset(deform, 0, sizeof(float) * start);
+						deform2 = tempDeform;
+						memset(deform2, 0, sizeof(float) * start);
 						if (self->scale == 1) {
 							for (vertex = vertices->child, v = start; vertex; vertex = vertex->next, ++v)
-								deform[v] = vertex->valueFloat;
+								deform2[v] = vertex->valueFloat;
 						} else {
 							for (vertex = vertices->child, v = start; vertex; vertex = vertex->next, ++v)
-								deform[v] = vertex->valueFloat * self->scale;
+								deform2[v] = vertex->valueFloat * self->scale;
 						}
-						memset(deform + v, 0, sizeof(float) * (deformLength - v));
+						memset(deform2 + v, 0, sizeof(float) * (deformLength - v));
 						if (!weighted) {
 							float* vertices = attachment->vertices;
 							for (v = 0; v < deformLength; ++v)
-								deform[v] += vertices[v];
+								deform2[v] += vertices[v];
 						}
 					}
-					spDeformTimeline_setFrame(timeline, frameIndex, Json_getFloat(valueMap, "time", 0), deform);
+					spDeformTimeline_setFrame(timeline, frameIndex, Json_getFloat(valueMap, "time", 0), deform2);
 					readCurve(valueMap, SUPER(timeline), frameIndex);
 				}
 				FREE(tempDeform);
