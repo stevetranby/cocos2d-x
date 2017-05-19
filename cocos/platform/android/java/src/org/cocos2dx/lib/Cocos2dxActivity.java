@@ -68,6 +68,9 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     private Cocos2dxEditBoxHelper mEditBoxHelper = null;
     private boolean hasFocus = false;
 
+    // whether register succeed
+    public static boolean sRegistered = false;
+
     public Cocos2dxGLSurfaceView getGLSurfaceView(){
         return  mGLSurfaceView;
     }
@@ -134,6 +137,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
         // Audio configuration
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        sRegistered = Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
     }
 
     //native method,call GLViewImpl::getGLContextAttrs() to get the OpenGL ES context attributions
@@ -154,6 +159,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         Cocos2dxAudioFocusManager.registerAudioFocusListener(this);
         this.hideVirtualButton();
        	resumeIfHasFocus();
+
+        Cocos2dxEngineDataManager.resume();
     }
     
     @Override
@@ -180,12 +187,15 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
         Cocos2dxHelper.onPause();
         mGLSurfaceView.onPause();
+        Cocos2dxEngineDataManager.pause();
     }
     
     @Override
     protected void onDestroy() {
         Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
         super.onDestroy();
+
+        Cocos2dxEngineDataManager.destroy();
     }
 
     @Override
