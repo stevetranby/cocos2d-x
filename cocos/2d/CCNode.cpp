@@ -1590,6 +1590,9 @@ void Node::scheduleUpdateWithPriority(int priority)
 
 void Node::scheduleUpdateWithPriorityLua(int nHandler, int priority)
 {
+#if !(CC_ENABLE_SCRIPT_BINDING)
+    CC_UNUSED_PARAM(nHandler);
+#endif
     unscheduleUpdate();
     
 #if CC_ENABLE_SCRIPT_BINDING
