@@ -218,7 +218,7 @@ public:
      *
      *@return A LayoutParameter and its descendant pointer.
      */
-    virtual LayoutParameter* getLayoutParameter() const= 0;
+    virtual LayoutParameter* getLayoutParameter() const = 0;
 };
 
     
