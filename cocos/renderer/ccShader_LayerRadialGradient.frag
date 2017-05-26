@@ -1,6 +1,5 @@
 /****************************************************************************
- Copyright (c) 2010-2012 cocos2d-x.org
- Copyright (c) 2013-2017 Chukong Technologies Inc.
+ Copyright (c) 2017 Chukong Technologies Inc.
 
  http://www.cocos2d-x.org
 
@@ -23,25 +22,37 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "platform/CCPlatformConfig.h"
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+const char* ccShader_LayerRadialGradient_frag = R"(
 
-#import <Foundation/Foundation.h>
+uniform vec4 u_startColor;
+uniform vec4 u_endColor;
+uniform vec2 u_center;
+uniform float u_radius;
+uniform float u_expand;
 
-@interface CCDirectorCaller : NSObject {
-        id displayLink;
-        int interval;
-        BOOL isAppActive;
-    CFTimeInterval lastDisplayTime;
+#ifdef GL_ES
+varying lowp vec4 v_position;
+#else
+varying vec4 v_position;
+#endif
+
+void main()
+{
+    float d = distance(v_position.xy, u_center) / u_radius;
+    if (d <= 1.0)
+    {
+        if (d <= u_expand)
+        {
+            gl_FragColor = u_startColor;
+        }
+        else
+        {
+            gl_FragColor = mix(u_startColor, u_endColor, (d - u_expand) / (1.0 - u_expand));
+        }
+    }
+    else
+    {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+    }
 }
-@property (readwrite) int interval;
--(void) startMainLoop;
--(void) stopMainLoop;
--(void) doCaller: (id) sender;
--(void) setAnimationInterval:(double)interval;
-+(id) sharedDirectorCaller;
-+(void) destroy;
-@end
-
-#endif // CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-
+)";

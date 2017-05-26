@@ -1,6 +1,5 @@
 /****************************************************************************
- Copyright (c) 2010-2012 cocos2d-x.org
- Copyright (c) 2013-2017 Chukong Technologies Inc.
+ Copyright (c) 2017 Chukong Technologies Inc.
 
  http://www.cocos2d-x.org
 
@@ -23,25 +22,19 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "platform/CCPlatformConfig.h"
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+const char* ccPosition_vert = R"(
 
-#import <Foundation/Foundation.h>
+attribute vec4 a_position;
 
-@interface CCDirectorCaller : NSObject {
-        id displayLink;
-        int interval;
-        BOOL isAppActive;
-    CFTimeInterval lastDisplayTime;
+#ifdef GL_ES
+varying lowp vec4 v_position;
+#else
+varying vec4 v_position;
+#endif
+
+void main()
+{
+    gl_Position = CC_MVPMatrix * a_position;
+    v_position = a_position;
 }
-@property (readwrite) int interval;
--(void) startMainLoop;
--(void) stopMainLoop;
--(void) doCaller: (id) sender;
--(void) setAnimationInterval:(double)interval;
-+(id) sharedDirectorCaller;
-+(void) destroy;
-@end
-
-#endif // CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-
+)";

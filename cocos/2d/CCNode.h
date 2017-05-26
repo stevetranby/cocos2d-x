@@ -1350,7 +1350,7 @@ public:
      * @js NA
      * @lua NA
      */
-    bool isScheduled(SEL_SCHEDULE selector);
+    bool isScheduled(SEL_SCHEDULE selector) const;
 
     /**
      * Checks whether a lambda function is scheduled.
@@ -1360,7 +1360,7 @@ public:
      * @js NA
      * @lua NA
      */
-    bool isScheduled(const std::string &key);
+    bool isScheduled(const std::string &key) const;
 
     /**
      * Schedules the "update" method.
