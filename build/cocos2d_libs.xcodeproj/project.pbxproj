@@ -17705,6 +17705,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_EXTENSION = a;
 				EXECUTABLE_PREFIX = "";
@@ -17738,6 +17739,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-llibsql3";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/png/include/mac $(SRCROOT)/../external/tiff/include/mac $(SRCROOT)/../external/webp/include/mac $(SRCROOT)/../external/jpeg/include/mac $(SRCROOT)/../external/freetype2/include/mac $(SRCROOT)/../external/glfw3/include/mac $(SRCROOT)/../external/websockets/include/mac $(SRCROOT)/../external/curl/include/mac $(SRCROOT)/../external/freetype2/include/mac/freetype2 $(SRCROOT)/../external/openssl/include/mac";
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
@@ -17745,6 +17747,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_EXTENSION = a;
 				EXECUTABLE_PREFIX = "";
@@ -17779,6 +17782,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-llibsql3";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/png/include/mac $(SRCROOT)/../external/tiff/include/mac $(SRCROOT)/../external/webp/include/mac $(SRCROOT)/../external/jpeg/include/mac $(SRCROOT)/../external/freetype2/include/mac $(SRCROOT)/../external/glfw3/include/mac $(SRCROOT)/../external/websockets/include/mac $(SRCROOT)/../external/curl/include/mac $(SRCROOT)/../external/freetype2/include/mac/freetype2 $(SRCROOT)/../external/openssl/include/mac";
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
