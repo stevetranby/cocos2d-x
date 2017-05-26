@@ -580,6 +580,9 @@ public:
      */
     virtual void onTouchCancelled(Touch *touch, Event *unusedEvent);
 
+    void stupid_steve_stupid(int b);
+    double steve(int a, float b);
+
     /**
      * Sets a LayoutParameter to widget.
      *

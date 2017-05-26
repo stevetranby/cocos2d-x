@@ -1158,6 +1158,9 @@ const Vec2& Widget::getTouchEndPosition()const
     return _touchEndPosition;
 }
 
+void Widget::stupid_steve_stupid(int b) { (void)b; }
+double Widget::steve(int a, float b) { (void)a; (void)b; return 1.1; }
+
 void Widget::setLayoutParameter(LayoutParameter *parameter)
 {
     if (!parameter)
