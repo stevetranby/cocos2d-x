@@ -204,11 +204,17 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, co
             break;
         }
 
-        auto profileHelper = _defaultProfileHelper;
-        if (profile && profile != &profileHelper->profile){
+        ProfileHelper* profileHelper = _defaultProfileHelper;
+
+        // Steve: added check for null profileHelper
+        if (profile && (!profileHelper || profile != &profileHelper->profile))
+        {
             CC_ASSERT(!profile->name.empty());
             profileHelper = &_audioPathProfileHelperMap[profile->name];
             profileHelper->profile = *profile;
+        } else {
+            // TODO: remove for release
+            log("profile = %p, profileHelper = %p", profile, profileHelper);
         }
         
         if (_audioIDInfoMap.size() >= _maxInstances) {
@@ -515,7 +521,7 @@ AudioProfile* AudioEngine::getDefaultProfile()
     {
         _defaultProfileHelper = new (std::nothrow) ProfileHelper();
     }
-    
+
     return &_defaultProfileHelper->profile;
 }
 
