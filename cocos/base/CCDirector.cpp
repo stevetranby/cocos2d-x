@@ -213,21 +213,18 @@ Director::~Director(void)
     CC_SAFE_RELEASE(_scheduler);
     CC_SAFE_RELEASE(_actionManager);
     CC_SAFE_DELETE(_defaultFBO);
-    
-    delete _beforeSetNextScene;
-    delete _afterSetNextScene;
-    delete _eventBeforeUpdate;
-    delete _eventAfterUpdate;
-    delete _eventAfterDraw;
-    delete _eventBeforeDraw;
-    delete _eventAfterVisit;
-    delete _eventProjectionChanged;
-    delete _eventResetDirector;
+
+    CC_SAFE_RELEASE(_beforeSetNextScene);
+    CC_SAFE_RELEASE(_afterSetNextScene);
+    CC_SAFE_RELEASE(_eventBeforeUpdate);
+    CC_SAFE_RELEASE(_eventAfterUpdate);
+    CC_SAFE_RELEASE(_eventAfterDraw);
+    CC_SAFE_RELEASE(_eventAfterVisit);
+    CC_SAFE_RELEASE(_eventProjectionChanged);
+    CC_SAFE_RELEASE(_eventResetDirector);
 
     delete _renderer;
-
     delete _console;
-
 
     CC_SAFE_RELEASE(_eventDispatcher);
     
@@ -512,7 +509,7 @@ void Director::initProjectionMatrixStack(size_t stackCount)
 
 size_t Director::getProjectionMatrixStackSize()
 {
-    return static_cast<unsigned int>(_projectionMatrixStackList.size());
+    return _projectionMatrixStackList.size();
 }
 
 void Director::popMatrix(MATRIX_STACK_TYPE type)
