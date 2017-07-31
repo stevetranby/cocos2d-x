@@ -128,11 +128,12 @@ bool CameraBackgroundDepthBrush::init()
     auto shader = GLProgramCache::getInstance()->getGLProgram(GLProgram::SHADER_CAMERA_CLEAR);
     _glProgramState = GLProgramState::getOrCreateWithGLProgram(shader);
     _glProgramState->retain();
-    
+
+    // TODO: z coord doesn't matter (it's replaced by _depth for all verts in vert shader)
     _quad.bl.vertices = Vec3(-1,-1,0);
     _quad.br.vertices = Vec3(1,-1,0);
-    _quad.tl.vertices = Vec3(-1,1,0);
-    _quad.tr.vertices = Vec3(1,1,0);
+    _quad.tl.vertices = Vec3(-1,1,1);
+    _quad.tr.vertices = Vec3(1,1,1);
     
     _quad.bl.colors = _quad.br.colors = _quad.tl.colors = _quad.tr.colors = Color4B(0,0,0,1);
     
@@ -200,13 +201,13 @@ void CameraBackgroundDepthBrush::drawBackground(Camera* /*camera*/)
     
     //draw
     
-    _glProgramState->setUniformFloat("depth", _depth);
+    _glProgramState->setUniformFloat("depth", 0);//, _depth);
     _glProgramState->apply(Mat4::IDENTITY);
     
     auto supportVAO = Configuration::getInstance()->supportsShareableVAO();
-    if (supportVAO)
-        GL::bindVAO(_vao);
-    else
+//    if (supportVAO)
+//        GL::bindVAO(_vao);
+//    else
     {
         GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POS_COLOR_TEX);
         glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
