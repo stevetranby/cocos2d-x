@@ -624,6 +624,9 @@ std::string FileUtils::getStringFromFile(const std::string& filename)
 {
     std::string s;
     auto status = getContents(filename, &s);
+    if(status == Status::NotExists) {
+        CCLOGERROR("[steve] file does not exist: %s", filename.c_str());
+    }
     CCLOG("[steve] status = %d", status);
     return s;
 }
