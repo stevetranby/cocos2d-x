@@ -206,7 +206,7 @@ bool Camera::initDefault()
     {
         case Director::Projection::_2D:
         {
-            initOrthographic(size.width, size.height, -10 * 1024, 10 * 1024);
+            initOrthographic(size.width, size.height, -3 * 1024, 13 * 1024);
             setPosition3D(Vec3(0.0f, 0.0f, 0.0f));
             setRotation3D(Vec3(0.f, 0.f, 0.f));
             break;
