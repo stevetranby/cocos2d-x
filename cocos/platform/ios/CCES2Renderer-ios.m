@@ -53,10 +53,20 @@
 {
     if (self = [super init])
     {
-        if (! sharegroup)
-                context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-        else
-                context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:sharegroup];
+        if (! sharegroup) {
+            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+//            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+//            if (context_ == nil) {
+//                context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+//            }
+        }
+        else {
+            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:sharegroup];
+//            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3 sharegroup:sharegroup];
+//            if (context_ == nil) {
+//                context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:sharegroup];
+//            }
+        }
 
         if (!context_ || ![EAGLContext setCurrentContext:context_] )
         {
