@@ -182,11 +182,14 @@ bool CameraBackgroundDepthBrush::init()
 
 void CameraBackgroundDepthBrush::drawBackground(Camera* /*camera*/)
 {
+    CCGL_DEBUG_INSERT_EVENT_MARKER("CameraBackgroundDepthBrush_drawBackground");
+
     GLboolean oldDepthTest;
     GLint oldDepthFunc;
     GLboolean oldDepthMask;
     {
         glColorMask(_clearColor, _clearColor, _clearColor, _clearColor);
+
         glStencilMask(0);
 
         oldDepthTest = glIsEnabled(GL_DEPTH_TEST);

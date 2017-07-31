@@ -161,7 +161,7 @@ THE SOFTWARE.
  * If a device doesn't support VAO though it claims to support should add exceptions list here.
  */
 #ifndef CC_TEXTURE_ATLAS_USE_VAO
-#define CC_TEXTURE_ATLAS_USE_VAO 1
+#define CC_TEXTURE_ATLAS_USE_VAO 0
 #endif
 
 
