@@ -151,11 +151,19 @@ namespace {
               The _vsnprintf behavior is compatible API which always return -1 when buffer isn't enough at VS2013/2015/2017
               Yes, The vsnprintf is more efficient implemented by MSVC 19.0 or later, AND it's also standard-compliant, see reference: http://www.cplusplus.com/reference/cstdio/vsnprintf/
 	    */
-            nret = vsnprintf(buf, bufferSize - 3, format, args);
+            // STEVE: added va_list, va_copy, va_end in case the buffer is too small
+            //        and vsnprintf is called twice
+            va_list args2;
+            va_copy(args2, args);
+            nret = vsnprintf(buf, bufferSize - 3, format, args2);
+            va_end(args2);
+
             if (nret >= 0)
-            { // VS2015/2017
+            {
+                // VS2015/2017
                 if (nret <= bufferSize - 3)
-                {// success, so don't need to realloc
+                {
+                    // success, so don't need to realloc
                     break;
                 }
                 else
@@ -165,9 +173,10 @@ namespace {
                 }
             }
             else // < 0
-            {	// VS2013 or Unix-like System(GCC)
-	        bufferSize *= 2;
-	        delete[] buf;
+            {
+                // VS2013 or Unix-like System(GCC)
+                bufferSize *= 2;
+                delete[] buf;
             }
         } while (true);
         buf[nret] = '\n';
