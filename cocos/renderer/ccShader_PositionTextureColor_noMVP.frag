@@ -25,7 +25,8 @@
 
 const char* ccPositionTextureColor_noMVP_frag = R"(
 #ifdef GL_ES
-precision lowp float;
+// STEVE: precision mediump float;
+precision highp float;
 #endif
 
 varying vec4 v_fragmentColor;

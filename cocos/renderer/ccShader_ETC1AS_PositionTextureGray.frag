@@ -25,7 +25,8 @@
 
 const char* ccETC1ASPositionTextureGray_frag = R"(
 #ifdef GL_ES
-    precision mediump float;
+    // STEVE: precision mediump float;
+precision highp float;
 #endif
 
 varying vec4 v_fragmentColor;

@@ -1,7 +1,8 @@
 
 const char* cc3D_Terrain_frag = R"(
 #ifdef GL_ES
-precision mediump float;
+// STEVE: precision mediump float;
+precision highp float;
 #endif
 uniform vec3 u_color;
 varying vec2 v_texCoord;

@@ -26,7 +26,8 @@
 const char* ccPositionTexture_uColor_frag = R"(
 
 #ifdef GL_ES
-precision lowp float;
+// STEVE: precision lowp float;
+precision highp float;
 #endif
 
 uniform vec4 u_color;

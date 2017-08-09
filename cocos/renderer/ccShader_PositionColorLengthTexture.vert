@@ -22,7 +22,8 @@
 const char* ccPositionColorLengthTexture_vert = R"(
 
 #ifdef GL_ES
-precision lowp float;
+// STEVE: precision lowp float;
+precision highp float;
 #endif
 
 #ifdef GL_ES

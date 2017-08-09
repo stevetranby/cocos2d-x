@@ -486,7 +486,8 @@ bool GLProgram::compileShader(GLuint * shader, GLenum type, const GLchar* source
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
         headersDef = (type == GL_VERTEX_SHADER ? "precision mediump float;\n precision mediump int;\n" : "precision mediump float;\n precision mediump int;\n");
 #elif (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32 && CC_TARGET_PLATFORM != CC_PLATFORM_LINUX && CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
-        headersDef = (type == GL_VERTEX_SHADER ? "precision highp float;\n precision highp int;\n" : "precision mediump float;\n precision mediump int;\n");
+                      // STEVE: changed mediump to highp
+        headersDef = (type == GL_VERTEX_SHADER ? "precision highp float;\n precision highp int;\n" : "precision highp float;\n precision highp int;\n");
 #endif
     }else{
         headersDef = compileTimeHeaders;
