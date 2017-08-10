@@ -39,7 +39,11 @@ NSString * const kCDN_AudioManagerInitialised = @"kCDN_AudioManagerInitialised";
 
 @implementation CDLongAudioSource
 
-@synthesize audioSourcePlayer, audioSourceFilePath, delegate, backgroundMusic, paused;
+@synthesize audioSourcePlayer;
+@synthesize audioSourceFilePath;
+@synthesize delegate;
+@synthesize backgroundMusic;
+@synthesize paused;
 
 -(id) init {
     if ((self = [super init])) {
