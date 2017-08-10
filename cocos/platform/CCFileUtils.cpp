@@ -218,7 +218,7 @@ public:
         }
     }
 
-    void endElement(void *ctx, const char *name)
+    void endElement(void *ctx, const char *name) override
     {
         SAXState curState = _stateStack.empty() ? SAX_DICT : _stateStack.top();
         const std::string sName((char*)name);
