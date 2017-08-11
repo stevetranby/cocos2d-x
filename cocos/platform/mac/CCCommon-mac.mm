@@ -54,11 +54,17 @@ void MessageBox(const char * msg, const char * title)
     [alert setAlertStyle:NSWarningAlertStyle];
 
     auto glview = Director::getInstance()->getOpenGLView();
-    id window = glview->getCocoaWindow();
-    [alert beginSheetModalForWindow:window
-                      modalDelegate:[window delegate]
-                     didEndSelector:nil
-                        contextInfo:nil];
+    id win = glview->getCocoaWindow();
+
+    if ([win isKindOfClass:[NSWindow class]]) {
+        NSWindow* nswin = (NSWindow*)win;
+        [alert beginSheetModalForWindow:nswin
+                          modalDelegate:[nswin delegate]
+                         didEndSelector:nil
+                            contextInfo:nil];
+    } else {
+        NSLog(@"[ERROR] win was not an NSWindow = %@", win);
+    }
 }
 
 NS_CC_END

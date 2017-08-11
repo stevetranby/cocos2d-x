@@ -149,9 +149,9 @@ static cocos2d::Value convertNSObjectToCCValue(id item)
     if ([item isKindOfClass:[NSDictionary class]])
     {
         ValueMap dict;
-        for (id subKey in [item allKeys])
+        for (id subKey in [(NSDictionary*)item allKeys])
         {
-            id subValue = [item objectForKey:subKey];
+            id subValue = [(NSDictionary*)item objectForKey:subKey];
             addNSObjectToCCMap(subKey, subValue, dict);
         }
         
