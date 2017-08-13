@@ -791,6 +791,7 @@ std::string FileUtils::getNewFilename(const std::string &filename) const
 
 std::string FileUtils::getPathForFilename(const std::string& filename, const std::string& resolutionDirectory, const std::string& searchPath) const
 {
+    CCLOGINFO("searchPath = %s", searchPath.c_str());
     std::string file = filename;
     std::string file_path = "";
     size_t pos = filename.find_last_of("/");

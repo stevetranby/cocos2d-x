@@ -220,7 +220,16 @@ bool AudioPlayer::play2d()
 
         ALint state;
         alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
-        assert(state == AL_PLAYING);
+
+
+#warning TODO: STEVE: need to probably make this a conditional, or just comment out of release (and testflight debug builds)?
+        // http://nshipster.com/nsassertionhandler/
+#warning TODO: need to probably define or -D this NS_BLOCK_ASSERTIONS
+        // ENABLE_NS_ASSERTIONS seems to be the newer one
+        // - see: https://stackoverflow.com/questions/6445222/ns-block-assertions-in-objective-c
+        NSCAssert(state == AL_PLAYING, @"Audio failed to play ????");
+
+
         _ready = true;
         ret = true;
     } while (false);
