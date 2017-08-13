@@ -71,6 +71,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import <OpenGLES/ES2/glext.h>
 #import <CoreFoundation/CoreFoundation.h>
 
+#import <GLKit/GLKit.h>
+
 #import "platform/ios/CCESRenderer-ios.h"
 
 //CLASS INTERFACE:
@@ -80,7 +82,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
  * The view content is basically an EAGL surface you render your OpenGL scene into.
  * Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
  */
-@interface CCEAGLView : UIView <UIKeyInput, UITextInput, UITextInputTraits>
+//@interface CCEAGLView : UIView <UIKeyInput, UITextInput, UITextInputTraits>
+@interface CCEAGLView : GLKView <UIKeyInput, UITextInput, UITextInputTraits>
 {
     id                        <CCESRenderer> renderer_;    
     EAGLContext                *context_; // weak ref

@@ -38,18 +38,24 @@ Application* Application::sm_pSharedApplication = nullptr;
 
 Application::Application()
 {
+    NSLog(@"Application()");
+    printf("Application()\n");
     CC_ASSERT(! sm_pSharedApplication);
     sm_pSharedApplication = this;
 }
 
 Application::~Application()
 {
+    NSLog(@"Application::~()");
+    printf("Application::~()\n");
     CC_ASSERT(this == sm_pSharedApplication);
     sm_pSharedApplication = 0;
 }
 
 int Application::run()
 {
+    NSLog(@"Application::run");
+    printf("Application::run\n");
     if (applicationDidFinishLaunching())
     {
         [[CCDirectorCaller sharedDirectorCaller] startMainLoop];
