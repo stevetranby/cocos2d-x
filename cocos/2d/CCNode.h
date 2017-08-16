@@ -180,8 +180,6 @@ public:
     * If two children have the same Z order, the child with larger arrival order will be drawn later.
     *
     * @warning This method is used internally for localZOrder sorting, don't change this manually
-    *
-    * @param orderOfArrival   The arrival order.
     */
     void updateOrderOfArrival();
 

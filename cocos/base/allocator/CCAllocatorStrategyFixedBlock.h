@@ -106,6 +106,7 @@ public:
     // if _block_size does not match the requested size, then we assert.
     CC_ALLOCATOR_INLINE void* allocate(size_t size)
     {
+        CC_UNUSED_PARAM(size);
         CC_ASSERT(block_size == size);
 #ifdef FALLBACK_TO_GLOBAL
         return ccAllocatorGlobal.allocate(size);
@@ -120,6 +121,7 @@ public:
     // @brief Deallocate a block by pushing it on the head of a linked list of free blocks.
     CC_ALLOCATOR_INLINE void deallocate(void* address, size_t size = 0)
     {
+        CC_UNUSED_PARAM(size);
         CC_ASSERT(0 == size || block_size == size);
 #ifdef FALLBACK_TO_GLOBAL
         ccAllocatorGlobal.deallocate(address);

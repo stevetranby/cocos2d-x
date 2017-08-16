@@ -53,18 +53,26 @@ public:
 
 public:
     /**
-    @{
     Constructor.
-    @param width Width of the size.
-    @param height Height of the size.
-    @param other Copy constructor.
-    @param point Conversion from a point.
      */
     Size();
+    /**
+     Constructor.
+     @param width Width of the size.
+     @param height Height of the size.
+     */
     Size(float width, float height);
+    /**
+     Copy Constructor.
+     @param other - instance to copy.
+     */
     Size(const Size& other);
+    /**
+     @{
+     Constructor.
+     @param point Conversion from a point.
+     */
     explicit Size(const Vec2& point);
-    /**@}*/
 
     /**
      * @js NA

@@ -67,7 +67,7 @@ public:
     // For example, if the alignment is 4 which is standard, then the address is divisible evenly by 4.
     CC_ALLOCATOR_INLINE pointer aligned(const pointer address, const size_t alignment = kDefaultAlignment) const
     {
-        return (pointer) (((intptr_t)address + (alignment - 1)) & ~(alignment - 1));
+        return (pointer) (( (uintptr_t)address + (alignment - 1) ) & ~(alignment - 1) );
     }
     
     // @brief Calculate the next power of two for a given size.

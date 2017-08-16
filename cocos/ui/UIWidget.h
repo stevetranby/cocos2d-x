@@ -46,8 +46,9 @@ namespace ui {
 
 /**
  * Touch event type.
- *@deprecated use `Widget::TouchEventType` instead
+ * @deprecated
  */
+CC_DEPRECATED("use `Widget::TouchEventType` instead")
 typedef enum
 {
     TOUCH_EVENT_BEGAN,
@@ -58,8 +59,9 @@ typedef enum
     
 /**
  * Touch event callback.
- *@deprecated use `Widget::ccWidgetTouchCallback` instead
+ * @deprecated
  */
+CC_DEPRECATED("use `Widget::ccWidgetTouchCallback` instead")
 typedef void (Ref::*SEL_TouchEvent)(Ref*,TouchEventType);
 #define toucheventselector(_SELECTOR) (SEL_TouchEvent)(&_SELECTOR)
 
@@ -529,7 +531,7 @@ public:
     /**
      * Get the content size of widget.
      * @warning This API exists mainly for keeping back compatibility.
-     * @return 
+     * @return content size
      */
     virtual const Size& getLayoutSize() {return _contentSize;};
 
