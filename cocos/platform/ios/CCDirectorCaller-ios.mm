@@ -108,7 +108,7 @@ static id s_sharedDirectorCaller;
     // Director::setAnimationInterval() is called, we should invalidate it first
     [self stopMainLoop];
     
-    displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(doCaller:)];
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doCaller:)];
     [displayLink setFrameInterval: self.interval];
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
@@ -141,8 +141,8 @@ static id s_sharedDirectorCaller;
         
         [EAGLContext setCurrentContext: cocos2dxContext];
 
-        CFTimeInterval dt = ((CADisplayLink*)displayLink).timestamp - lastDisplayTime;
-        lastDisplayTime = ((CADisplayLink*)displayLink).timestamp;
+        CFTimeInterval dt = displayLink.timestamp - lastDisplayTime;
+        lastDisplayTime = displayLink.timestamp;
         director->mainLoop(dt);
     }
 }

@@ -208,7 +208,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 - (void)didMoveToWindow
 {
-    float nscale = self.window.screen.nativeScale;
     printf("self.window.screen.nativeScale = %f", self.window.screen.nativeScale);
     self.contentScaleFactor = self.window.screen.nativeScale;
 #if !defined(CC_TARGET_OS_TVOS)

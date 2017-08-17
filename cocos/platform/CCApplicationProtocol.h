@@ -139,12 +139,19 @@ public:
     virtual Platform getTargetPlatform() = 0;
     
     /**
-     @brief Get application version.
+     @brief Get application version (Store version e.g. 1.2).
      * @js NA
      * @lua NA
      */
     virtual std::string getVersion() = 0;
-    
+
+    /**
+     @brief Get build version (sub-version, build number, etc e.g. 12064).
+     * @js NA
+     * @lua NA
+     */
+    virtual std::string getBuildVersion() = 0;
+
     /**
      @brief Open url in default browser.
      @param String with url to open.

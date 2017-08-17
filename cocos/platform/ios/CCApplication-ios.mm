@@ -56,6 +56,8 @@ int Application::run()
 {
     NSLog(@"Application::run");
     printf("Application::run\n");
+    NSString * version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+    NSString * build = [[NSBundle mainBundle] objectForInfoDictionaryKey: (NSString *)kCFBundleVersionKey];
     if (applicationDidFinishLaunching())
     {
         [[CCDirectorCaller sharedDirectorCaller] startMainLoop];
@@ -152,6 +154,14 @@ Application::Platform Application::getTargetPlatform()
 
 std::string Application::getVersion() {
     NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    if (version) {
+        return [version UTF8String];
+    }
+    return "";
+}
+
+std::string Application::getBuildVersion() {
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
     if (version) {
         return [version UTF8String];
     }

@@ -75,40 +75,13 @@ static ALenum alSourceAddNotificationExt(ALuint sid, ALuint notificationID, alSo
 
 @implementation AudioEngineSessionHandler
 
-// only enable it on iOS. Disable it on tvOS
-#if !defined(CC_TARGET_OS_TVOS)
-void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruption_state)
-{
-    if (kAudioSessionBeginInterruption == interruption_state)
-    {
-      alcMakeContextCurrent(nullptr);
-    }
-    else if (kAudioSessionEndInterruption == interruption_state)
-    {
-      OSStatus result = AudioSessionSetActive(true);
-      if (result) NSLog(@"Error setting audio session active! %d\n", static_cast<int>(result));
-
-      alcMakeContextCurrent(s_ALContext);
-    }
-}
-#endif
-
 -(id) init
 {
     if (self = [super init])
     {
-      if ([[[UIDevice currentDevice] systemVersion] intValue] > 5) {
-          [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:[AVAudioSession sharedInstance]];
-          [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:UIApplicationDidBecomeActiveNotification object:nil];
-          [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:UIApplicationWillResignActiveNotification object:nil];
-      }
-    // only enable it on iOS. Disable it on tvOS
-    // AudioSessionInitialize removed from tvOS
-#if !defined(CC_TARGET_OS_TVOS)
-      else {
-        AudioSessionInitialize(NULL, NULL, AudioEngineInterruptionListenerCallback, self);
-      }
-#endif
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:[AVAudioSession sharedInstance]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:UIApplicationWillResignActiveNotification object:nil];
 
         BOOL success = [[AVAudioSession sharedInstance]
                         setCategory: AVAudioSessionCategoryAmbient

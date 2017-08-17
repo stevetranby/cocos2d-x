@@ -29,7 +29,7 @@
 #import <Foundation/Foundation.h>
 
 @interface CCDirectorCaller : NSObject {
-        id displayLink;
+        CADisplayLink* displayLink;
         int interval;
         BOOL isAppActive;
     CFTimeInterval lastDisplayTime;
