@@ -122,12 +122,12 @@ static void wsLog(const char * format, ...)
 // Since CCLOG isn't thread safe, we uses LOGD for multi-thread logging.
 #ifdef ANDROID
     #if COCOS2D_DEBUG > 0
-        #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG,__VA_ARGS__)
+        #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
     #else
         #define LOGD(...)
     #endif
 
-    #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,__VA_ARGS__)
+    #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #else
     #if COCOS2D_DEBUG > 0
         #define LOGD(fmt, ...) wsLog("D/" LOG_TAG " (" QUOTEME(__LINE__) "): " fmt "", ##__VA_ARGS__)

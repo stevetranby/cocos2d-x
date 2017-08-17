@@ -89,12 +89,12 @@
     [textInput ccui_setDelegate:self];
     
     // Migrate properties
-    textInput.ccui_textColor = _textInput.ccui_textColor ?: [UIColor whiteColor];
-    textInput.ccui_text = _textInput.ccui_text ?: @"";
-    textInput.ccui_placeholder = _textInput.ccui_placeholder ?: @"";
-    textInput.ccui_font = _textInput.ccui_font ?: [UIFont systemFontOfSize:self.frameRect.size.height*2/3];
-    textInput.ccui_placeholderFont = _textInput.ccui_placeholderFont ?: textInput.ccui_font;
-    textInput.ccui_placeholderTextColor = _textInput.ccui_placeholderTextColor ?: [UIColor lightGrayColor];
+    textInput.ccui_textColor = _textInput.ccui_textColor ? _textInput.ccui_textColor : [UIColor whiteColor];
+    textInput.ccui_text = _textInput.ccui_text ? _textInput.ccui_text : @"";
+    textInput.ccui_placeholder = _textInput.ccui_placeholder ? _textInput.ccui_placeholder : @"";
+    textInput.ccui_font = _textInput.ccui_font ? _textInput.ccui_font : [UIFont systemFontOfSize:self.frameRect.size.height*2/3];
+    textInput.ccui_placeholderFont = _textInput.ccui_placeholderFont ? _textInput.ccui_placeholderFont : textInput.ccui_font;
+    textInput.ccui_placeholderTextColor = _textInput.ccui_placeholderTextColor ? _textInput.ccui_placeholderTextColor : [UIColor lightGrayColor];
     
     [_textInput resignFirstResponder];
     [_textInput removeFromSuperview];
@@ -404,14 +404,14 @@
     
     NSUInteger newLength = oldLength - rangeLength + replacementLength;
     
-    return newLength <= maxLength;
+    return newLength <= (NSUInteger)maxLength;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
 {
     int maxLength = getEditBoxImplIOS()->getMaxLength();
     if (textView.markedTextRange == nil) {
-        if (textView.text.length > maxLength) {
+        if ((int)textView.text.length > maxLength) {
             textView.text = [textView.text substringToIndex:maxLength];
         }
         
@@ -429,7 +429,7 @@
 {
     int maxLength = getEditBoxImplIOS()->getMaxLength();
     if (textField.markedTextRange == nil) {
-        if (textField.text.length > maxLength) {
+        if ((int)textField.text.length > maxLength) {
             textField.text = [textField.text substringToIndex:maxLength];
         }
         
@@ -490,7 +490,7 @@
     
     NSUInteger newLength = oldLength - rangeLength + replacementLength;
     
-    return newLength <= maxLength;
+    return newLength <= (NSUInteger)maxLength;
 }
 
 @end

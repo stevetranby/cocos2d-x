@@ -1378,7 +1378,8 @@ static char invalid_filename_char[] = {':', '/', '\\', '?', '%', '*', '<', '>', 
 
 void Console::commandUpload(int fd)
 {
-    ssize_t n, rc;
+    size_t n;
+    ssize_t rc;
     char buf[512] = {0};
     char c = 0;
     char *ptr = buf;

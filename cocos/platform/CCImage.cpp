@@ -41,36 +41,36 @@ extern "C"
 #define __ENABLE_COMPATIBILITY_WITH_UNIX_2003__
 #include <stdio.h>
 #include <dirent.h>
-    FILE *fopen$UNIX2003( const char *filename, const char *mode )
+    FILE *fopen_UNIX2003( const char *filename, const char *mode )
     {
         return fopen(filename, mode);
     }
-    size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d )
+    size_t fwrite_UNIX2003( const void *a, size_t b, size_t c, FILE *d )
     {
         return fwrite(a, b, c, d);
     }
-    int fputs$UNIX2003(const char *res1, FILE *res2){
+    int fputs_UNIX2003(const char *res1, FILE *res2){
         return fputs(res1,res2);
     }
-    char *strerror$UNIX2003( int errnum )
+    char *strerror_UNIX2003( int errnum )
     {
         return strerror(errnum);
     }
-    DIR * opendir$INODE64$UNIX2003( char * dirName )
+    DIR * opendir_INODE64_UNIX2003( char * dirName )
     {
         return opendir( dirName );
     }
-    DIR * opendir$INODE64( char * dirName )
+    DIR * opendir_INODE64( char * dirName )
     {
         return opendir( dirName );
     }
 
-    int closedir$UNIX2003(DIR * dir)
+    int closedir_UNIX2003(DIR * dir)
     {
         return closedir(dir);
     }
 
-    struct dirent * readdir$INODE64( DIR * dir )
+    struct dirent * readdir_INODE64( DIR * dir )
     {
         return readdir( dir );
     }

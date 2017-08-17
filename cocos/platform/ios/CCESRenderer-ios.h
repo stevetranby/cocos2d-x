@@ -39,17 +39,17 @@
 
 @protocol CCESRenderer <NSObject>
 
-- (id) initWithDepthFormat:(unsigned int)depthFormat withPixelFormat:(unsigned int)pixelFormat withSharegroup:(EAGLSharegroup*)sharegroup withMultiSampling:(BOOL) multiSampling withNumberOfSamples:(unsigned int) requestedSamples;
+- (id) initWithDepthFormat:(GLuint)depthFormat withPixelFormat:(GLuint)pixelFormat withSharegroup:(EAGLSharegroup*)sharegroup withMultiSampling:(BOOL) multiSampling withNumberOfSamples:(GLuint) requestedSamples;
 
 - (BOOL) resizeFromLayer:(CAEAGLLayer *)layer;
 
 - (EAGLContext*) context;
 - (CGSize) backingSize;
 
-- (unsigned int) colorRenderBuffer;
-- (unsigned int) defaultFrameBuffer;
-- (unsigned int) msaaFrameBuffer;
-- (unsigned int) msaaColorBuffer;
+- (GLuint) colorRenderBuffer;
+- (GLuint) defaultFrameBuffer;
+- (GLuint) msaaFrameBuffer;
+- (GLuint) msaaColorBuffer;
 @end
 
 #endif // CC_PLATFORM_IOS

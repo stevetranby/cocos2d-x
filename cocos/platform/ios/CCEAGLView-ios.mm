@@ -231,13 +231,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 -(int) getWidth
 {
     CGSize bound = [self bounds].size;
-    return (int)bound.width * self.contentScaleFactor;
+    return (int) (bound.width * self.contentScaleFactor);
 }
 
 -(int) getHeight
 {
     CGSize bound = [self bounds].size;
-    return (int)bound.height * self.contentScaleFactor;
+    return (int) (bound.height * self.contentScaleFactor);
 }
 
 

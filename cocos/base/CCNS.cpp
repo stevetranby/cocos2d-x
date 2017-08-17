@@ -83,7 +83,7 @@ static bool splitWithForm(const std::string& content, strArray& strs, int n)
         CC_BREAK_IF(nPos1 != std::string::npos || nPos2 != std::string::npos);
 
         split(pointStr, ",", strs);
-        if (strs.size() != n || strs[0].length() == 0 || strs[1].length() == 0)
+        if (strs.size() != (size_t)n || strs[0].length() == 0 || strs[1].length() == 0)
         {
             strs.clear();
             break;

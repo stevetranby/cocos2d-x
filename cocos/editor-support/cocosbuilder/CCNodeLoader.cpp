@@ -973,7 +973,7 @@ Node * NodeLoader::parsePropTypeCCBFile(Node * /*pNode*/, Node * pParent, CCBRea
         auto& ownerCallbackNodes = reader->getOwnerCallbackNodes();
         if (!ownerCallbackNames.empty() && !ownerCallbackNodes.empty())
         {
-            CCASSERT(ownerCallbackNames.size() == ownerCallbackNodes.size(),
+            CCASSERT((ssize_t)ownerCallbackNames.size() == ownerCallbackNodes.size(),
                      "ownerCallbackNames size should equal to ownerCallbackNodes size.");
             ssize_t nCount = ownerCallbackNames.size();
             
@@ -988,7 +988,7 @@ Node * NodeLoader::parsePropTypeCCBFile(Node * /*pNode*/, Node * pParent, CCBRea
         auto ownerOutletNodes = reader->getOwnerOutletNodes();
         if (!ownerOutletNames.empty() && !ownerOutletNodes.empty())
         {
-            CCASSERT(ownerOutletNames.size() == ownerOutletNodes.size(),
+            CCASSERT((ssize_t)ownerOutletNames.size() == ownerOutletNodes.size(),
                      "ownerOutletNames size should be equal to ownerOutletNodes's size.");
             ssize_t nCount = ownerOutletNames.size();
             

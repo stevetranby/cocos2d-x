@@ -49,7 +49,7 @@
 @synthesize msaaFramebuffer=msaaFramebuffer_;
 
 // Create an OpenGL ES 2.0 context
-- (id) initWithDepthFormat:(unsigned int)depthFormat withPixelFormat:(unsigned int)pixelFormat withSharegroup:(EAGLSharegroup*)sharegroup withMultiSampling:(BOOL) multiSampling withNumberOfSamples:(unsigned int) requestedSamples
+- (id) initWithDepthFormat:(GLuint)depthFormat withPixelFormat:(GLuint)pixelFormat withSharegroup:(EAGLSharegroup*)sharegroup withMultiSampling:(BOOL) multiSampling withNumberOfSamples:(GLuint) requestedSamples
 {
     if (self = [super init])
     {
@@ -93,7 +93,8 @@
         {
             GLint maxSamplesAllowed;
             glGetIntegerv(GL_MAX_SAMPLES_APPLE, &maxSamplesAllowed);
-            samplesToUse_ = MIN(maxSamplesAllowed,requestedSamples);
+            NSAssert(maxSamplesAllowed >= 0, @"Negative Value for maxSamplesAllowed!");
+            samplesToUse_ = MIN((GLuint)maxSamplesAllowed,requestedSamples);
             
             /* Create the MSAA framebuffer (offscreen) */
             glGenFramebuffers(1, &msaaFramebuffer_);

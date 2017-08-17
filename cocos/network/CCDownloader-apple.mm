@@ -153,7 +153,7 @@ namespace cocos2d { namespace network {
     for (NSData* data in _dataArray)
     {
         // check
-        if (bytesReceived + data.length > len)
+        if (bytesReceived + (int64_t)data.length > len)
         {
             break;
         }
