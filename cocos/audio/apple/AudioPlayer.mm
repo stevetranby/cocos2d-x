@@ -228,7 +228,10 @@ bool AudioPlayer::play2d()
         // ENABLE_NS_ASSERTIONS seems to be the newer one
         // - see: https://stackoverflow.com/questions/6445222/ns-block-assertions-in-objective-c
         NSCAssert(state == AL_PLAYING, @"Audio failed to play ????");
-
+#warning REMOVE for RELEASE
+        if(state != AL_PLAYING) {
+            CCLOGERROR("Audio failed to play ????");
+        }
 
         _ready = true;
         ret = true;

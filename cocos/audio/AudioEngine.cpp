@@ -278,13 +278,7 @@ void AudioEngine::setVolume(int audioID, float volume)
 {
     auto it = _audioIDInfoMap.find(audioID);
     if (it != _audioIDInfoMap.end()){
-        if (volume < 0.0f) {
-            volume = 0.0f;
-        }
-        else if (volume > 1.0f){
-            volume = 1.0f;
-        }
-
+        volume = clampf(volume, 0.f, 1.f);
         if (it->second.volume != volume){
             _audioEngineImpl->setVolume(audioID, volume);
             it->second.volume = volume;
