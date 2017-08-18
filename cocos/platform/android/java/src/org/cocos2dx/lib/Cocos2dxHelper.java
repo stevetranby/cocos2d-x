@@ -326,7 +326,16 @@ public class Cocos2dxHelper {
  		}
  	}
 
-    public static boolean openURL(String url) { 
+ 	public static String getBuildVersion() {
+ 		try {
+ 			int version = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxActivity.getContext().getPackageName(), 0).versionCode;
+ 			return Integer.toString(version);
+ 		} catch(Exception e) {
+ 			return "";
+ 		}
+ 	}
+
+    public static boolean openURL(String url) {
         boolean ret = false;
         try {
             Intent i = new Intent(Intent.ACTION_VIEW);
