@@ -319,7 +319,7 @@ void Scheduler::schedule(const ccSchedulerFunc& callback, void *target, float in
 
             if (timer && !timer->isExhausted() && key == timer->getKey())
             {
-                CCLOG("CCScheduler#schedule. Reiniting timer with interval %.4f, repeat %u, delay %.4f", interval, repeat, delay);
+                CCLOGINFO("CCScheduler#schedule. Reiniting timer with interval %.4f, repeat %u, delay %.4f", interval, repeat, delay);
                 timer->setupTimerWithInterval(interval, repeat, delay);
                 return;
             }
@@ -984,7 +984,7 @@ void Scheduler::schedule(SEL_SCHEDULE selector, Ref *target, float interval, uns
             
             if (timer && !timer->isExhausted() && selector == timer->getSelector())
             {
-                CCLOG("CCScheduler#schedule. Reiniting timer with interval %.4f, repeat %u, delay %.4f", interval, repeat, delay);
+                CCLOGINFO("CCScheduler#schedule. Reiniting timer with interval %.4f, repeat %u, delay %.4f", interval, repeat, delay);
                 timer->setupTimerWithInterval(interval, repeat, delay);
                 return;
             }

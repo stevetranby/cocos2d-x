@@ -252,6 +252,11 @@ public:
      */
     bool hasPolygonInfo() const;
 
+
+    // Steve:
+    std::string getDescription();
+
+
 CC_CONSTRUCTOR_ACCESS:
     /**
      * @lua NA

@@ -1563,6 +1563,7 @@ void Sprite::setSpriteFrame(const std::string &spriteFrameName)
     CCASSERT(!spriteFrameName.empty(), "spriteFrameName must not be empty");
     if (spriteFrameName.empty())
     {
+        CCLOG("sprite frame empty!!!");
         return;
     }
 
@@ -1590,6 +1591,7 @@ void Sprite::setSpriteFrame(SpriteFrame *spriteFrame)
     // update texture before updating texture rect
     if (texture != _texture)
     {
+        CCLOG("setting texture to: %p", texture);
         setTexture(texture);
     }
 
