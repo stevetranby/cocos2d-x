@@ -36,6 +36,13 @@ THE SOFTWARE.
 
 
 #define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
+#if __has_cpp_attribute(maybe_unused)
+#define MAYBE_UNUSED [[maybe_unused]]
+#elif __has_cpp_attribute(gnu::unused)
+#define MAYBE_UNUSED [[gnu::unused]]
+#else
+#define MAYBE_UNUSED
+#endif
 
 /* Define NULL pointer value */
 #ifndef NULL
