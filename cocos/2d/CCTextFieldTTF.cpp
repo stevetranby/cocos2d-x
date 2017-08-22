@@ -368,41 +368,42 @@ void TextFieldTTF::setCursorPosition(std::size_t cursorPosition)
 
 void TextFieldTTF::setCursorFromPoint(const Vec2 &point, const Camera* camera)
 {
-    if (_cursorEnabled)
-    {
-        // Reset Label, no cursor
-        bool oldIsAttachWithIME = _isAttachWithIME;
-        _isAttachWithIME = false;
-        updateCursorDisplayText();
+    if (! _cursorEnabled) { return; }
 
-        Rect rect;
-        rect.size = getContentSize();
-        if (isScreenPointInRect(point, camera, getWorldToNodeTransform(), rect, nullptr))
+    // Reset Label, no cursor
+    bool oldIsAttachWithIME = _isAttachWithIME;
+    _isAttachWithIME = false;
+    updateCursorDisplayText();
+
+    Rect rect;
+    rect.size = getContentSize();
+    if (isScreenPointInRect(point, camera, getWorldToNodeTransform(), rect, nullptr))
+    {
+        int iLetter = 0;
+        for (; iLetter < _lengthOfString; ++iLetter)
         {
-            int latterPosition = 0;
-            for (; latterPosition < _lengthOfString; ++latterPosition)
+            if (! _lettersInfo[iLetter].valid) { continue; }
+
+            auto sprite = getLetter(iLetter);
+            if(sprite == nullptr) { continue; }
+
+            rect.size = sprite->getContentSize();
+            const auto& transform = sprite->getWorldToNodeTransform();
+            if (isScreenPointInRect(point, camera, transform, rect, nullptr))
             {
-                if (_lettersInfo[latterPosition].valid)
-                {
-                    auto sprite = getLetter(latterPosition);
-                    rect.size = sprite->getContentSize();
-                    if (isScreenPointInRect(point, camera, sprite->getWorldToNodeTransform(), rect, nullptr))
-                    {
-                        setCursorPosition(latterPosition);
-                        break;
-                    }
-                }
-            }
-            if (latterPosition == _lengthOfString)
-            {
-                setCursorPosition(latterPosition);
+                setCursorPosition(iLetter);
+                break;
             }
         }
 
-        // Set cursor
-        _isAttachWithIME = oldIsAttachWithIME;
-        updateCursorDisplayText();
+        if (iLetter == _lengthOfString) {
+            setCursorPosition(iLetter);
+        }
     }
+
+    // Set cursor
+    _isAttachWithIME = oldIsAttachWithIME;
+    updateCursorDisplayText();
 }
 
 void TextFieldTTF::setAttachWithIME(bool isAttachWithIME)
