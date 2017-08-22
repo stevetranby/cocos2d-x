@@ -35,6 +35,18 @@ THE SOFTWARE.
 #define CC_ASSERT(cond) assert(cond)
 
 
+
+////////////////////////////////////////////////////////////
+// C++17 Attribute Features
+//
+// https://infektor.net/posts/2017-01-19-using-cpp17-attributes-today.html
+//
+//
+
+#ifndef __has_cpp_attribute
+#define __has_cpp_attribute(name) 0
+#endif
+
 #define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
 #if __has_cpp_attribute(maybe_unused)
 #define MAYBE_UNUSED [[maybe_unused]]
@@ -43,6 +55,26 @@ THE SOFTWARE.
 #else
 #define MAYBE_UNUSED
 #endif
+
+#if __has_cpp_attribute(nodiscard)
+#define NODISCARD [[nodiscard]]
+#elif __has_cpp_attribute(gnu::warn_unused_result)
+#define NODISCARD [[gnu::warn_unused_result]]
+#else
+#define NODISCARD
+#endif
+
+#if __has_cpp_attribute(fallthrough)
+#define FALLTHROUGH [[fallthrough]]
+#elif __has_cpp_attribute(clang::fallthrough)
+#define FALLTHROUGH [[clang::fallthrough]]
+#else
+#define FALLTHROUGH
+#endif
+
+////////////////////////////////////////////////////////////
+
+
 
 /* Define NULL pointer value */
 #ifndef NULL
