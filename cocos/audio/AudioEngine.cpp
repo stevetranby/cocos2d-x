@@ -209,16 +209,16 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, co
         // Steve: added check for null profileHelper
         if (profile && (!profileHelper || profile != &profileHelper->profile))
         {
-            CCLOG("profile = %p, profileHelper = %p, profile->name = %s", profile, profileHelper, profile->name.c_str());
+            CCLOGINFO("profile = %p, profileHelper = %p, profile->name = %s", profile, profileHelper, profile->name.c_str());
             profileHelper = &_audioPathProfileHelperMap[profile->name];
             profileHelper->profile = *profile;
         } else {
             // TODO: remove for release
-            CCLOG("profile = %p, profileHelper = %p", profile, profileHelper);
+            CCLOGINFO("profile = %p, profileHelper = %p", profile, profileHelper);
         }
         
         if (_audioIDInfoMap.size() >= _maxInstances) {
-            CCLOG("Fail to play %s cause by limited max instance of AudioEngine",filePath.c_str());
+            CCLOGERROR("Fail to play %s cause by limited max instance of AudioEngine",filePath.c_str());
             break;
         }
         if (profileHelper)
