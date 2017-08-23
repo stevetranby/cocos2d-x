@@ -369,7 +369,7 @@ AudioCache* AudioEngineImpl::preload(const std::string& filePath, std::function<
     return audioCache;
 }
 
-int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume)
+int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume, float seekToTime)
 {
     if (s_ALDevice == nullptr) {
         return AudioEngine::INVALID_AUDIO_ID;
@@ -411,7 +411,9 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
 
     _alSourceUsed[alSource] = true;
 
-    audioCache->addPlayCallback(std::bind(&AudioEngineImpl::_play2d,this,audioCache,_currentAudioID));
+    audioCache->addPlayCallback([this,audioCache,aid=_currentAudioID,seekToTime](){
+        _play2d(audioCache, aid, seekToTime);
+    });
 
     if (_lazyInitLoop) {
         _lazyInitLoop = false;
@@ -421,7 +423,7 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
     return _currentAudioID++;
 }
 
-void AudioEngineImpl::_play2d(AudioCache *cache, int audioID)
+void AudioEngineImpl::_play2d(AudioCache *cache, int audioID, float seekToTime)
 {
     //Note: It may bn in sub thread or main thread :(
     if (!*cache->_isDestroyed && cache->_state == AudioCache::State::READY)
@@ -429,10 +431,11 @@ void AudioEngineImpl::_play2d(AudioCache *cache, int audioID)
         _threadMutex.lock();
         auto playerIt = _audioPlayers.find(audioID);
         if (playerIt != _audioPlayers.end() && playerIt->second->play2d()) {
-            _scheduler->performFunctionInCocosThread([audioID](){
+            _scheduler->performFunctionInCocosThread([audioID,seekToTime](){
 
                 if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
                     AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;
+                    AudioEngine::setCurrentTime(audioID, seekToTime);
                 }
             });
         }
@@ -603,6 +606,10 @@ bool AudioEngineImpl::setCurrentTime(int audioID, float time)
             if (error != AL_NO_ERROR) {
                 ALOGE("%s: audio id = %d, error = %x", __PRETTY_FUNCTION__,audioID,error);
             }
+            // STEVE
+            else {
+                ALOGV("audio [%d] seeking to time: %f", audioID, time);
+            }
             ret = true;
         }
     } while (0);
@@ -615,16 +622,14 @@ void AudioEngineImpl::setFinishCallback(int audioID, const std::function<void (i
     _audioPlayers[audioID]->_finishCallbak = callback;
 }
 
-void AudioEngineImpl::update(float dt)
+void AudioEngineImpl::update(float dt MAYBE_UNUSED)
 {
-    CC_UNUSED_PARAM(dt);
-    
     ALint sourceState;
     int audioID;
     AudioPlayer* player;
     ALuint alSource;
 
-//    ALOGV("AudioPlayer count: %d", (int)_audioPlayers.size());
+    // Steve: ALOGV("AudioPlayer count: %d", (int)_audioPlayers.size());
 
     for (auto it = _audioPlayers.begin(); it != _audioPlayers.end(); ) {
         audioID = it->first;

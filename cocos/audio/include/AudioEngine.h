@@ -130,7 +130,7 @@ public:
      *
      * @see `AudioProfile`
      */
-    static int play2d(const std::string& filePath, bool loop = false, float volume = 1.0f, const AudioProfile *profile = nullptr);
+    static int play2d(const std::string& filePath, bool loop = false, float volume = 1.0f, float seekToTime = 0.f, const AudioProfile *profile = nullptr);
     
     /** 
      * Sets whether an audio instance loop or not.

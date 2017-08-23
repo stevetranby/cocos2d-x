@@ -47,7 +47,7 @@ public:
     ~AudioEngineImpl();
 
     bool init();
-    int play2d(const std::string &fileFullPath ,bool loop ,float volume);
+    int play2d(const std::string &fileFullPath ,bool loop ,float volume, float seekToTime = 0.f);
     void setVolume(int audioID,float volume);
     void setLoop(int audioID, bool loop);
     bool pause(int audioID);
@@ -65,7 +65,7 @@ public:
     void update(float dt);
 
 private:
-    void _play2d(AudioCache *cache, int audioID);
+    void _play2d(AudioCache *cache, int audioID, float seekToTime = 0.f);
     static ALvoid myAlSourceNotificationCallback(ALuint sid, ALuint notificationID, ALvoid* userData);
 
     ALuint _alSources[MAX_AUDIOINSTANCES];
