@@ -411,9 +411,7 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
 
     _alSourceUsed[alSource] = true;
 
-    audioCache->addPlayCallback([this,audioCache,aid=_currentAudioID,seekToTime](){
-        _play2d(audioCache, aid, seekToTime);
-    });
+    audioCache->addPlayCallback(std::bind(&AudioEngineImpl::_play2d, this, audioCache, _currentAudioID, seekToTime));
 
     if (_lazyInitLoop) {
         _lazyInitLoop = false;
@@ -430,14 +428,22 @@ void AudioEngineImpl::_play2d(AudioCache *cache, int audioID, float seekToTime)
     {
         _threadMutex.lock();
         auto playerIt = _audioPlayers.find(audioID);
-        if (playerIt != _audioPlayers.end() && playerIt->second->play2d()) {
-            _scheduler->performFunctionInCocosThread([audioID,seekToTime](){
-
-                if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
-                    AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;
-                    AudioEngine::setCurrentTime(audioID, seekToTime);
-                }
-            });
+        if (playerIt != _audioPlayers.end()) {
+            ALOGV("found player for audioId");
+            if(playerIt->second->play2d()) {
+                ALOGV("play successful");
+                _scheduler->performFunctionInCocosThread([audioID,seekToTime](){
+                    if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
+                        AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;
+                        if(seekToTime > FLT_EPSILON)
+                            AudioEngine::setCurrentTime(audioID, seekToTime);
+                    }
+                });
+            } else {
+                ALOGE("tried to play, got error....???");
+            }
+        } else {
+            ALOGE("didn't find player for aid: %d", audioID);
         }
         _threadMutex.unlock();
     }

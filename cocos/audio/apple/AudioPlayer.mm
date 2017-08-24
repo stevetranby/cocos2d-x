@@ -144,7 +144,8 @@ void AudioPlayer::setCache(AudioCache* cache)
 bool AudioPlayer::play2d()
 {
     _play2dMutex.lock();
-    ALOGVV("AudioPlayer::play2d, _alSource: %u", _alSource);
+    ALOGV("AudioPlayer::play2d, _alSource: %u", _alSource);
+#warning FIXME STEVE: ALOGVV("AudioPlayer::play2d, _alSource: %u", _alSource);
 
     /*********************************************************************/
     /*       Note that it may be in sub thread or in main thread.       **/
@@ -158,10 +159,10 @@ bool AudioPlayer::play2d()
             break;
         }
 
-        alSourcei(_alSource, AL_BUFFER, 0);CHECK_AL_ERROR_DEBUG();
-        alSourcef(_alSource, AL_PITCH, 1.0f);CHECK_AL_ERROR_DEBUG();
-        alSourcef(_alSource, AL_GAIN, _volume);CHECK_AL_ERROR_DEBUG();
-        alSourcei(_alSource, AL_LOOPING, AL_FALSE);CHECK_AL_ERROR_DEBUG();
+        alSourcei(_alSource, AL_BUFFER, 0); CHECK_AL_ERROR_DEBUG();
+        alSourcef(_alSource, AL_PITCH, 1.0f); CHECK_AL_ERROR_DEBUG();
+        alSourcef(_alSource, AL_GAIN, _volume); CHECK_AL_ERROR_DEBUG();
+        alSourcei(_alSource, AL_LOOPING, AL_FALSE); CHECK_AL_ERROR_DEBUG();
 
         if (_audioCache->_queBufferFrames == 0)
         {
@@ -221,7 +222,6 @@ bool AudioPlayer::play2d()
         ALint state;
         alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
 
-
 #warning TODO: STEVE: need to probably make this a conditional, or just comment out of release (and testflight debug builds)?
         // http://nshipster.com/nsassertionhandler/
 #warning TODO: need to probably define or -D this NS_BLOCK_ASSERTIONS
@@ -231,6 +231,7 @@ bool AudioPlayer::play2d()
 #warning REMOVE for RELEASE
         if(state != AL_PLAYING) {
             CCLOGERROR("Audio failed to play ????");
+            // TODO: retry???
         }
 
         _ready = true;
