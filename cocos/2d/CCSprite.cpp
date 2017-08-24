@@ -1591,7 +1591,7 @@ void Sprite::setSpriteFrame(SpriteFrame *spriteFrame)
     // update texture before updating texture rect
     if (texture != _texture)
     {
-        CCLOG("setting texture to: %p", texture);
+        CCLOGINFO("setting texture to: %p", texture);
         setTexture(texture);
     }
 

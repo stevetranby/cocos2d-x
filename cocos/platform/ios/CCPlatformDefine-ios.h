@@ -34,8 +34,6 @@ THE SOFTWARE.
 
 #define CC_ASSERT(cond) assert(cond)
 
-
-
 ////////////////////////////////////////////////////////////
 // C++17 Attribute Features
 //
@@ -48,6 +46,7 @@ THE SOFTWARE.
 #endif
 
 #define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
+
 #if __has_cpp_attribute(maybe_unused)
 #define MAYBE_UNUSED [[maybe_unused]]
 #elif __has_cpp_attribute(gnu::unused)
@@ -73,8 +72,19 @@ THE SOFTWARE.
 #endif
 
 ////////////////////////////////////////////////////////////
+// Printf-like VA_ARGS for all compilers
+// Passing variable name as string to function with default parameters
+// https://stackoverflow.com/questions/9969490/passing-variable-name-as-string-to-function-with-default-parameters
+//
 
+#define ST_STRINGIFY_IMPL(s) #s
+#define ST_STRINGIFY(s) ST_STRINGIFY_IMPL(s)
+#define ST_ARG1_IMPL(a, ...) a
+#define ST_ARG1(...) ST_ARG1_IMPL(__VA_ARGS__, 0)
 
+#define MACRO_MyFuncNeedingZeroOrMoreVarArgs(...) MyFuncNeedingZeroOrMoreVarArgs(ST_STRINGIFY(ARG1(__VA_ARGS__)), __VA_ARGS__)
+
+////////////////////////////////////////////////////////////
 
 /* Define NULL pointer value */
 #ifndef NULL
@@ -84,7 +94,6 @@ THE SOFTWARE.
 #define NULL    ((void *)0)
 #endif
 #endif
-
 
 #endif // CC_PLATFORM_IOS
 

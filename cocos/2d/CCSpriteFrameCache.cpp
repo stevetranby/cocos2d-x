@@ -353,7 +353,7 @@ void SpriteFrameCache::addSpriteFramesWithFile(const std::string& plist, Texture
 {
     if (_loadedFileNames->find(plist) != _loadedFileNames->end())
     {
-        CCLOG("[todo: move to LOGINFO] sprite sheet already exists in cache!");
+        CCLOGINFO("sprite sheet already exists in cache!");
         return; // We already added it
     }
     
