@@ -62,11 +62,11 @@ THE SOFTWARE.
     #if TARGET_OS_IPHONE // TARGET_OS_IPHONE includes TARGET_OS_IOS TARGET_OS_TV and TARGET_OS_WATCH. see TargetConditionals.h
         #undef  CC_TARGET_PLATFORM
         #define CC_TARGET_PLATFORM         CC_PLATFORM_IOS
-#warning CC_TARGET_PLATFORM         CC_PLATFORM_IOS
+        //#warning CC_TARGET_PLATFORM         CC_PLATFORM_IOS
     #elif TARGET_OS_MAC
         #undef  CC_TARGET_PLATFORM
         #define CC_TARGET_PLATFORM         CC_PLATFORM_MAC
-#warning CC_TARGET_PLATFORM         CC_PLATFORM_MAC
+        //#warning CC_TARGET_PLATFORM         CC_PLATFORM_MAC
     #endif
 #endif
 
