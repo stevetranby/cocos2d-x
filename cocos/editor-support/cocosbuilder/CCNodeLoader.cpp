@@ -578,7 +578,7 @@ SpriteFrame * NodeLoader::parsePropTypeSpriteFrame(Node * pNode, Node * /*pParen
 {
     std::string spriteSheet = ccbReader->readCachedString();
     std::string spriteFile = ccbReader->readCachedString();
-    
+
     SpriteFrame *spriteFrame = nullptr;
     if (!spriteFile.empty())
     {
@@ -610,7 +610,10 @@ SpriteFrame * NodeLoader::parsePropTypeSpriteFrame(Node * pNode, Node * /*pParen
             ccbReader->getAnimationManager()->setObject(spriteFrame, pNode, pPropertyName);
         }
     }
-    
+
+    if(! spriteFrame) {
+        CCLOG("spriteFrame is NULL! [%s, %s]", spriteSheet.data(), spriteFile.data());
+    }
     return spriteFrame;
 }
 

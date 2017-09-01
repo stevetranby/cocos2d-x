@@ -489,12 +489,14 @@ bool GLProgramState::init(GLProgram* glprogram)
     for(auto &attrib : _glprogram->_vertexAttribs) {
         VertexAttribValue value(&attrib.second);
         _attributes[attrib.first] = value;
+        CCLOG("[steve] [glpgstate] adding attrib: %s", attrib.first.data());
     }
 
     for(auto &uniform : _glprogram->_userUniforms) {
         UniformValue value(&uniform.second, _glprogram);
         _uniforms[uniform.second.location] = std::move(value);
         _uniformsByName[uniform.first] = uniform.second.location;
+        CCLOG("[steve] [glpgstate] adding uniform: %d, %s", uniform.second.location, uniform.first.data());
     }
 
     return true;
@@ -681,7 +683,7 @@ void GLProgramState::setUniformFloat(const std::string& uniformName, float value
     if (v)
         v->setFloat(value);
     else
-        CCLOG("cocos2d: warning: Uniform not found: %s", uniformName.c_str());
+        CCLOG("cocos2d: warning: Uniform[float] not found: %s", uniformName.c_str());
 }
 
 void GLProgramState::setUniformFloat(GLint uniformLocation, float value)
@@ -690,7 +692,7 @@ void GLProgramState::setUniformFloat(GLint uniformLocation, float value)
     if (v)
         v->setFloat(value);
     else
-        CCLOG("cocos2d: warning: Uniform at location not found: %i", uniformLocation);
+        CCLOG("cocos2d: warning: Uniform[float] at location not found: %i", uniformLocation);
 }
 
 void GLProgramState::setUniformInt(const std::string& uniformName, int value)

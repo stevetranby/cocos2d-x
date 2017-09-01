@@ -627,7 +627,7 @@ std::string FileUtils::getStringFromFile(const std::string& filename)
     if(status == Status::NotExists) {
         CCLOGERROR("[steve] file does not exist: %s", filename.c_str());
     }
-    CCLOG("[steve] status = %d", status);
+    CCLOGINFO("[steve] status = %d", status);
     return s;
 }
 
@@ -669,7 +669,7 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
 
     FILE *fp = fopen(fs->getSuitableFOpen(fullPath).c_str(), "rb");
     if (!fp) {
-        CCLOG("[steve] Error: %d (%s)\n", errno, strerror(errno));
+        CCLOG("[steve] Error opening file: %d (%s)\n", errno, strerror(errno));
         return Status::OpenFailed;
     }
 

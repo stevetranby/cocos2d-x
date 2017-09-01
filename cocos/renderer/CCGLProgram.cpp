@@ -419,11 +419,15 @@ void GLProgram::parseUniforms()
                     GLenum __gl_error_code = glGetError();
                     if (__gl_error_code != GL_NO_ERROR)
                     {
-                        CCLOG("error: 0x%x  uniformName: %s", (int)__gl_error_code, uniformName);
+                        CCLOG("GL Error: 0x%x  uniformName: %s", (int)__gl_error_code, uniformName);
                     }
                     assert(__gl_error_code == GL_NO_ERROR);
 
                     _userUniforms[uniform.name] = uniform;
+                    CCLOG("[steve] [glpg] adding uniform: %d, %s", uniform.location, uniformName);
+                } else {
+                    auto loc = glGetUniformLocation(_program, uniformName);
+                    CCLOG("[steve] [glpg] not adding uniform: %d, %s", loc, uniformName);
                 }
             }
         }
@@ -432,7 +436,7 @@ void GLProgram::parseUniforms()
     {
         GLchar ErrorLog[1024];
         glGetProgramInfoLog(_program, sizeof(ErrorLog), nullptr, ErrorLog);
-        CCLOG("Error linking shader program: '%s'\n", ErrorLog);
+        CCLOG("GL Error linking shader program: '%s'\n", ErrorLog);
 
     }
 
@@ -516,11 +520,11 @@ bool GLProgram::compileShader(GLuint * shader, GLenum type, const GLchar* source
 
         if (type == GL_VERTEX_SHADER)
         {
-            CCLOG("cocos2d: %s", getVertexShaderLog().c_str());
+            CCLOG("cocos2d: vert shader log: %s", getVertexShaderLog().c_str());
         }
         else
         {
-            CCLOG("cocos2d: %s", getFragmentShaderLog().c_str());
+            CCLOG("cocos2d: frag shader log: %s", getFragmentShaderLog().c_str());
         }
         free(src);
 

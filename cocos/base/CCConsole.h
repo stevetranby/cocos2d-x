@@ -241,6 +241,7 @@ protected:
     void commandTouchSubCommandSwipe(int fd, const std::string& args);
     void commandUpload(int fd);
     void commandVersion(int fd, const std::string& args);
+
     // file descriptor: socket, console, etc.
     int _logfd;
     int _listenfd;
