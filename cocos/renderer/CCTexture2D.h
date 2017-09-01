@@ -385,6 +385,7 @@ public:
     
     /** Gets the texture name. */
     GLuint getName() const;
+    std::string getFilePath() const;
     
     /** Gets max S. */
     GLfloat getMaxS() const;

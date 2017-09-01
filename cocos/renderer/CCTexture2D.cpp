@@ -499,6 +499,11 @@ GLuint Texture2D::getName() const
     return _name;
 }
 
+std::string Texture2D::getFilePath() const
+{
+    return _filePath;
+}
+
 GLuint Texture2D::getAlphaTextureName() const
 {
     return _alphaTexture == nullptr ? 0 : _alphaTexture->getName();
