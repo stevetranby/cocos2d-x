@@ -104,7 +104,9 @@ _normalTextureAdaptDirty(true),
 _pressedTextureAdaptDirty(true),
 _disabledTextureAdaptDirty(true),
 _fontSize(10),
-_type(FontType::SYSTEM)
+_type(FontType::SYSTEM),
+_buttonScale(1.0f),
+_titleScale(1.0f)
 {
     setTouchEnabled(true);
 }
@@ -508,13 +510,13 @@ void Button::onPressStateChangedToNormal()
                 _titleRenderer->stopAllActions();
                 if (_unifySize)
                 {
-                    Action *zoomTitleAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP, 1.0f, 1.0f);
+                    Action *zoomTitleAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP, _titleScale, _titleScale);
                     _titleRenderer->runAction(zoomTitleAction);
                 }
                 else
                 {
-                    _titleRenderer->setScaleX(1.0f);
-                    _titleRenderer->setScaleY(1.0f);
+                    _titleRenderer->setScaleX(_titleScale);
+                    _titleRenderer->setScaleY(_titleScale);
                 }
             }
         }
@@ -527,8 +529,8 @@ void Button::onPressStateChangedToNormal()
         if (nullptr != _titleRenderer)
         {
             _titleRenderer->stopAllActions();
-            _titleRenderer->setScaleX(1.0f);
-            _titleRenderer->setScaleY(1.0f);
+            _titleRenderer->setScaleX(_titleScale);
+            _titleRenderer->setScaleY(_titleScale);
         }
 
     }
@@ -550,18 +552,18 @@ void Button::onPressStateChangedToPressed()
             _buttonClickedRenderer->stopAllActions();
 
             Action *zoomAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP,
-                                                 1.0f + _zoomScale,
-                                                 1.0f + _zoomScale);
+                                                 _buttonScale + _zoomScale,
+                                                 _buttonScale + _zoomScale);
             _buttonClickedRenderer->runAction(zoomAction);
 
-            _buttonNormalRenderer->setScale(1.0f + _zoomScale,
-                                            1.0f + _zoomScale);
+            _buttonNormalRenderer->setScale(_buttonScale + _zoomScale,
+                                            _buttonScale + _zoomScale);
 
             if (nullptr != _titleRenderer)
             {
                 _titleRenderer->stopAllActions();
                 Action *zoomTitleAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP,
-                                                          1.0f + _zoomScale, 1.0f + _zoomScale);
+                                                          _titleScale + _zoomScale, _titleScale + _zoomScale);
                 _titleRenderer->runAction(zoomTitleAction);
             }
         }
@@ -573,13 +575,13 @@ void Button::onPressStateChangedToPressed()
         _buttonDisabledRenderer->setVisible(false);
 
         _buttonNormalRenderer->stopAllActions();
-        _buttonNormalRenderer->setScale(1.0f +_zoomScale, 1.0f + _zoomScale);
+        _buttonNormalRenderer->setScale(_buttonScale +_zoomScale, _buttonScale + _zoomScale);
 
         if (nullptr != _titleRenderer)
         {
             _titleRenderer->stopAllActions();
-            _titleRenderer->setScaleX(1.0f + _zoomScale);
-            _titleRenderer->setScaleY(1.0f + _zoomScale);
+            _titleRenderer->setScaleX(_titleScale + _zoomScale);
+            _titleRenderer->setScaleY(_titleScale + _zoomScale);
         }
     }
 }
