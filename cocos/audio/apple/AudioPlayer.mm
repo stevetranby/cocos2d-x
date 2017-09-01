@@ -144,6 +144,7 @@ void AudioPlayer::setCache(AudioCache* cache)
 bool AudioPlayer::play2d()
 {
     _play2dMutex.lock();
+
     ALOGV("AudioPlayer::play2d, _alSource: %u", _alSource);
 #warning FIXME STEVE: ALOGVV("AudioPlayer::play2d, _alSource: %u", _alSource);
 

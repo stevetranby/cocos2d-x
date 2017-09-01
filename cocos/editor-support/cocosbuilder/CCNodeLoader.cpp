@@ -611,6 +611,12 @@ SpriteFrame * NodeLoader::parsePropTypeSpriteFrame(Node * pNode, Node * /*pParen
         }
     }
 
+    if(spriteSheet.empty()) {
+        CCLOG("Empty `spriteSheet` while loading CCB Node!");
+    }
+    if(spriteFile.empty()) {
+        CCLOG("Empty `spriteFile` while loading CCB Node!");
+    }
     if(! spriteFrame) {
         CCLOG("spriteFrame is NULL! [%s, %s]", spriteSheet.data(), spriteFile.data());
     }
