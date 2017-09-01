@@ -677,21 +677,32 @@ std::string TextureCache::getCachedTextureInfo() const
 
         memset(buftmp, 0, sizeof(buftmp));
 
-
         Texture2D* tex = texture.second;
         unsigned int bpp = tex->getBitsPerPixelForFormat();
         // Each texture takes up width * height * bytesPerPixel bytes.
         auto bytes = tex->getPixelsWide() * tex->getPixelsHigh() * bpp / 8;
         totalBytes += bytes;
         count++;
-        snprintf(buftmp, sizeof(buftmp) - 1, "\"%s\" rc=%lu id=%lu %lu x %lu @ %ld bpp => %lu KB\n",
-            texture.first.c_str(),
+
+        std::string trimmedFilename;
+        auto& filepath = texture.first;
+        std::size_t found = filepath.rfind(".app");
+        if (found != std::string::npos) {
+            trimmedFilename.append(filepath.substr(found + 4));
+        } else {
+            found = filepath.size() > 40 ? filepath.size() - 40 : 0;
+            trimmedFilename.append(filepath.substr(found));
+        }
+
+
+        snprintf(buftmp, sizeof(buftmp) - 1, "rc=%lu id=%lu %lu x %lu @ %ld bpp => %lu KB\t\t\"%s\"\n",
             (long)tex->getReferenceCount(),
             (long)tex->getName(),
             (long)tex->getPixelsWide(),
             (long)tex->getPixelsHigh(),
             (long)bpp,
-            (long)bytes / 1024);
+            (long)bytes / 1024,
+             trimmedFilename.c_str());
 
         buffer += buftmp;
     }
