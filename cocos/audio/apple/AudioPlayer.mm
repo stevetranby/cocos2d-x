@@ -146,7 +146,6 @@ bool AudioPlayer::play2d()
     _play2dMutex.lock();
 
     ALOGV("AudioPlayer::play2d, _alSource: %u", _alSource);
-#warning FIXME STEVE: ALOGVV("AudioPlayer::play2d, _alSource: %u", _alSource);
 
     /*********************************************************************/
     /*       Note that it may be in sub thread or in main thread.       **/

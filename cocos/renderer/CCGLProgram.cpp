@@ -424,10 +424,10 @@ void GLProgram::parseUniforms()
                     assert(__gl_error_code == GL_NO_ERROR);
 
                     _userUniforms[uniform.name] = uniform;
-                    CCLOG("[steve] [glpg] adding uniform: %d, %s", uniform.location, uniformName);
+                    CCLOGINFO("[steve] [glpg] adding uniform: %d, %s", uniform.location, uniformName);
                 } else {
                     auto loc = glGetUniformLocation(_program, uniformName);
-                    CCLOG("[steve] [glpg] not adding uniform: %d, %s", loc, uniformName);
+                    CCLOGINFO("[steve] [glpg] not adding uniform: %d, %s", loc, uniformName);
                 }
             }
         }
