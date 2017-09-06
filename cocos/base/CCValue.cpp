@@ -775,38 +775,38 @@ static std::string getTabs(int depth)
     return tabWidth;
 }
 
-static std::string visit(const Value& v, int depth);
+static std::string visit(const Value& v, int depth, const char* delimiter = "\n");
 
-static std::string visitVector(const ValueVector& v, int depth)
+static std::string visitVector(const ValueVector& v, int depth, const char* delimiter = "\n")
 {
     std::stringstream ret;
 
     if (depth > 0)
-        ret << "\n";
+        ret << delimiter;
 
-    ret << getTabs(depth) << "[\n";
+    ret << getTabs(depth) << "[" << delimiter;
 
     int i = 0;
     for (const auto& child : v)
     {
-        ret << getTabs(depth+1) << i << ": " << visit(child, depth + 1);
+        ret << getTabs(depth+1) << i << ": " << visit(child, depth + 1, delimiter);
         ++i;
     }
 
-    ret << getTabs(depth) << "]\n";
+    ret << getTabs(depth) << "]" << delimiter;
 
     return ret.str();
 }
 
 template <class T>
-static std::string visitMap(const T& v, int depth)
+static std::string visitMap(const T& v, int depth, const char* delimiter = "\n")
 {
     std::stringstream ret;
 
     if (depth > 0)
-        ret << "\n";
+        ret << delimiter;
 
-    ret << getTabs(depth) << "{\n";
+    ret << getTabs(depth) << "{" << delimiter;
 
     for (auto& iter : v)
     {
@@ -814,12 +814,12 @@ static std::string visitMap(const T& v, int depth)
         ret << visit(iter.second, depth + 1);
     }
 
-    ret << getTabs(depth) << "}\n";
+    ret << getTabs(depth) << "}" << delimiter;
 
     return ret.str();
 }
 
-static std::string visit(const Value& v, int depth)
+static std::string visit(const Value& v, int depth, const char* delimiter /* = "\n" */)
 {
     std::stringstream ret;
 
@@ -833,16 +833,16 @@ static std::string visit(const Value& v, int depth)
         case Value::Type::DOUBLE:
         case Value::Type::BOOLEAN:
         case Value::Type::STRING:
-            ret << v.asString() << "\n";
+            ret << v.asString() << delimiter;
             break;
         case Value::Type::VECTOR:
-            ret << visitVector(v.asValueVector(), depth);
+            ret << visitVector(v.asValueVector(), depth, delimiter);
             break;
         case Value::Type::MAP:
-            ret << visitMap(v.asValueMap(), depth);
+            ret << visitMap(v.asValueMap(), depth, delimiter);
             break;
         case Value::Type::INT_KEY_MAP:
-            ret << visitMap(v.asIntKeyMap(), depth);
+            ret << visitMap(v.asIntKeyMap(), depth, delimiter);
             break;
         default:
             CCASSERT(false, "Invalid type!");
@@ -852,10 +852,10 @@ static std::string visit(const Value& v, int depth)
     return ret.str();
 }
 
-std::string Value::getDescription() const
+std::string Value::getDescription(const char* delimiter) const
 {
-    std::string ret("\n");
-    ret += visit(*this, 0);
+    std::string ret("");
+    ret += visit(*this, 0, delimiter);
     return ret;
 }
 

@@ -220,7 +220,7 @@ public:
     Type getType() const { return _type; }
 
     /** Gets the description of the class. */
-    std::string getDescription() const;
+    std::string getDescription(const char* delimiter = "\n") const;
 
 private:
     void clear();
