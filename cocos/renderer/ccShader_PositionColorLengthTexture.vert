@@ -22,30 +22,24 @@
 const char* ccPositionColorLengthTexture_vert = R"(
 
 #ifdef GL_ES
-// STEVE: precision lowp float;
-precision highp float;
-#endif
-
-#ifdef GL_ES
-attribute mediump vec4 a_position;
-attribute mediump vec2 a_texcoord;
-attribute mediump vec4 a_color;
-
-varying mediump vec4 v_color;
-varying mediump vec2 v_texcoord;
-
+attribute highp vec4 a_position;
+attribute highp vec2 a_texcoord;
+attribute lowp vec4 a_color;
 #else
-
 attribute vec4 a_position;
 attribute vec2 a_texcoord;
 attribute vec4 a_color;
-
-varying vec4 v_color;
-varying vec2 v_texcoord;
-
 #endif
 
+#ifdef GL_ES
+varying lowp vec4 v_color;
+varying highp vec2 v_texcoord;
+uniform lowp float u_alpha;
+#else
+varying vec4 v_color;
+varying vec2 v_texcoord;
 uniform float u_alpha;
+#endif
 
 void main()
 {

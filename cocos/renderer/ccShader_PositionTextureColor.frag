@@ -24,13 +24,14 @@
  */
 
 const char* ccPositionTextureColor_frag = R"(
-#ifdef GL_ES
-// STEVE: precision mediump float;
-precision highp float;
-#endif
 
+#ifdef GL_ES
+varying lowp vec4 v_fragmentColor;
+varying highp vec2 v_texCoord;
+#else
 varying vec4 v_fragmentColor;
 varying vec2 v_texCoord;
+#endif
 
 void main()
 {

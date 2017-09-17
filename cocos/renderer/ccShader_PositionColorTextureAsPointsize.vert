@@ -30,12 +30,12 @@ attribute vec4 a_color;
 attribute vec2 a_texCoord;
 
 #ifdef GL_ES
-// STEVE: varying lowp vec4 v_fragmentColor;
-varying mediump vec4 v_fragmentColor;
+varying lowp vec4 v_fragmentColor;
+uniform lowp float u_alpha;
 #else
 varying vec4 v_fragmentColor;
-#endif
 uniform float u_alpha;
+#endif
 
 void main()
 {

@@ -26,12 +26,12 @@
 const char* ccPositionTextureA8Color_frag = R"(
 
 #ifdef GL_ES
-// STEVE: precision lowp float;
-precision highp float;
-#endif
-
+varying lowp vec4 v_fragmentColor;
+varying highp vec2 v_texCoord;
+#else
 varying vec4 v_fragmentColor;
 varying vec2 v_texCoord;
+#endif
 
 void main()
 {

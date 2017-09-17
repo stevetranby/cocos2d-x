@@ -2,8 +2,8 @@
 const char* cc3D_Particle_tex_frag = R"(
 
 #ifdef GL_ES
-varying mediump vec2 TextureCoordOut;
-varying mediump vec4 ColorOut;
+varying highp vec2 TextureCoordOut;
+varying lowp vec4 ColorOut;
 #else
 varying vec4 ColorOut;
 varying vec2 TextureCoordOut;

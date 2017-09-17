@@ -30,8 +30,7 @@ uniform vec4 u_color;
 uniform float u_pointSize;
 
 #ifdef GL_ES
-// STEVE: varying lowp vec4 v_fragmentColor;
-varying highp vec4 v_fragmentColor;
+varying lowp vec4 v_fragmentColor;
 #else
 varying vec4 v_fragmentColor;
 #endif

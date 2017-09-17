@@ -25,14 +25,14 @@
 const char* ccPositionTextureColorAlphaTest_frag = R"(
 
 #ifdef GL_ES
-precision lowp float; // original
-//precision highp float; // STEVE
-#endif
-
+varying lowp vec4 v_fragmentColor;
+varying highp vec2 v_texCoord;
+uniform mediump float CC_alpha_value;
+#else
 varying vec4 v_fragmentColor;
 varying vec2 v_texCoord;
-
 uniform float CC_alpha_value;
+#endif
 
 void main()
 {

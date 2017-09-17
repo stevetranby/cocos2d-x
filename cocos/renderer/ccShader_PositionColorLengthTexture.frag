@@ -22,10 +22,8 @@
 const char* ccPositionColorLengthTexture_frag = R"(
 
 #ifdef GL_ES
-// #extension GL_OES_standard_derivatives : enable
-
-varying mediump vec4 v_color;
-varying mediump vec2 v_texcoord;
+varying lowp vec4 v_color;
+varying highp vec2 v_texcoord;
 #else
 varying vec4 v_color;
 varying vec2 v_texcoord;
