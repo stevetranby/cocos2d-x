@@ -29,13 +29,11 @@
 {
 }
 
-@synthesize maximumLength = _maximumLength;
-
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        _maximumLength = INT_MAX;
+        _maximumLength = NSIntegerMax;
     }
     
     return self;
@@ -53,16 +51,12 @@
     return YES;
 }
 
-- (BOOL)isPartialStringValid:(NSString **)partialStringPtr
-       proposedSelectedRange:(NSRangePointer)proposedSelRangePtr
-              originalString:(NSString *)origString
-       originalSelectedRange:(NSRange)origSelRange
-            errorDescription:(NSString **)error
+- (BOOL)isPartialStringValid:(NSString **) partialStringPtr
+       proposedSelectedRange:(NSRangePointer) __unused proposedSelRangePtr
+              originalString:(NSString *) __unused origString
+       originalSelectedRange:(NSRange) __unused origSelRange
+            errorDescription:(NSString **) __unused error
 {
-    (void)proposedSelRangePtr;
-    (void)origString;
-    (void)origSelRange;
-    (void)error;
     return (*partialStringPtr).length <= self.maximumLength;
 }
 

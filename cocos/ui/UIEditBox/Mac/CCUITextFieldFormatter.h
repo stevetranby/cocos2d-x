@@ -27,9 +27,8 @@
 
 @interface CCUITextFieldFormatter : NSFormatter
 {
-    int _maximumLength;
 }
 
-@property (nonatomic, assign) int maximumLength;
+@property (nonatomic, assign) NSUInteger maximumLength;
 
 @end

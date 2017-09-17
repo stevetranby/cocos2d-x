@@ -347,7 +347,7 @@
 
 - (BOOL)textView:(NSTextView *)textView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
 {
-    int maxLength = getEditBoxImplMac()->getMaxLength();
+    NSInteger maxLength = (NSInteger)getEditBoxImplMac()->getMaxLength();
     if (maxLength < 0)
     {
         return YES;
@@ -361,7 +361,7 @@
     NSUInteger replacementLength = replacementString.length;
     NSUInteger rangeLength = affectedCharRange.length;
     
-    NSUInteger newLength = oldLength - rangeLength + replacementLength;
+    NSInteger newLength = (NSInteger)(oldLength - rangeLength + replacementLength);
     
     return newLength <= maxLength;
 }
