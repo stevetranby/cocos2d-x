@@ -376,7 +376,7 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
     }
 
     ALuint alSource = findValidSource();
-    if (alSource == AL_INVALID)
+    if (alSource == (ALuint)AL_INVALID)
     {
         return AudioEngine::INVALID_AUDIO_ID;
     }

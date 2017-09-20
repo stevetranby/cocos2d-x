@@ -275,13 +275,18 @@ ostream& operator<< (ostream &out, const Texture2D& t) {
 }
 
 ostream& operator<< (ostream& out, const PolygonInfo& p) {
-    out << "{" << "polyinfo: " << &p << "}";
+    out << "{ " << "polyinfo: ";
+    out << "a: " << p.getArea() << ", ";
+    out << "r: " << p.getRect() << ", ";
+    out << "fn: " << p.getFilename();
+    out << " }";
+    return out;
 }
 
 std::string SpriteFrame::getDescription()
 {
     std::stringstream ss;
-    ss << ", _offset: " << _offset;
+    ss << "{ _offset: " << _offset;
     ss << ", _anchorPoint: " << _anchorPoint;
     ss << ", _originalSize: " << _originalSize;
     ss << ", _rectInPixels: " << _rectInPixels;
@@ -290,9 +295,10 @@ std::string SpriteFrame::getDescription()
     ss << ", _rect: " << _rect;
     ss << ", _offsetInPixels: " << _offsetInPixels;
     ss << ", _originalSizeInPixels: " << _originalSizeInPixels;
-    ss << ", _texture: " << *_texture;
+    ss << ", _texture: " << (*_texture);
     ss << ", _textureFilename: " << _textureFilename;
-    ss << ", _polygonInfo: " << _polygonInfo;
+//    ss << ", _polygonInfo: " << _polygonInfo;
+    ss << " }";
     return ss.str();
 }
 
