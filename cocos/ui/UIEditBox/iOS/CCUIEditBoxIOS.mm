@@ -273,7 +273,7 @@
 
 - (NSString *)text
 {
-    return self.textInput.ccui_text ?: @"";
+    return self.textInput.ccui_text ? self.textInput.ccui_text : @"";
 }
 
 - (void)setVisible:(BOOL)visible
@@ -283,7 +283,7 @@
 
 - (NSString *)getDefaultFontName
 {
-    return self.textInput.ccui_font.fontName ?: @"";
+    return self.textInput.ccui_font.fontName ? self.textInput.ccui_font.fontName : @"";
 }
 
 - (cocos2d::ui::EditBoxDelegate::EditBoxEndAction)getEndAction

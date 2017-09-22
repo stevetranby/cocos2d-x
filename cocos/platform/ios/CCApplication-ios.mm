@@ -55,9 +55,9 @@ Application::~Application()
 int Application::run()
 {
     NSLog(@"Application::run");
-    printf("Application::run\n");
-    NSString * version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
-    NSString * build = [[NSBundle mainBundle] objectForInfoDictionaryKey: (NSString *)kCFBundleVersionKey];
+//    printf("Application::run\n");
+//    NSString * version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+//    NSString * build = [[NSBundle mainBundle] objectForInfoDictionaryKey: (NSString *)kCFBundleVersionKey];
     if (applicationDidFinishLaunching())
     {
         [[CCDirectorCaller sharedDirectorCaller] startMainLoop];
