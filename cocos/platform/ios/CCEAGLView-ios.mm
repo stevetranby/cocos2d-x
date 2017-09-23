@@ -208,7 +208,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 - (void)didMoveToWindow
 {
-    printf("self.window.screen.nativeScale = %f", self.window.screen.nativeScale);
+    CCLOG("self.window.screen.nativeScale = %f", self.window.screen.nativeScale);
     self.contentScaleFactor = self.window.screen.nativeScale;
 #if !defined(CC_TARGET_OS_TVOS)
     [[NSNotificationCenter defaultCenter] addObserver:self
