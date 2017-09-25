@@ -281,6 +281,193 @@ CC_ASSERT(__gl_error_code == GL_NO_ERROR, "Error"); \
 #define CC_64BITS 0
 #endif
 
+ /******************************************************************************************/
+ /** LittleEndian Sense Macro, from google protobuf see:                                  **/
+ /** https://github.com/google/protobuf/blob/master/src/google/protobuf/io/coded_stream.h **/
+ /******************************************************************************************/
+#ifdef _MSC_VER
+  #if defined(_M_IX86)
+    #define CC_LITTLE_ENDIAN 1
+    #warning CC_LITTLE_ENDIAN enabled
+  #else
+    #define CC_LITTLE_ENDIAN 0
+    #warning CC_LITTLE_ENDIAN DISABLED!!!!
+  #endif
+  #if _MSC_VER >= 1300 && !defined(__INTEL_COMPILER)
+    #pragma runtime_checks("c", off)
+  #endif
+#else
+  #include <sys/param.h>
+//STEVE: TODO: #include <endian.h>
+
+  #if defined(__BYTE_ORDER) && __BYTE_ORDER == __LITTLE_ENDIAN
+    #define CC_LITTLE_ENDIAN 1
+    #warning CC_LITTLE_ENDIAN enabled
+  #else
+
+// STEVE: using info from - https://sourceforge.net/p/predef/wiki/Endianness/
+
+    #if (defined(__BIG_ENDIAN__) || \
+        defined(__ARMEB__) || \
+        defined(__THUMBEB__) || \
+        defined(__AARCH64EB__) || \
+        defined(_MIPSEB) || \
+        defined(__MIPSEB) || \
+        defined(__MIPSEB__) || \
+        (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) || \
+        (__FLOAT_WORD_ORDER__ == __ORDER_BIG_ENDIAN__))
+
+                #define CC_LITTLE_ENDIAN 0
+                #warning CC_LITTLE_ENDIAN DISABLED!!!!
+
+    #elif defined(__LITTLE_ENDIAN__) || \
+          defined(__ARMEL__) || \
+          defined(__THUMBEL__) || \
+          defined(__AARCH64EL__) || \
+          defined(_MIPSEL) || \
+          defined(__MIPSEL) || \
+          defined(__MIPSEL__) || \
+          (defined(__BYTE_ORDER) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__) || \
+          (defined(__FLOAT_WORD_ORDER__) && __FLOAT_WORD_ORDER__ == __ORDER_LITTLE_ENDIAN)
+
+                #define CC_LITTLE_ENDIAN 1
+                #warning CC_LITTLE_ENDIAN enabled
+
+#endif // if detect little endian
+  #endif // __BYTE_ORDER defined
+#endif // MSC_VER
+
+#if defined(__BIG_ENDIAN__)
+#warning defined(__BIG_ENDIAN__)
+#endif //
+#if defined(__ARMEB__)
+#warning defined(__ARMEB__)
+#endif //
+#if defined(__THUMBEB__)
+#warning defined(__THUMBEB__)
+#endif //
+#if defined(__AARCH64EB__)
+#warning defined(__AARCH64EB__)
+#endif //
+#if defined(_MIPSEB)
+#warning defined(_MIPSEB)
+#endif //
+#if defined(__MIPSEB)
+#warning defined(__MIPSEB)
+#endif //
+#if defined(__MIPSEB__)
+#warning defined(__MIPSEB__)
+#endif //
+
+#if defined(__LITTLE_ENDIAN__)
+#warning defined(__LITTLE_ENDIAN__)
+#endif //
+#if defined(__ARMEL__)
+#warning defined(__ARMEL__)
+#endif //
+#if defined(__THUMBEL__)
+#warning defined(__THUMBEL__)
+#endif //
+#if defined(__AARCH64EL__)
+#warning defined(__AARCH64EL__)
+#endif //
+#if de
+#if defined(__BIG_ENDIAN__)
+#warning defined(__BIG_ENDIAN__)
+#endif //
+#if defined(__ARMEB__)
+#warning defined(__ARMEB__)
+#endif //
+#if defined(__THUMBEB__)
+#warning defined(__THUMBEB__)
+#endif //
+#if defined(__AARCH64EB__)
+#warning defined(__AARCH64EB__)
+#endif //
+#if defined(_MIPSEB)
+#warning defined(_MIPSEB)
+#endif //
+#if defined(__MIPSEB)
+#warning defined(__MIPSEB)
+#endif //
+#if defined(__MIPSEB__)
+#warning defined(__MIPSEB__)
+#endif //
+
+#if defined(__LITTLE_ENDIAN__)
+#warning defined(__LITTLE_ENDIAN__)
+#endif //
+#if defined(__ARMEL__)
+#warning defined(__ARMEL__)
+#endif //
+#if defined(__THUMBEL__)
+#warning defined(__THUMBEL__)
+#endif //
+#if defined(__AARCH64EL__)
+#warning defined(__AARCH64EL__)
+#endif //
+#if defined(_MIPSEL)
+#warning defined(_MIPSEL)
+#endif //
+#if defined(__MIPSEL)
+#warning defined(__MIPSEL)
+#endif //
+#if defined(__MIPSEL__)
+#warning defined(__MIPSEL__)
+#endif //
+#if defined(__BYTE_ORDER)
+#warning defined(__BYTE_ORDER)
+#endif //
+#if defined(__FLOAT_WORD_ORDER__)
+#warning defined(__FLOAT_WORD_ORDER__)
+#endif //
+fined(_MIPSEL)
+#warning defined(_MIPSEL)
+#endif //
+#if defined(__MIPSEL)
+#warning defined(__MIPSEL)
+#endif //
+#if defined(__MIPSEL__)
+#warning defined(__MIPSEL__)
+#endif //
+#if defined(__BYTE_ORDER)
+#warning defined(__BYTE_ORDER)
+#endif //
+#if defined(__FLOAT_WORD_ORDER__)
+#warning defined(__FLOAT_WORD_ORDER__)
+#endif //
+
+
+
+/*
+ __BIG_ENDIAN__ and __LITTLE_ENDIAN__ are define in some gcc versions
+ only, probably depending on the architecture. Try to use endian.h if
+ the gcc way fails - endian.h also doesn not seem to be available on all
+ platforms.
+ */
+#ifdef __BIG_ENDIAN__
+#define WORDS_BIGENDIAN 1
+#else /* __BIG_ENDIAN__ */
+#ifdef __LITTLE_ENDIAN__
+#undef WORDS_BIGENDIAN
+#else
+#ifdef BSD
+#include <sys/endian.h>
+#else
+#include <endian.h>
+#endif
+#if __BYTE_ORDER == __BIG_ENDIAN
+#define WORDS_BIGENDIAN 1
+#elif __BYTE_ORDER == __LITTLE_ENDIAN
+#undef WORDS_BIGENDIAN
+#else
+#error "unable to determine endianess!"
+#endif /* __BYTE_ORDER */
+#endif /* __LITTLE_ENDIAN__ */
+#endif /* __BIG_ENDIAN__ */
+
+
+
 
 /** @def CC_INCREMENT_GL_DRAWS_BY_ONE
  Increments the GL Draws counts by one.

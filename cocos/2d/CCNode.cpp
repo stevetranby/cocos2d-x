@@ -56,7 +56,7 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 // FIXME:: Yes, nodes might have a sort problem once every 30 days if the game runs at 60 FPS and each frame sprites are reordered.
-unsigned int Node::s_globalOrderOfArrival = 0;
+std::uint32_t Node::s_globalOrderOfArrival = 0;
 int Node::__attachedNodeCount = 0;
 
 // MARK: Constructor, Destructor, Init
@@ -83,8 +83,7 @@ Node::Node()
 , _transformUpdated(true)
 // children (lazy allocs)
 // lazy alloc
-, _localZOrderAndArrival(0)
-, _localZOrder(0)
+, _localZOrder$Arrival(0LL)
 , _globalZOrder(0)
 , _parent(nullptr)
 // "whole screen" objects. like Scenes and Layers, should set _ignoreAnchorPointForPosition to true
@@ -259,7 +258,7 @@ void Node::setSkewY(float skewY)
     _transformUpdated = _transformDirty = _inverseDirty = true;
 }
 
-void Node::setLocalZOrder(int z)
+void Node::setLocalZOrder(std::int32_t z)
 {
     if (getLocalZOrder() == z)
         return;
@@ -275,16 +274,14 @@ void Node::setLocalZOrder(int z)
 
 /// zOrder setter : private method
 /// used internally to alter the zOrder variable. DON'T call this method manually
-void Node::_setLocalZOrder(int z)
+void Node::_setLocalZOrder(std::int32_t z)
 {
-    auto tmpZ = static_cast<std::uint64_t>(z) << 32;
-    _localZOrderAndArrival = static_cast<std::int64_t>(tmpZ) | (_localZOrderAndArrival & 0xffffffff);
     _localZOrder = z;
 }
 
 void Node::updateOrderOfArrival()
 {
-    _localZOrderAndArrival = (_localZOrderAndArrival & 0xffffffff00000000) | (++s_globalOrderOfArrival);
+    _orderOfArrival = (++s_globalOrderOfArrival);
 }
 
 void Node::setGlobalZOrder(float globalZOrder)
@@ -1763,24 +1760,13 @@ const Mat4& Node::getNodeToParentTransform() const
         float x = _position.x;
         float y = _position.y;
         float z = _positionZ;
-
-//        if (_parent && _parent->_usingPositionBasis)
-//        {
-//            const auto& p = _parent->_positionBasisInPoints;
-//            // If positionBasis > 0, we need to invert our x,y
-//            // Otherwise we keep them the same
-//            x *= std::copysign(1.0, 1 - (2 * _parent->_positionBasis.x));
-//            y *= std::copysign(1.0, 1 - (2 * _parent->_positionBasis.y));
-//            x += p.x;
-//            y += p.y;
-//        }
-
+        
         if (_ignoreAnchorPointForPosition)
         {
-            x += _anchorPointInPoints.x - _positionAnchorInPoints.x;
-            y += _anchorPointInPoints.y - _positionAnchorInPoints.y;
+            x += _anchorPointInPoints.x;
+            y += _anchorPointInPoints.y;
         }
-
+        
         bool needsSkewMatrix = ( _skewX || _skewY );
 
         // Build Transform Matrix = translation * rotation * scale
