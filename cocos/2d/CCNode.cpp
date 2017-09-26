@@ -56,7 +56,7 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 // FIXME:: Yes, nodes might have a sort problem once every 30 days if the game runs at 60 FPS and each frame sprites are reordered.
-unsigned int Node::s_globalOrderOfArrival = 0;
+std::uint32_t Node::s_globalOrderOfArrival = 0;
 int Node::__attachedNodeCount = 0;
 
 // MARK: Constructor, Destructor, Init
@@ -83,8 +83,7 @@ Node::Node()
 , _transformUpdated(true)
 // children (lazy allocs)
 // lazy alloc
-, _localZOrderAndArrival(0)
-, _localZOrder(0)
+, _localZOrder$Arrival(0LL)
 , _globalZOrder(0)
 , _parent(nullptr)
 // "whole screen" objects. like Scenes and Layers, should set _ignoreAnchorPointForPosition to true
@@ -98,7 +97,6 @@ Node::Node()
 , _running(false)
 , _visible(true)
 , _ignoreAnchorPointForPosition(false)
-, _usingPositionBasis(false)
 , _reorderChildDirty(false)
 , _isTransitionFinished(false)
 #if CC_ENABLE_SCRIPT_BINDING
@@ -260,7 +258,7 @@ void Node::setSkewY(float skewY)
     _transformUpdated = _transformDirty = _inverseDirty = true;
 }
 
-void Node::setLocalZOrder(int z)
+void Node::setLocalZOrder(std::int32_t z)
 {
     if (getLocalZOrder() == z)
         return;
@@ -276,15 +274,14 @@ void Node::setLocalZOrder(int z)
 
 /// zOrder setter : private method
 /// used internally to alter the zOrder variable. DON'T call this method manually
-void Node::_setLocalZOrder(int z)
+void Node::_setLocalZOrder(std::int32_t z)
 {
-    _localZOrderAndArrival = static_cast<std::int64_t>(static_cast<std::uint64_t>(z) << 32) | (_localZOrderAndArrival & 0xffffffff);
     _localZOrder = z;
 }
 
 void Node::updateOrderOfArrival()
 {
-    _localZOrderAndArrival = (_localZOrderAndArrival & 0xffffffff00000000) | (++s_globalOrderOfArrival);
+    _orderOfArrival = (++s_globalOrderOfArrival);
 }
 
 void Node::setGlobalZOrder(float globalZOrder)
@@ -627,52 +624,52 @@ void Node::setAnchorPoint(const Vec2& point)
     }
 }
 
-void Node::setPositionBasis(Vec2 positionBasis)
-{
-    if (!positionBasis.equals(_positionBasis) || !_usingPositionBasis)
-    {
-        _positionBasis = std::move(positionBasis);
-        _positionBasisInPoints.set(_contentSize.width * _positionBasis.x, _contentSize.height * _positionBasis.y);
-        _transformUpdated = _transformDirty = _inverseDirty = true;
-        _usingPositionBasis = true;
-    }
-}
-
-const Vec2& Node::getPositionBasis() const
-{
-    return _positionBasis;
-}
-
-const Vec2& Node::getPositionBasisInPoints() const
-{
-    return _positionBasisInPoints;
-}
-
-bool Node::isUsingPositionBasis() const
-{
-    return _usingPositionBasis;
-}
-
-void Node::setPositionAnchor(Vec2 positionAnchor)
-{
-    if (!positionAnchor.equals(_positionAnchor) || !_ignoreAnchorPointForPosition)
-    {
-        _positionAnchor = std::move(positionAnchor);
-        _positionAnchorInPoints.set(_contentSize.width * _positionAnchor.x, _contentSize.height * _positionAnchor.y);
-        _transformUpdated = _transformDirty = _inverseDirty = true;
-        _ignoreAnchorPointForPosition = true;
-    }
-}
-
-const Vec2& Node::getPositionAnchor() const
-{
-    return _positionAnchor;
-}
-
-const Vec2& Node::getPositionAnchorInPoints() const
-{
-    return _positionAnchorInPoints;
-}
+//void Node::setPositionBasis(Vec2 positionBasis)
+//{
+//    if (!positionBasis.equals(_positionBasis) || !_usingPositionBasis)
+//    {
+//        _positionBasis = std::move(positionBasis);
+//        _positionBasisInPoints.set(_contentSize.width * _positionBasis.x, _contentSize.height * _positionBasis.y);
+//        _transformUpdated = _transformDirty = _inverseDirty = true;
+//        _usingPositionBasis = true;
+//    }
+//}
+//
+//const Vec2& Node::getPositionBasis() const
+//{
+//    return _positionBasis;
+//}
+////
+////const Vec2& Node::getPositionBasisInPoints() const
+////{
+////    return _positionBasisInPoints;
+////}
+////
+////bool Node::isUsingPositionBasis() const
+////{
+////    return _usingPositionBasis;
+////}
+//
+//void Node::setPositionAnchor(Vec2 positionAnchor)
+//{
+//    if (!positionAnchor.equals(_positionAnchor) || !_ignoreAnchorPointForPosition)
+//    {
+//        _positionAnchor = std::move(positionAnchor);
+//        _positionAnchorInPoints.set(_contentSize.width * _positionAnchor.x, _contentSize.height * _positionAnchor.y);
+//        _transformUpdated = _transformDirty = _inverseDirty = true;
+//        _ignoreAnchorPointForPosition = true;
+//    }
+//}
+//
+//const Vec2& Node::getPositionAnchor() const
+//{
+//    return _positionAnchor;
+//}
+//
+//const Vec2& Node::getPositionAnchorInPoints() const
+//{
+//    return _positionAnchorInPoints;
+//}
 
 /// contentSize getter
 const Size& Node::getContentSize() const
@@ -687,18 +684,18 @@ void Node::setContentSize(const Size & size)
         _contentSize = size;
 
         _anchorPointInPoints.set(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y);
-        _positionAnchorInPoints.set(_contentSize.width * _positionAnchor.x, _contentSize.height * _positionAnchor.y);
+//        _positionAnchorInPoints.set(_contentSize.width * _positionAnchor.x, _contentSize.height * _positionAnchor.y);
         _transformUpdated = _transformDirty = _inverseDirty = _contentSizeDirty = true;
     }
 
-    if (_usingPositionBasis)
-    {
-        _positionBasisInPoints.set(_contentSize.width * _positionBasis.x, _contentSize.height * _positionBasis.y);
-        for (auto&& child : _children)
-        {
-            child->_transformUpdated = child->_transformDirty = child->_inverseDirty = true;
-        }
-    }
+//    if (_usingPositionBasis)
+//    {
+//        _positionBasisInPoints.set(_contentSize.width * _positionBasis.x, _contentSize.height * _positionBasis.y);
+//        for (auto&& child : _children)
+//        {
+//            child->_transformUpdated = child->_transformDirty = child->_inverseDirty = true;
+//        }
+//    }
 }
 
 // isRunning getter
@@ -723,12 +720,11 @@ bool Node::isIgnoreAnchorPointForPosition() const
 /// isRelativeAnchorPoint setter
 void Node::setIgnoreAnchorPointForPosition(bool newValue)
 {
-    if (newValue)
+    if (newValue != _ignoreAnchorPointForPosition) 
     {
-        setPositionAnchor(Vec2(0, 0));
+        _ignoreAnchorPointForPosition = newValue;
+        _transformUpdated = _transformDirty = _inverseDirty = true;
     }
-
-    _ignoreAnchorPointForPosition = newValue;
 }
 
 /// tag getter
@@ -1765,16 +1761,16 @@ const Mat4& Node::getNodeToParentTransform() const
         float y = _position.y;
         float z = _positionZ;
 
-        if (_parent && _parent->_usingPositionBasis)
-        {
-            const auto& p = _parent->_positionBasisInPoints;
-            // If positionBasis > 0, we need to invert our x,y
-            // Otherwise we keep them the same
-            x *= std::copysign(1.0, 1 - (2 * _parent->_positionBasis.x));
-            y *= std::copysign(1.0, 1 - (2 * _parent->_positionBasis.y));
-            x += p.x;
-            y += p.y;
-        }
+//        if (_parent && _parent->_usingPositionBasis)
+//        {
+//            const auto& p = _parent->_positionBasisInPoints;
+//            // If positionBasis > 0, we need to invert our x,y
+//            // Otherwise we keep them the same
+//            x *= std::copysign(1.0, 1 - (2 * _parent->_positionBasis.x));
+//            y *= std::copysign(1.0, 1 - (2 * _parent->_positionBasis.y));
+//            x += p.x;
+//            y += p.y;
+//        }
 
         if (_ignoreAnchorPointForPosition)
         {
