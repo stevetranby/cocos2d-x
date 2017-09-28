@@ -335,13 +335,11 @@ public class Cocos2dxEditBoxHelper {
                 if (editBox != null) {
                     editBox.setChangedTextProgrammatically(true);
                     editBox.setText(text);
-                    int position = text.length();
+                    int position = editBox.getText().length();
                     try {
                         editBox.setSelection(editBox.getMaxLength() > position ? position : editBox.getMaxLength());
                     }
-                    catch (java.lang.IndexOutOfBoundsException e) {
-
-                    }
+                    catch (java.lang.IndexOutOfBoundsException e) {}
                 }
             }
         });
@@ -441,7 +439,7 @@ public class Cocos2dxEditBoxHelper {
             Log.e(TAG, "closeKeyboardOnUiThread doesn't run on UI thread!");
             return;
         }
-        
+
         final InputMethodManager imm = (InputMethodManager) mCocos2dxActivity.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         Cocos2dxEditBox editBox = mEditBoxArray.get(index);
         if (null != editBox) {
