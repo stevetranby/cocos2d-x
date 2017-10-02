@@ -56,7 +56,7 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 // FIXME:: Yes, nodes might have a sort problem once every 30 days if the game runs at 60 FPS and each frame sprites are reordered.
-std::uint32_t Node::s_globalOrderOfArrival = 0;
+unsigned int Node::s_globalOrderOfArrival = 0;
 int Node::__attachedNodeCount = 0;
 
 // MARK: Constructor, Destructor, Init
@@ -83,7 +83,8 @@ Node::Node()
 , _transformUpdated(true)
 // children (lazy allocs)
 // lazy alloc
-, _localZOrder$Arrival(0LL)
+, _localZOrderAndArrival(0)
+, _localZOrder(0)
 , _globalZOrder(0)
 , _parent(nullptr)
 // "whole screen" objects. like Scenes and Layers, should set _ignoreAnchorPointForPosition to true
@@ -258,7 +259,7 @@ void Node::setSkewY(float skewY)
     _transformUpdated = _transformDirty = _inverseDirty = true;
 }
 
-void Node::setLocalZOrder(std::int32_t z)
+void Node::setLocalZOrder(int z)
 {
     if (getLocalZOrder() == z)
         return;
@@ -274,14 +275,16 @@ void Node::setLocalZOrder(std::int32_t z)
 
 /// zOrder setter : private method
 /// used internally to alter the zOrder variable. DON'T call this method manually
-void Node::_setLocalZOrder(std::int32_t z)
+void Node::_setLocalZOrder(int z)
 {
+    auto tmpZ = static_cast<std::uint64_t>(z) << 32;
+    _localZOrderAndArrival = static_cast<std::int64_t>(tmpZ) | (_localZOrderAndArrival & 0xffffffff);
     _localZOrder = z;
 }
 
 void Node::updateOrderOfArrival()
 {
-    _orderOfArrival = (++s_globalOrderOfArrival);
+    _localZOrderAndArrival = (_localZOrderAndArrival & 0xffffffff00000000) | (++s_globalOrderOfArrival);
 }
 
 void Node::setGlobalZOrder(float globalZOrder)
@@ -624,53 +627,6 @@ void Node::setAnchorPoint(const Vec2& point)
     }
 }
 
-//void Node::setPositionBasis(Vec2 positionBasis)
-//{
-//    if (!positionBasis.equals(_positionBasis) || !_usingPositionBasis)
-//    {
-//        _positionBasis = std::move(positionBasis);
-//        _positionBasisInPoints.set(_contentSize.width * _positionBasis.x, _contentSize.height * _positionBasis.y);
-//        _transformUpdated = _transformDirty = _inverseDirty = true;
-//        _usingPositionBasis = true;
-//    }
-//}
-//
-//const Vec2& Node::getPositionBasis() const
-//{
-//    return _positionBasis;
-//}
-////
-////const Vec2& Node::getPositionBasisInPoints() const
-////{
-////    return _positionBasisInPoints;
-////}
-////
-////bool Node::isUsingPositionBasis() const
-////{
-////    return _usingPositionBasis;
-////}
-//
-//void Node::setPositionAnchor(Vec2 positionAnchor)
-//{
-//    if (!positionAnchor.equals(_positionAnchor) || !_ignoreAnchorPointForPosition)
-//    {
-//        _positionAnchor = std::move(positionAnchor);
-//        _positionAnchorInPoints.set(_contentSize.width * _positionAnchor.x, _contentSize.height * _positionAnchor.y);
-//        _transformUpdated = _transformDirty = _inverseDirty = true;
-//        _ignoreAnchorPointForPosition = true;
-//    }
-//}
-//
-//const Vec2& Node::getPositionAnchor() const
-//{
-//    return _positionAnchor;
-//}
-//
-//const Vec2& Node::getPositionAnchorInPoints() const
-//{
-//    return _positionAnchorInPoints;
-//}
-
 /// contentSize getter
 const Size& Node::getContentSize() const
 {
@@ -684,18 +640,9 @@ void Node::setContentSize(const Size & size)
         _contentSize = size;
 
         _anchorPointInPoints.set(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y);
-//        _positionAnchorInPoints.set(_contentSize.width * _positionAnchor.x, _contentSize.height * _positionAnchor.y);
+
         _transformUpdated = _transformDirty = _inverseDirty = _contentSizeDirty = true;
     }
-
-//    if (_usingPositionBasis)
-//    {
-//        _positionBasisInPoints.set(_contentSize.width * _positionBasis.x, _contentSize.height * _positionBasis.y);
-//        for (auto&& child : _children)
-//        {
-//            child->_transformUpdated = child->_transformDirty = child->_inverseDirty = true;
-//        }
-//    }
 }
 
 // isRunning getter
@@ -1760,13 +1707,13 @@ const Mat4& Node::getNodeToParentTransform() const
         float x = _position.x;
         float y = _position.y;
         float z = _positionZ;
-        
+
         if (_ignoreAnchorPointForPosition)
         {
             x += _anchorPointInPoints.x;
             y += _anchorPointInPoints.y;
         }
-        
+
         bool needsSkewMatrix = ( _skewX || _skewY );
 
         // Build Transform Matrix = translation * rotation * scale
