@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include <assert.h>
 
 #ifdef _USRDLL
-#define CC_DLL __attribute__ ((visibility("default"))) 
+#define CC_DLL __attribute__ ((visibility("default")))
 #else
 #define CC_DLL
 #endif
@@ -57,28 +57,43 @@ THE SOFTWARE.
 
 #define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
 
-#if __has_cpp_attribute(maybe_unused)
-#define MAYBE_UNUSED [[maybe_unused]]
-#elif __has_cpp_attribute(gnu::unused)
-#define MAYBE_UNUSED [[gnu::unused]]
+////////////////////////////////////////////////////////////
+
+// c++11/14/17 attributes
+#if defined(__has_cpp_attribute)
+    #if __has_cpp_attribute(maybe_unused)
+        #define MAYBE_UNUSED [[maybe_unused]]
+    #elif __has_cpp_attribute(gnu::unused)
+        #define MAYBE_UNUSED [[gnu::unused]]
+	#else
+		#define MAYBE_UNUSED
+    #endif
 #else
-#define MAYBE_UNUSED
+	#define MAYBE_UNUSED
 #endif
 
-#if __has_cpp_attribute(nodiscard)
-#define NODISCARD [[nodiscard]]
-#elif __has_cpp_attribute(gnu::warn_unused_result)
-#define NODISCARD [[gnu::warn_unused_result]]
+#if defined(__has_cpp_attribute)
+	#if __has_cpp_attribute(nodiscard)
+		#define NODISCARD [[nodiscard]]
+	#elif __has_cpp_attribute(gnu::warn_unused_result)
+		#define NODISCARD [[gnu::warn_unused_result]]
+	#else
+		#define NODISCARD
+	#endif
 #else
-#define NODISCARD
+	#define NODISCARD
 #endif
 
-#if __has_cpp_attribute(fallthrough)
-#define FALLTHROUGH [[fallthrough]]
-#elif __has_cpp_attribute(clang::fallthrough)
-#define FALLTHROUGH [[clang::fallthrough]]
+#if defined(__has_cpp_attribute)
+	#if __has_cpp_attribute(fallthrough)
+		#define FALLTHROUGH [[fallthrough]]
+	#elif __has_cpp_attribute(clang::fallthrough)
+		#define FALLTHROUGH [[clang::fallthrough]]
+	#else
+		#define FALLTHROUGH
+	#endif
 #else
-#define FALLTHROUGH
+	#define FALLTHROUGH
 #endif
 
 ////////////////////////////////////////////////////////////

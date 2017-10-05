@@ -53,13 +53,46 @@ THE SOFTWARE.
 
 #define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
 
-#if __has_cpp_attribute(maybe_unused)
-#define MAYBE_UNUSED [[maybe_unused]]
-#elif __has_cpp_attribute(gnu::unused)
-#define MAYBE_UNUSED [[gnu::unused]]
+////////////////////////////////////////////////////////////
+
+// c++11/14/17 attributes
+#if defined(__has_cpp_attribute)
+    #if __has_cpp_attribute(maybe_unused)
+        #define MAYBE_UNUSED [[maybe_unused]]
+    #elif __has_cpp_attribute(gnu::unused)
+        #define MAYBE_UNUSED [[gnu::unused]]
+	#else
+		#define MAYBE_UNUSED
+    #endif
 #else
-#define MAYBE_UNUSED
+	#define MAYBE_UNUSED
 #endif
+
+#if defined(__has_cpp_attribute)
+	#if __has_cpp_attribute(nodiscard)
+		#define NODISCARD [[nodiscard]]
+	#elif __has_cpp_attribute(gnu::warn_unused_result)
+		#define NODISCARD [[gnu::warn_unused_result]]
+	#else
+		#define NODISCARD
+	#endif
+#else
+	#define NODISCARD
+#endif
+
+#if defined(__has_cpp_attribute)
+	#if __has_cpp_attribute(fallthrough)
+		#define FALLTHROUGH [[fallthrough]]
+	#elif __has_cpp_attribute(clang::fallthrough)
+		#define FALLTHROUGH [[clang::fallthrough]]
+	#else
+		#define FALLTHROUGH
+	#endif
+#else
+	#define FALLTHROUGH
+#endif
+
+////////////////////////////////////////////////////////////
 
 /* Define NULL pointer value */
 #ifndef NULL
