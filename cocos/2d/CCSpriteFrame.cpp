@@ -250,7 +250,6 @@ bool SpriteFrame::hasPolygonInfo() const
 
 
 using std::stringstream;
-using std::to_string;
 using std::string;
 using std::ostream;
 
