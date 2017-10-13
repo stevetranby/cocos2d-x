@@ -61,9 +61,9 @@ typedef enum
  * Touch event callback.
  * @deprecated
  */
-CC_DEPRECATED("use `Widget::ccWidgetTouchCallback` instead")
-typedef void (Ref::*SEL_TouchEvent)(Ref*,TouchEventType);
-#define toucheventselector(_SELECTOR) (SEL_TouchEvent)(&_SELECTOR)
+//CC_DEPRECATED("use `Widget::ccWidgetTouchCallback` instead")
+//typedef void (Ref::*SEL_TouchEvent)(Ref*,TouchEventType);
+//#define toucheventselector(_SELECTOR) (SEL_TouchEvent)(&_SELECTOR)
 
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
@@ -307,7 +307,7 @@ public:
     /**
      * Sets the touch event target/selector to the widget
      */
-    CC_DEPRECATED_ATTRIBUTE void addTouchEventListener(Ref* target,SEL_TouchEvent selector);
+//    CC_DEPRECATED_ATTRIBUTE void addTouchEventListener(Ref* target,SEL_TouchEvent selector);
     /**
      * Set a callback to touch vent listener.
      *@param callback  The callback in `ccWidgetEventCallback.`
@@ -980,19 +980,19 @@ protected:
      */
     static Widget *_focusedWidget;  //both layout & widget will be stored in this variable
 
-    Ref*       _touchEventListener;
-    #if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #elif _MSC_VER >= 1400 //vs 2005 or higher
-    #pragma warning (push)
-    #pragma warning (disable: 4996)
-    #endif
-    SEL_TouchEvent    _touchEventSelector;
-    #if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
-    #pragma GCC diagnostic warning "-Wdeprecated-declarations"
-    #elif _MSC_VER >= 1400 //vs 2005 or higher
-    #pragma warning (pop)
-    #endif
+//    Ref*       _touchEventListener;
+//    #if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
+//    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//    #elif _MSC_VER >= 1400 //vs 2005 or higher
+//    #pragma warning (push)
+//    #pragma warning (disable: 4996)
+//    #endif
+//    SEL_TouchEvent    _touchEventSelector;
+//    #if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
+//    #pragma GCC diagnostic warning "-Wdeprecated-declarations"
+//    #elif _MSC_VER >= 1400 //vs 2005 or higher
+//    #pragma warning (pop)
+//    #endif
     ccWidgetTouchCallback _touchEventCallback;
     ccWidgetClickCallback _clickEventListener;
     ccWidgetEventCallback _ccEventCallback;
