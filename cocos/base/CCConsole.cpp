@@ -137,6 +137,11 @@ namespace {
 
     void _log(const char *format, va_list args)
     {
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+        __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "steve", 0);
+#endif
+
         int bufferSize = MAX_LOG_LENGTH;
         char* buf = nullptr;
         int nret = 0;
@@ -144,7 +149,12 @@ namespace {
         {
             buf = new (std::nothrow) char[bufferSize];
             if (buf == nullptr)
+            {
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+                __android_log_print(ANDROID_LOG_DEBUG, "STEVE", "format: %s", format);
+#endif
                 return;
+            }
             /*
 	    pitfall: The behavior of vsnprintf between VS2013 and VS2015/2017 is different
               VS2013 or Unix-Like System will return -1 when buffer not enough, but VS2015/2017 will return the actural needed length for buffer at this station

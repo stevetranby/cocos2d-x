@@ -43,6 +43,7 @@ namespace cocos2d { namespace experimental {
 
 static int getSystemAPILevel()
 {
+	ALOGI("steve");
     static int __systemApiLevel = -1;
     if (__systemApiLevel > 0)
     {
@@ -91,7 +92,7 @@ AudioPlayerProvider::AudioPlayerProvider(SLEngineItf engineItf, SLObjectItf outp
           _threadPool(ThreadPool::newCachedThreadPool(1, 8, 5, 2, 2))
 #endif
 {
-    ALOGI("deviceSampleRate: %d, bufferSizeInFrames: %d", _deviceSampleRate, _bufferSizeInFrames);
+    ALOGI("steve: deviceSampleRate: %d, bufferSizeInFrames: %d", _deviceSampleRate, _bufferSizeInFrames);
     if (getSystemAPILevel() >= 17)
     {
         _mixController = new (std::nothrow) AudioMixerController(_bufferSizeInFrames, _deviceSampleRate, 2);
