@@ -153,6 +153,13 @@ public:
     virtual std::string getBuildVersion() = 0;
 
     /**
+     @brief Get build version (sub-version, build number, etc e.g. 12064).
+     * @js NA
+     * @lua NA
+     */
+    virtual std::string getCopyrightString() = 0;
+
+    /**
      @brief Open url in default browser.
      @param String with url to open.
      @return True if the resource located by the URL was successfully opened; otherwise false.

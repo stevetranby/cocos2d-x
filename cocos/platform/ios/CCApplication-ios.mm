@@ -168,6 +168,15 @@ std::string Application::getBuildVersion() {
     return "";
 }
 
+#warning TODO: should maybe move this into STDevice-ios.mm
+std::string Application::getCopyrightString() {
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"NSHumanReadableCopyright"];
+    if (version) {
+        return [version UTF8String];
+    }
+    return "";
+}
+
 bool Application::openURL(const std::string &url)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];

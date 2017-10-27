@@ -329,6 +329,15 @@ public class Cocos2dxHelper {
  		}
  	}
 
+    public static String getCopyrightString() {
+        return "Copyright (c) 2017";
+//        try {
+//            return "";
+//        } catch(Exception e) {
+//            return "";
+//        }
+    }
+
     public static boolean openURL(String url) {
         boolean ret = false;
         try {

@@ -209,6 +209,11 @@ std::string Application::getBuildVersion()
     return JniHelper::callStaticStringMethod(helperClassName, "getBuildVersion");
 }
 
+std::string Application::getCopyrightString()
+{
+    return JniHelper::callStaticStringMethod(helperClassName, "getCopyrightString");
+}
+
 bool Application::openURL(const std::string &url)
 {
     return JniHelper::callStaticBooleanMethod(helperClassName, "openURL", url);

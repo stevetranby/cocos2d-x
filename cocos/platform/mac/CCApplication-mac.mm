@@ -139,6 +139,15 @@ std::string Application::getBuildVersion() {
     return "";
 }
 
+std::string Application::getCopyrightString() {
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"NSHumanReadableCopyright"];
+    if (version) {
+        return [version UTF8String];
+    }
+    return "";
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // static member function
 //////////////////////////////////////////////////////////////////////////////////////////////////

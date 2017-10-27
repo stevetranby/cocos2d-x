@@ -96,7 +96,12 @@ public:
      @brief Get build version.
      */
     virtual std::string getBuildVersion() override;
-    
+
+    /**
+     @brief Get copyright.
+     */
+    virtual std::string getCopyrightString() override;
+
     /**
      @brief Open url in default browser
      @param String with url to open.
