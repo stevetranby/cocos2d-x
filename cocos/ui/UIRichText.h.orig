@@ -567,6 +567,10 @@ protected:
     void handleImageRenderer(const std::string& filePath, const Color3B& color, GLubyte opacity, int width, int height, const std::string& url);
     void handleCustomRenderer(Node* renderer);
     void formatRenderers();
+<<<<<<< HEAD
+    CC_DEPRECATED_ATTRIBUTE inline void formarRenderers() { formatRenderers(); }
+=======
+>>>>>>> db1102492452faea78746da7e3cf29fa22c69c2a
     void addNewLine();
     int findSplitPositionForWord(cocos2d::Label* label, const std::string& text);
     int findSplitPositionForChar(cocos2d::Label* label, const std::string& text);
