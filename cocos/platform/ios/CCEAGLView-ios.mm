@@ -143,12 +143,9 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
             return nil;
         }
 
-
         originalRect_ = self.frame;
         self.keyboardShowNotification = nil;
         self.autocorrectionType = UITextAutocorrectionTypeNo;
-
-
 
         // STEVE: https://developer.apple.com/library/content/samplecode/RosyWriter/Listings/Classes_Utilities_OpenGLPixelBufferView_m.html
         // On iOS8 and later we use the native scale of the screen as our content scale factor.
