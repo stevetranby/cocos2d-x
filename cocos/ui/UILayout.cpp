@@ -455,21 +455,6 @@ Layout::ClippingType Layout::getClippingType()const
 {
     return _clippingType;
 }
-    
-//void Layout::setStencilClippingSize(const Size& /*size*/)
-//{
-//    if (_clippingEnabled && _clippingType == ClippingType::STENCIL)
-//    {
-//        Vec2 rect[4];
-//        // rect[0].setZero(); Zero default
-//        rect[1].set(_contentSize.width, 0.0f);
-//        rect[2].set(_contentSize.width, _contentSize.height);
-//        rect[3].set(0.0f, _contentSize.height);
-//        Color4F green(0.0f, 1.0f, 0.0f, 1.0f);
-//        _clippingStencil->clear();
-//        _clippingStencil->drawPolygon(rect, 4, green, 0, green);
-//    }
-//}
 
 const Rect& Layout::getClippingRect() 
 {
@@ -1937,18 +1922,17 @@ void Layout::setCameraMask(unsigned short mask, bool applyChildren)
     {
         if (_clippingEnabled && _clippingType == ClippingType::STENCIL)
         {
-            Color4F green(0, 1, 0, 1);
+            Color4F fillColor(0, 1, 0, 1);
             _clippingStencil->clear();
 
             if(_stencilRadius == 0.0f) {
                 Vec2 rect[4];
-                // rect[0].setZero(); Zero default
+                rect[0].setZero(); // Zero default
                 rect[1].set(_contentSize.width, 0.0f);
                 rect[2].set(_contentSize.width, _contentSize.height);
                 rect[3].set(0.0f, _contentSize.height);
-                //STEVE: Color4F green(0.0f, 1.0f, 0.0f, 1.0f);
                 _clippingStencil->clear();
-                _clippingStencil->drawPolygon(rect, 4, green, 0, green);
+                _clippingStencil->drawPolygon(rect, 4, fillColor, 0, fillColor);
             } else {
                 const float kappa = 0.552228474;
                 float oneMinusKappa = (1.0f-kappa);
@@ -1990,7 +1974,7 @@ void Layout::setCameraMask(unsigned short mask, bool applyChildren)
                 polyVerts[4 * cornerSegments] = verts[0];
 
                 // draw final poly into mask
-                _clippingStencil->drawPolygon(&polyVerts[0], (int)polyVerts.size(), green, 0, green);
+                _clippingStencil->drawPolygon(&polyVerts[0], (int)polyVerts.size(), fillColor, 0, fillColor);
             }
         }
     }
