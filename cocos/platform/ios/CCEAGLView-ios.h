@@ -62,16 +62,20 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 */
 
 #include "platform/CCPlatformConfig.h"
+
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 #import <UIKit/UIKit.h>
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 #import <CoreFoundation/CoreFoundation.h>
-
 #import <GLKit/GLKit.h>
+#pragma clang diagnostic pop
+
 
 #import "platform/ios/CCESRenderer-ios.h"
 
