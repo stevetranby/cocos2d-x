@@ -168,7 +168,7 @@ std::string Application::getBuildVersion() {
     return "";
 }
 
-#warning TODO: should maybe move this into STDevice-ios.mm
+// TODO: should maybe move this into STDevice-ios.mm
 std::string Application::getCopyrightString() {
     NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"NSHumanReadableCopyright"];
     if (version) {
