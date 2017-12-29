@@ -961,6 +961,7 @@ void Director::popScene(void)
 
     if (c == 0)
     {
+        CCLOGINFO("end() director on next update");
         end();
     }
     else
