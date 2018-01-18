@@ -43,6 +43,7 @@ import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.os.Vibrator;
 import android.preference.PreferenceManager.OnActivityResultListener;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -57,6 +58,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
@@ -316,6 +318,7 @@ public class Cocos2dxHelper {
  			String version = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxActivity.getContext().getPackageName(), 0).versionName;
  			return version;
  		} catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
  			return "";
  		}
  	}
@@ -325,17 +328,63 @@ public class Cocos2dxHelper {
  			int version = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxActivity.getContext().getPackageName(), 0).versionCode;
  			return Integer.toString(version);
  		} catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
  			return "";
  		}
  	}
 
     public static String getCopyrightString() {
         return "Copyright (c) 2017";
-//        try {
-//            return "";
-//        } catch(Exception e) {
-//            return "";
-//        }
+    }
+
+    private static String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
+
+    public static String getModelString() {
+        try {
+            String str = Build.MODEL;
+            if (! Build.MODEL.startsWith(Build.MANUFACTURER)) {
+                str = Build.MANUFACTURER + " " + Build.MODEL;
+            }
+            str = capitalize(str);
+            Log.d(TAG, "Device Model: " + str);
+            return str;
+        } catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+            return "";
+        }
+    }
+
+    public static String getPlatformString() {
+        try {
+            Field[] fields = Build.VERSION_CODES.class.getFields();
+            String str = fields[Build.VERSION.SDK_INT + 1].getName();
+            str += " " + Build.VERSION.RELEASE;
+            Log.d(TAG, "Platform String:" + str);
+            return str;
+        } catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+            return "";
+        }
+    }
+
+    public static String getDeviceID() {
+        try {
+            String deviceId = Settings.Secure.getString(Cocos2dxActivity.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            return deviceId;
+        } catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+            return "";
+        }
     }
 
     public static boolean openURL(String url) {
