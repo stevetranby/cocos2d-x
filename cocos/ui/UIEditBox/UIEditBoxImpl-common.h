@@ -135,8 +135,6 @@ protected:
     void         refreshLabelAlignment();
     void         placeInactiveLabels(const Size& size);
     virtual void doAnimationWhenKeyboardMove(float duration, float distance) override { CC_UNUSED_PARAM(duration); CC_UNUSED_PARAM(distance); };
-
-    Size applyPadding(const Size& size) const;
   
     Label* _label;
     Label* _labelPlaceHolder;
