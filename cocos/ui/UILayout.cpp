@@ -92,7 +92,7 @@ _isInterceptTouch(false),
 _loopFocus(false),
 _passFocusToChild(true),
 _isFocusPassing(false),
-    _stencilRadius(0.0f)
+_stencilRadius(0.0f)
 {
     //no-op
 }
@@ -235,7 +235,11 @@ void Layout::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t par
     {
         return;
     }
-    
+
+    // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+    if(FLAGS_TRANSFORM_DIRTY & parentFlags || _transformUpdated || _contentSizeDirty)
+        _clippingRectDirty = true;
+
     adaptRenderers();
     doLayout();
     
@@ -255,7 +259,11 @@ void Layout::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t par
     }
     else
     {
-        Widget::visit(renderer, parentTransform, parentFlags);
+        //Widget::visit(renderer, parentTransform, parentFlags);
+
+        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+        //no need to adapt render again
+        ProtectedNode::visit(renderer, parentTransform, parentFlags);
     }
 }
     
@@ -460,10 +468,21 @@ const Rect& Layout::getClippingRect()
 {
     if (_clippingRectDirty)
     {
-        Vec2 worldPos = convertToWorldSpace(Vec2::ZERO);
-        AffineTransform t = getNodeToWorldAffineTransform();
-        float scissorWidth = _contentSize.width*t.a;
-        float scissorHeight = _contentSize.height*t.d;
+        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+//        Vec2 worldPos = convertToWorldSpace(Vec2::ZERO);
+//        AffineTransform t = getNodeToWorldAffineTransform();
+
+        Vec2 worldPos1 = convertToWorldSpace(Vec2::ZERO);
+        Vec2 worldPos2 = convertToWorldSpace(Vec2(_contentSize.width, _contentSize.height));
+        //Node can be flipped
+        Vec2 worldPos = Vec2(std::min(worldPos1.x, worldPos2.x), std::min(worldPos1.y, worldPos2.y));
+
+        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+//        float scissorWidth = _contentSize.width*t.a;
+//        float scissorHeight = _contentSize.height*t.d;
+        float scissorWidth = fabs(worldPos2.x - worldPos1.x);
+        float scissorHeight = fabs(worldPos2.y - worldPos1.y);
+
         Rect parentClippingRect;
         Layout* parent = this;
 
@@ -479,54 +498,80 @@ const Rect& Layout::getClippingRect()
                 }
             }
         }
-        
+
+        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+//        if (_clippingParent)
+//        {
+//            parentClippingRect = _clippingParent->getClippingRect();
+//            float finalX = worldPos.x - (scissorWidth * _anchorPoint.x);
+//            float finalY = worldPos.y - (scissorHeight * _anchorPoint.y);
+//            float finalWidth = scissorWidth;
+//            float finalHeight = scissorHeight;
+//
+//            float leftOffset = worldPos.x - parentClippingRect.origin.x;
+//            if (leftOffset < 0.0f)
+//            {
+//                finalX = parentClippingRect.origin.x;
+//                finalWidth += leftOffset;
+//            }
+//            float rightOffset = (worldPos.x + scissorWidth) - (parentClippingRect.origin.x + parentClippingRect.size.width);
+//            if (rightOffset > 0.0f)
+//            {
+//                finalWidth -= rightOffset;
+//            }
+//            float topOffset = (worldPos.y + scissorHeight) - (parentClippingRect.origin.y + parentClippingRect.size.height);
+//            if (topOffset > 0.0f)
+//            {
+//                finalHeight -= topOffset;
+//            }
+//            float bottomOffset = worldPos.y - parentClippingRect.origin.y;
+//            if (bottomOffset < 0.0f)
+//            {
+//                finalY = parentClippingRect.origin.y;
+//                finalHeight += bottomOffset;
+//            }
+//            if (finalWidth < 0.0f)
+//            {
+//                finalWidth = 0.0f;
+//            }
+//            if (finalHeight < 0.0f)
+//            {
+//                finalHeight = 0.0f;
+//            }
+//            _clippingRect.origin.x = finalX;
+//            _clippingRect.origin.y = finalY;
+//            _clippingRect.size.width = finalWidth;
+//            _clippingRect.size.height = finalHeight;
+//        }
+//        else
+//        {
+//            _clippingRect.origin.x = worldPos.x - (scissorWidth * _anchorPoint.x);
+//            _clippingRect.origin.y = worldPos.y - (scissorHeight * _anchorPoint.y);
+//            _clippingRect.size.width = scissorWidth;
+//            _clippingRect.size.height = scissorHeight;
+//        }
+//        _clippingRectDirty = false;
+
         if (_clippingParent)
         {
             parentClippingRect = _clippingParent->getClippingRect();
-            float finalX = worldPos.x - (scissorWidth * _anchorPoint.x);
-            float finalY = worldPos.y - (scissorHeight * _anchorPoint.y);
-            float finalWidth = scissorWidth;
-            float finalHeight = scissorHeight;
-            
-            float leftOffset = worldPos.x - parentClippingRect.origin.x;
-            if (leftOffset < 0.0f)
-            {
-                finalX = parentClippingRect.origin.x;
-                finalWidth += leftOffset;
-            }
-            float rightOffset = (worldPos.x + scissorWidth) - (parentClippingRect.origin.x + parentClippingRect.size.width);
-            if (rightOffset > 0.0f)
-            {
-                finalWidth -= rightOffset;
-            }
-            float topOffset = (worldPos.y + scissorHeight) - (parentClippingRect.origin.y + parentClippingRect.size.height);
-            if (topOffset > 0.0f)
-            {
-                finalHeight -= topOffset;
-            }
-            float bottomOffset = worldPos.y - parentClippingRect.origin.y;
-            if (bottomOffset < 0.0f)
-            {
-                finalY = parentClippingRect.origin.y;
-                finalHeight += bottomOffset;
-            }
-            if (finalWidth < 0.0f)
-            {
-                finalWidth = 0.0f;
-            }
-            if (finalHeight < 0.0f)
-            {
-                finalHeight = 0.0f;
-            }
-            _clippingRect.origin.x = finalX;
-            _clippingRect.origin.y = finalY;
-            _clippingRect.size.width = finalWidth;
-            _clippingRect.size.height = finalHeight;
+
+            // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+            _clippingRect.origin.x = std::max(parentClippingRect.origin.x, worldPos.x);
+            _clippingRect.origin.y = std::max(parentClippingRect.origin.y, worldPos.y);
+
+            float right = std::min(parentClippingRect.origin.x + parentClippingRect.size.width, worldPos.x + scissorWidth);
+            float top = std::min(parentClippingRect.origin.y + parentClippingRect.size.height, worldPos.y + scissorHeight);
+
+            _clippingRect.size.width = std::max(0.0f, right - _clippingRect.origin.x);
+            _clippingRect.size.height = std::max(0.0f, top - _clippingRect.origin.y);
         }
         else
         {
-            _clippingRect.origin.x = worldPos.x - (scissorWidth * _anchorPoint.x);
-            _clippingRect.origin.y = worldPos.y - (scissorHeight * _anchorPoint.y);
+            // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+            _clippingRect.origin.x = worldPos.x;
+            _clippingRect.origin.y = worldPos.y;
+
             _clippingRect.size.width = scissorWidth;
             _clippingRect.size.height = scissorHeight;
         }

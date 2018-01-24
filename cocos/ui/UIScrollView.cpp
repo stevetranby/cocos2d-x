@@ -491,6 +491,8 @@ void ScrollView::startAutoScroll(const Vec2& deltaMove, float timeInSec, bool at
         Vec2 afterOutOfBoundary = getHowMuchOutOfBoundary(adjustedDeltaMove);
         if(currentOutOfBoundary.x * afterOutOfBoundary.x > 0 || currentOutOfBoundary.y * afterOutOfBoundary.y > 0)
         {
+            // STEVE: added from https://github.com/cocos2d/cocos2d-x/pull/18650/files
+            _autoScrollBrakingStartPosition = getInnerContainerPosition(); // STEVE
             _autoScrollBraking = true;
         }
     }
