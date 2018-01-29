@@ -214,7 +214,7 @@ bool ControlSwitchSprite::initWithMaskSprite(
     return false;
 }
 
-void ControlSwitchSprite::updateTweenAction(float value, const std::string& /* key */)
+void ControlSwitchSprite::updateTweenAction(float value, const std::string& key MAYBE_UNUSED)
 {
     CCLOGINFO("key = %s, value = %f", key.c_str(), value);
     setSliderXPosition(value);

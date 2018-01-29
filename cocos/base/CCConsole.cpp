@@ -230,7 +230,7 @@ namespace {
     {
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-        __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "steve", 0);
+       // __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "steve", 0);
 #endif
 
         int bufferSize = MAX_LOG_LENGTH;
@@ -242,7 +242,7 @@ namespace {
             if (buf == nullptr)
             {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-                __android_log_print(ANDROID_LOG_DEBUG, "STEVE", "format: %s", format);
+                __android_log_print(ANDROID_LOG_DEBUG, "[ST]", "format: %s", format);
 #endif
                 return;
             }

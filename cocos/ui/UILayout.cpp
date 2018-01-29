@@ -51,8 +51,6 @@ public:
 NS_CC_END
 
 
-
-
 NS_CC_BEGIN
 
 namespace ui {

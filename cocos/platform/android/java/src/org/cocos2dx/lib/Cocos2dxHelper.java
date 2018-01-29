@@ -398,7 +398,36 @@ public class Cocos2dxHelper {
         }
         return ret;
     }
-    
+
+    public static void sendEmailMessageToSupport(String subj, String msg) {
+
+//        /* Create the Intent */
+//        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SENDTO);
+//
+//        /* Fill it with Data */
+//        emailIntent.setType("plain/text");
+//        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"to@email.com"});
+//        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subj);
+//        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, msg);
+//
+//        /* Send it off to the Activity-Chooser */
+//        Cocos2dxActivity.getContext().startActivity(Intent.createChooser(emailIntent, "Send feedback email..."));
+
+        // https://stackoverflow.com/questions/3132889/action-sendto-for-sending-an-email
+        // ACTION_SENDTO filters for email apps (discard bluetooth and others)
+        String uriText =
+                "mailto:youremail@gmail.com" +
+                        "?subject=" + Uri.encode(subj) +
+                        "&body=" + Uri.encode(msg);
+
+        Uri uri = Uri.parse(uriText);
+
+        Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
+        sendIntent.setData(uri);
+        Cocos2dxActivity.getContext().startActivity(Intent.createChooser(sendIntent, "Send email"));
+
+    }
+
     public static long[] getObbAssetFileDescriptor(final String path) {
         long[] array = new long[3];
         if (Cocos2dxHelper.getObbFile() != null) {
@@ -727,7 +756,7 @@ public class Cocos2dxHelper {
         editor.putString(key, value);
         editor.apply();
     }
-    
+
     public static void deleteValueForKey(String key) {
         SharedPreferences settings = sActivity.getSharedPreferences(Cocos2dxHelper.PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();

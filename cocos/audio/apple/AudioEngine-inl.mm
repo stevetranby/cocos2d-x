@@ -419,9 +419,9 @@ void AudioEngineImpl::_play2d(AudioCache *cache, int audioID, float seekToTime)
         _threadMutex.lock();
         auto playerIt = _audioPlayers.find(audioID);
         if (playerIt != _audioPlayers.end()) {
-            ALOGV("found player for audioId");
+            ALOGV("found player for audioId [%d]", audioID);
             if(playerIt->second->play2d()) {
-                ALOGV("play successful");
+                ALOGV("play successful, seekToTime = %f", seekToTime);
                 _scheduler->performFunctionInCocosThread([audioID,seekToTime](){
                     if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
                         AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;

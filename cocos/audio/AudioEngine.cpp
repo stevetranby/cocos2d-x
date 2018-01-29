@@ -216,11 +216,14 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, fl
             // TODO: remove for release
             CCLOGINFO("profile = %p, profileHelper = %p", profile, profileHelper);
         }
-        
+
+        // TODO: consider this PR - https://github.com/cocos2d/cocos2d-x/pull/18383
+        // - to allow play by removing oldest instance
         if (_audioIDInfoMap.size() >= _maxInstances) {
             CCLOGERROR("Fail to play %s cause by limited max instance of AudioEngine",filePath.c_str());
             break;
         }
+
         if (profileHelper)
         {
              if(profileHelper->profile.maxInstances != 0 && profileHelper->audioIDs.size() >= profileHelper->profile.maxInstances){

@@ -85,7 +85,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
 
 JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h)
 {
-	LOGD("steve");
+	//LOGD("steve");
     auto director = cocos2d::Director::getInstance();
     auto glview = director->getOpenGLView();
     if (!glview)

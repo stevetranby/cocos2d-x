@@ -167,15 +167,15 @@ bool FileUtilsAndroid::isFileExistInternal(const std::string& strFilePath) const
     {
         const char* s = strFilePath.c_str();
 
-		CCLOG("[FileUtilsAndroid::isFileExistInternal] [steve] _defaultResRootPath: %s", _defaultResRootPath.c_str());
+		CCLOGINFO("[FileUtilsAndroid::isFileExistInternal] [steve] _defaultResRootPath: %s", _defaultResRootPath.c_str());
 
         // Found "assets/" at the beginning of the path and we don't want it
         if (strFilePath.find(_defaultResRootPath) == 0) {
-	        CCLOG("[steve] strFilePath: %s", strFilePath.c_str());
+            CCLOGINFO("[steve] strFilePath: %s", strFilePath.c_str());
             s += _defaultResRootPath.length();
         }
 
-        CCLOG("[FileUtilsAndroid::isFileExistInternal] [steve] find in apk dirPath(%s)", s);
+        CCLOGINFO("[FileUtilsAndroid::isFileExistInternal] [steve] find in apk dirPath(%s)", s);
 
         if (obbfile && obbfile->fileExists(s))
         {
@@ -189,7 +189,7 @@ bool FileUtilsAndroid::isFileExistInternal(const std::string& strFilePath) const
                 bFound = true;
                 AAsset_close(aa);
             } else {
-                CCLOG("[FileUtilsAndroid::isFileExistInternal] [steve] [AssetManager] ... in APK %s, found = false!", strFilePath.c_str());
+                CCLOGINFO("[FileUtilsAndroid::isFileExistInternal] [steve] [AssetManager] ... in APK %s, found = false!", strFilePath.c_str());
             }
         }
     }

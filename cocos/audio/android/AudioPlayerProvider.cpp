@@ -43,7 +43,6 @@ namespace cocos2d { namespace experimental {
 
 static int getSystemAPILevel()
 {
-	ALOGI("steve");
     static int __systemApiLevel = -1;
     if (__systemApiLevel > 0)
     {
