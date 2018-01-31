@@ -209,6 +209,8 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, fl
         // Steve: added check for null profileHelper
         if (profile && (!profileHelper || profile != &profileHelper->profile))
         {
+#warning FIXME: may want to comment out assert for release? (though it should by default in release build)
+            CC_ASSERT(!profile->name.empty()); // NOTE: may cause issues that were previously ignored, but should probably resolve them
             CCLOGINFO("profile = %p, profileHelper = %p, profile->name = %s", profile, profileHelper, profile->name.c_str());
             profileHelper = &_audioPathProfileHelperMap[profile->name];
             profileHelper->profile = *profile;
@@ -220,8 +222,25 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, fl
         // TODO: consider this PR - https://github.com/cocos2d/cocos2d-x/pull/18383
         // - to allow play by removing oldest instance
         if (_audioIDInfoMap.size() >= _maxInstances) {
-            CCLOGERROR("Fail to play %s cause by limited max instance of AudioEngine",filePath.c_str());
-            break;
+            double oldestTimestamp = std::numeric_limits<double>::max();
+            int oldestId = INVALID_AUDIO_ID;
+            std::string ofilePath;
+            for(auto it = _audioIDInfoMap.begin(); it != _audioIDInfoMap.end(); ++it){
+                if(it->second.timestamp < oldestTimestamp && !it->second.loop){
+                    oldestId = it->first;
+                    oldestTimestamp = it->second.timestamp;
+                    ofilePath = *it->second.filePath;
+                }
+            }
+            
+            if(oldestId == INVALID_AUDIO_ID){
+                CCLOG("Fail to play %s cause by limited max instance of AudioEngine", filePath.c_str());
+                break;
+            }
+            
+            CCLOG("Max instance limit of AudioEngine exceeded. Stopping the oldest sound with id: %d and path: %s", oldestId, ofilePath.c_str());
+            
+            AudioEngine::stop(oldestId);
         }
 
         if (profileHelper)
@@ -256,6 +275,7 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, fl
             audioRef.volume = volume;
             audioRef.loop = loop;
             audioRef.filePath = &it->first;
+            audioRef.timestamp = utils::gettime();
 
             if (profileHelper) {
                 profileHelper->lastPlayTime = utils::gettime();
@@ -375,6 +395,7 @@ void AudioEngine::stopAll()
 void AudioEngine::uncache(const std::string &filePath)
 {
     if(!_audioEngineImpl){
+        // TODO: any reason we should assert this instead? Why would it ever be null?
         return;
     }
     auto audioIDsIter = _audioPathIDMap.find(filePath);
