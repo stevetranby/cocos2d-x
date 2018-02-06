@@ -256,7 +256,7 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dictionary, Textu
 
             // create frame
             spriteFrame = SpriteFrame::createWithTexture(texture,
-                                                         Rect(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
+                                                         Rect(textureRect.origin, spriteSize),
                                                          textureRotated,
                                                          spriteOffset,
                                                          spriteSourceSize);
