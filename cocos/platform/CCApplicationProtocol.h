@@ -97,6 +97,15 @@ public:
     */
     virtual void applicationWillEnterForeground() = 0;
 
+
+    /**
+     * @brief  This function will be called when the application enters foreground.
+     * @js NA
+     * @lua NA
+     */
+    //virtual void applicationWasOpenedWithUrl(std::string url);
+    virtual void applicationWasOpenedWithUrl(std::string scheme, std::string host, std::string path) = 0;
+
     /**
     * @brief    Callback by Director for limit FPS.
     * @param interval The time, expressed in seconds, between current frame and next.
