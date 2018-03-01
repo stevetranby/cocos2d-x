@@ -157,3 +157,9 @@ tests/lua-tests/project/proj.tizen/res/
 prebuilt-20150920
 .d
 android-backup.zip
+
+# Ignore vscode folder
+.vscode/
+
+# Ignore static libraries
+*.a

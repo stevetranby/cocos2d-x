@@ -3,6 +3,8 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 16
     buildToolsVersion '27.0.1'
+    //compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
+    //buildToolsVersion PROP_BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion PROP_MIN_SDK_VERSION
@@ -19,12 +21,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: '../java/libs')
+    implementation fileTree(dir: '../java/libs', include: ['*.jar'])
 }
