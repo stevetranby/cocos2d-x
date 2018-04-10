@@ -304,14 +304,14 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
     string relativePath = string();
     size_t position = fullPath.find(apkprefix);
     if (0 == position) {
-	    CCLOG("[sctest] find in apk dirPath(%s)", fullPath.c_str());
+        //LOGD("[sctest] find in apk dirPath(%s)", fullPath.c_str());
         // "assets/" is at the beginning of the path and we don't want it
         relativePath += fullPath.substr(apkprefix.size());
     } else {
         relativePath = fullPath;
     }
 
-	CCLOG("[sctest] relativePath: %s", relativePath.c_str());
+    //LOGD("[sctest] relativePath: %s", relativePath.c_str());
 
     if (obbfile)
     {
@@ -342,7 +342,7 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
         return FileUtils::Status::ReadFailed;
     }
 
-	CCLOG("[sctest] file found OK", relativePath.c_str());
+    //LOGD("[sctest] file found OK", relativePath.c_str());
     return FileUtils::Status::OK;
 }
 
