@@ -69,10 +69,11 @@ struct AudioFileIndicator
     int smallSizeIndicator;
 };
 
+        // Note(steve): higher values will preload larger files, often better to preload them during game load or level load
 static AudioFileIndicator __audioFileIndicator[] = {
         {"default", 128000}, // If we could not handle the audio format, return default value, the position should be first.
         {".wav",    1024000},
-        {".ogg",    128000},
+        {".ogg",    512000}, // Note(steve): Changes these values bigger than your background music size to ensure only PcmAudioPlayer work for all audios.
         {".mp3",    160000}
 };
 
