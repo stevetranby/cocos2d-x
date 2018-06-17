@@ -73,7 +73,7 @@ _pressedTexType(TextureResType::LOCAL),
 _disabledTexType(TextureResType::LOCAL),
 _fontSize(10),
 _type(FontType::SYSTEM),
-_fontName("")
+_fontName(""),
 _buttonScale(1.0f),
 _titleScale(1.0f)
 {
