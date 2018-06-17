@@ -69,6 +69,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     private Cocos2dxEditBoxHelper mEditBoxHelper = null;
     private boolean hasFocus = false;
     private boolean showVirtualButton = false;
+    private boolean gainAudioFocus = false;
+    private boolean paused = true;
 
     public Cocos2dxGLSurfaceView getGLSurfaceView(){
         return  mGLSurfaceView;
@@ -93,7 +95,15 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     }
 
     public void setEnableAudioFocusGain(boolean value) {
-        Cocos2dxAudioFocusManager.gainAudioFocus = value;
+        if(gainAudioFocus != value) {
+            if(!paused) {
+                if (value)
+                    Cocos2dxAudioFocusManager.registerAudioFocusListener(this);
+                else
+                    Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
+            }
+            gainAudioFocus = value;
+        }
     }
 
     protected void onLoadNativeLibraries() {
@@ -171,14 +181,13 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
     @Override
     protected void onResume() {
-		Log.d(TAG, "onResume()");
-		super.onResume();
-		AudioManager manager = (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
-		if (! manager.isMusicActive()) {
-			Cocos2dxAudioFocusManager.registerAudioFocusListener(this);
-		}
-		this.hideVirtualButton();
-		resumeIfHasFocus();
+    	Log.d(TAG, "onResume()");
+        paused = false;
+        super.onResume();
+        if(gainAudioFocus)
+            Cocos2dxAudioFocusManager.registerAudioFocusListener(this);
+        this.hideVirtualButton();
+       	resumeIfHasFocus();
 
         Cocos2dxEngineDataManager.resume();
     }
@@ -204,8 +213,10 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     @Override
     protected void onPause() {
     	Log.d(TAG, "onPause()");
+        paused = true;
         super.onPause();
-        Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
+        if(gainAudioFocus)
+            Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
         Cocos2dxHelper.onPause();
         mGLSurfaceView.onPause();
         Cocos2dxEngineDataManager.pause();
@@ -213,7 +224,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
     @Override
     protected void onDestroy() {
-        Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
+        if(gainAudioFocus)
+            Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
         super.onDestroy();
 
         Cocos2dxEngineDataManager.destroy();
