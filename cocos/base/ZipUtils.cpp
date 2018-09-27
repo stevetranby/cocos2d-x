@@ -29,7 +29,7 @@
 #ifdef MINIZIP_FROM_SYSTEM
 #include <minizip/unzip.h>
 #else // from our embedded sources
-#include "unzip.h"
+#include "external/unzip/unzip.h"
 #endif
 
 #include <zlib.h>
