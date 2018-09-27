@@ -430,8 +430,11 @@ void AudioEngineImpl::_play2d(AudioCache *cache, int audioID, float seekToTime)
                 _scheduler->performFunctionInCocosThread([audioID,seekToTime](){
                     if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
                         AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;
-                        if(seekToTime > FLT_EPSILON)
-                            AudioEngine::setCurrentTime(audioID, seekToTime);
+                        if(seekToTime > FLT_EPSILON) {
+                            ALOGV("[steve] seekToTime = %f\n", seekToTime);
+                            float a = seekToTime;
+                            AudioEngine::setCurrentTime(audioID, a);
+                        }
                     }
                 });
             } else {
