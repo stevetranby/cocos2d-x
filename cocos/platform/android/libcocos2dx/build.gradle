@@ -1,8 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 16
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 18
     //compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
     //buildToolsVersion PROP_BUILD_TOOLS_VERSION
 
