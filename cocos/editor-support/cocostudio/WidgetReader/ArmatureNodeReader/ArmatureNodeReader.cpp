@@ -25,7 +25,7 @@
 #include "editor-support/cocostudio/WidgetReader/ArmatureNodeReader/ArmatureNodeReader.h"
 
 #include "platform/CCFileUtils.h"
-#include "tinyxml2.h"
+#include "external/tinyxml2/tinyxml2.h"
 #include "flatbuffers/flatbuffers.h"
 #include "editor-support/cocostudio/WidgetReader/NodeReader/NodeReader.h"
 #include "editor-support/cocostudio/CSParseBinary_generated.h"

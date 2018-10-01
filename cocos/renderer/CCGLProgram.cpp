@@ -427,6 +427,7 @@ void GLProgram::parseUniforms()
                     CCLOGINFO("[steve] [glpg] adding uniform: %d, %s", uniform.location, uniformName);
                 } else {
                     auto loc = glGetUniformLocation(_program, uniformName);
+                    CC_UNUSED_PARAM(loc);
                     CCLOGINFO("[steve] [glpg] not adding uniform: %d, %s", loc, uniformName);
                 }
             }

@@ -37,7 +37,7 @@
 #include "platform/CCFileUtils.h"
 #include "2d/CCSpriteFrameCache.h"
 
-#include "tinyxml2.h"
+#include "external/tinyxml2/tinyxml2.h"
 #include "flatbuffers/flatbuffers.h"
 
 USING_NS_CC;

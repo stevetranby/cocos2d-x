@@ -435,12 +435,12 @@ public:
      */
     void renderScene(Scene* scene, Renderer* renderer);
 
-    /**
-     * Sets a VR renderer. 
-     * if `vrrenderer` is `nullptr` VR will be disabled
-     */
-    void setVR(VRIRenderer* vrrenderer);
-    VRIRenderer* getVR() const;
+//    /**
+//     * Sets a VR renderer.
+//     * if `vrrenderer` is `nullptr` VR will be disabled
+//     */
+//    void setVR(VRIRenderer* vrrenderer);
+//    VRIRenderer* getVR() const;
 
 protected:
     void updateDesignResolutionSize();

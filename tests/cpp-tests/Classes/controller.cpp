@@ -43,20 +43,20 @@ class RootTests : public TestList
 public:
     RootTests()
     {
-        addTest("Node: Scene3D", [](){return new (std::nothrow) Scene3DTests(); });
+//        addTest("Node: Scene3D", [](){return new (std::nothrow) Scene3DTests(); });
         addTest("ActionManager", [](){return new (std::nothrow) ActionManagerTests(); });
         addTest("Actions - Basic", [](){ return new (std::nothrow) ActionsTests(); });
         addTest("Actions - Ease", [](){return new (std::nothrow) ActionsEaseTests(); });
         addTest("Actions - Progress", [](){return new (std::nothrow) ActionsProgressTests(); });
         addTest("Allocator - Basic", [](){return new (std::nothrow) AllocatorTests(); });
-        addTest("Audio - CocosDenshion", []() { return new (std::nothrow) CocosDenshionTests(); });
+//        addTest("Audio - CocosDenshion", []() { return new (std::nothrow) CocosDenshionTests(); });
         addTest("Audio - NewAudioEngine", []() { return new (std::nothrow) AudioEngineTests(); });
 #if CC_ENABLE_BOX2D_INTEGRATION
         addTest("Box2d - Basic", []() { return new (std::nothrow) Box2DTests(); });
         addTest("Box2d - TestBed", []() { return new (std::nothrow) Box2dTestBedSuite(); });
 #endif
 #if CC_ENABLE_CHIPMUNK_INTEGRATION
-        addTest("Chipmunk", []() { return new ChipmunkTests(); });
+//        addTest("Chipmunk", []() { return new ChipmunkTests(); });
 #endif
         addTest("Bugs", []() { return new BugsTests(); });
         addTest("Click and Move", [](){return new ClickAndMoveTest(); });
@@ -79,9 +79,9 @@ public:
         addTest("JNIHelper", []() { return new JNITests(); });
 #endif
         addTest("Material System", [](){return new MaterialSystemTest(); });
-        addTest("Navigation Mesh", [](){return new NavMeshTests(); });
+//        addTest("Navigation Mesh", [](){return new NavMeshTests(); });
         addTest("Node: BillBoard Test", [](){  return new BillBoardTests(); });
-        addTest("Node: Camera 3D Test", [](){  return new Camera3DTests(); });
+//        addTest("Node: Camera 3D Test", [](){  return new Camera3DTests(); });
         addTest("Node: Clipping", []() { return new ClippingNodeTests(); });
         addTest("Node: Draw", [](){return new DrawPrimitivesTests(); });
         addTest("Node: Label - New API", [](){return new NewLabelTests(); });
@@ -93,16 +93,16 @@ public:
         addTest("Node: Node", [](){return new CocosNodeTests(); });
         addTest("Node: Parallax", [](){return new ParallaxTests(); });
         addTest("Node: Particles", [](){return new ParticleTests(); });
-        addTest("Node: Particle3D (PU)", [](){return new Particle3DTests(); });
+//        addTest("Node: Particle3D (PU)", [](){return new Particle3DTests(); });
 #if CC_USE_PHYSICS
-        addTest("Node: Physics", []() { return new PhysicsTests(); });
+//        addTest("Node: Physics", []() { return new PhysicsTests(); });
 #endif
-        addTest("Node: Physics3D", []() { return new Physics3DTests(); } );
+//        addTest("Node: Physics3D", []() { return new Physics3DTests(); } );
         addTest("Node: RenderTexture", [](){return new RenderTextureTests(); });
         addTest("Node: Scene", [](){return new SceneTests(); });
-        addTest("Node: Spine", [](){return new SpineTests(); });
+//        addTest("Node: Spine", [](){return new SpineTests(); });
         addTest("Node: Sprite", [](){return new SpriteTests(); });
-        addTest("Node: Sprite3D", [](){  return new Sprite3DTests(); });
+//        addTest("Node: Sprite3D", [](){  return new Sprite3DTests(); });
         addTest("Node: SpritePolygon", [](){return new (std::nothrow) SpritePolygonTest(); });
         addTest("Node: Terrain", [](){  return new TerrainTests(); });
         addTest("Node: TileMap", [](){return new TileMapTests(); });

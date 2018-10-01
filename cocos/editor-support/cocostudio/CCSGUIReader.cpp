@@ -47,7 +47,7 @@ THE SOFTWARE.
 #include "editor-support/cocostudio/WidgetReader/ScrollViewReader/ScrollViewReader.h"
 #include "editor-support/cocostudio/WidgetReader/ListViewReader/ListViewReader.h"
 #include "editor-support/cocostudio/CocoLoader.h"
-#include "tinyxml2.h"
+#include "external/tinyxml2/tinyxml2.h"
 
 
 using namespace cocos2d;

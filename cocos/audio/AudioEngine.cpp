@@ -210,7 +210,8 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, fl
         // Steve: added check for null profileHelper
         if (profile && (!profileHelper || profile != &profileHelper->profile))
         {
-#warning FIXME: may want to comment out assert for release? (though it should by default in release build)
+            // STEVE -
+            // FIXME: may want to comment out assert for release? (though it should by default in release build)
             CC_ASSERT(!profile->name.empty()); // NOTE: may cause issues that were previously ignored, but should probably resolve them
             CCLOGINFO("profile = %p, profileHelper = %p, profile->name = %s", profile, profileHelper, profile->name.c_str());
             profileHelper = &_audioPathProfileHelperMap[profile->name];

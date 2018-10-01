@@ -41,12 +41,12 @@ endif()
 include(2d/CMakeLists.txt)
 include(3d/CMakeLists.txt)
 include(platform/CMakeLists.txt)
-include(physics/CMakeLists.txt)
-include(physics3d/CMakeLists.txt)
+#include(physics/CMakeLists.txt)
+#include(physics3d/CMakeLists.txt)
 include(math/CMakeLists.txt)
-include(navmesh/CMakeLists.txt)
+#include(navmesh/CMakeLists.txt)
 include(renderer/CMakeLists.txt)
-include(vr/CMakeLists.txt)
+#include(vr/CMakeLists.txt)
 include(base/CMakeLists.txt)
 include(deprecated/CMakeLists.txt)
 include(ui/CMakeLists.txt)
@@ -77,12 +77,12 @@ set(COCOS_HEADER cocos2d.h
     ${COCOS_2D_HEADER}
     ${COCOS_3D_HEADER}
     ${COCOS_PLATFORM_HEADER}
-    ${COCOS_PHYSICS_HEADER}
-    ${COCOS_PHYSICS3D_HEADER}
+#    ${COCOS_PHYSICS_HEADER}
+#    ${COCOS_PHYSICS3D_HEADER}
     ${COCOS_MATH_HEADER}
-    ${COCOS_NAVMESH_HEADER}
+#    ${COCOS_NAVMESH_HEADER}
     ${COCOS_RENDERER_HEADER}
-    ${COCOS_VR_HEADER}
+#    ${COCOS_VR_HEADER}
     ${COCOS_BASE_HEADER}
     ${COCOS_AUDIO_HEADER}
     ${COCOS_UI_HEADER}
@@ -97,12 +97,12 @@ set(COCOS_SRC cocos2d.cpp
     ${COCOS_2D_SRC}
     ${COCOS_3D_SRC}
     ${COCOS_PLATFORM_SRC}
-    ${COCOS_PHYSICS_SRC}
-    ${COCOS_PHYSICS3D_SRC}
+#    ${COCOS_PHYSICS_SRC}
+#    ${COCOS_PHYSICS3D_SRC}
     ${COCOS_MATH_SRC}
-    ${COCOS_NAVMESH_SRC}
+#    ${COCOS_NAVMESH_SRC}
     ${COCOS_RENDERER_SRC}
-    ${COCOS_VR_SRC}
+#    ${COCOS_VR_SRC}
     ${COCOS_BASE_SRC}
     ${COCOS_AUDIO_SRC}
     ${COCOS_UI_SRC}

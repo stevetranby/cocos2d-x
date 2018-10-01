@@ -177,13 +177,6 @@ THE SOFTWARE.
 #include "renderer/CCFrameBuffer.h"
 #include "renderer/ccShaders.h"
 
-// physics
-#include "physics/CCPhysicsBody.h"
-#include "physics/CCPhysicsContact.h"
-#include "physics/CCPhysicsJoint.h"
-#include "physics/CCPhysicsShape.h"
-#include "physics/CCPhysicsWorld.h"
-
 // platform
 #include "platform/CCCommon.h"
 #include "platform/CCDevice.h"
@@ -304,10 +297,6 @@ THE SOFTWARE.
 #include "3d/CCSprite3D.h"
 #include "3d/CCSprite3DMaterial.h"
 #include "3d/CCTerrain.h"
-
-// vr
-#include "vr/CCVRGenericRenderer.h"
-
 
 // Deprecated
 // All deprecated features are include inside deprecated/CCDeprecated.h.
