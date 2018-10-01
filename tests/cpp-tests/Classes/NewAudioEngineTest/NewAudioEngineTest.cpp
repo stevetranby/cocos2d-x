@@ -33,7 +33,7 @@ using namespace cocos2d::experimental;
 
 AudioEngineTests::AudioEngineTests()
 {
-    ADD_TEST_CASE(AudioIssueMaxInstanceTest);
+    ADD_TEST_CASE(AudioIssue18597Test);
     ADD_TEST_CASE(AudioIssue11143Test);
     ADD_TEST_CASE(AudioControlTest);
     ADD_TEST_CASE(AudioLoadTest);
@@ -653,51 +653,57 @@ std::string LargeAudioFileTest::title() const
     return "Test large audio file";
 }
 
-bool AudioIssueMaxInstanceTest::init()
+bool AudioIssue18597Test::init()
 {
     if (AudioEngineTestDemo::init())
     {
         auto& layerSize = this->getContentSize();
-        
-        auto playItem = TextButton::create("play", [](TextButton* button){
-            float diff = 0.05f;
-            
-            AudioEngine::play2d("background.wav", true);
-            
-            for(int i = 0; i < 200; i++){
-                float delay = diff * (i + 1);
-                int j = i % 10 + 81;
-                
-                char buff1[255];
-                snprintf(buff1, sizeof(buff1), "k%d", i);
-                std::string key = buff1;
-                
-                char buff2[255];
-                snprintf(buff2, sizeof(buff2), "audio/SoundEffectsFX009/FX0%d.mp3", j);
-                std::string path = buff2;
-                
-                button->scheduleOnce([path](float dt){
-                    AudioEngine::play2d(path);
-                }, delay, key);
-            }
-        });
-        playItem->setPosition(layerSize.width * 0.5f, layerSize.height * 0.5f);
-        addChild(playItem);
-        
+
+        //test case for https://github.com/cocos2d/cocos2d-x/issues/18597
+        this->schedule([=](float dt)
+                       {
+                           CCLOG("issues 18597 audio crash test");
+                           for (int i = 0; i< 2;++i)
+                           {
+                               auto id = AudioEngine::play2d("audio/MUS_BGM_Battle_Round1_v1.caf", true, 1.0f);
+                               this->runAction(Sequence::create(
+                                                                DelayTime::create(8.0f),
+                                                                CallFunc::create([=]()
+                                                                                 {
+                                                                                     AudioEngine::stop(id);
+                                                                                 }),
+                                                                nullptr
+                                                                ));
+                           }
+                       }, 2.0, 10000, 0.0, "audio test");
+        // add label to show the side effect of "UnqueueBuffers Before alSourceStop"
+        _time = 0.0;
+        auto labelTime = Label::createWithBMFont("fonts/bitmapFontTest2.fnt", "time: ");
+        labelTime->setPosition(layerSize.width * 0.5f, layerSize.height * 0.5f);
+        labelTime->setTag(999);
+        this->addChild(labelTime);
+        // update label quickly
+        this->schedule([=](float dt){
+            _time += dt;
+            char timeString[20] = {0};
+            sprintf(timeString, "Time %2.2f", _time);
+            dynamic_cast<Label *>(this->getChildByTag(999))->setString(timeString);
+        }, 0.05, 1000000, 0, "update label quickly");
+
         return true;
     }
-    
+
     return false;
 }
 
-std::string AudioIssueMaxInstanceTest::title() const
+std::string AudioIssue18597Test::title() const
 {
-    return "Max instance exceeded issue test";
+    return "Test for issue 18597";
 }
 
-std::string AudioIssueMaxInstanceTest::subtitle() const
+std::string AudioIssue18597Test::subtitle() const
 {
-    return "There shouldn't be any blank break in sound.\nBackground music shouldn't stop.";
+    return "no crash for more than 10 minutes";
 }
 
 bool AudioIssue11143Test::init()
@@ -705,7 +711,7 @@ bool AudioIssue11143Test::init()
     if (AudioEngineTestDemo::init())
     {
         auto& layerSize = this->getContentSize();
-        
+
         auto playItem = TextButton::create("play", [](TextButton* button){
             AudioEngine::play2d("audio/SoundEffectsFX009/FX082.mp3", true);
             AudioEngine::stopAll();
@@ -717,14 +723,14 @@ bool AudioIssue11143Test::init()
                 AudioEngine::stop(audioId);
                 AudioEngine::play2d("audio/SoundEffectsFX009/FX083.mp3");
             }, 0.3f, key);
-            
+
         });
         playItem->setPosition(layerSize.width * 0.5f, layerSize.height * 0.5f);
         addChild(playItem);
-        
+
         return true;
     }
-    
+
     return false;
 }
 

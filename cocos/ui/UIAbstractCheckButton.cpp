@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 #include "ui/UIAbstractCheckButton.h"
 #include "2d/CCSprite.h"
+#warning TODO - remove this, but note it from merge, steve made it so that copy/pasted NodeExtension instead for fewer includes during build - `#include "editor-support/cocostudio/CocosStudioExtension.h"`
 #include "ui/UIHelper.h"
 
 
@@ -188,7 +189,7 @@ void AbstractCheckButton::loadTextureBackGroundSelected(const std::string& backG
 {
     _backGroundSelectedFileName = backGroundSelected;
     _isBackgroundSelectedTextureLoaded = !backGroundSelected.empty();
-    if(_isBackgroundSelectedTextureLoaded) { return; }
+    if( ! _isBackgroundSelectedTextureLoaded) { return; }
 
     _backGroundSelectedTexType = texType;
     switch (_backGroundSelectedTexType)

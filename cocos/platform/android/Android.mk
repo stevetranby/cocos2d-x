@@ -2,11 +2,11 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := cocos2dxandroid_static
+LOCAL_MODULE := ccandroid
 
-LOCAL_MODULE_FILENAME := libcocos2dandroid
+LOCAL_MODULE_FILENAME := libccandroid
 
-LOCAL_ARM_MODE := arm
+// TODO - STEVE - check this one: LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
 CCApplication-android.cpp \

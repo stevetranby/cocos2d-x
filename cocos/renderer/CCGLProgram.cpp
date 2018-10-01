@@ -35,7 +35,6 @@ THE SOFTWARE.
 
 #include "base/CCDirector.h"
 #include "base/ccUTF8.h"
-#include "renderer/ccGLStateCache.h"
 #include "platform/CCFileUtils.h"
 
 // helper functions
@@ -233,7 +232,7 @@ GLProgram::~GLProgram()
 
     if (_program)
     {
-        GL::deleteProgram(_program);
+        glDeleteProgram(_program);
     }
 
 
@@ -623,7 +622,7 @@ bool GLProgram::link()
     if (status == GL_FALSE)
     {
         CCLOG("cocos2d: ERROR: Failed to link program: %i", _program);
-        GL::deleteProgram(_program);
+        glDeleteProgram(_program);
         _program = 0;
     }
     else
@@ -639,7 +638,7 @@ bool GLProgram::link()
 
 void GLProgram::use()
 {
-    GL::useProgram(_program);
+    glUseProgram(_program);
 }
 
 static std::string logForOpenGLShader(GLuint shader)

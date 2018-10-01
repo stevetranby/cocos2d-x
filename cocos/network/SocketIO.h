@@ -62,6 +62,7 @@ in the onClose method the pointer should be set to NULL or used to connect to a 
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include "platform/CCPlatformMacros.h"
 #include "base/CCMap.h"
 
@@ -236,6 +237,9 @@ private:
 
     friend class SIOClientImpl;
 
+    bool isConnected() const;
+    void setConnected(bool);
+
     /**
      * Constructor of SIOClient class.
      *
@@ -250,7 +254,6 @@ private:
      * Destructor of SIOClient class.
      */
     virtual ~SIOClient();
-
 public:
     /**
      * Get the delegate for the client
@@ -268,12 +271,18 @@ public:
      * @param s message.
      */
     void send(const std::string& s);
+    void send(const std::vector<std::string>& s);
+
+
+
     /**
      *  Emit the eventname and the args to the endpoint that _path point to.
      * @param eventname
      * @param args
      */
     void emit(const std::string& eventname, const std::string& args);
+    void emit(const std::string& eventname, const std::vector<std::string> &args);
+
     /**
      * Used to register a socket.io event callback.
      * Event argument should be passed using CC_CALLBACK2(&Base::function, this).
