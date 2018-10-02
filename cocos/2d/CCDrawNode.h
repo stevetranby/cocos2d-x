@@ -314,6 +314,8 @@ public:
     // Overrides
     virtual void draw(Renderer *renderer, const Mat4 &transform, uint32_t flags) override;
 
+    // Allow use with defaults
+    using Node::visit;
     virtual void visit(Renderer* renderer, const Mat4 &parentTransform, uint32_t parentFlags) override;
     
     void setLineWidth(GLfloat lineWidth);
