@@ -417,8 +417,6 @@
 		B61E90CC1B12B74B00BE69EA /* NavMesh in Resources */ = {isa = PBXBuildFile; fileRef = B61E90CA1B12B74B00BE69EA /* NavMesh */; };
 		B63993311A49359F00B07923 /* Particle3D in Resources */ = {isa = PBXBuildFile; fileRef = B63993301A49359F00B07923 /* Particle3D */; };
 		B63993321A49359F00B07923 /* Particle3D in Resources */ = {isa = PBXBuildFile; fileRef = B63993301A49359F00B07923 /* Particle3D */; };
-		B6C039D919C95D83007207DC /* LightTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B6C039D719C95D83007207DC /* LightTest.cpp */; };
-		B6C039DA19C95D83007207DC /* LightTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B6C039D719C95D83007207DC /* LightTest.cpp */; };
 		C04F935A1941B05400E9FEAB /* TileMapTest2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04F93581941B05400E9FEAB /* TileMapTest2.cpp */; };
 		C04F935B1941B05400E9FEAB /* TileMapTest2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04F93581941B05400E9FEAB /* TileMapTest2.cpp */; };
 		C08689C118D370C90093E810 /* background.caf in Resources */ = {isa = PBXBuildFile; fileRef = C08689C018D370C90093E810 /* background.caf */; };
@@ -881,8 +879,6 @@
 		B609E67219C18DAD003D0074 /* BillBoardTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BillBoardTest.h; path = BillBoardTest/BillBoardTest.h; sourceTree = "<group>"; };
 		B61E90CA1B12B74B00BE69EA /* NavMesh */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NavMesh; path = "../tests/cpp-tests/Resources/NavMesh"; sourceTree = "<group>"; };
 		B63993301A49359F00B07923 /* Particle3D */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Particle3D; path = "../tests/cpp-tests/Resources/Particle3D"; sourceTree = "<group>"; };
-		B6C039D719C95D83007207DC /* LightTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LightTest.cpp; path = LightTest/LightTest.cpp; sourceTree = "<group>"; };
-		B6C039D819C95D83007207DC /* LightTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightTest.h; path = LightTest/LightTest.h; sourceTree = "<group>"; };
 		C04F93581941B05400E9FEAB /* TileMapTest2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TileMapTest2.cpp; sourceTree = "<group>"; };
 		C04F93591941B05400E9FEAB /* TileMapTest2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileMapTest2.h; sourceTree = "<group>"; };
 		C08689C018D370C90093E810 /* background.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = background.caf; path = "../tests/cpp-tests/Resources/background.caf"; sourceTree = "<group>"; };
@@ -1101,7 +1097,6 @@
 				6886696E1AE8E8A000C2CFD9 /* SpritePolygonTest */,
 				B603F1AC1AC8EA2E00A9579C /* TerrainTest */,
 				D0FD03611A3B543700825BB5 /* AllocatorTest */,
-				B6C039D619C95D28007207DC /* LightTest */,
 				B609E67019C18D90003D0074 /* BillBoardTest */,
 				3E2BDACD19BEA3410055CDCD /* NewAudioEngineTest */,
 				1AC3592818CECF0A00F37B72 /* ActionManagerTest */,
@@ -2184,15 +2179,6 @@
 			name = BillBoardTest;
 			sourceTree = "<group>";
 		};
-		B6C039D619C95D28007207DC /* LightTest */ = {
-			isa = PBXGroup;
-			children = (
-				B6C039D719C95D83007207DC /* LightTest.cpp */,
-				B6C039D819C95D83007207DC /* LightTest.h */,
-			);
-			name = LightTest;
-			sourceTree = "<group>";
-		};
 		C58126F61C84959600C92DE2 /* UITabControlTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -2564,7 +2550,6 @@
 				1AC35C4F18CECF0C00F37B72 /* SpriteTest.cpp in Sources */,
 				1AC35C0318CECF0C00F37B72 /* FileUtilsTest.cpp in Sources */,
 				B5CE6DD11B3C08F8002B0419 /* UIRadioButtonTest.cpp in Sources */,
-				B6C039D919C95D83007207DC /* LightTest.cpp in Sources */,
 				1AC35B5B18CECF0C00F37B72 /* CurlTest.cpp in Sources */,
 				1AC35BFF18CECF0C00F37B72 /* CustomTableViewCell.cpp in Sources */,
 				29080DDF191B595E0066F8DF /* UITextTest.cpp in Sources */,
@@ -2751,7 +2736,6 @@
 				29080DC4191B595E0066F8DF /* UIScene.cpp in Sources */,
 				1AC35B5A18CECF0C00F37B72 /* controller.cpp in Sources */,
 				94D793DA1B4B7A3600F60F10 /* Bug-CCDrawNode.cpp in Sources */,
-				B6C039DA19C95D83007207DC /* LightTest.cpp in Sources */,
 				1AC35B3E18CECF0C00F37B72 /* Bug-422.cpp in Sources */,
 				29080DAC191B595E0066F8DF /* UIFocusTest.cpp in Sources */,
 				1AC35BF618CECF0C00F37B72 /* HttpClientTest.cpp in Sources */,
