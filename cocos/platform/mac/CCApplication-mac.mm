@@ -73,17 +73,25 @@ int Application::run()
     
     long lastTime = 0L;
     long curTime = 0L;
-    
+    unsigned int ctx_updated_count = 0;
+
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     
     // Retain glview to avoid glview being released in the while loop
     glview->retain();
-    
+
     while (!glview->windowShouldClose())
     {
         lastTime = getCurrentMillSecond();
-        
+
+//        // STEVE: look into doing this outside this function to get rid of if condition per frame
+//        if(ctx_updated_count < 2) {
+//            ctx_updated_count++;
+//            NSOpenGLContext* ctx = (NSOpenGLContext*)glview->getNSGLContext();
+//            [ctx update];
+//        }
+
         director->mainLoop();
         glview->pollEvents();
 
