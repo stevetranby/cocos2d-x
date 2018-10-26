@@ -73,7 +73,6 @@ int Application::run()
     
     long lastTime = 0L;
     long curTime = 0L;
-    unsigned int ctx_updated_count = 0;
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
@@ -81,17 +80,28 @@ int Application::run()
     // Retain glview to avoid glview being released in the while loop
     glview->retain();
 
+    // STEVE: HACK: this is to fix issue with Mojave
+    // TODO: should look into only doing this if on Mojave
+    //int ctx_updated_count = 4;
+    for (int i=0; i<4; ++i)
+    {
+        NSOpenGLContext* ctx = (NSOpenGLContext*)glview->getNSGLContext();
+        [ctx update];
+
+        lastTime = getCurrentMillSecond();
+        director->mainLoop();
+        glview->pollEvents();
+
+        curTime = getCurrentMillSecond();
+        if (curTime - lastTime < _animationInterval)
+        {
+            usleep(static_cast<useconds_t>((_animationInterval - curTime + lastTime)*1000));
+        }
+    }
+
     while (!glview->windowShouldClose())
     {
         lastTime = getCurrentMillSecond();
-
-//        // STEVE: look into doing this outside this function to get rid of if condition per frame
-//        if(ctx_updated_count < 2) {
-//            ctx_updated_count++;
-//            NSOpenGLContext* ctx = (NSOpenGLContext*)glview->getNSGLContext();
-//            [ctx update];
-//        }
-
         director->mainLoop();
         glview->pollEvents();
 
