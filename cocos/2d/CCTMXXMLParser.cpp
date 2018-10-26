@@ -665,6 +665,10 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
             dict["polylinePoints"] = Value(pointsArray);
         }
     }
+    else
+    {
+        CCLOG("Unknown element '%s' while parsing TMX Map.", elementName.c_str());
+    }
 }
 
 void TMXMapInfo::endElement(void* /*ctx*/, const char *name)
@@ -784,6 +788,10 @@ void TMXMapInfo::endElement(void* /*ctx*/, const char *name)
     else if (elementName == "tileset")
     {
         _recordFirstGID = true;
+    }
+    else
+    {
+        CCLOG("Unknown element '%s' while parsing TMX Map.", elementName.c_str());
     }
 }
 
