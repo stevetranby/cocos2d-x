@@ -87,7 +87,7 @@ public:
         addTest("Node: Label - New API", [](){return new NewLabelTests(); });
         addTest("Node: Label - Old API", [](){return new LabelTests(); });
         addTest("Node: Layer", [](){return new LayerTests(); });
-        addTest("Node: Light", [](){return new LightTests(); });
+//        addTest("Node: Light", [](){return new LightTests(); });
         addTest("Node: Menu", [](){return new MenuTests(); });
         addTest("Node: MotionStreak", [](){return new MotionStreakTests(); });
         addTest("Node: Node", [](){return new CocosNodeTests(); });

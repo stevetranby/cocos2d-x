@@ -78,7 +78,7 @@
 #include "LabelTest/LabelTest.h"
 #include "LabelTest/LabelTestNew.h"
 #include "LayerTest/LayerTest.h"
-#include "LightTest/LightTest.h"
+//STEVE - #include "LightTest/LightTest.h"
 #include "MaterialSystemTest/MaterialSystemTest.h"
 #include "MenuTest/MenuTest.h"
 #include "MotionStreakTest/MotionStreakTest.h"
