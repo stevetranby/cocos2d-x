@@ -292,7 +292,6 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dictionary, Textu
         }
         // add sprite frame
         _spriteFramesCache.insertFrame(plist, spriteFrameName, spriteFrame);
-#warning REMOVE: _spriteFrames.insert(spriteFrameName, spriteFrame);
         //STEVE CCLOG("[sctest] spriteFrameName = %s", spriteFrameName.c_str());
     }
     CC_SAFE_DELETE(image);
