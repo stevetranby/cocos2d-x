@@ -289,28 +289,29 @@ namespace {
         __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "%s", buf);
         
 #elif CC_TARGET_PLATFORM ==  CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
-        
-        int pos = 0;
-        int len = nret;
-        char tempBuf[MAX_LOG_LENGTH + 1] = { 0 };
-        WCHAR wszBuf[MAX_LOG_LENGTH + 1] = { 0 };
-        
-        do
-        {
-            std::copy(buf + pos, buf + pos + MAX_LOG_LENGTH, tempBuf);
-            
-            tempBuf[MAX_LOG_LENGTH] = 0;
-            
-            MultiByteToWideChar(CP_UTF8, 0, tempBuf, -1, wszBuf, sizeof(wszBuf));
-            OutputDebugStringW(wszBuf);
-            WideCharToMultiByte(CP_ACP, 0, wszBuf, -1, tempBuf, sizeof(tempBuf), nullptr, FALSE);
-            printf("%s", tempBuf);
-            
-            pos += MAX_LOG_LENGTH;
-            
-        } while (pos < len);
-        SendLogToWindow(buf);
-        fflush(stdout);
+
+    int pos = 0;
+    int len = nret;
+    char tempBuf[MAX_LOG_LENGTH + 1] = { 0 };
+    WCHAR wszBuf[MAX_LOG_LENGTH + 1] = { 0 };
+
+    do
+    {
+        int dataSize = std::min(MAX_LOG_LENGTH, len - pos);
+        std::copy(buf + pos, buf + pos + dataSize, tempBuf);
+
+        tempBuf[dataSize] = 0;
+
+        MultiByteToWideChar(CP_UTF8, 0, tempBuf, -1, wszBuf, sizeof(wszBuf));
+        OutputDebugStringW(wszBuf);
+        WideCharToMultiByte(CP_ACP, 0, wszBuf, -1, tempBuf, sizeof(tempBuf), nullptr, FALSE);
+        printf("%s", tempBuf);
+
+        pos += dataSize;
+
+    } while (pos < len);
+    SendLogToWindow(buf);
+    fflush(stdout);
 #else
         // Linux, Mac, iOS, etc
         fprintf(stdout, "%s", buf);

@@ -171,3 +171,14 @@ android-backup.zip
 cmake-build-*/
 .vs
 cmake_build*
+
+# tmp android build files
+cocos/platform/android/libcocos2dx/.project
+tests/lua-tests/project/proj.android/.project
+tests/lua-tests/project/proj.android/app/.project
+tests/*/proj.android/.settings/org.eclipse.buildship.core.prefs
+tests/*/project/proj.android/.settings/org.eclipse.buildship.core.prefs
+
+# tmp folder for temp usage
+tmp/
+temp/
