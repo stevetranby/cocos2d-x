@@ -104,7 +104,7 @@ public:
      * @lua NA
      */
     //virtual void applicationWasOpenedWithUrl(std::string url);
-    virtual void applicationWasOpenedWithUrl(std::string scheme, std::string host, std::string path) {}
+    virtual void applicationWasOpenedWithUrl(std::string scheme, std::string host, std::string path) { CC_UNUSED_PARAM(scheme); CC_UNUSED_PARAM(host); CC_UNUSED_PARAM(path); }
 
     /**
     * @brief    Callback by Director for limit FPS.

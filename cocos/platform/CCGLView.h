@@ -208,7 +208,7 @@ public:
      * @param filename A path to image file, e.g., "cursors/custom.png".
      * @param hotspot Cursor hotspot, as a anchor point, default is top left (0, 1)
      */
-    virtual void setCursor(const std::string& filename, Vec2 hotspot = Vec2::ANCHOR_TOP_LEFT) {}
+    virtual void setCursor(const std::string& filename, Vec2 hotspot = Vec2::ANCHOR_TOP_LEFT) { CC_UNUSED_PARAM(filename); CC_UNUSED_PARAM(hotspot); }
 
     /**
      * Sets the cursor for the window back to default.
@@ -385,14 +385,14 @@ public:
      *
      * @param filename A path to image file, e.g., "icons/custom.png".
      */
-    virtual void setIcon(const std::string& filename) const {};
+    virtual void setIcon(const std::string& filename) const { CC_UNUSED_PARAM(filename); };
 
     /** Set window icon (implemented for windows and linux).
      * Best icon (based on size) will be auto selected.
      * 
      * @param filelist The array contains icons.
      */
-    virtual void setIcon(const std::vector<std::string>& filelist) const {};
+    virtual void setIcon(const std::vector<std::string>& filelist) const { CC_UNUSED_PARAM(filelist); };
 
     /** Set default window icon (implemented for windows and linux).
      * On windows it will use icon from .exe file (if included).

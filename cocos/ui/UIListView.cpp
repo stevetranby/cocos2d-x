@@ -657,7 +657,7 @@ void ListView::interceptTouchEvent(TouchEventType event, Widget *sender, Touch* 
             }
             parent = dynamic_cast<Widget*>(parent->getParent());
         }
-        if (sender->isHighlighted()) {
+        if (parent->isHighlighted()) {
             selectedItemEvent(event);
         }
     }

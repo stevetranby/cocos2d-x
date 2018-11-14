@@ -482,7 +482,7 @@ public:
      *
      * @return The Quantity of particles that are being simulated at the moment.
      */
-    unsigned int getParticleCount() const { return _particleCount; }
+    int getParticleCount() const { return _particleCount; }
     
     /** Gets how many seconds the emitter will run. -1 means 'forever'.
      *
