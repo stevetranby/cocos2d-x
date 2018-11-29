@@ -440,7 +440,7 @@ public:
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
     virtual id getCocoaWindow() = 0;
-    virtual id getNSGLContext() = 0;
+    virtual id getNSGLContext() = 0; // STEVE: added
 #endif /* (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) */
 
     /**
