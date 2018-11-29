@@ -73,7 +73,7 @@ int Application::run()
     
     long lastTime = 0L;
     long curTime = 0L;
-
+    
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     
