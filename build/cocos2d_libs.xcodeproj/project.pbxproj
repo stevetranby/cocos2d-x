@@ -820,6 +820,10 @@
 		50ABBD981925AB4100A911A9 /* CCGLProgramStateCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD6E1925AB4100A911A9 /* CCGLProgramStateCache.cpp */; };
 		50ABBD991925AB4100A911A9 /* CCGLProgramStateCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD6F1925AB4100A911A9 /* CCGLProgramStateCache.h */; };
 		50ABBD9A1925AB4100A911A9 /* CCGLProgramStateCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD6F1925AB4100A911A9 /* CCGLProgramStateCache.h */; };
+		50ABBD9B1925AB4100A911A9 /* ccGLStateCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD701925AB4100A911A9 /* ccGLStateCache.cpp */; };
+		50ABBD9C1925AB4100A911A9 /* ccGLStateCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD701925AB4100A911A9 /* ccGLStateCache.cpp */; };
+		50ABBD9D1925AB4100A911A9 /* ccGLStateCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD711925AB4100A911A9 /* ccGLStateCache.h */; };
+		50ABBD9E1925AB4100A911A9 /* ccGLStateCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD711925AB4100A911A9 /* ccGLStateCache.h */; };
 		50ABBD9F1925AB4100A911A9 /* CCGroupCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD721925AB4100A911A9 /* CCGroupCommand.cpp */; };
 		50ABBDA01925AB4100A911A9 /* CCGroupCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD721925AB4100A911A9 /* CCGroupCommand.cpp */; };
 		50ABBDA11925AB4100A911A9 /* CCGroupCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD731925AB4100A911A9 /* CCGroupCommand.h */; };
@@ -1711,6 +1715,8 @@
 		50ABBD6D1925AB4100A911A9 /* CCGLProgramState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCGLProgramState.h; sourceTree = "<group>"; };
 		50ABBD6E1925AB4100A911A9 /* CCGLProgramStateCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCGLProgramStateCache.cpp; sourceTree = "<group>"; };
 		50ABBD6F1925AB4100A911A9 /* CCGLProgramStateCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCGLProgramStateCache.h; sourceTree = "<group>"; };
+		50ABBD701925AB4100A911A9 /* ccGLStateCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ccGLStateCache.cpp; sourceTree = "<group>"; };
+		50ABBD711925AB4100A911A9 /* ccGLStateCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccGLStateCache.h; sourceTree = "<group>"; };
 		50ABBD721925AB4100A911A9 /* CCGroupCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCGroupCommand.cpp; sourceTree = "<group>"; };
 		50ABBD731925AB4100A911A9 /* CCGroupCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCGroupCommand.h; sourceTree = "<group>"; };
 		50ABBD741925AB4100A911A9 /* CCQuadCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCQuadCommand.cpp; sourceTree = "<group>"; };
@@ -3029,6 +3035,8 @@
 				50ABBD6D1925AB4100A911A9 /* CCGLProgramState.h */,
 				50ABBD6E1925AB4100A911A9 /* CCGLProgramStateCache.cpp */,
 				50ABBD6F1925AB4100A911A9 /* CCGLProgramStateCache.h */,
+				50ABBD701925AB4100A911A9 /* ccGLStateCache.cpp */,
+				50ABBD711925AB4100A911A9 /* ccGLStateCache.h */,
 				50ABBD721925AB4100A911A9 /* CCGroupCommand.cpp */,
 				50ABBD731925AB4100A911A9 /* CCGroupCommand.h */,
 				B29594B21926D5EC003EEF37 /* CCMeshCommand.cpp */,
