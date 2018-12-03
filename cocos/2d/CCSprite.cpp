@@ -80,17 +80,17 @@ Sprite* Sprite::create(const std::string& filename)
     return nullptr;
 }
 
-Sprite* Sprite::create(const PolygonInfo& info)
-{
-    Sprite *sprite = new (std::nothrow) Sprite();
-    if(sprite && sprite->initWithPolygon(info))
-    {
-        sprite->autorelease();
-        return sprite;
-    }
-    CC_SAFE_DELETE(sprite);
-    return nullptr;
-}
+//Sprite* Sprite::create(const PolygonInfo& info)
+//{
+//    Sprite *sprite = new (std::nothrow) Sprite();
+//    if(sprite && sprite->initWithPolygon(info))
+//    {
+//        sprite->autorelease();
+//        return sprite;
+//    }
+//    CC_SAFE_DELETE(sprite);
+//    return nullptr;
+//}
 
 Sprite* Sprite::create(const std::string& filename, const Rect& rect)
 {
@@ -242,21 +242,21 @@ bool Sprite::initWithSpriteFrame(SpriteFrame *spriteFrame)
     return ret;
 }
 
-bool Sprite::initWithPolygon(const cocos2d::PolygonInfo &info)
-{
-    bool ret = false;
-
-    Texture2D *texture = _director->getTextureCache()->addImage(info.getFilename());
-    if(texture && initWithTexture(texture))
-    {
-        _polyInfo = info;
-        _renderMode = RenderMode::POLYGON;
-        Node::setContentSize(_polyInfo.getRect().size / _director->getContentScaleFactor());
-        ret = true;
-    }
-
-    return ret;
-}
+//bool Sprite::initWithPolygon(const cocos2d::PolygonInfo &info)
+//{
+//    bool ret = false;
+//
+//    Texture2D *texture = _director->getTextureCache()->addImage(info.getFilename());
+//    if(texture && initWithTexture(texture))
+//    {
+//        _polyInfo = info;
+//        _renderMode = RenderMode::POLYGON;
+//        Node::setContentSize(_polyInfo.getRect().size / _director->getContentScaleFactor());
+//        ret = true;
+//    }
+//
+//    return ret;
+//}
 
 // designated initializer
 bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)

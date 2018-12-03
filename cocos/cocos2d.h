@@ -253,7 +253,7 @@ THE SOFTWARE.
 #include "2d/CCAnimation.h"
 #include "2d/CCAnimationCache.h"
 #include "2d/CCSprite.h"
-#include "2d/CCAutoPolygon.h"
+//#include "2d/CCAutoPolygon.h"
 #include "2d/CCSpriteBatchNode.h"
 #include "2d/CCSpriteFrame.h"
 #include "2d/CCSpriteFrameCache.h"
@@ -279,30 +279,30 @@ THE SOFTWARE.
 #include "2d/CCComponentContainer.h"
 
 //3d
-#include "3d/CCAABB.h"
-#include "3d/CCAnimate3D.h"
-#include "3d/CCAnimation3D.h"
-#include "3d/CCAttachNode.h"
-#include "3d/CCBillBoard.h"
-#include "3d/CCFrustum.h"
-#include "3d/CCMesh.h"
-#include "3d/CCMeshSkin.h"
-#include "3d/CCMotionStreak3D.h"
-#include "3d/CCMeshVertexIndexData.h"
-#include "3d/CCOBB.h"
-#include "3d/CCPlane.h"
-#include "3d/CCRay.h"
-#include "3d/CCSkeleton3D.h"
-#include "3d/CCSkybox.h"
-#include "3d/CCSprite3D.h"
-#include "3d/CCSprite3DMaterial.h"
-#include "3d/CCTerrain.h"
+//#include "3d/CCAABB.h"
+//#include "3d/CCAnimate3D.h"
+//#include "3d/CCAnimation3D.h"
+//#include "3d/CCAttachNode.h"
+//#include "3d/CCBillBoard.h"
+//#include "3d/CCFrustum.h"
+//#include "3d/CCMesh.h"
+//#include "3d/CCMeshSkin.h"
+//#include "3d/CCMotionStreak3D.h"
+//#include "3d/CCMeshVertexIndexData.h"
+//#include "3d/CCOBB.h"
+//#include "3d/CCPlane.h"
+//#include "3d/CCRay.h"
+//#include "3d/CCSkeleton3D.h"
+//#include "3d/CCSkybox.h"
+//#include "3d/CCSprite3D.h"
+//#include "3d/CCSprite3DMaterial.h"
+//#include "3d/CCTerrain.h"
 
 // Deprecated
 // All deprecated features are include inside deprecated/CCDeprecated.h.
 // It is recommended that you just include what is needed.
 // eg. #include "deprecated/CCString.h" if you only need cocos2d::__String.
-#include "deprecated/CCDeprecated.h"
+//#include "deprecated/CCDeprecated.h"
 
 
 NS_CC_BEGIN

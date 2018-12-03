@@ -26,8 +26,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+#include "CCSpriteFrame.h"
+
 #include "renderer/CCTextureCache.h"
-#include "2d/CCSpriteFrame.h"
 #include "base/CCDirector.h"
 #include "platform/CCFileUtils.h"
 
@@ -278,7 +279,7 @@ ostream& operator<< (ostream& out, const PolygonInfo& p) {
     out << "{ " << "polyinfo: ";
     out << "a: " << p.getArea() << ", ";
     out << "r: " << p.getRect() << ", ";
-    out << "fn: " << p.getFilename();
+    //out << "fn: " << p.getFilename();
     out << " }";
     return out;
 }
@@ -297,7 +298,7 @@ std::string SpriteFrame::getDescription()
     ss << ", _originalSizeInPixels: " << _originalSizeInPixels;
     ss << ", _texture: " << (*_texture);
     ss << ", _textureFilename: " << _textureFilename;
-//    ss << ", _polygonInfo: " << _polygonInfo;
+    ss << ", _polygonInfo: " << _polygonInfo;
     ss << " }";
     return ss.str();
 }

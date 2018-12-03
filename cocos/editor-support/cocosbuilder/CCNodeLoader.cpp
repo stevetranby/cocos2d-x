@@ -106,33 +106,44 @@ void NodeLoader::parseProperties(Node * pNode, Node * pParent, CCBReader * ccbRe
             if (ccbNode->getCCBFileNode() && isExtraProp)
             {
                 pNode = ccbNode->getCCBFileNode();
-                
-                // Skip properties that doesn't have a value to override
-                __Array *extraPropsNames = (__Array*)pNode->getUserObject();
-                Ref* pObj = nullptr;
+
                 bool bFound = false;
-                CCARRAY_FOREACH(extraPropsNames, pObj)
-                {
-                    __String* pStr = static_cast<__String*>(pObj);
-                    if (0 == pStr->compare(propertyName.c_str()))
-                    {
+                for(auto&& propName : _extraPropsNamesStdString) {
+                    if(propName == propertyName) {
                         bFound = true;
                         break;
                     }
                 }
                 setProp &= bFound;
+
+//                // Skip properties that doesn't have a value to override
+//                __Array *extraPropsNames = (__Array*)pNode->getUserObject();
+//                Ref* pObj = nullptr;
+//                bool bFound = false;
+//                CCARRAY_FOREACH(extraPropsNames, pObj)
+//                {
+//                    __String* pStr = static_cast<__String*>(pObj);
+//                    if (0 == pStr->compare(propertyName.c_str()))
+//                    {
+//                        bFound = true;
+//                        break;
+//                    }
+//                }
+//                setProp &= bFound;
             }
         }
         else if (isExtraProp && pNode == ccbReader->getAnimationManager()->getRootNode())
         {
-            __Array *extraPropsNames = static_cast<__Array*>(pNode->getUserObject());
-            if (! extraPropsNames)
-            {
-                extraPropsNames = __Array::create();
-                pNode->setUserObject(extraPropsNames);
-            }
-            
-            extraPropsNames->addObject(__String::create(propertyName));
+            _extraPropsNamesStdString.push_back(propertyName);
+
+//            __Array *extraPropsNames = static_cast<__Array*>(pNode->getUserObject());
+//            if (! extraPropsNames)
+//            {
+//                extraPropsNames = __Array::create();
+//                pNode->setUserObject(extraPropsNames);
+//            }
+//
+//            extraPropsNames->addObject(__String::create(propertyName));
         }
 
         switch(type) 

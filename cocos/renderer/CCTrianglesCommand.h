@@ -116,6 +116,111 @@ protected:
     GLuint _alphaTextureID; // ANDROID ETC1 ALPHA supports.
 };
 
+
+
+
+
+
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+// MARK: - PolygonInfo -
+// NOTE: from CCAutoPoly.h
+
+/**
+ * PolygonInfo is an object holding the required data to display Sprites.
+ * It can be a simple as a triangle, or as complex as a whole 3D mesh
+ */
+class CC_DLL PolygonInfo
+{
+public:
+    /// @name Creators
+    /// @{
+    /**
+     * Creates an empty Polygon info
+     * @memberof PolygonInfo
+     * @return PolygonInfo object
+     */
+    PolygonInfo();
+
+    /**
+     * Create an polygoninfo from the data of another Polygoninfo
+     * @param other     another PolygonInfo to be copied
+     * @return duplicate of the other PolygonInfo
+     */
+    PolygonInfo(const PolygonInfo& other);
+    //  end of creators group
+    /// @}
+
+    /**
+     * Copy the member of the other PolygonInfo
+     * @param other     another PolygonInfo to be copied
+     */
+    PolygonInfo& operator= (const PolygonInfo &other);
+    ~PolygonInfo();
+
+    /**
+     * set the data to be a pointer to a quad
+     * the member verts will not be released when this PolygonInfo destructs
+     * as the verts memory are managed by other objects
+     * @param quad  a pointer to the V3F_C4B_T2F_Quad object
+     */
+    void setQuad(V3F_C4B_T2F_Quad *quad);
+
+    /**
+     * set the data to be a pointer to a number of Quads
+     * the member verts will not be released when this PolygonInfo destructs
+     * as the verts memory are managed by other objects
+     * @param quad  a pointer to the V3F_C4B_T2F_Quad quads
+     */
+    void setQuads(V3F_C4B_T2F_Quad *quads, int numberOfQuads);
+
+
+    /**
+     * set the data to be a pointer to a triangles
+     * the member verts will not be released when this PolygonInfo destructs
+     * as the verts memory are managed by other objects
+     * @param triangles  a pointer to the TrianglesCommand::Triangles object
+     */
+    void setTriangles(const TrianglesCommand::Triangles& triangles);
+
+    /**
+     * get vertex count
+     * @return number of vertices
+     */
+    unsigned int getVertCount() const;
+
+    /**
+     * get triangles count
+     * @return number of triangles
+     */
+    unsigned int getTrianglesCount() const;
+
+    /** @deprecated Use method getTrianglesCount() instead */
+    CC_DEPRECATED_ATTRIBUTE unsigned int getTriaglesCount() const;
+
+    /**
+     * get sum of all triangle area size
+     * @return sum of all triangle area size
+     */
+    float getArea() const;
+
+    const Rect& getRect() const { return _rect; }
+    void setRect(const Rect& rect) { _rect = rect; }
+    //    const std::string& getFilename() const { return _filename; }
+    //    void setFilename(const std::string& filename ) { _filename = filename; }
+
+    // FIXME: this should be a property, not a public ivar
+    TrianglesCommand::Triangles triangles;
+
+protected:
+    bool _isVertsOwner;
+    Rect _rect;
+    //    std::string _filename;
+
+private:
+    void releaseVertsAndIndices();
+};
+
 NS_CC_END
 /**
  end of support group

@@ -165,7 +165,9 @@ class CC_DLL NodeLoader : public cocos2d::Ref {
         virtual void onHandlePropTypeCCBFile(cocos2d::Node * pNode, cocos2d::Node * pParent, const char* pPropertyName, cocos2d::Node * pCCBFileNode, CCBReader * ccbReader);
 
 protected:
-        cocos2d::ValueMap _customProperties;
+    cocos2d::ValueMap _customProperties;
+    // STEVE: added to replace __String and __Array
+    std::vector<std::string> _extraPropsNamesStdString;
 };
 
 }

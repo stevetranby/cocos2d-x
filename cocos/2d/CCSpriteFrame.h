@@ -30,13 +30,15 @@ THE SOFTWARE.
 #define __SPRITE_CCSPRITE_FRAME_H__
 
 #include "2d/CCNode.h"
-#include "2d/CCAutoPolygon.h"
+//#include "2d/CCAutoPolygon.h"
+#include "renderer/CCTrianglesCommand.h"
 #include "base/CCRef.h"
 #include "math/CCGeometry.h"
 
 NS_CC_BEGIN
 
 class Texture2D;
+
 
 /**
  * @addtogroup _2d
