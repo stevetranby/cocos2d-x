@@ -820,10 +820,6 @@
 		50ABBD981925AB4100A911A9 /* CCGLProgramStateCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD6E1925AB4100A911A9 /* CCGLProgramStateCache.cpp */; };
 		50ABBD991925AB4100A911A9 /* CCGLProgramStateCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD6F1925AB4100A911A9 /* CCGLProgramStateCache.h */; };
 		50ABBD9A1925AB4100A911A9 /* CCGLProgramStateCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD6F1925AB4100A911A9 /* CCGLProgramStateCache.h */; };
-		50ABBD9B1925AB4100A911A9 /* ccGLStateCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD701925AB4100A911A9 /* ccGLStateCache.cpp */; };
-		50ABBD9C1925AB4100A911A9 /* ccGLStateCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD701925AB4100A911A9 /* ccGLStateCache.cpp */; };
-		50ABBD9D1925AB4100A911A9 /* ccGLStateCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD711925AB4100A911A9 /* ccGLStateCache.h */; };
-		50ABBD9E1925AB4100A911A9 /* ccGLStateCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD711925AB4100A911A9 /* ccGLStateCache.h */; };
 		50ABBD9F1925AB4100A911A9 /* CCGroupCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD721925AB4100A911A9 /* CCGroupCommand.cpp */; };
 		50ABBDA01925AB4100A911A9 /* CCGroupCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD721925AB4100A911A9 /* CCGroupCommand.cpp */; };
 		50ABBDA11925AB4100A911A9 /* CCGroupCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ABBD731925AB4100A911A9 /* CCGroupCommand.h */; };
@@ -1152,6 +1148,8 @@
 		97A0627D21B4C13F00C28D83 /* CCControlLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97A0627821B4C13F00C28D83 /* CCControlLoader.cpp */; };
 		97A0628021B4C13F00C28D83 /* CCControlLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 97A0627A21B4C13F00C28D83 /* CCControlLoader.h */; };
 		97A0628121B4C13F00C28D83 /* CCControlLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 97A0627A21B4C13F00C28D83 /* CCControlLoader.h */; };
+		97A0628521B634BB00C28D83 /* ccGLStateCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD701925AB4100A911A9 /* ccGLStateCache.cpp */; };
+		97A0628621B634BB00C28D83 /* ccGLStateCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ABBD701925AB4100A911A9 /* ccGLStateCache.cpp */; };
 		A045F6D61BA81577005076C7 /* CCTextureCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A045F6D41BA81577005076C7 /* CCTextureCube.cpp */; };
 		A045F6D71BA81577005076C7 /* CCTextureCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A045F6D41BA81577005076C7 /* CCTextureCube.cpp */; };
 		A045F6D81BA81577005076C7 /* CCTextureCube.h in Headers */ = {isa = PBXBuildFile; fileRef = A045F6D51BA81577005076C7 /* CCTextureCube.h */; };
@@ -4297,6 +4295,7 @@
 				5012168E1AC47380009A4BEA /* CCRenderState.cpp in Sources */,
 				50ABC0011926664800A911A9 /* CCLock-apple.cpp in Sources */,
 				50ABBD931925AB4100A911A9 /* CCGLProgramState.cpp in Sources */,
+				97A0628621B634BB00C28D83 /* ccGLStateCache.cpp in Sources */,
 				1A57034B180BD09B0088DEC7 /* tinyxml2.cpp in Sources */,
 				1A570354180BD0B00088DEC7 /* ioapi.cpp in Sources */,
 				1A570358180BD0B00088DEC7 /* unzip.cpp in Sources */,
@@ -4507,6 +4506,7 @@
 				1A5701E7180BCB8C0088DEC7 /* CCTransition.cpp in Sources */,
 				15AE18BD19AAD33D00C27E9E /* CCLabelBMFontLoader.cpp in Sources */,
 				50ABC01E1926664800A911A9 /* CCThread.cpp in Sources */,
+				97A0628521B634BB00C28D83 /* ccGLStateCache.cpp in Sources */,
 				1A5701EB180BCB8C0088DEC7 /* CCTransitionPageTurn.cpp in Sources */,
 				1A5701EF180BCB8C0088DEC7 /* CCTransitionProgress.cpp in Sources */,
 				B240C5EA1B09DFB000137F50 /* CCFrameBuffer.cpp in Sources */,
