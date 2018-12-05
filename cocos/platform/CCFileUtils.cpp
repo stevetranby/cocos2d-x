@@ -690,7 +690,7 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
         return Status::OpenFailed;
     }
 
-    size_t size = statBuf.st_size;
+    size_t size = (size_t)statBuf.st_size;
 
     buffer->resize(size);
     size_t readsize = fread(buffer->buffer(), 1, size, fp);
