@@ -85,6 +85,29 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 @end
 
 @implementation CCEAGLView
+{
+    id<CCESRenderer>        renderer_;
+    EAGLContext             *context_; // weak ref
+
+    NSString                *pixelformat_;
+    GLuint                  depthFormat_;
+    BOOL                    preserveBackbuffer_;
+
+    CGSize                  size_;
+    CGRect                  safeArea_;
+    BOOL                    discardFramebufferSupported_;
+
+    //fsaa addition
+    BOOL                    multisampling_;
+    unsigned int            requestedSamples_;
+    BOOL                    isUseUITextField;
+@private
+    NSString *              markedText_;
+    CGRect                  caretRect_;
+    CGRect                  originalRect_;
+    NSNotification*         keyboardShowNotification_;
+    BOOL                    isKeyboardShown_;
+}
 
 @synthesize surfaceSize=size_;
 @synthesize pixelFormat=pixelformat_, depthFormat=depthFormat_;

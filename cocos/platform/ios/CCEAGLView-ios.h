@@ -87,29 +87,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
  * Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
  */
 @interface CCEAGLView : UIView <UIKeyInput, UITextInput, UITextInputTraits>
-{
-    id<CCESRenderer>        renderer_;
-    EAGLContext             *context_; // weak ref
-
-    NSString                *pixelformat_;
-    GLuint                  depthFormat_;
-    BOOL                    preserveBackbuffer_;
-
-    CGSize                  size_;
-    CGRect                  safeArea_;
-    BOOL                    discardFramebufferSupported_;
-
-    //fsaa addition
-    BOOL                    multisampling_;
-    unsigned int            requestedSamples_;
-    BOOL                    isUseUITextField;
-@private
-    NSString *              markedText_;
-    CGRect                  caretRect_;
-    CGRect                  originalRect_;
-    NSNotification*         keyboardShowNotification_;
-    BOOL                    isKeyboardShown_;
-}
 
 @property(nonatomic, readonly) UITextPosition *beginningOfDocument;
 @property(nonatomic, readonly) UITextPosition *endOfDocument;
