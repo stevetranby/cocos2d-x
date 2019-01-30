@@ -207,6 +207,7 @@ void TextureCache::addImageAsync(const std::string &path, const std::function<vo
 
     // check if file exists
     if (fullpath.empty() || !FileUtils::getInstance()->isFileExist(fullpath)) {
+        _imagesNotFound.insert(fullpath); // STEVE
         if (callback) callback(nullptr);
         return;
     }
@@ -358,6 +359,10 @@ void TextureCache::addImageAsyncCallBack(float /*dt*/)
                 // cache the texture file name
                 VolatileTextureMgr::addImageTexture(texture, asyncStruct->filename);
 #endif
+
+                _imagesLoadedAtLeastOnce.insert(asyncStruct->filename); // STEVE
+
+
                 // cache the texture. retain it, since it is added in the map
                 _textures.emplace(asyncStruct->filename, texture);
                 texture->retain();
@@ -432,6 +437,7 @@ Texture2D * TextureCache::addImage(const std::string &path)
                 VolatileTextureMgr::addImageTexture(texture, fullpath);
 #endif
                 // texture already retained, no need to re-retain it
+                _imagesLoadedAtLeastOnce.insert(fullpath); // STEVE
                 _textures.emplace(fullpath, texture);
 
                 //-- ANDROID ETC1 ALPHA SUPPORTS.

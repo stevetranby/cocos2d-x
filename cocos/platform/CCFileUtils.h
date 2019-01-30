@@ -168,7 +168,7 @@ public:
     /**
      *  Gets string from a file.
      */
-    virtual std::string getStringFromFile(const std::string& filename) const;
+    virtual std::string getStringFromFile(const std::string& filename); // STEVE const;
     
     /**
      * Gets string from a file, async off the main cocos thread
@@ -183,7 +183,7 @@ public:
      *  Creates binary data from a file.
      *  @return A data object.
      */
-    virtual Data getDataFromFile(const std::string& filename) const;
+    virtual Data getDataFromFile(const std::string& filename); // STEVE const;
     
 
     /**
@@ -268,11 +268,11 @@ public:
             std::is_base_of< ResizableBuffer, ResizableBufferAdapter<T> >::value
         >::type
     >
-    Status getContents(const std::string& filename, T* buffer) const {
+    Status getContents(const std::string& filename, T* buffer) {
         ResizableBufferAdapter<T> buf(buffer);
         return getContents(filename, &buf);
     }
-    virtual Status getContents(const std::string& filename, ResizableBuffer* buffer) const;
+    virtual Status getContents(const std::string& filename, ResizableBuffer* buffer); // STEVE const;
 
     /**
      *  Gets resource file data
@@ -283,7 +283,7 @@ public:
      *  @return Upon success, a pointer to the data is returned, otherwise NULL.
      *  @warning Recall: you are responsible for calling free() on any Non-NULL pointer returned.
      */
-    CC_DEPRECATED_ATTRIBUTE virtual unsigned char* getFileData(const std::string& filename, const char* mode, ssize_t *size) const;
+    CC_DEPRECATED_ATTRIBUTE virtual unsigned char* getFileData(const std::string& filename, const char* mode, ssize_t *size); // STEVE const;
 
     /**
      *  Gets resource file data from a zip file.
@@ -994,6 +994,14 @@ protected:
 
         AsyncTaskPool::getInstance()->enqueue(AsyncTaskPool::TaskType::TASK_IO, [](void*){}, nullptr, std::move(lambda));
     }
+
+    // STEVE
+public:
+    void dumpFileListings();
+    std::set<std::string> _fileContentsLoadedAtLeastOnce;
+    std::set<std::string> _fileContentsNotFound;
+    std::set<std::string> _fileAsStringLoadedAtLeastOnce;
+    std::set<std::string> _fileAsStringPathsNotFound;
 };
 
 // end of support group
