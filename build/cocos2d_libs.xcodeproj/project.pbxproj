@@ -4688,7 +4688,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"COCOS2D_DEBUG=1",
 					USE_FILE32API,
-					"CC_ENABLE_CHIPMUNK_INTEGRATION=1",
+					"CC_ENABLE_CHIPMUNK_INTEGRATION=0",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
@@ -4739,7 +4739,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"CC_ENABLE_CHIPMUNK_INTEGRATION=1",
+					"CC_ENABLE_CHIPMUNK_INTEGRATION=0",
 					NDEBUG,
 					USE_FILE32API,
 				);
@@ -4771,7 +4771,6 @@
 		1551A34D158F2AB200E66CFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_EXTENSION = a;
@@ -4811,10 +4810,10 @@
 					"\"$(SRCROOT)/../external/chipmunk/prebuilt/mac\"",
 					"\"$(SRCROOT)/../external/curl/prebuilt/mac\"",
 					"\"$(SRCROOT)/../external/zlib/prebuilt/mac\"",
-					"$(SRCROOT)/../external/openssl/prebuilt/mac",
-					"$(SRCROOT)/../external/bullet/prebuilt/mac",
-					"$(SRCROOT)/../external/Box2D/prebuilt/mac",
-					"$(SRCROOT)/../external/uv/prebuilt/mac",
+					"\"$(SRCROOT)/../external/openssl/prebuilt/mac\"",
+					"\"$(SRCROOT)/../external/bullet/prebuilt/mac\"",
+					"\"$(SRCROOT)/../external/Box2D/prebuilt/mac\"",
+					"\"$(SRCROOT)/../external/uv/prebuilt/mac\"",
 				);
 				MACH_O_TYPE = staticlib;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -4828,7 +4827,6 @@
 		1551A34E158F2AB200E66CFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_EXTENSION = a;
@@ -4869,10 +4867,10 @@
 					"\"$(SRCROOT)/../external/chipmunk/prebuilt/mac\"",
 					"\"$(SRCROOT)/../external/curl/prebuilt/mac\"",
 					"\"$(SRCROOT)/../external/zlib/prebuilt/mac\"",
-					"$(SRCROOT)/../external/openssl/prebuilt/mac",
-					"$(SRCROOT)/../external/bullet/prebuilt/mac",
-					"$(SRCROOT)/../external/Box2D/prebuilt/mac",
-					"$(SRCROOT)/../external/uv/prebuilt/mac",
+					"\"$(SRCROOT)/../external/openssl/prebuilt/mac\"",
+					"\"$(SRCROOT)/../external/bullet/prebuilt/mac\"",
+					"\"$(SRCROOT)/../external/Box2D/prebuilt/mac\"",
+					"\"$(SRCROOT)/../external/uv/prebuilt/mac\"",
 				);
 				MACH_O_TYPE = staticlib;
 				OTHER_LDFLAGS = "-llibsql3";
@@ -4882,7 +4880,6 @@
 		A07A4D621783777C0073F6A7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				ENABLE_BITCODE = NO;
 				EXECUTABLE_PREFIX = "";
@@ -4928,7 +4925,6 @@
 		A07A4D631783777C0073F6A7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				ENABLE_BITCODE = NO;
 				EXECUTABLE_PREFIX = "";
