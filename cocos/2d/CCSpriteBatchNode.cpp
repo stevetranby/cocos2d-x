@@ -451,6 +451,7 @@ ssize_t SpriteBatchNode::rebuildIndexInOrder(Sprite *parent, ssize_t index)
 
 ssize_t SpriteBatchNode::highestAtlasIndexInChild(Sprite *sprite)
 {
+    CCASSERT(sprite, "sprite cannot be null!");
     auto& children = sprite->getChildren();
 
     if (children.empty())
@@ -520,6 +521,7 @@ ssize_t SpriteBatchNode::atlasIndexForChild(Sprite *sprite, int nZ)
     }
     else
     {
+        CCASSERT(prev, "prev cannot be null!");
         // previous & sprite belong to the same branch
         if ((prev->getLocalZOrder() < 0 && nZ < 0) || (prev->getLocalZOrder() >= 0 && nZ >= 0))
         {

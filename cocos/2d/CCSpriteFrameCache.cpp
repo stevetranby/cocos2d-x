@@ -262,6 +262,8 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dictionary, Textu
                                                          spriteOffset,
                                                          spriteSourceSize);
 
+            CCASSERT(spriteFrame, "spriteFrame create failed!");
+
             if(frameDict.find("vertices") != frameDict.end())
             {
                 std::vector<int> vertices;
