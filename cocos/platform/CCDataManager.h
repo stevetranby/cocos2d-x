@@ -1,9 +1,8 @@
 /****************************************************************************
-Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2011      Zynga Inc.
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -26,14 +25,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+#ifndef __CC_DataManager_H__
+#define __CC_DataManager_H__
+
 #include "platform/CCPlatformMacros.h"
+#include "base/ccTypes.h"
 
 NS_CC_BEGIN
 
-CC_DLL const char* cocos2dVersion()
+/**
+ * @addtogroup platform
+ * @{
+ */
+
+class CC_DLL DataManager
 {
-    return "cocos2d-x-3.17.2";
-}
+public:
+    static void setProcessID(int pid);
+    static void setFrameSize(int width, int height);
+    static void onSceneLoaderBegin();
+    static void onSceneLoaderEnd();
+    static void onShaderLoaderBegin();
+    static void onShaderLoaderEnd();
+};
+
+// end of platform group
+/** @} */
 
 NS_CC_END
 
+#endif    // __CC_DataManager_H__

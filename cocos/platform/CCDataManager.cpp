@@ -1,9 +1,8 @@
 /****************************************************************************
-Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2011      Zynga Inc.
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -26,14 +25,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/CCPlatformMacros.h"
+#include "platform/CCDataManager.h"
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#   include "platform/android/jni/JniHelper.h"
+#   define DataManagerClassName "org/cocos2dx/lib/Cocos2dxDataManager"
+#endif
 
 NS_CC_BEGIN
 
-CC_DLL const char* cocos2dVersion()
-{
-    return "cocos2d-x-3.17.2";
+void DataManager::setProcessID(int pid){
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    JniHelper::callStaticVoidMethod(DataManagerClassName, "setProcessID", pid);
+#endif
+}
+void DataManager::setFrameSize(int width, int height){
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    JniHelper::callStaticVoidMethod(DataManagerClassName, "setFrameSize", width, height);
+#endif
+}
+void DataManager::onSceneLoaderBegin(){
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    JniHelper::callStaticVoidMethod(DataManagerClassName, "onSceneLoaderBegin");
+#endif
+}
+void DataManager::onSceneLoaderEnd(){
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    JniHelper::callStaticVoidMethod(DataManagerClassName, "onSceneLoaderEnd");
+#endif
+}
+void DataManager::onShaderLoaderBegin(){
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    JniHelper::callStaticVoidMethod(DataManagerClassName, "onShaderLoaderBegin");
+#endif
+}
+void DataManager::onShaderLoaderEnd(){
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    JniHelper::callStaticVoidMethod(DataManagerClassName, "onShaderLoaderEnd");
+#endif
 }
 
 NS_CC_END
-

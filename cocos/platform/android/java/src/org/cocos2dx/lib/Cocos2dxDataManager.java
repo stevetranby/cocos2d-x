@@ -1,9 +1,8 @@
 /****************************************************************************
-Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2011      Zynga Inc.
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -24,16 +23,35 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-****************************************************************************/
+ ****************************************************************************/
 
-#include "platform/CCPlatformMacros.h"
+package org.cocos2dx.lib;
+import android.util.Log;
 
-NS_CC_BEGIN
+import com.oppo.oiface.engine.OifaceGameEngineManager;
 
-CC_DLL const char* cocos2dVersion()
-{
-    return "cocos2d-x-3.17.2";
+public class Cocos2dxDataManager {
+    public static void setOptimise(String thing, float value){
+        String jsonStr = "{\"" + thing + "\":" + String.valueOf(value) + "}";
+        OifaceGameEngineManager.getInstance().updateGameEngineInfo(jsonStr);
+    }
+
+    public static void setProcessID(int pid){
+        setOptimise("render_pid", pid);
+    }
+    public static void setFrameSize(int width, int height){
+        setOptimise("buffer_size", width * height);
+    }
+    public static void onSceneLoaderBegin(){
+        setOptimise("load_scene", 1);
+    }
+    public static void onSceneLoaderEnd(){
+        setOptimise("load_scene", 0);
+    }
+    public static void onShaderLoaderBegin(){
+        setOptimise("shader_compile", 1);
+    }
+    public static void onShaderLoaderEnd(){
+        setOptimise("shader_compile", 0);
+    }
 }
-
-NS_CC_END
-
