@@ -1,15 +1,15 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 18
-    //compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
-    //buildToolsVersion PROP_BUILD_TOOLS_VERSION
+    compileSdkVersion 28
+    buildToolsVersion = '28.0.3'
 
     defaultConfig {
-        minSdkVersion PROP_MIN_SDK_VERSION
-        targetSdkVersion PROP_TARGET_SDK_VERSION
-        versionCode 31601
-        versionName "3.16"
+        minSdkVersion 18
+        targetSdkVersion 28
+        versionCode 31702
+        versionName "3.17"
+        maxSdkVersion 28
     }
 
     sourceSets.main {
@@ -23,6 +23,11 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 }
 

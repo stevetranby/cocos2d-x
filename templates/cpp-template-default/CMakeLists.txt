@@ -23,6 +23,8 @@
 # THE SOFTWARE.
 # ****************************************************************************/
 
+# STEVE: need 3.9.4+ for setting standards
+# cmake_minimum_required(VERSION 3.9.4)
 cmake_minimum_required(VERSION 3.6)
 
 set(APP_NAME HelloCpp)
@@ -46,7 +48,7 @@ if(APPLE OR WINDOWS)
     cocos_mark_multi_resources(common_res_files RES_TO "Resources" FOLDERS ${GAME_RES_FOLDER})
 endif()
 
-# add cross-platforms source files and header files 
+# add cross-platforms source files and header files
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp

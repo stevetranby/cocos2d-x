@@ -159,7 +159,7 @@ std::string FileUtilsAndroid::getNewFilename(const std::string &filename) const
 
 bool FileUtilsAndroid::isFileExistInternal(const std::string& strFilePath) const
 {
-    
+
     DECLARE_GUARD;
 
     if (strFilePath.empty())
@@ -226,7 +226,7 @@ bool FileUtilsAndroid::isDirectoryExistInternal(const std::string& dirPath) cons
     }
 
     const char* s = dirPathCopy.c_str();
-    
+
     // find absolute path in flash memory
     if (s[0] == '/')
     {
@@ -284,7 +284,7 @@ long FileUtilsAndroid::getFileSize(const std::string& filepath) const
     if (size != -1) {
         return size;
     }
-    
+
     if (FileUtilsAndroid::assetmanager)
     {
         string relativePath = filepath;
@@ -292,7 +292,7 @@ long FileUtilsAndroid::getFileSize(const std::string& filepath) const
         {
             relativePath = filepath.substr(_defaultResRootPath.size());
         }
-        
+
         AAsset* asset = AAssetManager_open(FileUtilsAndroid::assetmanager, relativePath.data(), AASSET_MODE_UNKNOWN);
         if (asset)
         {
@@ -300,7 +300,7 @@ long FileUtilsAndroid::getFileSize(const std::string& filepath) const
             AAsset_close(asset);
         }
     }
-    
+
     return size;
 }
 
@@ -351,7 +351,7 @@ std::vector<std::string> FileUtilsAndroid::listFiles(const std::string& dirPath)
     return fileList;
 }
 
-FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, ResizableBuffer* buffer) const
+FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, ResizableBuffer* buffer) // STEVE const
 {
     static const std::string apkprefix("assets/");
     if (filename.empty())

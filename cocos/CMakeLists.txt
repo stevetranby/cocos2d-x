@@ -53,7 +53,7 @@ include(storage/CMakeLists.txt)
 # default value for cocos2dx extensions modules build
 option(BUILD_EDITOR_COCOSBUILDER "Build editor support for cocosbuilder" ON)
 option(BUILD_EDITOR_COCOSTUDIO "Build editor support for cocostudio" ON)
-option(BUILD_EDITOR_SPINE "Build editor support for spine" ON)
+option(BUILD_EDITOR_SPINE "Build editor support for spine" OFF)
 option(BUILD_EXTENSIONS "Build extension library" ON)
 
 if(BUILD_EDITOR_COCOSBUILDER)
@@ -88,7 +88,7 @@ set(COCOS_HEADER cocos2d.h
     ${COCOS_BASE_HEADER}
     ${COCOS_AUDIO_HEADER}
     ${COCOS_UI_HEADER}
-    ${COCOS_DEPRECATED_HEADER}
+#    ${COCOS_DEPRECATED_HEADER}
     ${COCOS_NETWORK_HEADER}
     ${COCOS_EDITOR_SUPPORT_HEADER}
     ${COCOS_EXTENSIONS_HEADER}
@@ -108,7 +108,7 @@ set(COCOS_SRC cocos2d.cpp
     ${COCOS_BASE_SRC}
     ${COCOS_AUDIO_SRC}
     ${COCOS_UI_SRC}
-    ${COCOS_DEPRECATED_SRC}
+#    ${COCOS_DEPRECATED_SRC}
     ${COCOS_NETWORK_SRC}
     ${COCOS_EDITOR_SUPPORT_SRC}
     ${COCOS_EXTENSIONS_SRC}

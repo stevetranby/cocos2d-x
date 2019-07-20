@@ -71,7 +71,7 @@ WidgetReader/Particle3DReader/Particle3DReader.cpp \
 WidgetReader/SkeletonReader/BoneNodeReader.cpp \
 WidgetReader/SkeletonReader/SkeletonNodeReader.cpp \
 WidgetReader/GameNode3DReader/GameNode3DReader.cpp \
-WidgetReader/Light3DReader/Light3DReader.cpp \
+#WidgetReader/Light3DReader/Light3DReader.cpp \
 ActionTimeline/CCActionTimelineCache.cpp \
 ActionTimeline/CCFrame.cpp \
 ActionTimeline/CCTimeLine.cpp \
@@ -97,7 +97,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/.. \
 LOCAL_CFLAGS += -fexceptions
 
 LOCAL_STATIC_LIBRARIES := ccui
-LOCAL_STATIC_LIBRARIES += ccds
+#LOCAL_STATIC_LIBRARIES += ccds
 LOCAL_STATIC_LIBRARIES += ext_flatbuffers
 
 include $(BUILD_STATIC_LIBRARY)

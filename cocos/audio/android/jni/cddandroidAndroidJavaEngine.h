@@ -26,7 +26,7 @@ THE SOFTWARE.
 #ifndef __CDDANDROIDANDROIDJAVAENGINE_H__
 #define __CDDANDROIDANDROIDJAVAENGINE_H__
 
-#include "audio/include/SimpleAudioEngine.h"
+//STEVE -  #include "audio/include/SimpleAudioEngine.h"
 #include "platform/android/jni/JniHelper.h"
 #include <list>
 
@@ -42,71 +42,71 @@ namespace CocosDenshion {
              * @param filePath The path of the background music file.
              */
             virtual void preloadBackgroundMusic(const char* filePath);
-            
+
             /*
              * @brief Play background music.
              * @param filePath The path of the background music file,or the FileName of T_SoundResInfo.
              * @param loop Whether the background music loop or not.
              */
             virtual void playBackgroundMusic(const char* filePath, bool loop);
-            
+
             /*
              * @brief Stop playing background music.
              * @param releaseData If release the background music data or not.As default value is false.
              */
             virtual void stopBackgroundMusic(bool releaseData);
-            
+
             /*
              * @brief Pause playing background music.
              */
             virtual void pauseBackgroundMusic();
-            
+
             /*
              * @brief Resume playing background music.
              */
             virtual void resumeBackgroundMusic();
-            
+
             /*
              * @brief Rewind playing background music
              */
             virtual void rewindBackgroundMusic();
-            
+
             /*
              * @brief Indicates whether any background music can be played or not.
              * @return true if background music can be played; otherwise false.
              */
             virtual bool willPlayBackgroundMusic();
-            
+
             /*
              * @brief Indicates whether the background music is playing.
              * @return true if the background music is playing; otherwise false.
              */
             virtual bool isBackgroundMusicPlaying();
-            
+
             /*
              * @brief Get the volume of the background music.
              * @return the range of 0.0 as the minimum and 1.0 as the maximum.
              */
             virtual float getBackgroundMusicVolume();
-            
+
             /*
              * @brief Set the volume of the background music.
              * @param volume must be range of 0.0 as the minimum and 1.0 as the maximum.
              */
             virtual void setBackgroundMusicVolume(float volume);
-            
+
             /*
              * @brief Get the volume of the effects.
              * @return the range of 0.0 as the minimum and 1.0 as the maximum.
              */
             virtual float getEffectsVolume();
-            
+
             /*
              * @brief Set the volume of sound effects.
              * @param volume must be range of 0.0 as the minimum and 1.0 as the maximum.
              */
             virtual void setEffectsVolume(float volume);
-            
+
             /*
              * @brief Play sound effect with a file path, pitch, pan, and gain.
              * @param filePath The path of the effect file.
@@ -118,46 +118,46 @@ namespace CocosDenshion {
              */
             virtual unsigned int playEffect(const char* filePath, bool loop = false,
                                     float pitch = 1.0f, float pan = 0.0f, float gain = 1.0f);
-            
+
             /*
              * @brief Pause playing sound effect.
              * @param soundId The return value of function playEffect.
              */
             virtual void pauseEffect(unsigned int soundId);
-            
+
             /*
              * @brief Pause all playing sound effect.
              */
             virtual void pauseAllEffects();
-            
+
             /*
              * @brief Resume playing sound effect.
              * @param soundId The return value of function playEffect.
              */
             virtual void resumeEffect(unsigned int soundId);
-            
+
             /*
              * @brief Resume all playing sound effects.
              */
             virtual void resumeAllEffects();
-            
+
             /*
              * @brief Stop playing sound effect.
              * @param soundId The return value of function playEffect.
              */
             virtual void stopEffect(unsigned int soundId);
-            
+
             /*
              * @brief Stop all playing sound effects.
              */
             virtual void stopAllEffects();
-            
+
             /*
              * @brief Preload a compressed audio file.
              * @param filePath The path of the effect file.
              */
             virtual void preloadEffect(const char* filePath);
-            
+
             /*
              * @brief Unload the preloaded effect from internal buffer.
              * @param filePath The path of the effect file.

@@ -51,27 +51,28 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../include \
 LOCAL_STATIC_LIBRARIES += ext_vorbisidec ext_pvmp3dec
 include $(BUILD_STATIC_LIBRARY)
 
-#SimpleAudioEngine
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := ccds
-
-LOCAL_MODULE_FILENAME := libccds
-
-LOCAL_ARM_MODE := arm
-
-LOCAL_SRC_FILES := cddSimpleAudioEngine.cpp \
-                   ccdandroidUtils.cpp \
-                   jni/cddandroidAndroidJavaEngine.cpp
-
-LOCAL_STATIC_LIBRARIES := audio
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../include
-
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../include \
-                    $(LOCAL_PATH)/../.. \
-                    $(LOCAL_PATH)/../../platform/android
-
-include $(BUILD_STATIC_LIBRARY)
+#
+# # SimpleAudioEngine
+# include $(CLEAR_VARS)
+#
+# LOCAL_MODULE := ccds
+#
+# LOCAL_MODULE_FILENAME := libccds
+#
+# LOCAL_ARM_MODE := arm
+#
+# LOCAL_SRC_FILES := cddSimpleAudioEngine.cpp \
+#                    ccdandroidUtils.cpp \
+#                    jni/cddandroidAndroidJavaEngine.cpp
+#
+# LOCAL_STATIC_LIBRARIES := audio
+# LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../include
+#
+# LOCAL_C_INCLUDES := $(LOCAL_PATH)/../include \
+#                     $(LOCAL_PATH)/../.. \
+#                     $(LOCAL_PATH)/../../platform/android
+#
+# include $(BUILD_STATIC_LIBRARY)
 
 $(call import-module,android-specific/tremolo)
 $(call import-module,android-specific/pvmp3dec)
