@@ -83,7 +83,7 @@ bool ProgressTimer::initWithSprite(Sprite* sp)
     return true;
 }
 
-ProgressTimer::~ProgressTimer(void)
+ProgressTimer::~ProgressTimer()
 {
     CC_SAFE_FREE(_vertexData);
     CC_SAFE_RELEASE(_sprite);
@@ -191,7 +191,7 @@ Vec2 ProgressTimer::vertexFromAlphaPoint(Vec2 alpha)
     return ret;
 }
 
-void ProgressTimer::updateColor(void)
+void ProgressTimer::updateColor()
 {
     if (!_sprite) {
         return;
@@ -207,7 +207,7 @@ void ProgressTimer::updateColor(void)
     }
 }
 
-void ProgressTimer::updateProgress(void)
+void ProgressTimer::updateProgress()
 {
     switch (_type)
     {
@@ -268,7 +268,7 @@ void ProgressTimer::setMidpoint(const Vec2& midPoint)
 //    It now deals with flipped texture. If you run into this problem, just use the
 //    sprite property and enable the methods flipX, flipY.
 ///
-void ProgressTimer::updateRadial(void)
+void ProgressTimer::updateRadial()
 {
     if (!_sprite) {
         return;
@@ -400,7 +400,7 @@ void ProgressTimer::updateRadial(void)
 //    It now deals with flipped texture. If you run into this problem, just use the
 //    sprite property and enable the methods flipX, flipY.
 ///
-void ProgressTimer::updateBar(void)
+void ProgressTimer::updateBar()
 {
     if (!_sprite) {
         return;

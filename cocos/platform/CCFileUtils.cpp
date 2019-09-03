@@ -548,8 +548,7 @@ void FileUtils::destroyInstance()
 
 void FileUtils::setDelegate(FileUtils *delegate)
 {
-    if (s_sharedFileUtils)
-        delete s_sharedFileUtils;
+    delete s_sharedFileUtils;
 
     s_sharedFileUtils = delegate;
 }
@@ -617,7 +616,7 @@ bool FileUtils::init()
 {
     DECLARE_GUARD;
     _searchPathArray.push_back(_defaultResRootPath);
-    _searchResolutionsOrderArray.push_back("");
+    _searchResolutionsOrderArray.emplace_back("");
     return true;
 }
 
@@ -915,7 +914,7 @@ std::string FileUtils::fullPathForDirectory(const std::string &dir) const
     {
         for (const auto& resolutionIt : _searchResolutionsOrderArray)
         {
-            fullpath = searchIt + longdir + resolutionIt;
+            fullpath.assign(searchIt).append(longdir).append(resolutionIt);
             auto exists = isDirectoryExistInternal(fullpath);
 
             if (exists && !fullpath.empty())
@@ -958,7 +957,7 @@ void FileUtils::setSearchResolutionsOrder(const std::vector<std::string>& search
     for(const auto& iter : searchResolutionsOrder)
     {
         std::string resolutionDirectory = iter;
-        if (!existDefault && resolutionDirectory == "")
+        if (!existDefault && resolutionDirectory.empty())
         {
             existDefault = true;
         }
@@ -973,7 +972,7 @@ void FileUtils::setSearchResolutionsOrder(const std::vector<std::string>& search
 
     if (!existDefault)
     {
-        _searchResolutionsOrderArray.push_back("");
+        _searchResolutionsOrderArray.emplace_back("");
     }
 }
 
@@ -1133,7 +1132,7 @@ std::string FileUtils::getFullPathForFilenameWithinDirectory(const std::string& 
 {
     // get directory+filename, safely adding '/' as necessary
     std::string ret = directory;
-    if (directory.size() && directory[directory.size()-1] != '/'){
+    if (!directory.empty() && directory[directory.size()-1] != '/'){
         ret += '/';
     }
     ret += filename;
@@ -1197,7 +1196,7 @@ bool FileUtils::isDirectoryExist(const std::string& dirPath) const
         for (const auto& resolutionIt : _searchResolutionsOrderArray)
         {
             // searchPath + file_path + resourceDirectory
-            fullpath = fullPathForDirectory(searchIt + dirPath + resolutionIt);
+            fullpath = fullPathForDirectory(std::string(searchIt).append(dirPath).append(resolutionIt));
             if (isDirectoryExistInternal(fullpath))
             {
                 _fullPathCacheDir.emplace(dirPath, fullpath);

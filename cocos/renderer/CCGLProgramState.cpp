@@ -501,7 +501,7 @@ bool GLProgramState::init(GLProgram* glprogram)
 
     for(auto &uniform : _glprogram->_userUniforms) {
         UniformValue value(&uniform.second, _glprogram);
-        _uniforms[uniform.second.location] = std::move(value);
+        _uniforms[uniform.second.location] = value;
         _uniformsByName[uniform.first] = uniform.second.location;
         CCLOG("[steve] [glpgstate] adding uniform: %d, %s", uniform.second.location, uniform.first.data());
     }

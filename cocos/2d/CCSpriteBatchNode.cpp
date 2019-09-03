@@ -468,7 +468,7 @@ ssize_t SpriteBatchNode::lowestAtlasIndexInChild(Sprite *sprite)
 {
     auto& children = sprite->getChildren();
 
-    if (children.size() == 0)
+    if (children.empty())
     {
         return sprite->getAtlasIndex();
     }

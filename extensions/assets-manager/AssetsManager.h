@@ -91,7 +91,7 @@ public:
     
     typedef std::function<void(int)> ErrorCallback;
     typedef std::function<void(int)> ProgressCallback;
-    typedef std::function<void(void)> SuccessCallback;
+    typedef std::function<void()> SuccessCallback;
 
     /* @brief To access within scripting environment
      */
@@ -221,13 +221,13 @@ public:
      * @js NA
      * @lua NA
      */
-    virtual void onSuccess() {};
+    virtual void onSuccess() {}
 };
 
 // Deprecated declaration
 CC_DEPRECATED_ATTRIBUTE typedef AssetsManager CCAssetsManager;
 CC_DEPRECATED_ATTRIBUTE typedef AssetsManagerDelegateProtocol CCAssetsManagerDelegateProtocol;
 
-NS_CC_EXT_END;
+NS_CC_EXT_END
 
 #endif /* defined(__AssetsManager__) */

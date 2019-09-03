@@ -79,7 +79,7 @@ public:
     {
     }
 
-    ~BitmapDC(void)
+    ~BitmapDC()
     {
     }
 

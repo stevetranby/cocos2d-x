@@ -398,7 +398,7 @@ public:
      * On windows it will use icon from .exe file (if included).
      * On linux it will use default window icon.
      */
-    virtual void setDefaultIcon() const {};
+    virtual void setDefaultIcon() const {}
 
     /**
      * Get the opengl view port rectangle.

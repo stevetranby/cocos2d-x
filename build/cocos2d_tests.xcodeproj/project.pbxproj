@@ -78,7 +78,6 @@
 		1AC358EA18CEC1CB00F37B72 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC358D718CEC1CB00F37B72 /* main.m */; };
 		1AC358EB18CEC1CB00F37B72 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AC358D918CEC1CB00F37B72 /* RootViewController.mm */; };
 		1AC358F518CEC1D400F37B72 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1AC358ED18CEC1D400F37B72 /* InfoPlist.strings */; };
-		1AC358F618CEC1D400F37B72 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AC358EF18CEC1D400F37B72 /* MainMenu.xib */; };
 		1AC358F818CEC1D400F37B72 /* Icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1AC358F318CEC1D400F37B72 /* Icon.icns */; };
 		1AC358F918CEC1D400F37B72 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AC358F418CEC1D400F37B72 /* main.cpp */; };
 		1AC3590318CEC1FB00F37B72 /* bang.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AC358FE18CEC1FB00F37B72 /* bang.png */; };
@@ -237,7 +236,6 @@
 		1AC35C8718CECF1400F37B72 /* testsAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AC35C7218CECF1400F37B72 /* testsAppDelegate.mm */; };
 		1AC35C9818CECF1400F37B72 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC35C8418CECF1400F37B72 /* main.m */; };
 		1AC35CA318CECF1E00F37B72 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1AC35C9B18CECF1E00F37B72 /* InfoPlist.strings */; };
-		1AC35CA418CECF1E00F37B72 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AC35C9D18CECF1E00F37B72 /* MainMenu.xib */; };
 		1AC35CA518CECF1E00F37B72 /* Icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1AC35C9F18CECF1E00F37B72 /* Icon.icns */; };
 		1AC35CA618CECF1E00F37B72 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AC35CA018CECF1E00F37B72 /* main.cpp */; };
 		1AC35CCA18CED84500F37B72 /* animations in Resources */ = {isa = PBXBuildFile; fileRef = 1AC35CA918CED84500F37B72 /* animations */; };
@@ -571,7 +569,6 @@
 		1AC358D818CEC1CB00F37B72 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		1AC358D918CEC1CB00F37B72 /* RootViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RootViewController.mm; sourceTree = "<group>"; };
 		1AC358EE18CEC1D400F37B72 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1AC358F018CEC1D400F37B72 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1AC358F318CEC1D400F37B72 /* Icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Icon.icns; sourceTree = "<group>"; };
 		1AC358F418CEC1D400F37B72 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		1AC358FE18CEC1FB00F37B72 /* bang.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bang.png; path = "../tests/cpp-empty-test/Resources/bang.png"; sourceTree = "<group>"; };
@@ -732,7 +729,6 @@
 		1AC35C7218CECF1400F37B72 /* testsAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testsAppDelegate.mm; sourceTree = "<group>"; };
 		1AC35C8418CECF1400F37B72 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1AC35C9C18CECF1E00F37B72 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1AC35C9E18CECF1E00F37B72 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1AC35C9F18CECF1E00F37B72 /* Icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Icon.icns; sourceTree = "<group>"; };
 		1AC35CA018CECF1E00F37B72 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		1AC35CA918CED84500F37B72 /* animations */ = {isa = PBXFileReference; lastKnownFileType = folder; name = animations; path = "../tests/cpp-tests/Resources/animations"; sourceTree = "<group>"; };
@@ -1063,7 +1059,6 @@
 				1AC3590D18CEC25300F37B72 /* Info.plist */,
 				1AC358ED18CEC1D400F37B72 /* InfoPlist.strings */,
 				1AC358F418CEC1D400F37B72 /* main.cpp */,
-				1AC358EF18CEC1D400F37B72 /* MainMenu.xib */,
 			);
 			name = proj.mac;
 			path = "../tests/cpp-empty-test/proj.mac";
@@ -1715,7 +1710,6 @@
 			children = (
 				1AC35D0C18CED89100F37B72 /* Info.plist */,
 				1AC35C9B18CECF1E00F37B72 /* InfoPlist.strings */,
-				1AC35C9D18CECF1E00F37B72 /* MainMenu.xib */,
 				1AC35C9F18CECF1E00F37B72 /* Icon.icns */,
 				1AC35CA018CECF1E00F37B72 /* main.cpp */,
 			);
@@ -2357,7 +2351,6 @@
 				1AC3590B18CEC1FB00F37B72 /* iphone in Resources */,
 				1AC358F818CEC1D400F37B72 /* Icon.icns in Resources */,
 				1AC3590518CEC1FB00F37B72 /* fonts in Resources */,
-				1AC358F618CEC1D400F37B72 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2418,7 +2411,6 @@
 				1AC35CD618CED84500F37B72 /* CocosBuilderExample.ccbproj in Resources */,
 				3E92EA851921A7720094CD21 /* Sprite3DTest in Resources */,
 				1AC35CA318CECF1E00F37B72 /* InfoPlist.strings in Resources */,
-				1AC35CA418CECF1E00F37B72 /* MainMenu.xib in Resources */,
 				B603F1B41AC8FBFB00A9579C /* TerrainTest in Resources */,
 				1AC35CD418CED84500F37B72 /* ccb in Resources */,
 				C08689C118D370C90093E810 /* background.caf in Resources */,
@@ -2804,14 +2796,6 @@
 				1AC358EE18CEC1D400F37B72 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		1AC358EF18CEC1D400F37B72 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1AC358F018CEC1D400F37B72 /* en */,
-			);
-			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 		1AC35C9B18CECF1E00F37B72 /* InfoPlist.strings */ = {

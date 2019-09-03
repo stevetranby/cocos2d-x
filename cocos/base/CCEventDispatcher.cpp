@@ -1004,7 +1004,7 @@ void EventDispatcher::dispatchTouchEvent(EventTouch* event)
                         }
                     }
                 }
-                else if (listener->_claimedTouches.size() > 0
+                else if (!listener->_claimedTouches.empty()
                          && ((removedIter = std::find(listener->_claimedTouches.begin(), listener->_claimedTouches.end(), touches)) != listener->_claimedTouches.end()))
                 {
                     isClaimed = true;
@@ -1081,7 +1081,7 @@ void EventDispatcher::dispatchTouchEvent(EventTouch* event)
     //
     // process standard handlers 2nd
     //
-    if (allAtOnceListeners && mutableTouches.size() > 0)
+    if (allAtOnceListeners && !mutableTouches.empty())
     {
         
         auto onTouchesEvent = [&](EventListener* l) -> bool{
