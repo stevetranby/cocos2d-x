@@ -1739,28 +1739,46 @@ const Mat4& Node::getNodeToParentTransform() const
             // If we skew with the exact same value for both x and y then we're simply just rotating
             float radiansX = -CC_DEGREES_TO_RADIANS(_rotationZ_X);
             float radiansY = -CC_DEGREES_TO_RADIANS(_rotationZ_Y);
+
             float cx = cosf(radiansX);
             float sx = sinf(radiansX);
             float cy = cosf(radiansY);
             float sy = sinf(radiansY);
             
-            float m0 = _transform.m[0], m1 = _transform.m[1], m4 = _transform.m[4], m5 = _transform.m[5], m8 = _transform.m[8], m9 = _transform.m[9];
-            _transform.m[0] = cy * m0 - sx * m1, _transform.m[4] = cy * m4 - sx * m5, _transform.m[8] = cy * m8 - sx * m9;
-            _transform.m[1] = sy * m0 + cx * m1, _transform.m[5] = sy * m4 + cx * m5, _transform.m[9] = sy * m8 + cx * m9;
+            float m0 = _transform.m[0];
+            float m1 = _transform.m[1];
+            float m4 = _transform.m[4];
+            float m5 = _transform.m[5];
+            float m8 = _transform.m[8];
+            float m9 = _transform.m[9];
+
+            _transform.m[0] = cy * m0 - sx * m1;
+            _transform.m[4] = cy * m4 - sx * m5;
+            _transform.m[8] = cy * m8 - sx * m9;
+
+            _transform.m[1] = sy * m0 + cx * m1;
+            _transform.m[5] = sy * m4 + cx * m5;
+            _transform.m[9] = sy * m8 + cx * m9;
         }
         _transform = translation * _transform;
 
         if (_scaleX != 1.f)
         {
-            _transform.m[0] *= _scaleX, _transform.m[1] *= _scaleX, _transform.m[2] *= _scaleX;
+            _transform.m[0] *= _scaleX;
+            _transform.m[1] *= _scaleX;
+            _transform.m[2] *= _scaleX;
         }
         if (_scaleY != 1.f)
         {
-            _transform.m[4] *= _scaleY, _transform.m[5] *= _scaleY, _transform.m[6] *= _scaleY;
+            _transform.m[4] *= _scaleY;
+            _transform.m[5] *= _scaleY;
+            _transform.m[6] *= _scaleY;
         }
         if (_scaleZ != 1.f)
         {
-            _transform.m[8] *= _scaleZ, _transform.m[9] *= _scaleZ, _transform.m[10] *= _scaleZ;
+            _transform.m[8] *= _scaleZ;
+            _transform.m[9] *= _scaleZ;
+            _transform.m[10] *= _scaleZ;
         }
         
         // FIXME:: Try to inline skew
