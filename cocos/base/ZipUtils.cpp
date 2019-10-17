@@ -31,7 +31,8 @@
 #else // from our embedded sources
 #include "external/unzip/unzip.h"
 #endif
-#include "ioapi_mem.h"
+#include "external/unzip/ioapi_mem.h"
+
 #include <memory>
 
 #include <zlib.h>
