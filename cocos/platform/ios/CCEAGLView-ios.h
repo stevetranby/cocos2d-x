@@ -60,22 +60,12 @@ APPLE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 */
-
-#include "platform/CCPlatformConfig.h"
-
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wstrict-prototypes"
 #import <UIKit/UIKit.h>
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 #import <CoreFoundation/CoreFoundation.h>
-#import <GLKit/GLKit.h>
-#pragma clang diagnostic pop
-
 
 #import "platform/ios/CCESRenderer-ios.h"
 
@@ -86,18 +76,17 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
  * The view content is basically an EAGL surface you render your OpenGL scene into.
  * Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
  */
-@interface CCEAGLView : UIView <UIKeyInput, UITextInput, UITextInputTraits>
+@interface CCEAGLView : UIView
+{
+    id<CCESRenderer>        renderer_;
 
-@property(nonatomic, readonly) UITextPosition *beginningOfDocument;
-@property(nonatomic, readonly) UITextPosition *endOfDocument;
-@property(nonatomic, assign) id<UITextInputDelegate> inputDelegate;
-@property(nonatomic, readonly) UITextRange *markedTextRange;
-@property (nonatomic, copy) NSDictionary *markedTextStyle;
-@property(readwrite, copy) UITextRange *selectedTextRange;
-@property(nonatomic, readonly) id<UITextInputTokenizer> tokenizer;
-@property(nonatomic, readonly, getter = isKeyboardShown) BOOL isKeyboardShown;
-@property(nonatomic, copy) NSNotification* keyboardShowNotification;
-@property(nonatomic) UITextAutocorrectionType autocorrectionType;         // default is UITextAutocorrectionTypeDefault
+    BOOL                    preserveBackbuffer_;
+    CGRect                  safeArea_;
+    BOOL                    discardFramebufferSupported_;
+
+    //fsaa addition
+    unsigned int            requestedSamples_;
+}
 
 /** creates an initializes an CCEAGLView with a frame and 0-bit depth buffer, and a RGB565 color buffer */
 + (id) viewWithFrame:(CGRect)frame;
@@ -115,7 +104,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 /** Initializes an CCEAGLView with a frame, a color buffer format, a depth buffer format, a sharegroup and multisampling support */
 - (id) initWithFrame:(CGRect)frame pixelFormat:(NSString*)format depthFormat:(GLuint)depth preserveBackbuffer:(BOOL)retained sharegroup:(EAGLSharegroup*)sharegroup multiSampling:(BOOL)sampling numberOfSamples:(unsigned int)nSamples;
 
-/** pixel format: it could be RGBA8 (32-bit) or RGB565 (16-bit) */
+//// * pixel format: it could be RGBA8 (32-bit) or RGB565 (16-bit)
 @property(nonatomic,readonly) NSString* pixelFormat;
 /** depth format of the render buffer: 0, 16 or 24 bits*/
 @property(nonatomic,readonly) GLuint depthFormat;
@@ -127,6 +116,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 @property(nonatomic,readonly) EAGLContext *context;
 
 @property(nonatomic,readwrite) BOOL multiSampling;
+@property(nonatomic, readonly) BOOL isKeyboardShown;
 
 
 /** CCEAGLView uses double-buffer. This method swaps the buffers */
@@ -140,6 +130,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 -(void) doAnimationWhenKeyboardMoveWithDuration:(float) duration distance:(float) dis;
 -(void) doAnimationWhenAnotherEditBeClicked;
-@end
 
-#endif // CC_PLATFORM_IOS
+-(void) showKeyboard;
+-(void) hideKeyboard;
+@end

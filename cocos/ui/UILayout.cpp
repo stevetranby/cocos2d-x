@@ -467,6 +467,12 @@ const Rect& Layout::getClippingRect()
 {
     if (_clippingRectDirty)
     {
+#error //STEVE: check these
+        //const Vec2 worldPos = convertToWorldSpace(Vec2::ZERO);
+        //const AffineTransform t = getNodeToWorldAffineTransform();
+        //const float scissorWidth = _contentSize.width * t.a;
+        //const float scissorHeight = _contentSize.height * t.d;
+        
         // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
 //        Vec2 worldPos = convertToWorldSpace(Vec2::ZERO);
 //        AffineTransform t = getNodeToWorldAffineTransform();
@@ -553,6 +559,49 @@ const Rect& Layout::getClippingRect()
 
         if (_clippingParent)
         {
+#error remove this code until STEVE
+            const Rect& parentClippingRect = _clippingParent->getClippingRect();
+            float finalX = worldPos.x;
+            float finalY = worldPos.y;
+            float finalWidth = scissorWidth;
+            float finalHeight = scissorHeight;
+            
+            const float leftOffset = worldPos.x - parentClippingRect.origin.x;
+            if (leftOffset < 0.0f)
+            {
+                finalX = parentClippingRect.origin.x;
+                finalWidth += leftOffset;
+            }
+            const float rightOffset = (worldPos.x + scissorWidth) - (parentClippingRect.origin.x + parentClippingRect.size.width);
+            if (rightOffset > 0.0f)
+            {
+                finalWidth -= rightOffset;
+            }
+            const float topOffset = (worldPos.y + scissorHeight) - (parentClippingRect.origin.y + parentClippingRect.size.height);
+            if (topOffset > 0.0f)
+            {
+                finalHeight -= topOffset;
+            }
+            const float bottomOffset = worldPos.y - parentClippingRect.origin.y;
+            if (bottomOffset < 0.0f)
+            {
+                finalY = parentClippingRect.origin.y;
+                finalHeight += bottomOffset;
+            }
+            if (finalWidth < 0.0f)
+            {
+                finalWidth = 0.0f;
+            }
+            if (finalHeight < 0.0f)
+            {
+                finalHeight = 0.0f;
+            }
+            _clippingRect.origin.x = finalX;
+            _clippingRect.origin.y = finalY;
+            _clippingRect.size.width = finalWidth;
+            _clippingRect.size.height = finalHeight;
+            
+            // STEVE: my version
             parentClippingRect = _clippingParent->getClippingRect();
 
             // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
