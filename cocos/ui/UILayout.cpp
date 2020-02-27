@@ -40,6 +40,8 @@ THE SOFTWARE.
 #include "base/CCEventFocus.h"
 #include "base/CCStencilStateManager.h"
 
+//#include <algorithm>
+
 
 NS_CC_BEGIN
 
@@ -101,7 +103,7 @@ Layout::~Layout()
     CC_SAFE_RELEASE(_clippingStencil);
     CC_SAFE_DELETE(_stencilStateManager);
 }
-    
+
 void Layout::onEnter()
 {
 #if CC_ENABLE_SCRIPT_BINDING
@@ -120,7 +122,7 @@ void Layout::onEnter()
     _doLayoutDirty = true;
     _clippingRectDirty = true;
 }
-    
+
 void Layout::onExit()
 {
 #if CC_ENABLE_SCRIPT_BINDING
@@ -137,7 +139,7 @@ void Layout::onExit()
         _clippingStencil->onExit();
     }
 }
-    
+
 void Layout::setGlobalZOrder(float globalZOrder)
 {
     // _protectedChildren's global z order is set in ProtectedNode::setGlobalZOrder()
@@ -174,12 +176,12 @@ bool Layout::init()
     }
     return false;
 }
-    
+
 void Layout::addChild(Node* child)
 {
     Layout::addChild(child, child->getLocalZOrder(), child->getTag());
 }
-    
+
 void Layout::addChild(Node * child, int localZOrder)
 {
     Layout::addChild(child, localZOrder, child->getTag());
@@ -194,7 +196,7 @@ void Layout::addChild(Node *child, int zOrder, int tag)
     Widget::addChild(child, zOrder, tag);
     _doLayoutDirty = true;
 }
-    
+
 void Layout::addChild(Node* child, int zOrder, const std::string &name)
 {
     if (dynamic_cast<Widget*>(child)) {
@@ -204,19 +206,19 @@ void Layout::addChild(Node* child, int zOrder, const std::string &name)
     Widget::addChild(child, zOrder, name);
     _doLayoutDirty = true;
 }
-    
+
 void Layout::removeChild(Node *child, bool cleanup)
 {
     Widget::removeChild(child, cleanup);
     _doLayoutDirty = true;
 }
-    
+
 void Layout::removeAllChildren()
 {
     Widget::removeAllChildren();
     _doLayoutDirty = true;
 }
-    
+
 void Layout::removeAllChildrenWithCleanup(bool cleanup)
 {
     Widget::removeAllChildrenWithCleanup(cleanup);
@@ -235,7 +237,7 @@ void Layout::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t par
         return;
     }
 
-    // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+    // STEVE: https://github.com/cocos2d/cocos2d-x/pull/20464/files
     if(FLAGS_TRANSFORM_DIRTY & parentFlags || _transformUpdated || _contentSizeDirty)
         _clippingRectDirty = true;
 
@@ -258,14 +260,13 @@ void Layout::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t par
     }
     else
     {
+        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/20464/files
         //Widget::visit(renderer, parentTransform, parentFlags);
-
-        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
         //no need to adapt render again
         ProtectedNode::visit(renderer, parentTransform, parentFlags);
     }
 }
-    
+
 void Layout::stencilClippingVisit(Renderer *renderer, const Mat4& parentTransform, uint32_t parentFlags)
 {
     if(!_visible)
@@ -349,7 +350,7 @@ void Layout::stencilClippingVisit(Renderer *renderer, const Mat4& parentTransfor
     
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
-    
+
 void Layout::onBeforeVisitScissor()
 {
     auto glview = Director::getInstance()->getOpenGLView();
@@ -392,7 +393,7 @@ void Layout::onAfterVisitScissor()
         glDisable(GL_SCISSOR_TEST);
     }
 }
-    
+
 void Layout::scissorClippingVisit(Renderer *renderer, const Mat4& parentTransform, uint32_t parentFlags)
 {
     if (parentFlags & FLAGS_DIRTY_MASK)
@@ -445,7 +446,7 @@ void Layout::setClippingEnabled(bool able)
             break;
     }
 }
-    
+
 void Layout::setClippingType(ClippingType type)
 {
     if (type == _clippingType)
@@ -457,7 +458,7 @@ void Layout::setClippingType(ClippingType type)
     _clippingType = type;
     setClippingEnabled(clippingEnabled);
 }
-    
+
 Layout::ClippingType Layout::getClippingType()const
 {
     return _clippingType;
@@ -467,28 +468,19 @@ const Rect& Layout::getClippingRect()
 {
     if (_clippingRectDirty)
     {
-#error //STEVE: check these
-        //const Vec2 worldPos = convertToWorldSpace(Vec2::ZERO);
-        //const AffineTransform t = getNodeToWorldAffineTransform();
-        //const float scissorWidth = _contentSize.width * t.a;
-        //const float scissorHeight = _contentSize.height * t.d;
+        //        const Vec2 worldPos_cc2d = convertToWorldSpace(Vec2::ZERO);
+        //        const AffineTransform t = getNodeToWorldAffineTransform();
+        //        const float scissorWidth_cc2d = _contentSize.width * t.a;
+        //        const float scissorHeight_cc2d = _contentSize.height * t.d;
         
-        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
-//        Vec2 worldPos = convertToWorldSpace(Vec2::ZERO);
-//        AffineTransform t = getNodeToWorldAffineTransform();
+        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/20464/files
+        const auto worldPos1 = convertToWorldSpace(Vec2::ZERO);
+        const auto worldPos2 = convertToWorldSpace(Vec2(_contentSize.width, _contentSize.height));
+        //Node may be flipped
+        const auto worldPos = Vec2(std::min(worldPos1.x, worldPos2.x), std::min(worldPos1.y, worldPos2.y));
+        const auto scissorWidth = std::fabs(worldPos2.x - worldPos1.x);
+        const auto scissorHeight = std::fabs(worldPos2.y - worldPos1.y);
 
-        Vec2 worldPos1 = convertToWorldSpace(Vec2::ZERO);
-        Vec2 worldPos2 = convertToWorldSpace(Vec2(_contentSize.width, _contentSize.height));
-        //Node can be flipped
-        Vec2 worldPos = Vec2(std::min(worldPos1.x, worldPos2.x), std::min(worldPos1.y, worldPos2.y));
-
-        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
-//        float scissorWidth = _contentSize.width*t.a;
-//        float scissorHeight = _contentSize.height*t.d;
-        float scissorWidth = fabs(worldPos2.x - worldPos1.x);
-        float scissorHeight = fabs(worldPos2.y - worldPos1.y);
-
-        Rect parentClippingRect;
         Layout* parent = this;
 
         while (parent)
@@ -504,122 +496,69 @@ const Rect& Layout::getClippingRect()
             }
         }
 
-        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
-//        if (_clippingParent)
-//        {
-//            parentClippingRect = _clippingParent->getClippingRect();
-//            float finalX = worldPos.x - (scissorWidth * _anchorPoint.x);
-//            float finalY = worldPos.y - (scissorHeight * _anchorPoint.y);
-//            float finalWidth = scissorWidth;
-//            float finalHeight = scissorHeight;
-//
-//            float leftOffset = worldPos.x - parentClippingRect.origin.x;
-//            if (leftOffset < 0.0f)
-//            {
-//                finalX = parentClippingRect.origin.x;
-//                finalWidth += leftOffset;
-//            }
-//            float rightOffset = (worldPos.x + scissorWidth) - (parentClippingRect.origin.x + parentClippingRect.size.width);
-//            if (rightOffset > 0.0f)
-//            {
-//                finalWidth -= rightOffset;
-//            }
-//            float topOffset = (worldPos.y + scissorHeight) - (parentClippingRect.origin.y + parentClippingRect.size.height);
-//            if (topOffset > 0.0f)
-//            {
-//                finalHeight -= topOffset;
-//            }
-//            float bottomOffset = worldPos.y - parentClippingRect.origin.y;
-//            if (bottomOffset < 0.0f)
-//            {
-//                finalY = parentClippingRect.origin.y;
-//                finalHeight += bottomOffset;
-//            }
-//            if (finalWidth < 0.0f)
-//            {
-//                finalWidth = 0.0f;
-//            }
-//            if (finalHeight < 0.0f)
-//            {
-//                finalHeight = 0.0f;
-//            }
-//            _clippingRect.origin.x = finalX;
-//            _clippingRect.origin.y = finalY;
-//            _clippingRect.size.width = finalWidth;
-//            _clippingRect.size.height = finalHeight;
-//        }
-//        else
-//        {
-//            _clippingRect.origin.x = worldPos.x - (scissorWidth * _anchorPoint.x);
-//            _clippingRect.origin.y = worldPos.y - (scissorHeight * _anchorPoint.y);
-//            _clippingRect.size.width = scissorWidth;
-//            _clippingRect.size.height = scissorHeight;
-//        }
-//        _clippingRectDirty = false;
-
+        // STEVE: https://github.com/cocos2d/cocos2d-x/pull/20464/files
         if (_clippingParent)
         {
-#error remove this code until STEVE
-            const Rect& parentClippingRect = _clippingParent->getClippingRect();
-            float finalX = worldPos.x;
-            float finalY = worldPos.y;
-            float finalWidth = scissorWidth;
-            float finalHeight = scissorHeight;
-            
-            const float leftOffset = worldPos.x - parentClippingRect.origin.x;
-            if (leftOffset < 0.0f)
-            {
-                finalX = parentClippingRect.origin.x;
-                finalWidth += leftOffset;
-            }
-            const float rightOffset = (worldPos.x + scissorWidth) - (parentClippingRect.origin.x + parentClippingRect.size.width);
-            if (rightOffset > 0.0f)
-            {
-                finalWidth -= rightOffset;
-            }
-            const float topOffset = (worldPos.y + scissorHeight) - (parentClippingRect.origin.y + parentClippingRect.size.height);
-            if (topOffset > 0.0f)
-            {
-                finalHeight -= topOffset;
-            }
-            const float bottomOffset = worldPos.y - parentClippingRect.origin.y;
-            if (bottomOffset < 0.0f)
-            {
-                finalY = parentClippingRect.origin.y;
-                finalHeight += bottomOffset;
-            }
-            if (finalWidth < 0.0f)
-            {
-                finalWidth = 0.0f;
-            }
-            if (finalHeight < 0.0f)
-            {
-                finalHeight = 0.0f;
-            }
-            _clippingRect.origin.x = finalX;
-            _clippingRect.origin.y = finalY;
-            _clippingRect.size.width = finalWidth;
-            _clippingRect.size.height = finalHeight;
-            
-            // STEVE: my version
-            parentClippingRect = _clippingParent->getClippingRect();
+            //            const Rect& parentClippingRect = _clippingParent->getClippingRect();
+            //
+            //            float finalX = worldPos.x;
+            //            float finalY = worldPos.y;
+            //            float finalWidth = scissorWidth;
+            //            float finalHeight = scissorHeight;
+            //
+            //            const float leftOffset = worldPos.x - parentClippingRect.origin.x;
+            //            if (leftOffset < 0.0f)
+            //            {
+            //                finalX = parentClippingRect.origin.x;
+            //                finalWidth += leftOffset;
+            //            }
+            //            const float rightOffset = (worldPos.x + scissorWidth) - (parentClippingRect.origin.x + parentClippingRect.size.width);
+            //            if (rightOffset > 0.0f)
+            //            {
+            //                finalWidth -= rightOffset;
+            //            }
+            //            const float topOffset = (worldPos.y + scissorHeight) - (parentClippingRect.origin.y + parentClippingRect.size.height);
+            //            if (topOffset > 0.0f)
+            //            {
+            //                finalHeight -= topOffset;
+            //            }
+            //            const float bottomOffset = worldPos.y - parentClippingRect.origin.y;
+            //            if (bottomOffset < 0.0f)
+            //            {
+            //                finalY = parentClippingRect.origin.y;
+            //                finalHeight += bottomOffset;
+            //            }
+            //            if (finalWidth < 0.0f)
+            //            {
+            //                finalWidth = 0.0f;
+            //            }
+            //            if (finalHeight < 0.0f)
+            //            {
+            //                finalHeight = 0.0f;
+            //            }
+            //            _clippingRect.origin.x = finalX;
+            //            _clippingRect.origin.y = finalY;
+            //            _clippingRect.size.width = finalWidth;
+            //            _clippingRect.size.height = finalHeight;
 
-            // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
+
+
+            // STEVE: https://github.com/cocos2d/cocos2d-x/pull/20464/files
+            const auto& parentClippingRect = _clippingParent->getClippingRect();
+
             _clippingRect.origin.x = std::max(parentClippingRect.origin.x, worldPos.x);
             _clippingRect.origin.y = std::max(parentClippingRect.origin.y, worldPos.y);
 
-            float right = std::min(parentClippingRect.origin.x + parentClippingRect.size.width, worldPos.x + scissorWidth);
-            float top = std::min(parentClippingRect.origin.y + parentClippingRect.size.height, worldPos.y + scissorHeight);
+            const auto right = std::min(parentClippingRect.origin.x + parentClippingRect.size.width, worldPos.x + scissorWidth);
+            const auto top = std::min(parentClippingRect.origin.y + parentClippingRect.size.height, worldPos.y + scissorHeight);
 
             _clippingRect.size.width = std::max(0.0f, right - _clippingRect.origin.x);
             _clippingRect.size.height = std::max(0.0f, top - _clippingRect.origin.y);
         }
         else
         {
-            // STEVE: https://github.com/cocos2d/cocos2d-x/pull/18651/files
             _clippingRect.origin.x = worldPos.x;
             _clippingRect.origin.y = worldPos.y;
-
             _clippingRect.size.width = scissorWidth;
             _clippingRect.size.height = scissorHeight;
         }
@@ -676,7 +615,7 @@ void Layout::setBackGroundImageScale9Enabled(bool able)
     
     setBackGroundImageCapInsets(_backGroundImageCapInsets);
 }
-    
+
 bool Layout::isBackGroundImageScale9Enabled()const
 {
     return _backGroundScale9Enabled;
@@ -699,7 +638,7 @@ void Layout::setBackGroundImage(const std::string& fileName,TextureResType texTy
     }
     _backGroundImageFileName = fileName;
     _bgImageTexType = texType;
-   
+
     switch (_bgImageTexType)
     {
         case TextureResType::LOCAL:
@@ -731,7 +670,7 @@ void Layout::setBackGroundImageCapInsets(const Rect &capInsets)
         _backGroundImage->setCapInsets(capInsets);
     }
 }
-    
+
 const Rect& Layout::getBackGroundImageCapInsets()const
 {
     return _backGroundImageCapInsets;
@@ -777,7 +716,7 @@ void Layout::addBackGroundImage()
     _backGroundImage->setRenderingType(Scale9Sprite::RenderingType::SIMPLE);
     
     addProtectedChild(_backGroundImage, BACKGROUNDIMAGE_Z, -1);
-   
+
     _backGroundImage->setPosition(_contentSize.width/2.0f, _contentSize.height/2.0f);
 }
 
@@ -855,7 +794,7 @@ void Layout::setBackGroundColorType(BackGroundColorType type)
             break;
     }
 }
-    
+
 Layout::BackGroundColorType Layout::getBackGroundColorType()const
 {
     return _colorType;
@@ -869,7 +808,7 @@ void Layout::setBackGroundColor(const Color3B &color)
         _colorRender->setColor(color);
     }
 }
-    
+
 const Color3B& Layout::getBackGroundColor()const
 {
     return _cColor;
@@ -888,7 +827,7 @@ void Layout::setBackGroundColor(const Color3B &startColor, const Color3B &endCol
         _gradientRender->setEndColor(endColor);
     }
 }
-    
+
 const Color3B& Layout::getBackGroundStartColor()const
 {
     return _gStartColor;
@@ -916,7 +855,7 @@ void Layout::setBackGroundColorOpacity(GLubyte opacity)
             break;
     }
 }
-    
+
 GLubyte Layout::getBackGroundColorOpacity()const
 {
     return _cOpacity;
@@ -930,7 +869,7 @@ void Layout::setBackGroundColorVector(const Vec2 &vector)
         _gradientRender->setVector(vector);
     }
 }
-    
+
 const Vec2& Layout::getBackGroundColorVector()const
 {
     return _alongVector;
@@ -991,7 +930,7 @@ const Size& Layout::getBackGroundImageTextureSize() const
 void Layout::setLayoutType(Type type)
 {
     _layoutType = type;
-   
+
     for (auto& child : _children)
     {
         Widget* widgetChild = dynamic_cast<Widget*>(child);
@@ -1002,7 +941,7 @@ void Layout::setLayoutType(Type type)
     }
     _doLayoutDirty = true;
 }
-    
+
 
 
 Layout::Type Layout::getLayoutType() const
@@ -1015,22 +954,22 @@ void Layout::forceDoLayout()
     this->requestDoLayout();
     this->doLayout();
 }
-    
+
 void Layout::requestDoLayout()
 {
     _doLayoutDirty = true;
 }
-    
+
 Size Layout::getLayoutContentSize()const
 {
     return this->getContentSize();
 }
-    
+
 const Vector<Node*>& Layout::getLayoutElements()const
 {
     return this->getChildren();
 }
-    
+
 LayoutManager* Layout::createLayoutManager()
 {
     LayoutManager* exe = nullptr;
@@ -1108,7 +1047,7 @@ void Layout::copySpecialProperties(Widget *widget)
         _isInterceptTouch = layout->_isInterceptTouch;
     }
 }
-    
+
 void Layout::setLoopFocus(bool loop)
 {
     _loopFocus = loop;
@@ -1172,7 +1111,7 @@ Vec2 Layout::getWorldCenterPoint(Widget* widget)const
     Layout *layout = dynamic_cast<Layout*>(widget);
     //FIXEDME: we don't need to calculate the content size of layout anymore
     Size widgetSize = layout ? layout->getLayoutAccumulatedSize() :  widget->getContentSize();
-//    CCLOG("content size : width = %f, height = %f", widgetSize.width, widgetSize.height);
+    //    CCLOG("content size : width = %f, height = %f", widgetSize.width, widgetSize.height);
     return widget->convertToWorldSpace(Vec2(widgetSize.width/2, widgetSize.height/2));
 }
 
@@ -1213,7 +1152,7 @@ float Layout::calculateNearestDistance(Widget* baseWidget)
     }
     return distance;
 }
-    
+
 float Layout::calculateFarthestDistance(cocos2d::ui::Widget *baseWidget)
 {
     float distance = -FLT_MAX;
@@ -1297,11 +1236,11 @@ int Layout::findNearestChildWidgetIndex(FocusDirection direction, Widget* baseWi
                 {
                     length = (wPosition - widgetPosition).getLength();
                 }
-               
+
                 if (length < distance)
                 {
-                        found = index;
-                        distance = length;
+                    found = index;
+                    distance = length;
                 }
             }
             index++;
@@ -1313,7 +1252,7 @@ int Layout::findNearestChildWidgetIndex(FocusDirection direction, Widget* baseWi
     CCASSERT(0, "invalid focus direction!!!");
     return 0;
 }
-    
+
 int Layout::findFarthestChildWidgetIndex(FocusDirection direction, cocos2d::ui::Widget *baseWidget)
 {
     if (baseWidget == nullptr || baseWidget == this)
@@ -1360,12 +1299,12 @@ int Layout::findFarthestChildWidgetIndex(FocusDirection direction, cocos2d::ui::
     CCASSERT(0, "invalid focus direction!!!");
     return 0;
 }
-    
+
 
 
 Widget* Layout::findFocusEnabledChildWidgetByIndex(ssize_t index)
 {
-  
+
     Widget *widget = this->getChildWidgetByIndex(index);
     
     if (widget)
@@ -1379,7 +1318,7 @@ Widget* Layout::findFocusEnabledChildWidgetByIndex(ssize_t index)
     }
     return nullptr;
 }
-    
+
 Widget *Layout::findFirstNonLayoutWidget()
 {
     Widget* widget = nullptr;
@@ -1408,7 +1347,7 @@ Widget *Layout::findFirstNonLayoutWidget()
     
     return widget;
 }
-    
+
 void Layout::findProperSearchingFunctor(FocusDirection dir, Widget* baseWidget)
 {
     if (baseWidget == nullptr)
@@ -1499,7 +1438,7 @@ Widget* Layout::passFocusToChild(FocusDirection dir, cocos2d::ui::Widget *curren
     {
         return this;
     }
-        
+
 }
 
 bool Layout::checkFocusEnabledChild()const
@@ -1900,7 +1839,7 @@ Widget* Layout::findNextFocusedWidget(FocusDirection direction, Widget* current)
         }
         parent->_isFocusPassing = true;
         return parent->findNextFocusedWidget(direction, this);
-            
+
     }
     else if(current->isFocused() || dynamic_cast<Layout*>(current))
     {
@@ -1989,7 +1928,7 @@ Widget* Layout::findNextFocusedWidget(FocusDirection direction, Widget* current)
         return current;
     }
 }
-    
+
 void Layout::setCameraMask(unsigned short mask, bool applyChildren)
 {
     Widget::setCameraMask(mask, applyChildren);
@@ -1997,95 +1936,96 @@ void Layout::setCameraMask(unsigned short mask, bool applyChildren)
         _clippingStencil->setCameraMask(mask, applyChildren);
     }
 }
-    
-    // STEVE
-    void Layout::appendCubicBezier(int startPoint, std::vector<Vec2>& verts, const Vec2& from, const Vec2& control1, const Vec2& control2, const Vec2& to, int segments)
-    {
-        float t = 0;
-        for(int i = 0; i < segments; i++)
-        {
-            float x = powf(1 - t, 3) * from.x + 3.0f * powf(1 - t, 2) * t * control1.x + 3.0f * (1 - t) * t * t * control2.x + t * t * t * to.x;
-            float y = powf(1 - t, 3) * from.y + 3.0f * powf(1 - t, 2) * t * control1.y + 3.0f * (1 - t) * t * t * control2.y + t * t * t * to.y;
-            verts[startPoint + i] = Vec2(x,y);
-            t += 1.0f / segments;
-        }
-    }
 
-    void Layout::setStencilClippingSize(const Size &size)
+// STEVE
+void Layout::appendCubicBezier(int startPoint, std::vector<Vec2>& verts, const Vec2& from, const Vec2& control1, const Vec2& control2, const Vec2& to, int segments)
+{
+    float t = 0;
+    for(int i = 0; i < segments; i++)
     {
-        if (_clippingEnabled && _clippingType == ClippingType::STENCIL)
-        {
-            Color4F fillColor(0, 1, 0, 1);
+        float x = powf(1 - t, 3) * from.x + 3.0f * powf(1 - t, 2) * t * control1.x + 3.0f * (1 - t) * t * t * control2.x + t * t * t * to.x;
+        float y = powf(1 - t, 3) * from.y + 3.0f * powf(1 - t, 2) * t * control1.y + 3.0f * (1 - t) * t * t * control2.y + t * t * t * to.y;
+        verts[startPoint + i] = Vec2(x,y);
+        t += 1.0f / segments;
+    }
+}
+
+void Layout::setStencilClippingSize(const Size &size)
+{
+    if (_clippingEnabled && _clippingType == ClippingType::STENCIL)
+    {
+        Color4F fillColor(0, 1, 0, 1);
+        _clippingStencil->clear();
+
+        if(_stencilRadius == 0.0f) {
+            Vec2 rect[4];
+            rect[0].setZero(); // Zero default
+            rect[1].set(_contentSize.width, 0.0f);
+            rect[2].set(_contentSize.width, _contentSize.height);
+            rect[3].set(0.0f, _contentSize.height);
             _clippingStencil->clear();
+            _clippingStencil->drawPolygon(rect, 4, fillColor, 0, fillColor);
+        } else {
+            const float kappa = 0.552228474;
+            float oneMinusKappa = (1.0f-kappa);
 
-            if(_stencilRadius == 0.0f) {
-                Vec2 rect[4];
-                rect[0].setZero(); // Zero default
-                rect[1].set(_contentSize.width, 0.0f);
-                rect[2].set(_contentSize.width, _contentSize.height);
-                rect[3].set(0.0f, _contentSize.height);
-                _clippingStencil->clear();
-                _clippingStencil->drawPolygon(rect, 4, fillColor, 0, fillColor);
-            } else {
-                const float kappa = 0.552228474;
-                float oneMinusKappa = (1.0f-kappa);
+            // define corner control points
+            std::vector<Vec2> verts(16);
 
-                // define corner control points
-                std::vector<Vec2> verts(16);
+            float radius = _stencilRadius;
+            int cornerSegments = 32;
+            verts[0] = Vec2(0, radius);
+            verts[1] = Vec2(0, radius * oneMinusKappa);
+            verts[2] = Vec2(radius * oneMinusKappa, 0);
+            verts[3] = Vec2(radius, 0);
 
-                float radius = _stencilRadius;
-                int cornerSegments = 32;
-                verts[0] = Vec2(0, radius);
-                verts[1] = Vec2(0, radius * oneMinusKappa);
-                verts[2] = Vec2(radius * oneMinusKappa, 0);
-                verts[3] = Vec2(radius, 0);
+            verts[4] = Vec2(size.width - radius, 0);
+            verts[5] = Vec2(size.width - radius * oneMinusKappa, 0);
+            verts[6] = Vec2(size.width, radius * oneMinusKappa);
+            verts[7] = Vec2(size.width, radius);
 
-                verts[4] = Vec2(size.width - radius, 0);
-                verts[5] = Vec2(size.width - radius * oneMinusKappa, 0);
-                verts[6] = Vec2(size.width, radius * oneMinusKappa);
-                verts[7] = Vec2(size.width, radius);
+            verts[8] = Vec2(size.width, size.height - radius);
+            verts[9] = Vec2(size.width, size.height - radius * oneMinusKappa);
+            verts[10] = Vec2(size.width - radius * oneMinusKappa, size.height);
+            verts[11] = Vec2(size.width - radius, size.height);
 
-                verts[8] = Vec2(size.width, size.height - radius);
-                verts[9] = Vec2(size.width, size.height - radius * oneMinusKappa);
-                verts[10] = Vec2(size.width - radius * oneMinusKappa, size.height);
-                verts[11] = Vec2(size.width - radius, size.height);
+            verts[12] = Vec2(radius, size.height);
+            verts[13] = Vec2(radius * oneMinusKappa, size.height);
+            verts[14] = Vec2(0, size.height - radius * oneMinusKappa);
+            verts[15] = Vec2(0, size.height - radius);
 
-                verts[12] = Vec2(radius, size.height);
-                verts[13] = Vec2(radius * oneMinusKappa, size.height);
-                verts[14] = Vec2(0, size.height - radius * oneMinusKappa);
-                verts[15] = Vec2(0, size.height - radius);
+            // result
+            std::vector<Vec2> polyVerts(4 * cornerSegments + 1);
 
-                // result
-                std::vector<Vec2> polyVerts(4 * cornerSegments + 1);
+            // add corner arcs
+            appendCubicBezier(0 * cornerSegments, polyVerts, verts[0], verts[1], verts[2], verts[3], cornerSegments);
+            appendCubicBezier(1 * cornerSegments, polyVerts, verts[4], verts[5], verts[6], verts[7], cornerSegments);
+            appendCubicBezier(2 * cornerSegments, polyVerts, verts[8], verts[9], verts[10], verts[11], cornerSegments);
+            appendCubicBezier(3 * cornerSegments, polyVerts, verts[12], verts[13], verts[14], verts[15], cornerSegments);
+            // close path
+            polyVerts[4 * cornerSegments] = verts[0];
 
-                // add corner arcs
-                appendCubicBezier(0 * cornerSegments, polyVerts, verts[0], verts[1], verts[2], verts[3], cornerSegments);
-                appendCubicBezier(1 * cornerSegments, polyVerts, verts[4], verts[5], verts[6], verts[7], cornerSegments);
-                appendCubicBezier(2 * cornerSegments, polyVerts, verts[8], verts[9], verts[10], verts[11], cornerSegments);
-                appendCubicBezier(3 * cornerSegments, polyVerts, verts[12], verts[13], verts[14], verts[15], cornerSegments);
-                // close path
-                polyVerts[4 * cornerSegments] = verts[0];
-
-                // draw final poly into mask
-                _clippingStencil->drawPolygon(&polyVerts[0], (int)polyVerts.size(), fillColor, 0, fillColor);
-            }
+            // draw final poly into mask
+            _clippingStencil->drawPolygon(&polyVerts[0], (int)polyVerts.size(), fillColor, 0, fillColor);
         }
     }
+}
 
-    void Layout::setPositionZ(float positionZ)
-    {
-        Widget::setPositionZ(positionZ);
-        if(_colorRender) { _colorRender->setPositionZ(positionZ - .1f); }
-        if(_gradientRender) { _gradientRender->setPositionZ(positionZ - .1f); }
-    }
+void Layout::setPositionZ(float positionZ)
+{
+    Widget::setPositionZ(positionZ);
+    if(_colorRender) { _colorRender->setPositionZ(positionZ - .1f); }
+    if(_gradientRender) { _gradientRender->setPositionZ(positionZ - .1f); }
+}
 
-    ResourceData Layout::getRenderFile()
-    {
-        ResourceData rData;
-        rData.type = (int)_bgImageTexType;
-        rData.file = _backGroundImageFileName;
-        return rData;
-    }
+ResourceData Layout::getRenderFile()
+{
+    ResourceData rData;
+    rData.type = (int)_bgImageTexType;
+    rData.file = _backGroundImageFileName;
+    return rData;
+}
+
 }
 
 NS_CC_END
