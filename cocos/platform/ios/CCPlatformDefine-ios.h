@@ -46,7 +46,7 @@ THE SOFTWARE.
 #define __has_cpp_attribute(name) 0
 #endif
 
-#define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
+#define CC_UNUSED_PARAM(unusedparam) (void)unusedparam;
 
 ////////////////////////////////////////////////////////////
 
