@@ -152,36 +152,34 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         
         // STEVE: remove below
         {
-        self.autocorrectionType = UITextAutocorrectionTypeNo;
-        
-        // STEVE: https://developer.apple.com/library/content/samplecode/RosyWriter/Listings/Classes_Utilities_OpenGLPixelBufferView_m.html
-        // On iOS8 and later we use the native scale of the screen as our content scale factor.
-        // This allows us to render to the exact pixel resolution of the screen which avoids additional scaling and GPU rendering work.
-        // For example the iPhone 6 Plus appears to UIKit as a 736 x 414 pt screen with a 3x scale factor (2208 x 1242 virtual pixels).
-        // But the native pixel dimensions are actually 1920 x 1080.
-        // Since we are streaming 1080p buffers from the camera we can render to the iPhone 6 Plus screen at 1:1 with no additional scaling if we set everything up correctly.
-        // Using the native scale of the screen also allows us to render at full quality when using the display zoom feature on iPhone 6/6 Plus.
-        
-        
-        NSLog(@"navtiveScale: %f", [[UIScreen mainScreen] nativeScale]);
-        NSLog(@"self.contentScaleFactor: %f", self.contentScaleFactor);
-        
-        // Only try to compile this code if we are using the 8.0 or later SDK.
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-        if ( [UIScreen instancesRespondToSelector:@selector(nativeScale)] )
-        {
+            // STEVE: https://developer.apple.com/library/content/samplecode/RosyWriter/Listings/Classes_Utilities_OpenGLPixelBufferView_m.html
+            // On iOS8 and later we use the native scale of the screen as our content scale factor.
+            // This allows us to render to the exact pixel resolution of the screen which avoids additional scaling and GPU rendering work.
+            // For example the iPhone 6 Plus appears to UIKit as a 736 x 414 pt screen with a 3x scale factor (2208 x 1242 virtual pixels).
+            // But the native pixel dimensions are actually 1920 x 1080.
+            // Since we are streaming 1080p buffers from the camera we can render to the iPhone 6 Plus screen at 1:1 with no additional scaling if we set everything up correctly.
+            // Using the native scale of the screen also allows us to render at full quality when using the display zoom feature on iPhone 6/6 Plus.
+
+
             NSLog(@"navtiveScale: %f", [[UIScreen mainScreen] nativeScale]);
-            NSLog(@"self.contentScaleFactor [before]: %f", self.contentScaleFactor);
-            self.contentScaleFactor = [UIScreen mainScreen].nativeScale;
-            NSLog(@"self.contentScaleFactor [after ]: %f", self.contentScaleFactor);
-        }
-        else
+            NSLog(@"self.contentScaleFactor: %f", self.contentScaleFactor);
+
+            // Only try to compile this code if we are using the 8.0 or later SDK.
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+            if ( [UIScreen instancesRespondToSelector:@selector(nativeScale)] )
+            {
+                NSLog(@"navtiveScale: %f", [[UIScreen mainScreen] nativeScale]);
+                NSLog(@"self.contentScaleFactor [before]: %f", self.contentScaleFactor);
+                self.contentScaleFactor = [UIScreen mainScreen].nativeScale;
+                NSLog(@"self.contentScaleFactor [after ]: %f", self.contentScaleFactor);
+            }
+            else
 #endif
-        {
-            NSLog(@"self.contentScaleFactor [before]: %f", self.contentScaleFactor);
-            self.contentScaleFactor = [UIScreen mainScreen].scale;
-            NSLog(@"self.contentScaleFactor [after ]: %f", self.contentScaleFactor);
-        }
+            {
+                NSLog(@"self.contentScaleFactor [before]: %f", self.contentScaleFactor);
+                self.contentScaleFactor = [UIScreen mainScreen].scale;
+                NSLog(@"self.contentScaleFactor [after ]: %f", self.contentScaleFactor);
+            }
         }
     }
     
