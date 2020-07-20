@@ -255,25 +255,27 @@ void Controller::registerListeners()
             }
         };
     }
-    else if (_impl->_gcController.gamepad != nil)
+
+#warning //STEVE: THIS IS UNUSED CODE (move into previous conditional? or maybe need to check differently for joystick vs. controller?)
+    else if (_impl->_gcController.extendedGamepad != nil)
     {
-        _impl->_gcController.gamepad.dpad.up.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.up.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_UP, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.down.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.down.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_DOWN, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.left.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.left.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_LEFT, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.right.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.right.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_RIGHT, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.valueChangedHandler = ^(GCGamepad *gamepad, GCControllerElement *element){
+        _impl->_gcController.extendedGamepad.valueChangedHandler = ^(GCExtendedGamepad *gamepad, GCControllerElement *element){
             
             if (element == gamepad.buttonA)
             {
@@ -301,6 +303,7 @@ void Controller::registerListeners()
             }
         };
     }
+#warning //STEVE: SHOULDNT THIS BE AVAIL ON ALL PLATFORMS? 
 #if defined(CC_TARGET_OS_TVOS)
     else if (_impl->_gcController.microGamepad != nil)
     {
@@ -333,20 +336,23 @@ void Controller::registerListeners()
         };
     }
 #endif
-    
-    _impl->_gcController.controllerPausedHandler = ^(GCController* gcCon){
-        
-        auto iter = std::find_if(s_allController.begin(), s_allController.end(), [gcCon](Controller* c){ return c->_impl->_gcController == gcCon; });
-        
-        if(iter == s_allController.end())
-        {
-            log("Could not find the controller");
-            return;
-        }
-        
+
+    _impl->_gcController.extendedGamepad.buttonMenu.valueChangedHandler = ^(GCControllerButtonInput * _Nonnull button, float value, BOOL pressed) {
+        // Send both pressed and released events in case game checks one or other or both
         onButtonEvent(Key::BUTTON_PAUSE, true, 1.0f, false);
         onButtonEvent(Key::BUTTON_PAUSE, false, 0.0f, false);
     };
+
+//    _impl->_gcController.controllerPausedHandler = ^(GCController* gcCon) {
+//        auto iter = std::find_if(s_allController.begin(), s_allController.end(), [gcCon](Controller* c){ return c->_impl->_gcController == gcCon; });
+//        if(iter == s_allController.end())
+//        {
+//            log("Could not find the controller");
+//            return;
+//        }
+//        onButtonEvent(Key::BUTTON_PAUSE, true, 1.0f, false);
+//        onButtonEvent(Key::BUTTON_PAUSE, false, 0.0f, false);
+//    };
 }
 
 bool Controller::isConnected() const

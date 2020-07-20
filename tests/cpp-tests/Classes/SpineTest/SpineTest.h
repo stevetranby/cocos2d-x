@@ -55,7 +55,7 @@ public:
     SpineTestLayer();
     virtual ~SpineTestLayer();
 
-    virtual bool init();
+    virtual bool init() override; //STEVE: added override
     virtual std::string title() const override;
 protected:
     std::string    _title;
