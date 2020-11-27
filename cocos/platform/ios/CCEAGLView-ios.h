@@ -77,16 +77,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
  * Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
  */
 @interface CCEAGLView : UIView
-{
-    id<CCESRenderer>        renderer_;
-
-    BOOL                    preserveBackbuffer_;
-    CGRect                  safeArea_;
-    BOOL                    discardFramebufferSupported_;
-
-    //fsaa addition
-    unsigned int            requestedSamples_;
-}
 
 /** creates an initializes an CCEAGLView with a frame and 0-bit depth buffer, and a RGB565 color buffer */
 + (id) viewWithFrame:(CGRect)frame;

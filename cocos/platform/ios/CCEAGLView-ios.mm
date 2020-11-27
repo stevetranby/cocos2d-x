@@ -77,6 +77,17 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #define IOS_MAX_TOUCHES_COUNT     10
 
 @interface CCEAGLView ()
+{
+    id<CCESRenderer>        renderer_;
+
+    BOOL                    preserveBackbuffer_;
+    CGRect                  safeArea_;
+    BOOL                    discardFramebufferSupported_;
+
+    //fsaa addition
+    unsigned int            requestedSamples_;
+}
+
 @property (nonatomic) CCInputView* textInputView;
 @property(nonatomic, readwrite, assign) BOOL isKeyboardShown;
 @property(nonatomic, copy) NSNotification* keyboardShowNotification;
