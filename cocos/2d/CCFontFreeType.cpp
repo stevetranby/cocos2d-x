@@ -301,12 +301,12 @@ unsigned char* FontFreeType::getGlyphBitmap(uint64_t theChar, long &outWidth, lo
 
         if (_distanceFieldEnabled)
         {
-            if (FT_Load_Char(_fontRef, theChar, FT_LOAD_RENDER | FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT))
+            if (FT_Load_Char(_fontRef, (FT_ULong)theChar, FT_LOAD_RENDER | FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT))
                 break;
         }
         else
         {
-            if (FT_Load_Char(_fontRef, theChar, FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT))
+            if (FT_Load_Char(_fontRef, (FT_ULong)theChar, FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT))
                 break;
         }
 
