@@ -42,6 +42,7 @@ namespace
     static CC_ALLOCATOR_GLOBAL_NEW_DELETE global;
 }
 
+#warning STEVE STEVE
 // @brief overrides global operator new array
 void* operator new[] (std::size_t size)
 {
@@ -56,6 +57,7 @@ void* operator new[] (std::size_t size)
     return ptr;
 }
 
+#warning STEVE STEVE
 // @brief overrides global operator new
 void* operator new(std::size_t size)
 {

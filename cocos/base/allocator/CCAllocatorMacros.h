@@ -60,6 +60,8 @@
 
 #endif
 
+#warning STEVE: test this (currently not using due to not working)
+
 // allocator macros
 #if CC_ENABLE_ALLOCATOR
 

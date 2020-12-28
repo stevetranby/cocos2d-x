@@ -75,7 +75,16 @@
 
     self.responseError = nil;
     self.connError = nil;
-    
+
+    // TODO: deprecated
+    //STEVE: deprecated use this instead:
+//    NSURLSession *session = [NSURLSession sharedSession];
+//    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+//                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+//                                      {
+//        // do something with the data
+//    }];
+//    [dataTask resume];
     // create the connection with the target request and this class as the delegate
     self.conn = [[[NSURLConnection alloc] initWithRequest:request
                                                  delegate:self
