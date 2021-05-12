@@ -136,7 +136,7 @@ public: \
     virtual ActionEase* reverse() const override; \
 private: \
     CC_DISALLOW_COPY_AND_ASSIGN(CLASSNAME); \
-}
+};
 
 /**
  @class EaseExponentialIn
