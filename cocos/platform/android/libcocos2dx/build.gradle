@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
+    compileSdkVersion 30
 
     defaultConfig {
-        minSdkVersion PROP_MIN_SDK_VERSION.toInteger()
-        targetSdkVersion PROP_TARGET_SDK_VERSION.toInteger()
+        minSdkVersion 23
+        targetSdkVersion 30
+
         versionCode 31703
         versionName "3.17"
     }
@@ -22,10 +23,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
