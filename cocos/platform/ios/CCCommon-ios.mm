@@ -41,20 +41,32 @@ NS_CC_BEGIN
 // ios no MessageBox, use log instead
 void ccMessageBox(const char * msg, const char * title)
 {
-    // only enable it on iOS.
-    // FIXME: Implement it for tvOS
-#if !defined(CC_TARGET_OS_TVOS)
     NSString * tmpTitle = (title) ? [NSString stringWithUTF8String : title] : nil;
     NSString * tmpMsg = (msg) ? [NSString stringWithUTF8String : msg] : nil;
-    UIAlertView * messageBox = [[UIAlertView alloc] initWithTitle: tmpTitle
-                                                          message: tmpMsg
-                                                         delegate: nil
-                                                cancelButtonTitle: @"OK"
-                                                otherButtonTitles: nil];
-    [messageBox autorelease];
-    [messageBox show];
-#endif
 
+//    UIAlertView * messageBox = [[UIAlertView alloc] initWithTitle: tmpTitle
+//                                                          message: tmpMsg
+//                                                         delegate: nil
+//                                                cancelButtonTitle: @"OK"
+//                                                otherButtonTitles: nil];
+//    [messageBox autorelease];
+//    [messageBox show];
+
+    // TODO: STEVE: deprecated use this instead:
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:tmpTitle message:tmpMsg preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK"
+                                                 style:UIAlertActionStyleDefault
+                                               handler:^(UIAlertAction * action) {
+        [alert dismissViewControllerAnimated:YES completion:nil];
+    }];
+
+    [alert addAction:ok];
+
+    UIApplication* app = [UIApplication sharedApplication];
+    UIWindow* win = [app keyWindow];
+    UIViewController* vc = [win rootViewController];
+    [vc presentViewController:alert animated:YES completion:nil];
 }
 
 void LuaLog(const char * format)
