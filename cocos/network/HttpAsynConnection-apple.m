@@ -76,8 +76,7 @@
     self.responseError = nil;
     self.connError = nil;
 
-    // TODO: deprecated
-    //STEVE: deprecated use this instead:
+    // TODO: STEVE: deprecated use this instead:
 //    NSURLSession *session = [NSURLSession sharedSession];
 //    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
 //                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)

@@ -60,7 +60,7 @@
 
 #endif
 
-#warning STEVE: test this (currently not using due to not working)
+// STEVE: Not currently using the potentially interesting Allocators for Debug or Auto-Pooling
 
 // allocator macros
 #if CC_ENABLE_ALLOCATOR
