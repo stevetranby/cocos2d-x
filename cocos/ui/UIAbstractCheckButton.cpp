@@ -186,7 +186,7 @@ void AbstractCheckButton::loadTextureBackGroundSelected(const std::string& backG
 {
     _backGroundSelectedFileName = backGroundSelected;
     _isBackgroundSelectedTextureLoaded = !backGroundSelected.empty();
-    if( ! _isBackgroundSelectedTextureLoaded) { return; }
+    if(_isBackgroundSelectedTextureLoaded) { return; }
 
     _backGroundSelectedTexType = texType;
     switch (_backGroundSelectedTexType)
