@@ -246,7 +246,8 @@ namespace {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
                 __android_log_print(ANDROID_LOG_DEBUG, "[ST]", "format: %s", format);
 #endif
-                return;
+                return; // not enough memory
+
             }
             /*
              pitfall: The behavior of vsnprintf between VS2013 and VS2015/2017 is different
