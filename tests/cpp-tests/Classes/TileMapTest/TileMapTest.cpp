@@ -42,6 +42,11 @@ enum
 
 TileMapTests::TileMapTests()
 {
+    CCLOGWARN("\n\n\n\n\n\n");
+    CCLOGWARN("----------------------------------------------------------------------");
+    CCLOGWARN("# STEVE");
+    CCLOGWARN("\n\n\n\n\n\n");
+
     ADD_TEST_CASE(TMXIsoZorder);
     ADD_TEST_CASE(TMXOrthoZorder);
     ADD_TEST_CASE(TMXStaggeredTest);
