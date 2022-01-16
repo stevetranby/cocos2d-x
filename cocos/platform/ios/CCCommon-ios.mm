@@ -38,7 +38,7 @@
 
 NS_CC_BEGIN
 
-// ios no MessageBox, use log instead
+// Show modal message
 void ccMessageBox(const char * msg, const char * title)
 {
     NSString * tmpTitle = (title) ? [NSString stringWithUTF8String : title] : nil;
@@ -52,21 +52,21 @@ void ccMessageBox(const char * msg, const char * title)
 //    [messageBox autorelease];
 //    [messageBox show];
 
-    // TODO: STEVE: deprecated use this instead:
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:tmpTitle message:tmpMsg preferredStyle:UIAlertControllerStyleAlert];
+    // TODO: STEVE: deprecated use this instead
+    
+    // TODO: TESTING
+    UIAlertController* messageBoxAlert = [UIAlertController alertControllerWithTitle:tmpTitle message:tmpMsg preferredStyle:UIAlertControllerStyleAlert];
+    [messageBoxAlert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"ok'd alert! action: %@", action);
+    }]];
 
-    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK"
-                                                 style:UIAlertActionStyleDefault
-                                               handler:^(UIAlertAction * action) {
-        [alert dismissViewControllerAnimated:YES completion:nil];
-    }];
-
-    [alert addAction:ok];
-
-    UIApplication* app = [UIApplication sharedApplication];
-    UIWindow* win = [app keyWindow];
-    UIViewController* vc = [win rootViewController];
-    [vc presentViewController:alert animated:YES completion:nil];
+//    // TODO: if there's a need for an ok/cancel version
+//    [messageBoxAlert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        NSLog(@"cancelled alert! action: %@", action);
+//    }]];
+    
+    UIViewController* viewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+    [viewController presentViewController:messageBoxAlert animated:YES completion:nil];
 }
 
 void LuaLog(const char * format)
