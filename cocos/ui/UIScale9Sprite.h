@@ -568,7 +568,6 @@ namespace ui {
          */
         void copyTo(Scale9Sprite* copy) const;
 
-
         /**
          * Set the slice sprite rendering type.
          * When setting to SIMPLE, only 4 vertexes is used to rendering.
@@ -592,6 +591,28 @@ namespace ui {
         Rect getCapInsets() const;
 
         void resetRender();
+
+
+
+#error // STEVE: REMOVE: bu this is from a long time ago
+        virtual bool isFlippedY()const;
+        
+        //override the setScale function of Node
+        virtual void setScaleX(float scaleX) override;
+        virtual void setScaleY(float scaleY) override;
+        virtual void setScale(float scale) override;
+        virtual void setScale(float scaleX, float scaleY) override;
+        using Node::setScaleZ;
+        virtual float getScaleX() const override;
+        virtual float getScaleY() const override;
+        virtual float getScale() const override;
+        using Node::getScaleZ;
+        virtual void setCameraMask(unsigned short mask, bool applyChildren = true) override;
+        virtual void setGlobalZOrder(float globalZOrder) override;
+        virtual void setPositionZ(float z) override;
+
+
+
 
     protected:
         void updateCapInset();
