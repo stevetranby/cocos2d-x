@@ -69,6 +69,8 @@ public:
 
     virtual float getVolume() const override;
 
+    virtual void setPitch(float pitch) override;
+
     virtual void setAudioFocus(bool isFocus) override;
 
     virtual void setLoop(bool isLoop) override;
@@ -118,6 +120,7 @@ private:
     SLVolumeItf _volumeItf;
 
     float _volume;
+    float _pitch;
     float _duration;
     bool _isLoop;
     bool _isAudioFocus;
