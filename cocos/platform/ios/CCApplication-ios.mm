@@ -72,9 +72,9 @@ void Application::setAnimationInterval(float interval)
     [[CCDirectorCaller sharedDirectorCaller] setAnimationInterval: interval ];
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // static member function
-//////////////////////////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 Application* Application::getInstance()
 {

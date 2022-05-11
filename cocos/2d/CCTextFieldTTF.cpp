@@ -78,9 +78,9 @@ bool TextFieldDelegate::onVisit(TextFieldTTF* /*sender*/, Renderer* /*renderer*/
     return false;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // constructor and destructor
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 TextFieldTTF::TextFieldTTF()
 : _delegate(0)
@@ -104,9 +104,9 @@ TextFieldTTF::~TextFieldTTF()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // static constructor
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 TextFieldTTF * TextFieldTTF::textFieldWithPlaceHolder(const std::string& placeholder, const Size& dimensions, TextHAlignment alignment, const std::string& fontName, float fontSize)
 {
@@ -140,9 +140,9 @@ TextFieldTTF * TextFieldTTF::textFieldWithPlaceHolder(const std::string& placeho
     return nullptr;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // initialize
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 bool TextFieldTTF::initWithPlaceHolder(const std::string& placeholder, const Size& dimensions, TextHAlignment alignment, const std::string& fontName, float fontSize)
 {
@@ -186,9 +186,9 @@ bool TextFieldTTF::initWithPlaceHolder(const std::string& placeholder, const std
     return true;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // IMEDelegate
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 bool TextFieldTTF::attachWithIME()
 {
@@ -529,9 +529,9 @@ void TextFieldTTF::setColorSpaceHolder(const Color4B& color)
     }
 }
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // properties
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 // input text property
 void TextFieldTTF::setString(const std::string &text)

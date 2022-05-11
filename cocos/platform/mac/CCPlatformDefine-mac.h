@@ -45,7 +45,7 @@ THE SOFTWARE.
 #endif
 
 
-////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // C++17 Attribute Features
 //
 // https://infektor.net/posts/2017-01-19-using-cpp17-attributes-today.html
@@ -59,7 +59,7 @@ THE SOFTWARE.
 #define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
 
 
-////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 // c++11/14/17 attributes
 #if defined(__has_cpp_attribute)
@@ -99,7 +99,7 @@ THE SOFTWARE.
 #endif
 
 
-////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // Printf-like VA_ARGS for all compilers
 // Passing variable name as string to function with default parameters
 // https://stackoverflow.com/questions/9969490/passing-variable-name-as-string-to-function-with-default-parameters
@@ -112,7 +112,7 @@ THE SOFTWARE.
 
 #define MACRO_MyFuncNeedingZeroOrMoreVarArgs(...) MyFuncNeedingZeroOrMoreVarArgs(ST_STRINGIFY(ARG1(__VA_ARGS__)), __VA_ARGS__)
 
-////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 /* Define NULL pointer value */
 #ifndef NULL

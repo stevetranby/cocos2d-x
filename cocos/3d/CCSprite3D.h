@@ -281,7 +281,7 @@ protected:
     AsyncLoadParam             _asyncLoadParam;
 };
 
-///////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 /**
  * Sprite3DCache
  * @brief the cache data of Sprite3D, use to speed up Sprite3D::create

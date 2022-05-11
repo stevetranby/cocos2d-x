@@ -161,9 +161,9 @@ protected:
      */
     Node* getAssociatedNode() const { return _node; }
 
-    ///////////////
+    ////----------------------------------------------------------------------
     // Properties
-    //////////////
+    //----------------------------------------------------------------------
     std::function<void(Event*)> _onEvent;   /// Event callback function
 
     Type _type;                             /// Event listener type

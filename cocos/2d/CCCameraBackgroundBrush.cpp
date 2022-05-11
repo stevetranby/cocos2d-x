@@ -80,7 +80,7 @@ CameraBackgroundSkyBoxBrush* CameraBackgroundBrush::createSkyboxBrush(const std:
     return CameraBackgroundSkyBoxBrush::create(positive_x, negative_x, positive_y, negative_y, positive_z, negative_z);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 CameraBackgroundDepthBrush::CameraBackgroundDepthBrush()
 : _depth(0.f)
@@ -281,7 +281,7 @@ void CameraBackgroundDepthBrush::drawBackground(Camera* /*camera*/)
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 CameraBackgroundColorBrush::CameraBackgroundColorBrush()
 : _color(0.f, 0.f, 0.f, 0.f)
@@ -338,7 +338,7 @@ CameraBackgroundColorBrush* CameraBackgroundColorBrush::create(const Color4F& co
     return ret;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------------------------------//----------------------------------------------------------------------
 CameraBackgroundSkyBoxBrush::CameraBackgroundSkyBoxBrush()
 : _vao(0)
 , _vertexBuffer(0)

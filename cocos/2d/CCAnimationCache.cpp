@@ -247,8 +247,8 @@ void AnimationCache::addAnimationsWithFile(const std::string& plist)
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
+//----------------------------------------------------------------------
 // MARK - STEVE Extensions
 
 void AnimationCache::addAnimationWithName(const string& animName, const string& animFrameName, const vector<string>& animFrameIndicies, float frameDelay)

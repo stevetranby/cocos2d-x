@@ -49,7 +49,7 @@ const std::string GLViewImpl::EVENT_WINDOW_RESIZED = "glview_window_resized";
 const std::string GLViewImpl::EVENT_WINDOW_FOCUSED = "glview_window_focused";
 const std::string GLViewImpl::EVENT_WINDOW_UNFOCUSED = "glview_window_unfocused";
 
-////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 struct keyCodeItem
 {
@@ -189,9 +189,9 @@ static keyCodeItem g_keyCodeStructArray[] = {
     { GLFW_KEY_LAST            , EventKeyboard::KeyCode::KEY_NONE          }
 };
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // implement GLViewImpl
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 
 GLViewImpl::GLViewImpl(bool initglfw)
