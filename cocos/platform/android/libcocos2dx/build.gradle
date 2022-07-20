@@ -1,11 +1,19 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+}
 
 android {
-    compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
+    logger.lifecycle('[cocos2d] A lifecycle info log message.')
+    compileSdk 31
+    buildToolsVersion '30.0.3'
+
+//    ndkVersion '24.0.8215888'
+    ndkVersion "23.1.7779620"
+//    ndkVersion '21.4.7075529' (default if none specified)
 
     defaultConfig {
-        minSdkVersion PROP_MIN_SDK_VERSION.toInteger()
-        targetSdkVersion PROP_TARGET_SDK_VERSION.toInteger()
+        minSdk 19
+        targetSdk 30
         versionCode 31703
         versionName "3.17"
     }
@@ -21,11 +29,15 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            jniDebuggable true
+            renderscriptDebuggable true
+        }
     }
 
     compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

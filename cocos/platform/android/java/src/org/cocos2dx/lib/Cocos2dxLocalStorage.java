@@ -43,7 +43,7 @@ public class Cocos2dxLocalStorage {
     private static SQLiteDatabase mDatabase = null;
     /**
      * Constructor
-     * @param context The Context within which to work, used to create the DB
+     * - context The Context within which to work, used to create the DB
      * @return 
      */
     public static boolean init(String dbName, String tableName) {
@@ -63,20 +63,20 @@ public class Cocos2dxLocalStorage {
         }
     }
     
-    public static void setItem(String key, String value) {
+    public static void setItem(String key_, String value_) {
         try {
             String sql = "replace into "+TABLE_NAME+"(key,value)values(?,?)";
-            mDatabase.execSQL(sql, new Object[] { key, value });
+            mDatabase.execSQL(sql, new Object[] { key_, value_ });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    public static String getItem(String key) {
+    public static String getItem(String key_) {
         String ret = null;
         try {
         String sql = "select value from "+TABLE_NAME+" where key=?";
-        Cursor c = mDatabase.rawQuery(sql, new String[]{key});  
+        Cursor c = mDatabase.rawQuery(sql, new String[]{key_});
         while (c.moveToNext()) {
             // only return the first value
             if (ret != null) 
