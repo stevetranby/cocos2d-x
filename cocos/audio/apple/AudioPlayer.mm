@@ -337,7 +337,7 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
             //if (sourceState == AL_PLAYING) {}
             if (sourceState == AL_PLAYING || sourceState == AL_PAUSED) {
                 alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &bufferProcessed);
-                while (bufferProcessed > 0) {
+                while (bufferProcessed > 0 && _audioCache) {
                     bufferProcessed--;
                     if (_timeDirty) {
                         _timeDirty = false;
