@@ -36,48 +36,48 @@ USING_NS_CC_ALLOCATOR;
 #if CC_ENABLE_ALLOCATOR
 #if CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
 
-namespace
-{
-    // @brief Declare the allocator for global new/delete
-    static CC_ALLOCATOR_GLOBAL_NEW_DELETE global;
-}
-
-#warning STEVE STEVE
-// @brief overrides global operator new array
-void* operator new[] (std::size_t size)
-{
-    void* ptr = global.allocate(size);
-    assert(ptr && "No memory");
-
-    // disabling exceptions since cocos2d-x doesn't use them
-//#if CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID
-//    if (nullptr == ptr)
-//        throw std::bad_alloc();
-//#endif
-    return ptr;
-}
-
-#warning STEVE STEVE
-// @brief overrides global operator new
-void* operator new(std::size_t size)
-{
-    void* ptr = global.allocate(size);
-    assert(ptr && "No memory");
-
-    // disabling exceptions since cocos2d-x doesn't use them
-//#if CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID
-//    if (nullptr == ptr)
-//        throw std::bad_alloc();
-//#endif
-    return ptr;
-}
-
-// @brief overrides global operator delete
-void operator delete(void* p) throw()
-{
-    if (p)
-        global.deallocate(p);
-}
+//namespace
+//{
+//    // @brief Declare the allocator for global new/delete
+//    static CC_ALLOCATOR_GLOBAL_NEW_DELETE global;
+//}
+//
+//#warning STEVE STEVE
+//// @brief overrides global operator new array
+//void* operator new[] (std::size_t size)
+//{
+//    void* ptr = global.allocate(size);
+//    assert(ptr && "No memory");
+//
+//    // disabling exceptions since cocos2d-x doesn't use them
+////#if CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID
+////    if (nullptr == ptr)
+////        throw std::bad_alloc();
+////#endif
+//    return ptr;
+//}
+//
+//#warning STEVE STEVE
+//// @brief overrides global operator new
+//void* operator new(std::size_t size)
+//{
+//    void* ptr = global.allocate(size);
+//    assert(ptr && "No memory");
+//
+//    // disabling exceptions since cocos2d-x doesn't use them
+////#if CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID
+////    if (nullptr == ptr)
+////        throw std::bad_alloc();
+////#endif
+//    return ptr;
+//}
+//
+//// @brief overrides global operator delete
+//void operator delete(void* p) throw()
+//{
+//    if (p)
+//        global.deallocate(p);
+//}
 
 #endif // CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
 #endif // CC_ENABLE_ALLOCATOR

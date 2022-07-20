@@ -64,31 +64,31 @@
 
 // allocator macros
 #if CC_ENABLE_ALLOCATOR
-
-    // @brief macros for new/delete
-    // we let global new/delete handle these as they are overridden.
-    #define CC_NEW(klass, ...) new klass(__VAR_ARGS__)
-    #define CC_DELETE(object) delete object;
-
-    // @brief macros for malloc/free
-    // these will use the global allocator
-    #define CC_MALLOC(size) ccAllocatorGlobal.allocate(size)
-    #define CC_FREE(address) ccAllocatorGlobal.deallocate(address)
-
-    // alloc on the stack
-    #define CC_ALLOCA(size) alloca(size)
-
-    // @brief helper macro for overriding new/delete operators for a class.
-    // This correctly passes the size in the deallocate method which is needed.
-    #define CC_USE_ALLOCATOR_POOL(T, A) \
-        CC_ALLOCATOR_INLINE void* operator new (size_t size) \
-        { \
-            return (void*)A.allocate(size); \
-        } \
-        CC_ALLOCATOR_INLINE void operator delete (void* object, size_t size) \
-        { \
-            A.deallocate((T*)object, size); \
-        }
+#warning FIXME: COCOS2D GLOBAL ALLOCATED enabled, but is commented out
+//    // @brief macros for new/delete
+//    // we let global new/delete handle these as they are overridden.
+//    #define CC_NEW(klass, ...) new klass(__VAR_ARGS__)
+//    #define CC_DELETE(object) delete object;
+//
+//    // @brief macros for malloc/free
+//    // these will use the global allocator
+//    #define CC_MALLOC(size) ccAllocatorGlobal.allocate(size)
+//    #define CC_FREE(address) ccAllocatorGlobal.deallocate(address)
+//
+//    // alloc on the stack
+//    #define CC_ALLOCA(size) alloca(size)
+//
+//    // @brief helper macro for overriding new/delete operators for a class.
+//    // This correctly passes the size in the deallocate method which is needed.
+//    #define CC_USE_ALLOCATOR_POOL(T, A) \
+//        CC_ALLOCATOR_INLINE void* operator new (size_t size) \
+//        { \
+//            return (void*)A.allocate(size); \
+//        } \
+//        CC_ALLOCATOR_INLINE void operator delete (void* object, size_t size) \
+//        { \
+//            A.deallocate((T*)object, size); \
+//        }
 
 #else
 
