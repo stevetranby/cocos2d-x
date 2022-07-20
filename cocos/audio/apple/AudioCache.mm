@@ -49,7 +49,11 @@ unsigned int __idIndex = 0;
 }
 
 #define INVALID_AL_BUFFER_ID 0xFFFFFFFF
-#define PCMDATA_CACHEMAXSIZE 1048576
+
+// STEVE: hopefully fixes or mitigates rotatebufferthread crash 
+//#define PCMDATA_CACHEMAXSIZE 1048576
+//#define PCMDATA_CACHEMAXSIZE 10485760 // STEVE: increased size to avoid some crashes
+#define PCMDATA_CACHEMAXSIZE 20485760 // STEVE: increased size to avoid some crashes
 
 @interface NSTimerWrapper : NSObject
 {

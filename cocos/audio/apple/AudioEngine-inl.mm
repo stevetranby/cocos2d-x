@@ -137,8 +137,16 @@ static ALenum alSourceAddNotificationExt(ALuint sid, ALuint notificationID, alSo
                     ALOGE("AVAudioSessionInterruptionTypeEnded, AVAudioSession setActive fail, %d",(int)error.code);
                     return;
                 }
-                
+
+                // STEVE: added this check to avoid deadlock
+                // https://github.com/simdsoft/x-studio.github.io/commit/75e6c0c83c03fc0c4d22d9606a3cdeaf9bb3cbbc
+                // TODO: check on PR by PatriceJiang
+                // v3 - https://github.com/cocos2d/cocos2d-x/pull/20552
+                // v4 - https://github.com/cocos2d/cocos2d-x/pull/20553
+                if (alcGetCurrentContext() != nullptr) { alcMakeContextCurrent(nullptr); }
+
                 alcMakeContextCurrent(s_ALContext);
+
                 if (Director::getInstance()->isPaused())
                 {
                     ALOGD("AVAudioSessionInterruptionTypeEnded, director was paused, try to resume it.");
@@ -170,16 +178,27 @@ static ALenum alSourceAddNotificationExt(ALuint sid, ALuint notificationID, alSo
             resumeOnBecomingActive = false;
             ALOGD("UIApplicationDidBecomeActiveNotification, alcMakeContextCurrent(s_ALContext)");
             NSError *error = nil;
+
             BOOL success = [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryAmbient error: &error];
             if (!success) {
                 ALOGE("Fail to set audio session.");
                 return;
             }
+
             [[AVAudioSession sharedInstance] setActive:YES error:&error];
+
             if(error != nil){
                 ALOGE("UIApplicationDidBecomeActiveNotification, AVAudioSession setActive fail, %d",(int)error.code);
                 return;
             }
+
+            // STEVE: added this check to avoid deadlock
+            // https://github.com/simdsoft/x-studio.github.io/commit/75e6c0c83c03fc0c4d22d9606a3cdeaf9bb3cbbc
+            // TODO: check on PR by PatriceJiang
+            // v3 - https://github.com/cocos2d/cocos2d-x/pull/20552
+            // v4 - https://github.com/cocos2d/cocos2d-x/pull/20553
+            if (alcGetCurrentContext() != nullptr) { alcMakeContextCurrent(nullptr); }
+
             alcMakeContextCurrent(s_ALContext);
         }
         else if (isAudioSessionInterrupted)
