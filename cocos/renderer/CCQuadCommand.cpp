@@ -86,6 +86,8 @@ void QuadCommand::reIndex(int indicesCount)
 
         CCLOG("cocos2d: QuadCommand: resizing index size from [%d] to [%d]", __indexCapacity, indicesCount);
 
+        // TODO(steve): minor memory leak
+        // - https://github.com/cocos2d/cocos2d-x/pull/20744/files
         _ownedIndices.push_back(__indices);
         __indices = new (std::nothrow) GLushort[indicesCount];
         __indexCapacity = indicesCount;

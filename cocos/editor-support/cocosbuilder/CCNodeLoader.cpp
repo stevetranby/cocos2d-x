@@ -413,7 +413,8 @@ Vec2 NodeLoader::parsePropTypePosition(Node * pNode, Node * pParent, CCBReader *
     float y = ccbReader->readFloat();
     
     CCBReader::PositionType type = static_cast<CCBReader::PositionType>(ccbReader->readInt(false));
-    
+
+    // STEVE: pParent can be NULL, it then uses root container size instead.
     Size containerSize = ccbReader->getAnimationManager()->getContainerSize(pParent);
     
     Vec2 pt = getAbsolutePosition(Vec2(x,y), type, containerSize, pPropertyName);
