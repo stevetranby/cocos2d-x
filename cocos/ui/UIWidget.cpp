@@ -318,7 +318,7 @@ void Widget::setContentSize(const cocos2d::Size &contentSize)
         }
         else
         {
-            pSize = _parent->getContentSize();
+            pSize = _parent ? _parent->getContentSize() : Size::ZERO;
         }
         float spx = 0.0f;
         float spy = 0.0f;
@@ -360,9 +360,16 @@ void Widget::setSizePercent(const Vec2 &percent)
             {
                 cSize = Size(widgetParent->getContentSize().width * percent.x, widgetParent->getContentSize().height * percent.y);
             }
+            else if (_parent)
+            {
+                // STEVE: checking if _parent is null ... probably unrecoverable, but prevent crashes
+                auto parentSize = _parent->getContentSize();
+                cSize = Size(parentSize.width * percent.x, parentSize.height * percent.y);
+            }
             else
             {
-                cSize = Size(_parent->getContentSize().width * percent.x, _parent->getContentSize().height * percent.y);
+                // STEVE: checking if _parent is null ... probably unrecoverable, but prevent crashes
+                cSize = Size::ZERO;
             }
         }
         if (_ignoreSize)
@@ -379,8 +386,8 @@ void Widget::setSizePercent(const Vec2 &percent)
 
 void Widget::updateSizeAndPosition()
 {
+    if (! _parent) { return; } // STEVE: checking if _parent is null ... probably unrecoverable, but prevent crashes
     Size pSize = _parent->getContentSize();
-
     updateSizeAndPosition(pSize);
 }
 
