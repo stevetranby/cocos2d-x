@@ -67,6 +67,9 @@ Node * NodeLoader::loadNode(Node * pParent, CCBReader * ccbReader)
 
 void NodeLoader::parseProperties(Node * pNode, Node * pParent, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
+
     int numRegularProps = ccbReader->readInt(false);
     int numExturaProps = ccbReader->readInt(false);
     int propertyCount = numRegularProps + numExturaProps;
@@ -409,6 +412,11 @@ void NodeLoader::parseProperties(Node * pNode, Node * pParent, CCBReader * ccbRe
 
 Vec2 NodeLoader::parsePropTypePosition(Node * pNode, Node * pParent, CCBReader * ccbReader, const char *pPropertyName)
 {
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
+    //CCASSERT(pParent, "ArgumentNullException: pParent!");
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+    CCASSERT(pPropertyName, "ArgumentNullException: pPropertyName!");
+
     float x = ccbReader->readFloat();
     float y = ccbReader->readFloat();
     
@@ -435,6 +443,8 @@ Vec2 NodeLoader::parsePropTypePosition(Node * pNode, Node * pParent, CCBReader *
 
 Vec2 NodeLoader::parsePropTypePoint(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: pNode!");
+
     float x = ccbReader->readFloat();
     float y = ccbReader->readFloat();
 
@@ -442,6 +452,8 @@ Vec2 NodeLoader::parsePropTypePoint(Node * /*pNode*/, Node * /*pParent*/, CCBRea
 }
 
 Vec2 NodeLoader::parsePropTypePointLock(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     float x = ccbReader->readFloat();
     float y = ccbReader->readFloat();
 
@@ -449,6 +461,8 @@ Vec2 NodeLoader::parsePropTypePointLock(Node * /*pNode*/, Node * /*pParent*/, CC
 }
 
 Size NodeLoader::parsePropTypeSize(Node * /*pNode*/, Node * pParent, CCBReader * ccbReader) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     float width = ccbReader->readFloat();
     float height = ccbReader->readFloat();
 
@@ -506,6 +520,8 @@ Size NodeLoader::parsePropTypeSize(Node * /*pNode*/, Node * pParent, CCBReader *
 
 
 float * NodeLoader::parsePropTypeFloatXY(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     float x = ccbReader->readFloat();
     float y = ccbReader->readFloat();
 
@@ -517,6 +533,8 @@ float * NodeLoader::parsePropTypeFloatXY(Node * /*pNode*/, Node * /*pParent*/, C
 }
 
 float * NodeLoader::parsePropTypeScaleLock(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader, const char *pPropertyName) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     float x = ccbReader->readFloat();
     float y = ccbReader->readFloat();
     
@@ -548,13 +566,18 @@ float * NodeLoader::parsePropTypeScaleLock(Node * pNode, Node * /*pParent*/, CCB
 }
 
 float NodeLoader::parsePropTypeFloat(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     return ccbReader->readFloat();
 }
 
 float NodeLoader::parsePropTypeDegrees(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader, const char *pPropertyName) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     float ret = ccbReader->readFloat();
     if (ccbReader->getAnimatedProperties()->find(pPropertyName) != ccbReader->getAnimatedProperties()->end())
     {
+        CCASSERT(pNode, "ArgumentNullException: pNode!");
         ccbReader->getAnimationManager()->setBaseValue(Value(ret), pNode, pPropertyName);
     }
     
@@ -563,6 +586,8 @@ float NodeLoader::parsePropTypeDegrees(Node * pNode, Node * /*pParent*/, CCBRead
 
 float NodeLoader::parsePropTypeFloatScale(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     float f = ccbReader->readFloat();
 
     CCBReader::ScaleType type = static_cast<CCBReader::ScaleType>(ccbReader->readInt(false));
@@ -577,16 +602,22 @@ float NodeLoader::parsePropTypeFloatScale(Node * /*pNode*/, Node * /*pParent*/, 
 
 int NodeLoader::parsePropTypeInteger(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     return ccbReader->readInt(true);
 }
 
 int NodeLoader::parsePropTypeIntegerLabeled(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     return ccbReader->readInt(true);
 }
 
 float * NodeLoader::parsePropTypeFloatVar(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     float f = ccbReader->readFloat();
     float fVar = ccbReader->readFloat();
     
@@ -599,6 +630,8 @@ float * NodeLoader::parsePropTypeFloatVar(Node * /*pNode*/, Node * /*pParent*/, 
 
 bool NodeLoader::parsePropTypeCheck(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader, const char *pPropertyName)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     bool ret = ccbReader->readBool();
     
     if (ccbReader->getAnimatedProperties()->find(pPropertyName) != ccbReader->getAnimatedProperties()->end())
@@ -612,6 +645,8 @@ bool NodeLoader::parsePropTypeCheck(Node * pNode, Node * /*pParent*/, CCBReader 
 
 SpriteFrame * NodeLoader::parsePropTypeSpriteFrame(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader, const char *pPropertyName)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     std::string spriteSheet = ccbReader->readCachedString();
     std::string spriteFile = ccbReader->readCachedString();
 
@@ -659,7 +694,10 @@ SpriteFrame * NodeLoader::parsePropTypeSpriteFrame(Node * pNode, Node * /*pParen
     return spriteFrame;
 }
 
-Animation * NodeLoader::parsePropTypeAnimation(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+Animation * NodeLoader::parsePropTypeAnimation(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
+{
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     std::string animationFile = ccbReader->getCCBRootPath() + ccbReader->readCachedString();
     std::string animation = ccbReader->readCachedString();
     
@@ -683,7 +721,10 @@ Animation * NodeLoader::parsePropTypeAnimation(Node * /*pNode*/, Node * /*pParen
     return ccAnimation;
 }
 
-Texture2D * NodeLoader::parsePropTypeTexture(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+Texture2D * NodeLoader::parsePropTypeTexture(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
+{
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     std::string spriteFile = ccbReader->getCCBRootPath() + ccbReader->readCachedString();
     
     if (!spriteFile.empty())
@@ -698,6 +739,8 @@ Texture2D * NodeLoader::parsePropTypeTexture(Node * /*pNode*/, Node * /*pParent*
 
 unsigned char NodeLoader::parsePropTypeByte(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader, const char *pPropertyName)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     unsigned char ret = ccbReader->readByte();
     
     if (ccbReader->getAnimatedProperties()->find(pPropertyName) != ccbReader->getAnimatedProperties()->end())
@@ -708,7 +751,10 @@ unsigned char NodeLoader::parsePropTypeByte(Node * pNode, Node * /*pParent*/, CC
     return ret;
 }
 
-Color3B NodeLoader::parsePropTypeColor3(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader, const char *pPropertyName) {
+Color3B NodeLoader::parsePropTypeColor3(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader, const char *pPropertyName)
+{
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     unsigned char r = ccbReader->readByte();
     unsigned char g = ccbReader->readByte();
     unsigned char b = ccbReader->readByte();
@@ -727,7 +773,10 @@ Color3B NodeLoader::parsePropTypeColor3(Node * pNode, Node * /*pParent*/, CCBRea
     return color;
 }
 
-Color4F * NodeLoader::parsePropTypeColor4FVar(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+Color4F * NodeLoader::parsePropTypeColor4FVar(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
+{
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     float red = ccbReader->readFloat();
     float green = ccbReader->readFloat();
     float blue = ccbReader->readFloat();
@@ -751,7 +800,10 @@ Color4F * NodeLoader::parsePropTypeColor4FVar(Node * /*pNode*/, Node * /*pParent
     return colors;
 }
 
-bool * NodeLoader::parsePropTypeFlip(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+bool * NodeLoader::parsePropTypeFlip(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
+{
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     bool flipX = ccbReader->readBool();
     bool flipY = ccbReader->readBool();
 
@@ -764,6 +816,8 @@ bool * NodeLoader::parsePropTypeFlip(Node * /*pNode*/, Node * /*pParent*/, CCBRe
 
 BlendFunc NodeLoader::parsePropTypeBlendFunc(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+
     int source = ccbReader->readInt(false);
     int destination = ccbReader->readInt(false);
     
@@ -776,18 +830,22 @@ BlendFunc NodeLoader::parsePropTypeBlendFunc(Node * /*pNode*/, Node * /*pParent*
 
 std::string NodeLoader::parsePropTypeFntFile(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
     return ccbReader->readCachedString();
 }
 
 std::string NodeLoader::parsePropTypeString(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
     return ccbReader->readCachedString();
 }
 
 std::string NodeLoader::parsePropTypeText(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
     return ccbReader->readCachedString();
 }
 
 std::string NodeLoader::parsePropTypeFontTTF(Node * /*pNode*/, Node * /*pParent*/, CCBReader * ccbReader) {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
     std::string fontTTF = ccbReader->readCachedString();
 
     // String * ttfEnding = String::create(".ttf");
@@ -806,6 +864,9 @@ std::string NodeLoader::parsePropTypeFontTTF(Node * /*pNode*/, Node * /*pParent*
 
 BlockData * NodeLoader::parsePropTypeBlock(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
+
     std::string selectorName = ccbReader->readCachedString();
     CCBReader::TargetType selectorTarget = static_cast<CCBReader::TargetType>(ccbReader->readInt(false));
 
@@ -886,6 +947,9 @@ BlockData * NodeLoader::parsePropTypeBlock(Node * pNode, Node * /*pParent*/, CCB
 
 BlockControlData * NodeLoader::parsePropTypeBlockControl(Node * pNode, Node * /*pParent*/, CCBReader * ccbReader)
 {
+    CCASSERT(ccbReader, "ArgumentNullException: ccbReader!");
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
+
     std::string selectorName = ccbReader->readCachedString();
     CCBReader::TargetType selectorTarget = static_cast<CCBReader::TargetType>(ccbReader->readInt(false));
     int controlEvents = ccbReader->readInt(false);
@@ -967,7 +1031,10 @@ BlockControlData * NodeLoader::parsePropTypeBlockControl(Node * pNode, Node * /*
     return nullptr;
 }
 
-Node * NodeLoader::parsePropTypeCCBFile(Node * /*pNode*/, Node * pParent, CCBReader * pCCBReader) {
+Node * NodeLoader::parsePropTypeCCBFile(Node * /*pNode*/, Node * pParent, CCBReader * pCCBReader)
+{
+    CCASSERT(pCCBReader, "ArgumentNullException: pCCBReader!");
+
     std::string ccbFileName = pCCBReader->getCCBRootPath() + pCCBReader->readCachedString();
 
     /* Change path extension to .ccbi. */
@@ -981,6 +1048,8 @@ Node * NodeLoader::parsePropTypeCCBFile(Node * /*pNode*/, Node * pParent, CCBRea
     
     CCBReader * reader = new (std::nothrow) CCBReader(pCCBReader);
     reader->autorelease();
+
+    CCASSERT(pParent, "ArgumentNullException: pParent!");
     reader->getAnimationManager()->setRootContainerSize(pParent->getContentSize());
     
     
@@ -1051,6 +1120,7 @@ Node * NodeLoader::parsePropTypeCCBFile(Node * /*pNode*/, Node * pParent, CCBRea
 
 void NodeLoader::onHandlePropTypePosition(Node * pNode, Node * /*pParent*/, const char* pPropertyName, Vec2 pPosition, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_POSITION) == 0) {
+        CCASSERT(pNode, "ArgumentNullException: pNode!");
         pNode->setPosition(pPosition);
     } else {
         ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
@@ -1059,6 +1129,7 @@ void NodeLoader::onHandlePropTypePosition(Node * pNode, Node * /*pParent*/, cons
 
 void NodeLoader::onHandlePropTypePoint(Node * pNode, Node * /*pParent*/, const char* pPropertyName, Vec2 pPoint, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_ANCHORPOINT) == 0) {
+        CCASSERT(pNode, "ArgumentNullException: pNode!");
         pNode->setAnchorPoint(pPoint);
     } else {
         ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
@@ -1071,6 +1142,7 @@ void NodeLoader::onHandlePropTypePointLock(Node * /*pNode*/, Node * /*pParent*/,
 
 void NodeLoader::onHandlePropTypeSize(Node * pNode, Node * /*pParent*/, const char* pPropertyName, Size pSize, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_CONTENTSIZE) == 0) {
+        CCASSERT(pNode, "ArgumentNullException: pNode!");
         pNode->setContentSize(pSize);
     } else {
         ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
@@ -1079,6 +1151,7 @@ void NodeLoader::onHandlePropTypeSize(Node * pNode, Node * /*pParent*/, const ch
 
 void NodeLoader::onHandlePropTypeFloatXY(Node * pNode, Node * /*pParent*/, const char* pPropertyName, float * pFloat, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_SKEW) == 0) {
+        CCASSERT(pNode, "ArgumentNullException: pNode!");
         pNode->setSkewX(pFloat[0]);
         pNode->setSkewY(pFloat[1]);
     } else {
@@ -1089,6 +1162,7 @@ void NodeLoader::onHandlePropTypeFloatXY(Node * pNode, Node * /*pParent*/, const
 
 void NodeLoader::onHandlePropTypeScaleLock(Node * pNode, Node * /*pParent*/, const char* pPropertyName, float * pScaleLock, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_SCALE) == 0) {
+        CCASSERT(pNode, "ArgumentNullException: pNode!");
         pNode->setScaleX(pScaleLock[0]);
         pNode->setScaleY(pScaleLock[1]);
     } else {
@@ -1104,6 +1178,7 @@ void NodeLoader::onHandlePropTypeFloat(Node * /*pNode*/, Node * /*pParent*/, con
 
 
 void NodeLoader::onHandlePropTypeDegrees(Node * pNode, Node * /*pParent*/, const char* pPropertyName, float pDegrees, CCBReader * /*ccbReader*/) {
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
     if(strcmp(pPropertyName, PROPERTY_ROTATION) == 0) {
         pNode->setRotation(pDegrees);
     } else if(strcmp(pPropertyName, PROPERTY_ROTATIONX) == 0) {
@@ -1122,6 +1197,7 @@ void NodeLoader::onHandlePropTypeFloatScale(Node * /*pNode*/, Node * /*pParent*/
 
 void NodeLoader::onHandlePropTypeInteger(Node * pNode, Node * /*pParent*/, const char* pPropertyName, int pInteger, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_TAG) == 0) {
+        CCASSERT(pNode, "ArgumentNullException: pNode!");
         pNode->setTag(pInteger);
     } else {
  //       ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
@@ -1139,6 +1215,7 @@ void NodeLoader::onHandlePropTypeFloatVar(Node * /*pNode*/, Node * /*pParent*/, 
 }
 
 void NodeLoader::onHandlePropTypeCheck(Node * pNode, Node * /*pParent*/, const char* pPropertyName, bool pCheck, CCBReader * /*ccbReader*/) {
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
     if(strcmp(pPropertyName, PROPERTY_VISIBLE) == 0) {
         pNode->setVisible(pCheck);
     } else if(strcmp(pPropertyName, PROPERTY_IGNOREANCHORPOINTFORPOSITION) == 0) {

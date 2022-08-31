@@ -248,18 +248,24 @@ void CCBAnimationManager::addNode(Node *pNode, const std::unordered_map<int, Map
 
 void CCBAnimationManager::setBaseValue(const Value& value, Node *pNode, const std::string& propName)
 {
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
+
     auto& props = _baseValues[pNode];
     props[propName] = value;
 }
 
 const Value& CCBAnimationManager::getBaseValue(Node *pNode, const std::string& propName)
 {
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
+
     auto& props = _baseValues[pNode];
     return props[propName];
 }
 
 void CCBAnimationManager::setObject(Ref* obj, Node *pNode, const std::string& propName)
 {
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
+
     auto& props = _objects[pNode];
     auto iter = props.find(propName);
     if (iter != props.end())
@@ -271,6 +277,8 @@ void CCBAnimationManager::setObject(Ref* obj, Node *pNode, const std::string& pr
 
 Ref* CCBAnimationManager::getObject(Node *pNode, const std::string& propName)
 {
+    CCASSERT(pNode, "ArgumentNullException: pNode!");
+
     auto& props = _objects[pNode];
     auto iter = props.find(propName);
     if (iter != props.end())
