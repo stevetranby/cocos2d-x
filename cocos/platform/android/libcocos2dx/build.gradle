@@ -5,7 +5,7 @@ plugins {
 android {
     logger.lifecycle('[cocos2d] A lifecycle info log message.')
     compileSdk 31
-    buildToolsVersion '30.0.3'
+//    buildToolsVersion '30.0.3'
 
 //    ndkVersion '24.0.8215888'
     ndkVersion "23.1.7779620"
