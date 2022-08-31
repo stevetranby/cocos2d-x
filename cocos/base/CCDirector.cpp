@@ -98,6 +98,8 @@ const char *Director::EVENT_AFTER_UPDATE = "director_after_update";
 const char *Director::EVENT_RESET = "director_reset";
 const char *Director::EVENT_BEFORE_DRAW = "director_before_draw";
 
+// TODO(steve): rename this to get() or Instance()
+// TODO(steve): refactor to simple two-line singleton a la AudioManager::get()
 Director* Director::getInstance()
 {
     if (!s_SharedDirector)
