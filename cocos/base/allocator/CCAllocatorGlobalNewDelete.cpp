@@ -25,6 +25,12 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#if CC_ENABLE_ALLOCATOR
+#warning ENABLED - CC_ENABLE_ALLOCATOR
+
+#if CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
+#warning ENABLED - CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
+
 #include "base/allocator/CCAllocatorStrategyGlobalSmallBlock.h"
 #include <new>
 #include <exception>
@@ -32,9 +38,6 @@
 #include <assert.h>
 
 USING_NS_CC_ALLOCATOR;
-
-#if CC_ENABLE_ALLOCATOR
-#if CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
 
 //namespace
 //{
@@ -79,5 +82,10 @@ USING_NS_CC_ALLOCATOR;
 //        global.deallocate(p);
 //}
 
+#else
+#warning DISABLED - CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
 #endif // CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
+
+#else
+//#warning DISABLED - CC_ENABLE_ALLOCATOR
 #endif // CC_ENABLE_ALLOCATOR
