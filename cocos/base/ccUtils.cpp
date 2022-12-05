@@ -436,6 +436,7 @@ std::string getDataMD5Hash(const Data &data)
     md5_append(&state, (const md5_byte_t *)data.getBytes(), (int)data.getSize());
     md5_finish(&state, digest);
 
+    // TODO(steve): use `snprintf` instead for security reasons
     for (int di = 0; di < 16; ++di)
         sprintf(hexOutput + di * 2, "%02x", digest[di]);
 

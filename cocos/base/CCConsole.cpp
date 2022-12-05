@@ -1391,17 +1391,17 @@ void Console::commandProjection(int fd, const std::string& /*args*/)
     auto proj = director->getProjection();
     switch (proj) {
         case cocos2d::Director::Projection::_2D:
-            sprintf(buf,"2d");
+            snprintf(buf,20,"2d");
             break;
         case cocos2d::Director::Projection::_3D:
-            sprintf(buf,"3d");
+            snprintf(buf,20,"3d");
             break;
         case cocos2d::Director::Projection::CUSTOM:
-            sprintf(buf,"custom");
+            snprintf(buf,20,"custom");
             break;
             
         default:
-            sprintf(buf,"unknown");
+            snprintf(buf,20,"unknown");
             break;
     }
     Console::Utility::mydprintf(fd, "Current projection: %s\n", buf);

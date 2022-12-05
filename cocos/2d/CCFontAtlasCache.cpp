@@ -181,7 +181,9 @@ FontAtlas* FontAtlasCache::getFontAtlasCharMap(const std::string& plistFile)
 FontAtlas* FontAtlasCache::getFontAtlasCharMap(Texture2D* texture, int itemWidth, int itemHeight, int startCharMap)
 {
     char key[ATLAS_MAP_KEY_PREFIX_BUFFER_SIZE];
-    sprintf(key,"name:%u_%d_%d_%d",texture->getName(),itemWidth,itemHeight,startCharMap);
+    snprintf(key, ATLAS_MAP_KEY_PREFIX_BUFFER_SIZE,
+             "name:%u_%d_%d_%d",
+             texture->getName(),itemWidth,itemHeight,startCharMap);
     std::string atlasName = key;
 
     auto it = _atlasMap.find(atlasName);
