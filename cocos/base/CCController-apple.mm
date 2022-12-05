@@ -255,25 +255,25 @@ void Controller::registerListeners()
             }
         };
     }
-    else if (_impl->_gcController.gamepad != nil)
+    else if (_impl->_gcController.extendedGamepad != nil)
     {
-        _impl->_gcController.gamepad.dpad.up.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.up.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_UP, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.down.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.down.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_DOWN, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.left.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.left.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_LEFT, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.right.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.right.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_RIGHT, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.valueChangedHandler = ^(GCGamepad *gamepad, GCControllerElement *element){
+        _impl->_gcController.extendedGamepad.valueChangedHandler = ^(GCExtendedGamepad *gamepad, GCControllerElement *element){
             
             if (element == gamepad.buttonA)
             {
