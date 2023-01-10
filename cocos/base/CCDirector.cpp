@@ -383,7 +383,7 @@ void Director::setOpenGLView(GLView *openGLView)
         // Configuration. Gather GPU info
         Configuration *conf = Configuration::getInstance();
         conf->gatherGPUInfo();
-        CCLOG("\nconfiguration:\n%s\n",conf->getInfo().c_str());
+        CCLOG("configuration:\n%s\n",conf->getInfo().c_str());
 
         if(_openGLView)
             _openGLView->release();
