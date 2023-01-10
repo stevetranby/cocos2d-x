@@ -819,7 +819,7 @@ void Terrain::cacheUniformAttribLocation()
 {
 
     _positionLocation = glGetAttribLocation(this->getGLProgram()->getProgram(),"a_position");
-    _texcoordLocation = glGetAttribLocation(this->getGLProgram()->getProgram(),"a_texCoord");
+    _texcoordLocation = glGetAttribLocation(this->getGLProgram()->getProgram(),"a_texCoord0");
     _normalLocation = glGetAttribLocation(this->getGLProgram()->getProgram(),"a_normal");
     _alphaMapLocation = -1;
     for(int i =0;i<4;++i)

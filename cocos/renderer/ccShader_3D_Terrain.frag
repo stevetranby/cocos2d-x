@@ -5,7 +5,7 @@ const char* cc3D_Terrain_frag = R"(
 precision highp float;
 #endif
 uniform vec3 u_color;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 varying vec3 v_normal;
 #ifdef GL_ES
 uniform lowp int u_has_alpha;
@@ -30,19 +30,19 @@ if(u_has_light_map<=0)
     lightColor = vec4(1.0,1.0,1.0,1.0);
 }else
 {
-    lightColor = texture2D(u_lightMap,v_texCoord);
+    lightColor = texture2D(u_lightMap,v_texCoord0);
 }
 float lightFactor = dot(-u_lightDir,v_normal);
 if(u_has_alpha<=0)
 {
-    gl_FragColor = texture2D(u_texture0, v_texCoord)*lightColor*lightFactor;
+    gl_FragColor = texture2D(u_texture0, v_texCoord0)*lightColor*lightFactor;
 }else
 {
-    vec4 blendFactor =texture2D(u_alphaMap,v_texCoord);
+    vec4 blendFactor =texture2D(u_alphaMap,v_texCoord0);
     vec4 color = vec4(0.0,0.0,0.0,0.0);
-    color = texture2D(u_texture0, v_texCoord*u_detailSize[0])*blendFactor.r +
-    texture2D(u_texture1, v_texCoord*u_detailSize[1])*blendFactor.g + texture2D(u_texture2, v_texCoord*u_detailSize[2])*blendFactor.b
-        + texture2D(u_texture3, v_texCoord*u_detailSize[3])*(1.0 - blendFactor.a);
+    color = texture2D(u_texture0, v_texCoord0*u_detailSize[0])*blendFactor.r +
+    texture2D(u_texture1, v_texCoord0*u_detailSize[1])*blendFactor.g + texture2D(u_texture2, v_texCoord0*u_detailSize[2])*blendFactor.b
+        + texture2D(u_texture3, v_texCoord0*u_detailSize[3])*(1.0 - blendFactor.a);
     gl_FragColor = vec4(color.rgb*lightColor.rgb*lightFactor, 1.0);
 }
 }

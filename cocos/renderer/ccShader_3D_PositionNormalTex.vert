@@ -17,7 +17,7 @@ uniform vec3 u_SpotLightSourceDirection[MAX_SPOT_LIGHT_NUM];
 #endif
 
 attribute vec4 a_position;
-attribute vec2 a_texCoord;
+attribute vec2 a_texCoord0;
 attribute vec3 a_normal;
 #ifdef USE_NORMAL_MAPPING
 attribute vec3 a_tangent;
@@ -107,7 +107,7 @@ void main(void)
     #endif
 #endif
 
-    TextureCoordOut = a_texCoord;
+    TextureCoordOut = a_texCoord0;
     TextureCoordOut.y = 1.0 - TextureCoordOut.y;
     gl_Position = CC_PMatrix * ePosition;
 }
@@ -135,7 +135,7 @@ attribute vec3 a_position;
 attribute vec4 a_blendWeight;
 attribute vec4 a_blendIndex;
 
-attribute vec2 a_texCoord;
+attribute vec2 a_texCoord0;
 
 attribute vec3 a_normal;
 #ifdef USE_NORMAL_MAPPING
@@ -300,7 +300,7 @@ void main()
     #endif
 #endif
 
-    TextureCoordOut = a_texCoord;
+    TextureCoordOut = a_texCoord0;
     TextureCoordOut.y = 1.0 - TextureCoordOut.y;
     gl_Position = CC_PMatrix * ePosition;
 }

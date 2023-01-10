@@ -26,17 +26,17 @@ const char* ccPositionTextureColorAlphaTest_frag = R"(
 
 #ifdef GL_ES
 varying lowp vec4 v_fragmentColor;
-varying highp vec2 v_texCoord;
+varying highp vec2 v_texCoord0;
 uniform mediump float CC_alpha_value;
 #else
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 uniform float CC_alpha_value;
 #endif
 
 void main()
 {
-    vec4 texColor = texture2D(CC_Texture0, v_texCoord);
+    vec4 texColor = texture2D(CC_Texture0, v_texCoord0);
 
 // mimic: glAlphaFunc(GL_GREATER)
 // pass if ( incoming_pixel >= CC_alpha_value ) => fail if incoming_pixel < CC_alpha_value

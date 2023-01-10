@@ -23,28 +23,28 @@ const char* ccPositionColorLengthTexture_vert = R"(
 
 #ifdef GL_ES
 attribute highp vec4 a_position;
-attribute highp vec2 a_texcoord;
+attribute highp vec2 a_texCoord0;
 attribute lowp vec4 a_color;
 #else
 attribute vec4 a_position;
-attribute vec2 a_texcoord;
+attribute vec2 a_texCoord0;
 attribute vec4 a_color;
 #endif
 
 #ifdef GL_ES
 varying lowp vec4 v_color;
-varying highp vec2 v_texcoord;
+varying highp vec2 v_texCoord0;
 uniform lowp float u_alpha;
 #else
 varying vec4 v_color;
-varying vec2 v_texcoord;
+varying vec2 v_texCoord0;
 uniform float u_alpha;
 #endif
 
 void main()
 {
     v_color = vec4(a_color.rgb * a_color.a * u_alpha, a_color.a * u_alpha);
-    v_texcoord = a_texcoord;
+    v_texCoord0 = a_texCoord0;
 
     gl_Position = CC_MVPMatrix * a_position;
 }

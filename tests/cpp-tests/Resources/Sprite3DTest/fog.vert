@@ -1,5 +1,5 @@
 attribute vec4 a_position;
-attribute vec2 a_texCoord;
+attribute vec2 a_texCoord0;
 varying float v_fogFactor;              //weight for fog
 varying vec2 v_texture_coord;
 
@@ -11,7 +11,7 @@ uniform int u_fogEquation; // 0 = linear, 1 = exp, 2 = exp2
 void main(void)
 {
     gl_Position = CC_MVPMatrix * a_position;
-    v_texture_coord = a_texCoord; 
+    v_texture_coord = a_texCoord0; 
 
     float fogFragCoord = abs(gl_Position.z);                                       //get fog distance
 

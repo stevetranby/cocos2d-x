@@ -30,12 +30,12 @@ precision highp float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 void main()
 {
-    vec4 texColor = texture2D(CC_Texture0, v_texCoord);
-    texColor.a = texture2D(CC_Texture1, v_texCoord).r;
+    vec4 texColor = texture2D(CC_Texture0, v_texCoord0);
+    texColor.a = texture2D(CC_Texture1, v_texCoord0).r;
     texColor.rgb *= texColor.a; // premultiply alpha channel
 
     texColor = v_fragmentColor * texColor;

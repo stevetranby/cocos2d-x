@@ -3,7 +3,7 @@ precision mediump float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 uniform vec2 resolution;
 uniform vec2 textureResolution;
@@ -80,7 +80,7 @@ vec3 cc(vec3 color, float factor,float factor2) // color modifier
 
 void main(void)
 {
-	vec2 uv = v_texCoord - 0.5;
+	vec2 uv = v_texCoord0 - 0.5;
 	uv.x *= resolution.x/resolution.y; //fix aspect ratio
 //	vec3 mouse = vec3(iMouse.xy/iResolution.xy - 0.5,iMouse.z-.5);
 //	mouse.x *= iResolution.x/iResolution.y; //fix aspect ratio
@@ -94,7 +94,7 @@ void main(void)
     mouse.y=sin(CC_Time[1]*.913)*.5;
 	
 	vec3 color = vec3(1.4,1.2,1.0)*lensflare(uv,mouse.xy);
-	color -= noise(v_texCoord * resolution)*.015;
+	color -= noise(v_texCoord0 * resolution)*.015;
 	color = cc(color,.5,.1);
 	gl_FragColor = vec4(color,1.0);
 }

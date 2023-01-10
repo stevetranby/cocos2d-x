@@ -30,10 +30,10 @@ const char* ccPositionTexture_frag = R"(
 precision highp float;
 #endif
 
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 void main()
 {
-    gl_FragColor =  texture2D(CC_Texture0, v_texCoord);
+    gl_FragColor =  texture2D(CC_Texture0, v_texCoord0);
 }
 )";

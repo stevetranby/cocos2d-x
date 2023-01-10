@@ -6,14 +6,14 @@ precision highp float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 uniform vec4 u_effectColor;
 uniform vec4 u_textColor;
 
 void main()
 {
-    float dist = texture2D(CC_Texture0, v_texCoord).a;
+    float dist = texture2D(CC_Texture0, v_texCoord0).a;
     //TODO: Implementation 'fwidth' for glsl 1.0
     //float width = fwidth(dist);
     //assign width for constant will lead to a little bit fuzzy,it's temporary measure.
