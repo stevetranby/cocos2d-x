@@ -417,6 +417,7 @@ Vec2 NodeLoader::parsePropTypePosition(Node * pNode, Node * pParent, CCBReader *
     Size containerSize = ccbReader->getAnimationManager()->getContainerSize(pParent);
     
     Vec2 pt = getAbsolutePosition(Vec2(x,y), type, containerSize, pPropertyName);
+    CC_ASSERT(pNode != nullptr);
     pNode->setPosition(pt);
     
     if (ccbReader->getAnimatedProperties()->find(pPropertyName) != ccbReader->getAnimatedProperties()->end())
@@ -1058,6 +1059,7 @@ void NodeLoader::onHandlePropTypePosition(Node * pNode, Node * /*pParent*/, cons
 
 void NodeLoader::onHandlePropTypePoint(Node * pNode, Node * /*pParent*/, const char* pPropertyName, Vec2 pPoint, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_ANCHORPOINT) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setAnchorPoint(pPoint);
     } else {
         ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
@@ -1070,6 +1072,7 @@ void NodeLoader::onHandlePropTypePointLock(Node * /*pNode*/, Node * /*pParent*/,
 
 void NodeLoader::onHandlePropTypeSize(Node * pNode, Node * /*pParent*/, const char* pPropertyName, Size pSize, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_CONTENTSIZE) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setContentSize(pSize);
     } else {
         ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
@@ -1078,6 +1081,7 @@ void NodeLoader::onHandlePropTypeSize(Node * pNode, Node * /*pParent*/, const ch
 
 void NodeLoader::onHandlePropTypeFloatXY(Node * pNode, Node * /*pParent*/, const char* pPropertyName, float * pFloat, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_SKEW) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setSkewX(pFloat[0]);
         pNode->setSkewY(pFloat[1]);
     } else {
@@ -1088,6 +1092,7 @@ void NodeLoader::onHandlePropTypeFloatXY(Node * pNode, Node * /*pParent*/, const
 
 void NodeLoader::onHandlePropTypeScaleLock(Node * pNode, Node * /*pParent*/, const char* pPropertyName, float * pScaleLock, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_SCALE) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setScaleX(pScaleLock[0]);
         pNode->setScaleY(pScaleLock[1]);
     } else {
@@ -1104,10 +1109,13 @@ void NodeLoader::onHandlePropTypeFloat(Node * /*pNode*/, Node * /*pParent*/, con
 
 void NodeLoader::onHandlePropTypeDegrees(Node * pNode, Node * /*pParent*/, const char* pPropertyName, float pDegrees, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_ROTATION) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setRotation(pDegrees);
     } else if(strcmp(pPropertyName, PROPERTY_ROTATIONX) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setRotationSkewX(pDegrees);
     } else if(strcmp(pPropertyName, PROPERTY_ROTATIONY) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setRotationSkewY(pDegrees);
     }
     else {
@@ -1121,6 +1129,7 @@ void NodeLoader::onHandlePropTypeFloatScale(Node * /*pNode*/, Node * /*pParent*/
 
 void NodeLoader::onHandlePropTypeInteger(Node * pNode, Node * /*pParent*/, const char* pPropertyName, int pInteger, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_TAG) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setTag(pInteger);
     } else {
  //       ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
@@ -1139,8 +1148,10 @@ void NodeLoader::onHandlePropTypeFloatVar(Node * /*pNode*/, Node * /*pParent*/, 
 
 void NodeLoader::onHandlePropTypeCheck(Node * pNode, Node * /*pParent*/, const char* pPropertyName, bool pCheck, CCBReader * /*ccbReader*/) {
     if(strcmp(pPropertyName, PROPERTY_VISIBLE) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setVisible(pCheck);
     } else if(strcmp(pPropertyName, PROPERTY_IGNOREANCHORPOINTFORPOSITION) == 0) {
+        CC_ASSERT(pNode != nullptr);
         pNode->setIgnoreAnchorPointForPosition(pCheck);
     } else {
         //ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);

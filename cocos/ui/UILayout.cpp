@@ -202,6 +202,7 @@ void Layout::addChild(Node* child, int zOrder, const std::string &name)
     if (dynamic_cast<Widget*>(child)) {
         supplyTheLayoutParameterLackToChild(static_cast<Widget*>(child));
     }
+    CC_ASSERT(child != nullptr);
     child->setGlobalZOrder(_globalZOrder);
     Widget::addChild(child, zOrder, name);
     _doLayoutDirty = true;
@@ -1108,6 +1109,7 @@ Size Layout::getLayoutAccumulatedSize()const
 
 Vec2 Layout::getWorldCenterPoint(Widget* widget)const
 {
+    CC_ASSERT(widget != nullptr);
     Layout *layout = dynamic_cast<Layout*>(widget);
     //FIXEDME: we don't need to calculate the content size of layout anymore
     Size widgetSize = layout ? layout->getLayoutAccumulatedSize() :  widget->getContentSize();

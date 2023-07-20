@@ -318,6 +318,7 @@ void Widget::setContentSize(const cocos2d::Size &contentSize)
         }
         else
         {
+            CC_ASSERT(_parent != nullptr);
             pSize = _parent->getContentSize();
         }
         float spx = 0.0f;
@@ -362,6 +363,7 @@ void Widget::setSizePercent(const Vec2 &percent)
             }
             else
             {
+                CC_ASSERT(_parent != nullptr);
                 cSize = Size(_parent->getContentSize().width * percent.x, _parent->getContentSize().height * percent.y);
             }
         }
