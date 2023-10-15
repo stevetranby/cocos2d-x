@@ -29,10 +29,17 @@ THE SOFTWARE.
 /// @cond DO_NOT_SHOW
 
 #include "platform/CCPlatformConfig.h"
+//
+//#ifdef __APPLE__
+///* Defined before OpenGL and GLUT includes to avoid deprecation messages */
+//#define GL_SILENCE_DEPRECATION
+//#endif
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+#define GL_SILENCE_DEPRECATION // Defined before OpenGL and GLUT includes to avoid deprecation messages
 #include "platform/mac/CCGL-mac.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#define GL_SILENCE_DEPRECATION // Defined before OpenGL and GLUT includes to avoid deprecation messages
 #include "platform/ios/CCGL-ios.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/CCGL-android.h"
