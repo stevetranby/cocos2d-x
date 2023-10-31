@@ -427,7 +427,7 @@ public class Cocos2dxHelper {
         // https://stackoverflow.com/questions/3132889/action-sendto-for-sending-an-email
         // ACTION_SENDTO filters for email apps (discard bluetooth and others)
         String uriText =
-                "mailto:youremail@gmail.com" +
+                "mailto:starcommandhelp+deviceinfo@gmail.com" +
                         "?subject=" + Uri.encode(subj) +
                         "&body=" + Uri.encode(msg);
 
