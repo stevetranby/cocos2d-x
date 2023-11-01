@@ -35,6 +35,8 @@
 #include <mutex>
 #include <string>
 #include <thread>
+
+#define OPENAL_DEPRECATED // STEVE - This silences all OpenAL deprecated warnings @cleanup
 #include <OpenAL/al.h>
 
 NS_CC_BEGIN
