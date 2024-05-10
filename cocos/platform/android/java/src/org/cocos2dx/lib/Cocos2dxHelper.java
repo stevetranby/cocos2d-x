@@ -121,29 +121,28 @@ public class Cocos2dxHelper {
             int sampleRate = 44100;
             int bufferSizeInFrames = 192;
 
-            if (Build.VERSION.SDK_INT >= 17) {
-                AudioManager am = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-                // use reflection to remove dependence of API 17 when compiling
+            // TODO(steve): no longer need if
+            AudioManager am = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+            // use reflection to remove dependence of API 17 when compiling
 
-                // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
-                final Class audioManagerClass = AudioManager.class;
-                Object[] parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_SAMPLE_RATE")};
-                final String strSampleRate = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
+            // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
+            final Class<AudioManager> audioManagerClass = AudioManager.class;
+            Object[] parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_SAMPLE_RATE")};
+            final String strSampleRate = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
 
-                // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
-                parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_FRAMES_PER_BUFFER")};
-                final String strBufferSizeInFrames = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
+            // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
+            parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_FRAMES_PER_BUFFER")};
+            final String strBufferSizeInFrames = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
 
-                try {
-                    sampleRate = Integer.parseInt(strSampleRate);
-                    bufferSizeInFrames = Integer.parseInt(strBufferSizeInFrames);
-                } catch (NumberFormatException e) {
-                    Log.e(TAG, "parseInt failed", e);
-                }
-                Log.d(TAG, "sampleRate: " + sampleRate + ", framesPerBuffer: " + bufferSizeInFrames);
-            } else {
-                Log.d(TAG, "android version is lower than 17");
+            try {
+                assert strSampleRate != null;
+                assert strBufferSizeInFrames != null;
+                sampleRate = Integer.parseInt(strSampleRate);
+                bufferSizeInFrames = Integer.parseInt(strBufferSizeInFrames);
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "parseInt failed", e);
             }
+            Log.d(TAG, "sampleRate: " + sampleRate + ", framesPerBuffer: " + bufferSizeInFrames);
 
             nativeSetAudioDeviceInfo(isSupportLowLatency, sampleRate, bufferSizeInFrames);
 
@@ -898,11 +897,11 @@ public class Cocos2dxHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             Window cocosWindow = sActivity.getWindow();
             DisplayCutout displayCutout = cocosWindow.getDecorView().getRootWindowInsets().getDisplayCutout();
-            // Judge whether it is cutouts (aka notch) screen phone by judge cutout equle to null
+            // Judge whether it is cutouts (aka notch) screen phone by judge cutout equal to null
             if (displayCutout != null) {
-                List<Rect> rects = displayCutout.getBoundingRects();
+                List<Rect> safeRects = displayCutout.getBoundingRects();
                 // Judge whether it is cutouts (aka notch) screen phone by judge cutout rects is null or zero size
-                if (rects != null && rects.size() != 0) {
+                if (!safeRects.isEmpty()) {
                     safeInsets[0] = displayCutout.getSafeInsetBottom();
                     safeInsets[1] = displayCutout.getSafeInsetLeft();
                     safeInsets[2] = displayCutout.getSafeInsetRight();
