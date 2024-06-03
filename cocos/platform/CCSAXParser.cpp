@@ -93,7 +93,77 @@ bool SAXParser::parse(const std::string& filename)
     Data data = FileUtils::getInstance()->getDataFromFile(filename);
     if (!data.isNull())
     {
-        ret = parseIntrusive((char*)data.getBytes(), data.getSize());
+        // NOTE(stevetranby): This is code that I've added into rapidxml_sax3.hpp, but that file
+        //   resides in a separate git repository, so I've added the required code here as a
+        //   replacement so I can commit it to save the changes.
+        //
+        // This goes in rapidxml_sax3.hpp
+        //
+        // ```
+        // template<int Flags = parse_normal>
+        // void parse(Ch *text, int nLen) {
+        //   //...
+        //        printf("\n--------\n\n\nxml document in full:\n\n%s\n\n\n\n---------\n", text);
+        //        printf("[A] %p : %p : %ld\n", text, endptr_, (ptrdiff_t)(endptr_ - text));
+        //
+        //        // Parse children
+        //        while (1)
+        //        {
+        //            // Skip whitespace before node
+        //            skip<whitespace_pred, Flags>(text, endptr_);
+        //
+        //            // RAPIDXML 1.13 VERSION (requires null-terminated c_string)
+        //            // http://rapidxml.sourceforge.net/rapidxml.hpp
+        //            //if (*text == 0) { break; }
+        //
+        //            // Cocos2d's RapidXML 1.13 (uses length to define an endptr_ sentinel)
+        //            // it doesn't require a null-terminated c_string so the allocated memory (buffer) may not
+        //            // have a valid element past the c-string where there shoudl be a null-terminator (\0)
+        //            // https://github.com/cocos2d/cocos2d-x-3rd-party-libs-bin/blob/v4/rapidxml/rapidxml.hpp
+        //            //if (*text == 0 || text >= endptr_) { break; }
+        //
+        //            // NOTE(stevetranby): Should test endptr_ first to avoid a heap overflow when
+        //            // dereferencing text if it's not a null-terminated c_string. The correct fix
+        //            // would probably be requiring all rapidxml parsing to be done only on
+        //            // null-terminated c_string data, and then using the original 1.13 version.
+        //            if (text >= endptr_ || *text == 0) { break; }
+        //
+        //            // Parse and append new child
+        //            if (*text == Ch('<'))
+        //            {
+        //                ++text;     // Skip '<'
+        //                parse_node<Flags>(text);
+        //            }
+        //            else
+        //                RAPIDXML_PARSE_ERROR("expected <", text);
+        //        }
+        //   //...
+        // }
+        //
+        // ```
+        //
+
+        // NOTE: data.getBytes() is **NOT** null-terminated, but rapidxml expects a null-terminated c_string.
+        // Options:
+        // 1. malloc a new null-terminated c_string buffer and memcpy
+        // 2. make change to rapidxml parser
+        // The 1st option is more correct, but the 2nd option is less code
+        // ... OR ...
+        // 3. Replace RapidXML with a C++17 XML parser. This is best, but would require active development.
+
+//        // Option 1 - create temp c_string with a null-termination byte
+//        char* buffer = (char*)malloc(sizeof(char) * (data.getSize() + 1));
+//        memcpy(buffer, data.getBytes(), data.getSize());
+//        buffer[data.getSize()] = '\0';
+//        ret = parseIntrusive(buffer, data.getSize() + 1);
+//        free(buffer);
+
+        // Option 1b - use std::string ctor that takes bytes ptr & length to alloc space for '\0'.
+        std::string dataCopy((char*)data.getBytes(), data.getSize());
+        ret = parseIntrusive((char*)dataCopy.c_str(), dataCopy.size());
+
+//        // Original Code
+//        ret = parseIntrusive((char*)data.getBytes(), data.getSize());
     }
 
     return ret;

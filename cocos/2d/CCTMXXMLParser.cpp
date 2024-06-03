@@ -219,7 +219,10 @@ bool TMXMapInfo::parseXMLFile(const std::string& xmlFilename)
 
 // the XML parser calls here with all the elements
 void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts)
-{    
+{
+    // STEVE:
+    printf(" <start: %s> ", name);
+
     TMXMapInfo *tmxMapInfo = this;
     std::string elementName = name;
     ValueMap attributeDict;
@@ -696,7 +699,7 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
     }
     else
     {
-        CCLOG("Unknown element '%s' while parsing TMX Map.", elementName.c_str());
+        CCLOGINFO("[REMOVE] startElement: No handler for element <'%s'>. Ignoring.", elementName.c_str());
     }
 }
 
@@ -824,7 +827,7 @@ void TMXMapInfo::endElement(void* /*ctx*/, const char *name)
     }
     else
     {
-        CCLOG("Unknown element '%s' while parsing TMX Map.", elementName.c_str());
+        CCLOGINFO("[REMOVE] endElement: No handler for element <'%s'>. Ignoring.", elementName.c_str());
     }
 }
 
