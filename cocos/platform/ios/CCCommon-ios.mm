@@ -38,7 +38,7 @@
 
 NS_CC_BEGIN
 
-// ios no MessageBox, use log instead
+// Show modal message
 void ccMessageBox(const char * msg, const char * title)
 {
     NSString * tmpTitle = (title) ? [NSString stringWithUTF8String : title] : nil;
@@ -54,14 +54,24 @@ void ccMessageBox(const char * msg, const char * title)
 
     // TODO: STEVE: deprecated use this instead:
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:tmpTitle message:tmpMsg preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:tmpTitle message:tmpMsg preferredStyle:UIAlertControllerStyleAlert];
 
     UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK"
                                                  style:UIAlertActionStyleDefault
                                                handler:^(UIAlertAction * action) {
+        NSLog(@"ok'd alert! action: %@", action);
+        [alert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" 
+                                                     style:UIAlertActionStyleDefault 
+                                                   handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"cancelled alert! action: %@", action);
         [alert dismissViewControllerAnimated:YES completion:nil];
     }];
 
     [alert addAction:ok];
+    [alert addAction:cancel];
 
 
 #pragma clang diagnostic push
