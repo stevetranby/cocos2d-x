@@ -4851,7 +4851,6 @@
 					CC_TARGET_OS_MAC,
 					CC_KEYBOARD_SUPPORT,
 					_USRDLL,
-					GL_SILENCE_DEPRECATION,
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

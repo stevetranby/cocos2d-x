@@ -40,6 +40,11 @@ THE SOFTWARE.
 #define GL_DEPTH24_STENCIL8         GL_DEPTH24_STENCIL8_OES
 #define GL_WRITE_ONLY               GL_WRITE_ONLY_OES
 
+// STEVE: Defined before OpenGL and GLUT includes to avoid deprecation messages
+#ifndef GL_SILENCE_DEPRECATION
+#define GL_SILENCE_DEPRECATION
+#endif
+
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
