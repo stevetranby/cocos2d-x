@@ -455,8 +455,15 @@ float AudioEngine::getDuration(int audioID)
 bool AudioEngine::setCurrentTime(int audioID, float time)
 {
     auto it = _audioIDInfoMap.find(audioID);
-    if (it != _audioIDInfoMap.end() && it->second.state != AudioState::INITIALIZING) {
-        return _audioEngineImpl->setCurrentTime(audioID, time);
+    if (it != _audioIDInfoMap.end()) {
+        CCLOG("it->second.state = %d; for audioID = %d", it->second.state, audioID);
+        if (it->second.state != AudioState::INITIALIZING) {
+            return _audioEngineImpl->setCurrentTime(audioID, time);
+        } else {
+            CCLOG("AudioState::INITIALIZING for audioID = %d", audioID);
+        }
+    } else {
+        CCLOG("Couldn't find an existing audioID = %d", audioID);
     }
 
     return false;
@@ -474,7 +481,7 @@ float AudioEngine::getCurrentTime(int audioID)
 void AudioEngine::setFinishCallback(int audioID, const std::function<void (int, const std::string &)> &callback)
 {
     auto it = _audioIDInfoMap.find(audioID);
-    if (it != _audioIDInfoMap.end()){
+    if (it != _audioIDInfoMap.end()) {
         _audioEngineImpl->setFinishCallback(audioID, callback);
     }
 }
