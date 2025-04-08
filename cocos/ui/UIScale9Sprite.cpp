@@ -557,93 +557,105 @@ void Scale9Sprite::setupSlice9(Texture2D* texture, const Rect& capInsets)
     }
 }
 
-    void Scale9Sprite::setCameraMask(unsigned short mask, bool applyChildren)
-    {
-        Node::setCameraMask(mask, applyChildren);
+void Scale9Sprite::setCameraMask(unsigned short mask, bool applyChildren)
+{
+    Node::setCameraMask(mask, applyChildren);
 
-        if(_scale9Image)
-            _scale9Image->setCameraMask(mask,applyChildren);
+    if(_scale9Image)
+        _scale9Image->setCameraMask(mask,applyChildren);
+}
+
+// (0,0)  O = capInsets.origin
+// v0----------------------
+// |        |      |      |
+// |        |      |      |
+// v1-------O------+------|
+// |        |      |      |
+// |        |      |      |
+// v2-------+------+------|
+// |        |      |      |
+// |        |      |      |
+// v3-------------------- (1,1)  (texture coordinate is flipped)
+// u0       u1     u2     u3
+std::vector<Vec2> Scale9Sprite::calculateUV(Texture2D *tex,
+                                           const Rect& capInsets,
+                                           const Size& originalSize,
+                                           const Vec4& offsets)
+{
+    auto atlasWidth = tex->getPixelsWide();
+    auto atlasHeight = tex->getPixelsHigh();
+
+    //calculate texture coordinate
+    float leftWidth = 0, centerWidth = 0, rightWidth = 0;
+    float topHeight = 0, centerHeight = 0, bottomHeight = 0;
+
+    if (_spriteFrameRotated)
+    {
+        rightWidth = capInsets.origin.y - offsets.y;
+        centerWidth = capInsets.size.height;
+        leftWidth = originalSize.height - centerWidth - capInsets.origin.y - offsets.w;
+
+        topHeight = capInsets.origin.x - offsets.x;
+        centerHeight = capInsets.size.width;
+        bottomHeight = originalSize.width - (capInsets.origin.x + centerHeight) - offsets.z;
+    }
+    else
+    {
+        leftWidth = capInsets.origin.x - offsets.x;
+        centerWidth = capInsets.size.width;
+        rightWidth = originalSize.width - (capInsets.origin.x + centerWidth) - offsets.z;
+
+        topHeight = capInsets.origin.y - offsets.y;
+        centerHeight = capInsets.size.height;
+        bottomHeight = originalSize.height - (capInsets.origin.y + centerHeight) - offsets.w;
     }
     
-    // (0,0)  O = capInsets.origin
-    // v0----------------------
-    // |        |      |      |
-    // |        |      |      |
-    // v1-------O------+------|
-    // |        |      |      |
-    // |        |      |      |
-    // v2-------+------+------|
-    // |        |      |      |
-    // |        |      |      |
-    // v3-------------------- (1,1)  (texture coordinate is flipped)
-    // u0       u1     u2     u3
-    std::vector<Vec2> Scale9Sprite::calculateUV(Texture2D *tex,
-                                               const Rect& capInsets,
-                                               const Size& originalSize,
-                                               const Vec4& offsets)
+    
+    if(leftWidth<0)
     {
-        auto atlasWidth = tex->getPixelsWide();
-        auto atlasHeight = tex->getPixelsHigh();
+        centerWidth += leftWidth;
+        leftWidth = 0;
+    }
+    if(rightWidth<0)
+    {
+        centerWidth += rightWidth;
+        rightWidth = 0;
+    }
+    
+    if(topHeight<0)
+    {
+        centerHeight += topHeight;
+        topHeight = 0;
+    }
+    if(bottomHeight<0)
+    {
+        centerHeight += bottomHeight;
+        bottomHeight = 0;
+    }
 
-        //calculate texture coordinate
-        float leftWidth = 0, centerWidth = 0, rightWidth = 0;
-        float topHeight = 0, centerHeight = 0, bottomHeight = 0;
+    auto textureRect = CC_RECT_POINTS_TO_PIXELS(_spriteRect);
+    //handle .9.png
+    if (_isPatch9)
+    {
+        //This magic number is used to avoiding artifact with .9.png format.
+        float offset = 1.3f;
+        textureRect = Rect(textureRect.origin.x +  offset,
+                           textureRect.origin.y +  offset,
+                           textureRect.size.width - 2,
+                           textureRect.size.height - 2);
+    }
 
-        if (_spriteFrameRotated)
-        {
-            rightWidth = capInsets.origin.y - offsets.y;
-            centerWidth = capInsets.size.height;
-            leftWidth = originalSize.height - centerWidth - capInsets.origin.y - offsets.w;
 
-            topHeight = capInsets.origin.x - offsets.x;
-            centerHeight = capInsets.size.width;
-            bottomHeight = originalSize.width - (capInsets.origin.x + centerHeight) - offsets.z;
-        }
-        else
-        {
-            leftWidth = capInsets.origin.x - offsets.x;
-            centerWidth = capInsets.size.width;
-            rightWidth = originalSize.width - (capInsets.origin.x + centerWidth) - offsets.z;
 
-            topHeight = capInsets.origin.y - offsets.y;
-            centerHeight = capInsets.size.height;
-            bottomHeight = originalSize.height - (capInsets.origin.y + centerHeight) - offsets.w;
-        }
-        
-        
-        if(leftWidth<0)
-        {
-            centerWidth += leftWidth;
-            leftWidth = 0;
-        }
-        if(rightWidth<0)
-        {
-            centerWidth += rightWidth;
-            rightWidth = 0;
-        }
-        
-        if(topHeight<0)
-        {
-            centerHeight += topHeight;
-            topHeight = 0;
-        }
-        if(bottomHeight<0)
-        {
-            centerHeight += bottomHeight;
-            bottomHeight = 0;
-        }
 
-        auto textureRect = CC_RECT_POINTS_TO_PIXELS(_spriteRect);
-        //handle .9.png
-        if (_isPatch9)
-        {
-            //This magic number is used to avoiding artifact with .9.png format.
-            float offset = 1.3f;
-            textureRect = Rect(textureRect.origin.x +  offset,
-                               textureRect.origin.y +  offset,
-                               textureRect.size.width - 2,
-                               textureRect.size.height - 2);
-        }
+
+
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
 void Scale9Sprite::setCapInsets(const cocos2d::Rect &insetsCopy)
 {
     Rect insets = insetsCopy;
@@ -688,6 +700,18 @@ void Scale9Sprite::setCapInsets(const cocos2d::Rect &insetsCopy)
         }
 
         return uvCoordinates;
+
+
+
+
+
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
+
     // When Insets == Zero --> we should use a 1/3 of its untrimmed size
     if (insets.equals(Rect::ZERO)) {
         insets = Rect( _originalContentSize.width / 3.0f,
@@ -696,127 +720,145 @@ void Scale9Sprite::setCapInsets(const cocos2d::Rect &insetsCopy)
                       _originalContentSize.height / 3.0f);
     }
 
-    //
-    // y3----------------------(preferedSize.width, preferedSize.height)
-    // |        |      |      |
-    // |        |      |      |
-    // y2-------O------+------|
-    // |        |      |      |
-    // |        |      |      |
-    // y1-------+------+------|
-    // |        |      |      |
-    // |        |      |      |
-    //x0,y0--------------------
-    //         x1     x2     x3
-    std::vector<Vec2> Scale9Sprite::calculateVertices(const Rect& capInsets,
-                                                     const Size& originalSize,
-                                                     const Vec4& offsets)
+
+
+
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
+//
+// y3----------------------(preferedSize.width, preferedSize.height)
+// |        |      |      |
+// |        |      |      |
+// y2-------O------+------|
+// |        |      |      |
+// |        |      |      |
+// y1-------+------+------|
+// |        |      |      |
+// |        |      |      |
+//x0,y0--------------------
+//         x1     x2     x3
+std::vector<Vec2> Scale9Sprite::calculateVertices(const Rect& capInsets,
+                                                 const Size& originalSize,
+                                                 const Vec4& offsets)
+{
+    
+    float offsetLeft = offsets.x / CC_CONTENT_SCALE_FACTOR();
+    float offsetTop = offsets.y / CC_CONTENT_SCALE_FACTOR();
+    float offsetRight = offsets.z / CC_CONTENT_SCALE_FACTOR();
+    float offsetBottom = offsets.w / CC_CONTENT_SCALE_FACTOR();
+    
+    std::vector<Vec2> vertices;
+    if (_renderingType == RenderingType::SIMPLE)
     {
+        float hScale = _preferredSize.width / (originalSize.width / CC_CONTENT_SCALE_FACTOR());
+        float vScale = _preferredSize.height / (originalSize.height / CC_CONTENT_SCALE_FACTOR());
         
-        float offsetLeft = offsets.x / CC_CONTENT_SCALE_FACTOR();
-        float offsetTop = offsets.y / CC_CONTENT_SCALE_FACTOR();
-        float offsetRight = offsets.z / CC_CONTENT_SCALE_FACTOR();
-        float offsetBottom = offsets.w / CC_CONTENT_SCALE_FACTOR();
+        vertices = {Vec2(offsetLeft * hScale, offsetBottom * vScale),
+                    Vec2(_preferredSize.width - offsetRight * hScale, _preferredSize.height - offsetTop * vScale)};
+    }
+    else
+    {
+        float leftWidth = 0, centerWidth = 0, rightWidth = 0;
+        float topHeight = 0, centerHeight = 0, bottomHeight = 0;
+
+        leftWidth = capInsets.origin.x;
+        centerWidth = capInsets.size.width;
+        rightWidth = originalSize.width - (leftWidth + centerWidth);
+
+        topHeight = capInsets.origin.y;
+        centerHeight = capInsets.size.height;
+        bottomHeight = originalSize.height - (topHeight + centerHeight);
+
+        leftWidth = leftWidth / CC_CONTENT_SCALE_FACTOR();
+        rightWidth = rightWidth / CC_CONTENT_SCALE_FACTOR();
+        centerWidth = centerWidth / CC_CONTENT_SCALE_FACTOR();
+        topHeight = topHeight / CC_CONTENT_SCALE_FACTOR();
+        bottomHeight = bottomHeight / CC_CONTENT_SCALE_FACTOR();
+        centerHeight = centerHeight / CC_CONTENT_SCALE_FACTOR();
         
-        std::vector<Vec2> vertices;
-        if (_renderingType == RenderingType::SIMPLE)
+        float sizableWidth = _preferredSize.width - leftWidth - rightWidth;
+        float sizableHeight = _preferredSize.height - topHeight - bottomHeight;
+        
+        leftWidth -= offsetLeft;
+        rightWidth -= offsetRight;
+        topHeight -= offsetTop;
+        bottomHeight -= offsetBottom;
+        
+        float hScale = sizableWidth / centerWidth;
+        float vScale = sizableHeight / centerHeight;
+        
+        if(leftWidth<0)
         {
-            float hScale = _preferredSize.width / (originalSize.width / CC_CONTENT_SCALE_FACTOR());
-            float vScale = _preferredSize.height / (originalSize.height / CC_CONTENT_SCALE_FACTOR());
-            
-            vertices = {Vec2(offsetLeft * hScale, offsetBottom * vScale),
-                        Vec2(_preferredSize.width - offsetRight * hScale, _preferredSize.height - offsetTop * vScale)};
+            offsetLeft -= leftWidth * (hScale - 1.0f);
+            sizableWidth += leftWidth * hScale;
+            leftWidth = 0;
+        }
+        if(rightWidth<0)
+        {
+            sizableWidth += rightWidth * hScale;
+            rightWidth = 0;
+        }
+        if(topHeight<0)
+        {
+            sizableHeight += topHeight * vScale;
+            topHeight = 0;
+        }
+        if(bottomHeight<0)
+        {
+            offsetBottom -= bottomHeight * (vScale - 1.0f);
+            sizableHeight += bottomHeight * vScale;
+            bottomHeight = 0;
+        }
+        
+        float x0,x1,x2,x3;
+        float y0,y1,y2,y3;
+        if(sizableWidth >= 0)
+        {
+            x0 = offsetLeft;
+            x1 = x0 + leftWidth;
+            x2 = x1 + sizableWidth;
+            x3 = x2 + rightWidth;
         }
         else
         {
-            float leftWidth = 0, centerWidth = 0, rightWidth = 0;
-            float topHeight = 0, centerHeight = 0, bottomHeight = 0;
-
-            leftWidth = capInsets.origin.x;
-            centerWidth = capInsets.size.width;
-            rightWidth = originalSize.width - (leftWidth + centerWidth);
-
-            topHeight = capInsets.origin.y;
-            centerHeight = capInsets.size.height;
-            bottomHeight = originalSize.height - (topHeight + centerHeight);
-
-            leftWidth = leftWidth / CC_CONTENT_SCALE_FACTOR();
-            rightWidth = rightWidth / CC_CONTENT_SCALE_FACTOR();
-            centerWidth = centerWidth / CC_CONTENT_SCALE_FACTOR();
-            topHeight = topHeight / CC_CONTENT_SCALE_FACTOR();
-            bottomHeight = bottomHeight / CC_CONTENT_SCALE_FACTOR();
-            centerHeight = centerHeight / CC_CONTENT_SCALE_FACTOR();
-            
-            float sizableWidth = _preferredSize.width - leftWidth - rightWidth;
-            float sizableHeight = _preferredSize.height - topHeight - bottomHeight;
-            
-            leftWidth -= offsetLeft;
-            rightWidth -= offsetRight;
-            topHeight -= offsetTop;
-            bottomHeight -= offsetBottom;
-            
-            float hScale = sizableWidth / centerWidth;
-            float vScale = sizableHeight / centerHeight;
-            
-            if(leftWidth<0)
-            {
-                offsetLeft -= leftWidth * (hScale - 1.0f);
-                sizableWidth += leftWidth * hScale;
-                leftWidth = 0;
-            }
-            if(rightWidth<0)
-            {
-                sizableWidth += rightWidth * hScale;
-                rightWidth = 0;
-            }
-            if(topHeight<0)
-            {
-                sizableHeight += topHeight * vScale;
-                topHeight = 0;
-            }
-            if(bottomHeight<0)
-            {
-                offsetBottom -= bottomHeight * (vScale - 1.0f);
-                sizableHeight += bottomHeight * vScale;
-                bottomHeight = 0;
-            }
-            
-            float x0,x1,x2,x3;
-            float y0,y1,y2,y3;
-            if(sizableWidth >= 0)
-            {
-                x0 = offsetLeft;
-                x1 = x0 + leftWidth;
-                x2 = x1 + sizableWidth;
-                x3 = x2 + rightWidth;
-            }
-            else
-            {
-                float xScale = _preferredSize.width / (leftWidth + rightWidth);
-                x0 = offsetLeft;
-                x1 = x2 = offsetLeft + leftWidth * xScale;
-                x3 = x2 + rightWidth * xScale;
-            }
-
-            if(sizableHeight >= 0)
-            {
-                y0 = offsetBottom;
-                y1 = y0 + bottomHeight;
-                y2 = y1 + sizableHeight;
-                y3 = y2 + topHeight;
-            }
-            else
-            {
-                float yScale = _preferredSize.height / (topHeight + bottomHeight);
-                y0 = offsetBottom;
-                y1 = y2 = y0 + bottomHeight * yScale;
-                y3 = y2 + topHeight * yScale;
-            }
-
-            vertices = {Vec2(x0,y0), Vec2(x1,y1), Vec2(x2,y2), Vec2(x3,y3)};
+            float xScale = _preferredSize.width / (leftWidth + rightWidth);
+            x0 = offsetLeft;
+            x1 = x2 = offsetLeft + leftWidth * xScale;
+            x3 = x2 + rightWidth * xScale;
         }
-        return vertices;
+
+        if(sizableHeight >= 0)
+        {
+            y0 = offsetBottom;
+            y1 = y0 + bottomHeight;
+            y2 = y1 + sizableHeight;
+            y3 = y2 + topHeight;
+        }
+        else
+        {
+            float yScale = _preferredSize.height / (topHeight + bottomHeight);
+            y0 = offsetBottom;
+            y1 = y2 = y0 + bottomHeight * yScale;
+            y3 = y2 + topHeight * yScale;
+        }
+
+        vertices = {Vec2(x0,y0), Vec2(x1,y1), Vec2(x2,y2), Vec2(x3,y3)};
     }
+    return vertices;
+}
+
+
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
+
     // emulate invalid insets. shouldn't be supported, but the original code supported it.
     if (insets.origin.x > _originalContentSize.width)
         insets.origin.x = 0;
@@ -827,99 +869,131 @@ void Scale9Sprite::setCapInsets(const cocos2d::Rect &insetsCopy)
     if (insets.size.height > _originalContentSize.height)
         insets.size.height = 1;
 
-    TrianglesCommand::Triangles Scale9Sprite::calculateTriangles(const std::vector<Vec2>& uv,
-                                                                const std::vector<Vec2>& vertices)
+
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
+
+
+TrianglesCommand::Triangles Scale9Sprite::calculateTriangles(const std::vector<Vec2>& uv,
+                                                            const std::vector<Vec2>& vertices)
+{
+    const unsigned short slicedTotalVertexCount = powf(uv.size(),2);
+    const unsigned short slicedTotalIndices = 6 * powf(uv.size() -1, 2);
+    CC_SAFE_DELETE_ARRAY(_sliceVertices);
+    CC_SAFE_DELETE_ARRAY(_sliceIndices);
+
+    _sliceVertices = new (std::nothrow) V3F_C4B_T2F[slicedTotalVertexCount];
+    _sliceIndices = new (std::nothrow) unsigned short[slicedTotalIndices];
+
+    unsigned short indicesStart = 0;
+    const unsigned short indicesOffset = 6;
+    const unsigned short sliceQuadIndices[] = {4,0,5, 1,5,0};
+    const unsigned short simpleQuadIndices[] = {0,1,2, 3,2,1};
+    
+    auto displayedColor = _scale9Image->getDisplayedColor();
+    auto displayedOpacity = _scale9Image->getDisplayedOpacity();
+    Color4B color4( displayedColor.r, displayedColor.g, displayedColor.b, displayedOpacity );
+    
+    // special opacity for premultiplied textures
+    if (_scale9Image->isOpacityModifyRGB())
     {
-        const unsigned short slicedTotalVertexCount = powf(uv.size(),2);
-        const unsigned short slicedTotalIndices = 6 * powf(uv.size() -1, 2);
-        CC_SAFE_DELETE_ARRAY(_sliceVertices);
-        CC_SAFE_DELETE_ARRAY(_sliceIndices);
+        color4.r *= displayedOpacity/255.0f;
+        color4.g *= displayedOpacity/255.0f;
+        color4.b *= displayedOpacity/255.0f;
+    }
 
-        _sliceVertices = new (std::nothrow) V3F_C4B_T2F[slicedTotalVertexCount];
-        _sliceIndices = new (std::nothrow) unsigned short[slicedTotalIndices];
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
 
-        unsigned short indicesStart = 0;
-        const unsigned short indicesOffset = 6;
-        const unsigned short sliceQuadIndices[] = {4,0,5, 1,5,0};
-        const unsigned short simpleQuadIndices[] = {0,1,2, 3,2,1};
-        
-        auto displayedColor = _scale9Image->getDisplayedColor();
-        auto displayedOpacity = _scale9Image->getDisplayedOpacity();
-        Color4B color4( displayedColor.r, displayedColor.g, displayedColor.b, displayedOpacity );
-        
-        // special opacity for premultiplied textures
-        if (_scale9Image->isOpacityModifyRGB())
-        {
-            color4.r *= displayedOpacity/255.0f;
-            color4.g *= displayedOpacity/255.0f;
-            color4.b *= displayedOpacity/255.0f;
-        }
     _insetLeft = insets.origin.x;
     _insetTop = insets.origin.y;
     _insetRight = _originalContentSize.width - _insetLeft - insets.size.width;
     _insetBottom = _originalContentSize.height - _insetTop - insets.size.height;
 
-        int vertexCount = (int)(vertices.size() - 1);
 
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
+
+    int vertexCount = (int)(vertices.size() - 1);
+
+    for (int j = 0; j <= vertexCount; ++j)
+    {
+        for (int i = 0; i <= vertexCount; ++i)
+        {
+            V3F_C4B_T2F vertextData;
+            vertextData.vertices.x = vertices[i].x;
+            vertextData.vertices.y = vertices[j].y;
+
+            if (_spriteFrameRotated)
+            {
+                vertextData.texCoords.u = uv[j].x;
+                vertextData.texCoords.v = uv[i].y;
+            }
+            else
+            {
+                vertextData.texCoords.u = uv[i].x;
+                vertextData.texCoords.v = uv[j].y;
+            }
+
+            vertextData.colors = color4;
+            
+            //if slice mode
+            if (_renderingType == RenderingType::SLICE)
+            {
+                memcpy(_sliceVertices + i + j * 4, &vertextData, sizeof(V3F_C4B_T2F));
+            }
+            else
+            {
+                memcpy(_sliceVertices + i + j * 2, &vertextData, sizeof(V3F_C4B_T2F));
+            }
+        }
+    }
+    
+    if (_renderingType == RenderingType::SLICE)
+    {
         for (int j = 0; j <= vertexCount; ++j)
         {
             for (int i = 0; i <= vertexCount; ++i)
             {
-                V3F_C4B_T2F vertextData;
-                vertextData.vertices.x = vertices[i].x;
-                vertextData.vertices.y = vertices[j].y;
-
-                if (_spriteFrameRotated)
+                if (i < 3 && j < 3)
                 {
-                    vertextData.texCoords.u = uv[j].x;
-                    vertextData.texCoords.v = uv[i].y;
-                }
-                else
-                {
-                    vertextData.texCoords.u = uv[i].x;
-                    vertextData.texCoords.v = uv[j].y;
-                }
-
-                vertextData.colors = color4;
-                
-                //if slice mode
-                if (_renderingType == RenderingType::SLICE)
-                {
-                    memcpy(_sliceVertices + i + j * 4, &vertextData, sizeof(V3F_C4B_T2F));
-                }
-                else
-                {
-                    memcpy(_sliceVertices + i + j * 2, &vertextData, sizeof(V3F_C4B_T2F));
-                }
-            }
-        }
-        
-        if (_renderingType == RenderingType::SLICE)
-        {
-            for (int j = 0; j <= vertexCount; ++j)
-            {
-                for (int i = 0; i <= vertexCount; ++i)
-                {
-                    if (i < 3 && j < 3)
-                    {
-                        memcpy(_sliceIndices + indicesStart, sliceQuadIndices, indicesOffset * sizeof(unsigned short));
-                        
-                        for (int k = 0; k  < indicesOffset; ++k)
-                        {
-                            unsigned short actualIndex = (i  + j * 3) * indicesOffset;
-                            _sliceIndices[k + actualIndex] = _sliceIndices[k + actualIndex] + j * 4 + i;
-                        }
-                        indicesStart = indicesStart + indicesOffset;
-                    }
+                    memcpy(_sliceIndices + indicesStart, sliceQuadIndices, indicesOffset * sizeof(unsigned short));
                     
+                    for (int k = 0; k  < indicesOffset; ++k)
+                    {
+                        unsigned short actualIndex = (i  + j * 3) * indicesOffset;
+                        _sliceIndices[k + actualIndex] = _sliceIndices[k + actualIndex] + j * 4 + i;
+                    }
+                    indicesStart = indicesStart + indicesOffset;
                 }
+                
             }
         }
-        
-        if (_renderingType == RenderingType::SIMPLE)
-        {
-            memcpy(_sliceIndices, simpleQuadIndices, indicesOffset * sizeof(unsigned short));
-        }
+    }
+    
+    if (_renderingType == RenderingType::SIMPLE)
+    {
+        memcpy(_sliceIndices, simpleQuadIndices, indicesOffset * sizeof(unsigned short));
+    }
+
+
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
     // we have to convert from untrimmed to trimmed
     // Sprite::setCenterRect is using trimmed values (to be compatible with Cocos Creator)
     // Scale9Sprite::setCapInsects uses untrimmed values (which makes more sense)
@@ -933,36 +1007,52 @@ void Scale9Sprite::setCapInsets(const cocos2d::Rect &insetsCopy)
     // intersecting rectangle
     // can't use _offsetPosition since it is calculated using bottom-left as origin,
     // and the center rect is calculated using top-left
+
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
     insets.origin.x -= (_originalContentSize.width - _rect.size.width) / 2 + _unflippedOffsetPositionFromCenter.x;
     insets.origin.y -= (_originalContentSize.height - _rect.size.height) / 2 - _unflippedOffsetPositionFromCenter.y;
 
-        return triangles;
-    }
-    
-    void Scale9Sprite::setRenderingType(cocos2d::ui::Scale9Sprite::RenderingType type)
-    {
-        if (_renderingType == type)
-        {
-            return;
-        }
-        _renderingType = type;
-        _sliceSpriteDirty = true;
-    }
-    
-    Scale9Sprite::RenderingType Scale9Sprite::getRenderingType()const
-    {
-        return _renderingType;
-    }
-    // intersecting rectangle
-    const float x1 = std::max(insets.origin.x, 0.0f);
-    const float y1 = std::max(insets.origin.y, 0.0f);
-    const float x2 = std::min(insets.origin.x + insets.size.width, 0.0f + _rect.size.width);
-    const float y2 = std::min(insets.origin.y + insets.size.height, 0.0f + _rect.size.height);
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
 
-    void Scale9Sprite::resetRender()
+    return triangles;
+}
+
+void Scale9Sprite::setRenderingType(cocos2d::ui::Scale9Sprite::RenderingType type)
+{
+    if (_renderingType == type)
     {
-        // Release old sprites
-        this->cleanupSlicedSprites();
+        return;
+    }
+    _renderingType = type;
+    _sliceSpriteDirty = true;
+}
+
+Scale9Sprite::RenderingType Scale9Sprite::getRenderingType()const
+{
+    return _renderingType;
+}
+
+// intersecting rectangle
+const float x1 = std::max(insets.origin.x, 0.0f);
+const float y1 = std::max(insets.origin.y, 0.0f);
+const float x2 = std::min(insets.origin.x + insets.size.width, 0.0f + _rect.size.width);
+const float y2 = std::min(insets.origin.y + insets.size.height, 0.0f + _rect.size.height);
+
+void Scale9Sprite::resetRender()
+{
+    // Release old sprites
+    this->cleanupSlicedSprites();
+    
+
     // centerRect uses the trimmed frame origin as 0,0.
     // so, recenter inset rect
     insets.setRect(x1,
@@ -970,10 +1060,11 @@ void Scale9Sprite::setCapInsets(const cocos2d::Rect &insetsCopy)
                    x2 - x1,
                    y2 - y1);
 
-        CC_SAFE_RELEASE_NULL(this->_scale9Image);
-    }
+    CC_SAFE_RELEASE_NULL(this->_scale9Image);
+}
     
-    void Scale9Sprite::setGlobalZOrder(float globalZOrder)
+void Scale9Sprite::setGlobalZOrder(float globalZOrder)
+{
     // Only update center rect while in slice mode.
     if (_renderingType == RenderingType::SLICE && _renderMode != RenderMode::POLYGON)
     {
@@ -987,6 +1078,12 @@ void Scale9Sprite::setCapInsets(const cocos2d::Rect &insetsCopy)
 
 }
 
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
+
 Rect Scale9Sprite::getCapInsets() const
 {
     return Rect(_insetLeft,
@@ -994,6 +1091,13 @@ Rect Scale9Sprite::getCapInsets() const
                 _originalContentSize.width - _insetLeft - _insetRight,
                 _originalContentSize.height - _insetTop - _insetBottom);
 }
+
+
+#error
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
+#error
 
 // STEVE
 void Scale9Sprite::setPositionZ(float z)
@@ -1005,9 +1109,11 @@ void Scale9Sprite::setPositionZ(float z)
         _scale9Image->setPositionZ(z);
     }
 
+#error this was merged in on 2026-07-08
     for(const auto &child : _protectedChildren)
     {
         child->setPositionZ(z);
     }
+#error this was merged in on 2026-07-08
 }
 
