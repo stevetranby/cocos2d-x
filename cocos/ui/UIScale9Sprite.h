@@ -608,6 +608,17 @@ namespace ui {
         Scale9Sprite::RenderingType _renderingType;
         
 #error STEVE
+        /// helper that reorder a child
+        void addProtectedChild(Node* child);
+        
+        Vector<Node*> _protectedChildren;        ///holds the 9 sprites
+        bool _reorderProtectedChildDirty;
+        
+        bool _flippedX;
+        bool _flippedY;
+#error STEVE - end
+
+
         // STEVE
     public:
         virtual void setPositionZ(float z) override;
