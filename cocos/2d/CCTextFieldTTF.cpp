@@ -299,21 +299,25 @@ void TextFieldTTF::insertText(const char * text, size_t len)
 void TextFieldTTF::deleteBackward()
 {
     size_t len = _inputText.length();
-    if (! len)
-    {
+    if (! len) {
         // there is no string
         return;
     }
 
-    // get the delete byte number
-    size_t deleteLen = 1;    // default, erase 1 byte
-
-    while(0x80 == (0xC0 & _inputText.at(len - deleteLen)))
-    {
-        ++deleteLen;
+    if(_cursorIndex <= 0) {
+        // nothing to delete to the left of the cursor
+        return;
     }
 
-    if (_delegate && _delegate->onTextFieldDeleteBackward(this, _inputText.c_str() + len - deleteLen, static_cast<int>(deleteLen)))
+    // get the delete byte number
+    size_t deleteLen = 1; // default, erase 1 byte
+
+    while(0x80 == (0xC0 & _inputText.at(_cursorIndex - deleteLen)))
+    {
+            ++deleteLen;
+    }
+
+    if (_delegate && _delegate->onTextFieldDeleteBackward(this, _inputText.c_str() + _cursorIndex - deleteLen, static_cast<int>(deleteLen)))
     {
         // delegate doesn't want to delete backwards
         return;
@@ -327,6 +331,10 @@ void TextFieldTTF::deleteBackward()
         setCursorPosition(0);
         setString(_inputText);
         return;
+    }
+
+    if((_cursorIndex - (int)deleteLen) < 0) {
+        log("WARNING: trying to delete too much???");
     }
 
     // set new input text

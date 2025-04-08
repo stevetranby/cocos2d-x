@@ -251,6 +251,8 @@ protected:
     virtual void didDetachWithIME() override;
     virtual void insertText(const char * text, size_t len) override;
     virtual void deleteBackward() override;
+    virtual void cursorLeft() override;
+    virtual void cursorRight() override;
     virtual const std::string& getContentText() override;
     virtual void controlKey(EventKeyboard::KeyCode keyCode) override;
 
@@ -281,6 +283,11 @@ protected:
     void updateCursorDisplayText();
     void setAttachWithIME(bool isAttachWithIME);
     void setTextColorInternally(const Color4B& color);
+
+public:
+//    // cursor
+//    bool _cursorWasLastDispatch;
+    int _cursorIndex;
 
 private:
     class LengthStack;
