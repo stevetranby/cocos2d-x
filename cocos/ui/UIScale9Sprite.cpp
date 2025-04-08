@@ -1099,21 +1099,19 @@ Rect Scale9Sprite::getCapInsets() const
 #error STEVE - this looks like merge/rebase conflict corruption or errorneous code ordering or formatting
 #error
 
-// STEVE
-void Scale9Sprite::setPositionZ(float z)
-{
-    Node::setPositionZ(z);
-
-    if(_scale9Image)
+    // STEVE
+    void Scale9Sprite::setPositionZ(float z)
     {
-        _scale9Image->setPositionZ(z);
-    }
+        Node::setPositionZ(z);
 
-#error this was merged in on 2026-07-08
-    for(const auto &child : _protectedChildren)
-    {
-        child->setPositionZ(z);
+        if(_scale9Image)
+        {
+            _scale9Image->setPositionZ(z);
+        }
+
+        for(const auto &child : _protectedChildren)
+        {
+            child->setPositionZ(z);
+        }
     }
-#error this was merged in on 2026-07-08
-}
 
