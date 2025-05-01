@@ -423,24 +423,20 @@ std::string getDataMD5Hash(const Data &data)
 {
     static const unsigned int MD5_DIGEST_LENGTH = 16;
 
-    if (data.isNull())
-    {
-        return std::string();
-    }
+    if (data.isNull()) { return ""; }
 
     md5_state_t state;
     md5_byte_t digest[MD5_DIGEST_LENGTH];
-    char hexOutput[(MD5_DIGEST_LENGTH << 1) + 1] = { 0 };
 
     md5_init(&state);
     md5_append(&state, (const md5_byte_t *)data.getBytes(), (int)data.getSize());
     md5_finish(&state, digest);
 
-    // TODO(steve): use `snprintf` instead for security reasons
-    for (int di = 0; di < 16; ++di)
-        sprintf(hexOutput + di * 2, "%02x", digest[di]);
-
-    return hexOutput;
+    std::stringstream ssHash;
+    for (int di = 0; di < MD5_DIGEST_LENGTH; ++di) {
+        ssHash << StringUtils::format("%02x", (unsigned int)digest[di]);
+    }
+    return ssHash.str();
 }
 
 LanguageType getLanguageTypeByISO2(const char* code)
