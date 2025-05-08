@@ -63,10 +63,14 @@ void ccMessageBox(const char * msg, const char * title)
 
     [alert addAction:ok];
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     UIApplication* app = [UIApplication sharedApplication];
     UIWindow* win = [app keyWindow];
     UIViewController* vc = [win rootViewController];
     [vc presentViewController:alert animated:YES completion:nil];
+#pragma clang diagnostic pop
 }
 
 void LuaLog(const char * format)

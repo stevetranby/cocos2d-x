@@ -333,9 +333,11 @@ void Controller::registerListeners()
         };
     }
 #endif
-    
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     _impl->_gcController.controllerPausedHandler = ^(GCController* gcCon){
-        
         auto iter = std::find_if(s_allController.begin(), s_allController.end(), [gcCon](Controller* c){ return c->_impl->_gcController == gcCon; });
         
         if(iter == s_allController.end())
@@ -347,6 +349,7 @@ void Controller::registerListeners()
         onButtonEvent(Key::BUTTON_PAUSE, true, 1.0f, false);
         onButtonEvent(Key::BUTTON_PAUSE, false, 0.0f, false);
     };
+#pragma clang diagnostic pop
 }
 
 bool Controller::isConnected() const

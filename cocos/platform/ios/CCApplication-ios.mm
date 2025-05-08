@@ -120,6 +120,9 @@ LanguageType Application::getCurrentLanguage()
 
 Application::Platform Application::getTargetPlatform()
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) // idiom for iOS <= 3.2, otherwise: [UIDevice userInterfaceIdiom] is faster.
     {
         return Platform::OS_IPAD;
@@ -128,6 +131,7 @@ Application::Platform Application::getTargetPlatform()
     {
         return Platform::OS_IPHONE;
     }
+#pragma clang diagnostic pop
 }
 
 std::string Application::getVersion() {

@@ -113,8 +113,12 @@ static id s_sharedDirectorCaller;
 
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doCaller:)];
 
-    CCLOG("setFrameInterval: %f", self.interval);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
+    CCLOG("setFrameInterval: %d", self.interval);
     [displayLink setFrameInterval: self.interval];
+#pragma clang diagnostic pop
 
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
@@ -135,7 +139,12 @@ static id s_sharedDirectorCaller;
     // Interval - 1 => Every Frame, 2 => Every other Frame (60 * intervalNew is assuming 60 fps display refresh rate)
     self.interval = (int)(60.0 * intervalNew);
     CCLOG("setFrameInterval: %d", self.interval);
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     [displayLink setFrameInterval: self.interval];
+#pragma clang diagnostic pop
 
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }

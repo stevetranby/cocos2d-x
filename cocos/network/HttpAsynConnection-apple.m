@@ -76,6 +76,10 @@
     self.responseError = nil;
     self.connError = nil;
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     // TODO: STEVE: deprecated use this instead:
 //    NSURLSession *session = [NSURLSession sharedSession];
 //    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
@@ -88,7 +92,8 @@
     self.conn = [[[NSURLConnection alloc] initWithRequest:request
                                                  delegate:self
                                          startImmediately:NO] autorelease];
-    
+#pragma clang diagnostic pop
+
     [self.conn scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     
     // start the connection
@@ -190,16 +195,27 @@
     CFArrayRef certArrayRef = CFArrayCreate(NULL, (void*)&cert, 1, NULL);
     SecTrustRef serverTrust = protectionSpace.serverTrust;
     SecTrustSetAnchorCertificates(serverTrust, certArrayRef);
-    
+
     //Verify that trust
     SecTrustResultType trustResult;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     SecTrustEvaluate(serverTrust, &trustResult);
-    
+#pragma clang diagnostic pop
+
     if(trustResult == kSecTrustResultRecoverableTrustFailure)
     {
         CFDataRef errDataRef = SecTrustCopyExceptions(serverTrust);
         SecTrustSetExceptions(serverTrust, errDataRef);
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
         SecTrustEvaluate(serverTrust, &trustResult);
+#pragma clang diagnostic pop
+
         CFRelease(errDataRef);
     }
     [certData release];

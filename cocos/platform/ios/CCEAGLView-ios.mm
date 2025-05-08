@@ -520,6 +520,10 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 -(void) doAnimationWhenKeyboardMoveWithDuration:(float) duration distance:(float) dis
 {
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     [UIView beginAnimations:nil context:nullptr];
         [UIView setAnimationDelegate:self];
         [UIView setAnimationDuration:duration];
@@ -559,8 +563,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
                 break;
         }
     #endif
-        
         [UIView commitAnimations];
+#pragma clang diagnostic pop
 }
 
 -(void) doAnimationWhenAnotherEditBeClicked
@@ -621,8 +625,14 @@ namespace {
     
     CGSize viewSize = self.frame.size;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+#pragma clang diagnostic pop
+
     CGFloat tmp;
-    switch (getFixedOrientation([[UIApplication sharedApplication] statusBarOrientation]))
+    switch (getFixedOrientation(orientation))
     {
         case UIInterfaceOrientationPortrait:
             begin.origin.y = viewSize.height - begin.origin.y - begin.size.height;
