@@ -150,11 +150,11 @@ void TransitionScene::finish()
 void TransitionScene::setNewScene(float /*dt*/)
 {    
     this->unschedule(CC_SCHEDULE_SELECTOR(TransitionScene::setNewScene));
-    
+
     // Before replacing, save the "send cleanup to scene"
     Director *director = Director::getInstance();
     _isSendCleanupToScene = director->isSendCleanupToScene();
-    
+
     director->replaceScene(_inScene);
 #if CC_ENABLE_GC_FOR_NATIVE_OBJECTS
     auto sEngine = ScriptEngineManager::getInstance()->getScriptEngine();
