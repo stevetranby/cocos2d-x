@@ -132,9 +132,10 @@ std::string Application::getCopyrightString()
     return JniHelper::callStaticStringMethod(helperClassName, "getCopyrightString");
 }
 
-bool Application::openURL(const std::string &url)
+void Application::openURL(const std::string &url, const std::function<void(bool)>& completionHandler)
 {
-    return JniHelper::callStaticBooleanMethod(helperClassName, "openURL", url);
+    bool success = JniHelper::callStaticBooleanMethod(helperClassName, "openURL", url);
+    completionHandler(success);
 }
 
 void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {

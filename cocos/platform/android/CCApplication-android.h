@@ -105,7 +105,7 @@ public:
      @param String with url to open.
      @return true if the resource located by the URL was successfully opened; otherwise false.
      */
-    virtual bool openURL(const std::string &url) override;
+    virtual void openURL(const std::string &url, const std::function<void(bool)>& completionHandler) override;
 
     /**
     @brief  This function will be called when the application screen size is changed.

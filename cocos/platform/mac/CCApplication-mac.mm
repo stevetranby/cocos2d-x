@@ -207,11 +207,14 @@ LanguageType Application::getCurrentLanguage()
     return utils::getLanguageTypeByISO2([languageCode UTF8String]);
 }
 
-bool Application::openURL(const std::string &url)
+//bool Application::openURL(const std::string &url)
+void Application::openURL(const std::string &url, const std::function<void(bool)>& completionHandler)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
-    return [[NSWorkspace sharedWorkspace] openURL:nsUrl];
+
+    BOOL success = [[NSWorkspace sharedWorkspace] openURL:nsUrl];
+    completionHandler((bool)success);
 }
 
 void Application::setResourceRootPath(const std::string& rootResDir)

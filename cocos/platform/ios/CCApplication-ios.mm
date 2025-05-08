@@ -69,7 +69,7 @@ int Application::run()
 
 void Application::setAnimationInterval(float interval)
 {
-    [[CCDirectorCaller sharedDirectorCaller] setAnimationInterval: interval ];
+    [[CCDirectorCaller sharedDirectorCaller] setAnimationInterval: interval];
 }
 
 //----------------------------------------------------------------------
@@ -159,11 +159,21 @@ std::string Application::getCopyrightString() {
     return "";
 }
 
-bool Application::openURL(const std::string &url)
+// TODO: Need to add a completion handler function parameter to pass to the new API for openURL
+void Application::openURL(const std::string &url, const std::function<void(BOOL)>& completionHandler)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
-    return [[UIApplication sharedApplication] openURL:nsUrl];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
+    //return [[UIApplication sharedApplication] openURL:nsUrl];
+    [[UIApplication sharedApplication] openURL:nsUrl options:@{} completionHandler:^(BOOL success){
+        CCLOG("openURL success: %d", success);
+        completionHandler(success);
+    }];
+#pragma clang diagnostic pop
 }
 
 void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {
