@@ -567,7 +567,7 @@ void AudioEngineImpl::stopAll()
 
 float AudioEngineImpl::getDuration(int audioID)
 {
-    auto player = _audioPlayers[audioID];
+    auto player MAYBE_UNUSED = _audioPlayers[audioID];
     if(player->_ready){
         return player->_audioCache->_duration;
     } else {
