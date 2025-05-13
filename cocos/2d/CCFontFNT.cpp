@@ -51,9 +51,9 @@ enum {
 
 struct _FontDefHashElement;
 
-//
-//FNTConfig Cache - free functions
-//
+//----------------------------------------------------------------------
+// FNTConfig Cache - free functions
+
 static Map<std::string, BMFontConfiguration*>* s_configurations = nullptr;
 
 BMFontConfiguration* FNTConfigLoadFile(const std::string& fntFile)
@@ -78,9 +78,8 @@ BMFontConfiguration* FNTConfigLoadFile(const std::string& fntFile)
     return ret;
 }
 
-//
-//BitmapFontConfiguration
-//
+//----------------------------------------------------------------------
+// BitmapFontConfiguration
 
 BMFontConfiguration * BMFontConfiguration::create(const std::string& FNTfile)
 {

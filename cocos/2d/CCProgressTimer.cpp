@@ -158,9 +158,9 @@ void ProgressTimer::setReverseDirection(bool reverse)
 
 // Interval
 
-///
-//    @returns the vertex position from the texture coordinate
-///
+//----------------------------------------------------------------------
+// @returns the vertex position from the texture coordinate
+
 Tex2F ProgressTimer::textureCoordFromAlphaPoint(Vec2 alpha)
 {
     Tex2F ret(0.0f, 0.0f);
@@ -259,7 +259,7 @@ void ProgressTimer::setMidpoint(const Vec2& midPoint)
     _midpoint = midPoint.getClampPoint(Vec2::ZERO, Vec2(1, 1));
 }
 
-///
+//----------------------------------------------------------------------
 //    Update does the work of mapping the texture onto the triangles
 //    It now doesn't occur the cost of free/alloc data every update cycle.
 //    It also only changes the percentage point but no other points if they have not
@@ -267,7 +267,8 @@ void ProgressTimer::setMidpoint(const Vec2& midPoint)
 //    
 //    It now deals with flipped texture. If you run into this problem, just use the
 //    sprite property and enable the methods flipX, flipY.
-///
+//----------------------------------------------------------------------
+
 void ProgressTimer::updateRadial()
 {
     if (!_sprite) {
@@ -391,15 +392,16 @@ void ProgressTimer::updateRadial()
 
 }
 
-///
-//    Update does the work of mapping the texture onto the triangles for the bar
-//    It now doesn't occur the cost of free/alloc data every update cycle.
-//    It also only changes the percentage point but no other points if they have not
-//    been modified.
-//    
-//    It now deals with flipped texture. If you run into this problem, just use the
-//    sprite property and enable the methods flipX, flipY.
-///
+//----------------------------------------------------------------------
+// Update does the work of mapping the texture onto the triangles for the bar
+// It now doesn't occur the cost of free/alloc data every update cycle.
+// It also only changes the percentage point but no other points if they have not
+// been modified.
+//
+// It now deals with flipped texture. If you run into this problem, just use the
+// sprite property and enable the methods flipX, flipY.
+//----------------------------------------------------------------------
+
 void ProgressTimer::updateBar()
 {
     if (!_sprite) {

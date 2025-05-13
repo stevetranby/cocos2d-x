@@ -864,8 +864,8 @@ public:
     virtual Node* getParent() { return _parent; }
     virtual const Node* getParent() const { return _parent; }
 
-
-    ////// REMOVES //////
+    //----------------------------------------------------------------------
+    // REMOVES
 
     /**
      * Removes this node itself from its parent node with a cleanup.

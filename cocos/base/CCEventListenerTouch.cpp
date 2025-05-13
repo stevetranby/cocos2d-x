@@ -117,7 +117,7 @@ EventListenerTouchOneByOne* EventListenerTouchOneByOne::clone()
     return ret;
 }
 
-////----------------------------------------------------------------------
+//----------------------------------------------------------------------
 
 const std::string EventListenerTouchAllAtOnce::LISTENER_ID = "__cc_touch_all_at_once";
 

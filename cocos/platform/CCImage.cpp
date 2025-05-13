@@ -122,7 +122,7 @@ extern "C"
 NS_CC_BEGIN
 
 //----------------------------------------------------------------------
-//struct and data for pvr structure
+// struct and data for pvr structure
 
 namespace
 {

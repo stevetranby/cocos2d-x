@@ -91,8 +91,9 @@ public:
      * @return a Node object whose tag equals to the input parameter.
      */
     virtual Node * getProtectedChildByTag(int tag);
-    
-    ////// REMOVES //////
+
+    //----------------------------------------------------------------------
+    // REMOVES
     
     /**
      * Removes a child from the container. It will also cleanup all running actions depending on the cleanup parameter.

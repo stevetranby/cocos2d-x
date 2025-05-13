@@ -123,6 +123,7 @@ private:
 // NOTE: Converting these macros into Templates is desirable, but please see
 // issue #16159 [https://github.com/cocos2d/cocos2d-x/pull/16159] for further info
 //
+
 #define EASE_TEMPLATE_DECL_CLASS(CLASSNAME) \
 class CC_DLL CLASSNAME : public ActionEase \
 { \

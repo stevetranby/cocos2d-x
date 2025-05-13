@@ -41,9 +41,8 @@ NS_CC_BEGIN
 #define M_PI_X_2 (float)M_PI * 2.0f
 #endif
 
-//
+//----------------------------------------------------------------------
 // EaseAction
-//
 
 bool ActionEase::initWithAction(ActionInterval *action)
 {
@@ -100,9 +99,8 @@ ActionInterval* ActionEase::getInnerAction()
     return _inner;
 }
 
-//
+//----------------------------------------------------------------------
 // EaseRateAction
-//
 
 EaseRateAction* EaseRateAction::create(ActionInterval* action, float rate)
 {
@@ -134,6 +132,7 @@ bool EaseRateAction::initWithAction(ActionInterval *action, float rate)
 // NOTE: Converting these macros into Templates is desirable, but please see
 // issue #16159 [https://github.com/cocos2d/cocos2d-x/pull/16159] for further info
 //
+
 #define EASE_TEMPLATE_IMPL(CLASSNAME, TWEEN_FUNC, REVERSE_CLASSNAME) \
 CLASSNAME* CLASSNAME::create(cocos2d::ActionInterval *action) \
 { \
@@ -221,9 +220,8 @@ EASERATE_TEMPLATE_IMPL(EaseIn, tweenfunc::easeIn)
 EASERATE_TEMPLATE_IMPL(EaseOut, tweenfunc::easeOut)
 EASERATE_TEMPLATE_IMPL(EaseInOut, tweenfunc::easeInOut)
 
-//
+//----------------------------------------------------------------------
 // EaseElastic
-//
 
 bool EaseElastic::initWithAction(ActionInterval *action, float period /* = 0.3f*/)
 {
@@ -240,6 +238,7 @@ bool EaseElastic::initWithAction(ActionInterval *action, float period /* = 0.3f*
 // NOTE: Converting these macros into Templates is desirable, but please see
 // issue #16159 [https://github.com/cocos2d/cocos2d-x/pull/16159] for further info
 //
+
 #define EASEELASTIC_TEMPLATE_IMPL(CLASSNAME, TWEEN_FUNC, REVERSE_CLASSNAME) \
 CLASSNAME* CLASSNAME::create(cocos2d::ActionInterval *action, float period /* = 0.3f*/) \
 { \

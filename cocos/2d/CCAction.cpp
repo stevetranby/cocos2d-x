@@ -33,9 +33,9 @@ THE SOFTWARE.
 #include "base/ccUTF8.h"
 
 NS_CC_BEGIN
-//
+
+//----------------------------------------------------------------------
 // Action Base Class
-//
 
 Action::Action()
 :_originalTarget(nullptr)
@@ -84,9 +84,9 @@ void Action::update(float /*time*/)
     CCLOG("[Action update]. override me");
 }
 
-//
+//----------------------------------------------------------------------
 // Speed
-//
+
 Speed::Speed()
 : _speed(0.0)
 , _innerAction(nullptr)
@@ -181,9 +181,9 @@ void Speed::setInnerAction(ActionInterval *action)
     }
 }
 
-//
+//----------------------------------------------------------------------
 // Follow
-//
+
 Follow::~Follow()
 {
     CC_SAFE_RELEASE(_followedNode);

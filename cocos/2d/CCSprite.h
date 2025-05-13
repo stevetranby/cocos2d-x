@@ -682,7 +682,7 @@ protected:
     //
     BlendFunc        _blendFunc;            /// It's required for TextureProtocol inheritance
     Texture2D*       _texture;              /// Texture2D object that is used to render the sprite
-    SpriteFrame*     _spriteFrame;
+    SpriteFrame*     _spriteFrame;          ///
     TrianglesCommand _trianglesCommand;     ///
 #if CC_SPRITE_DEBUG_DRAW
     DrawNode *_debugDrawNode;

@@ -338,7 +338,7 @@ CameraBackgroundColorBrush* CameraBackgroundColorBrush::create(const Color4F& co
     return ret;
 }
 
-//-------------------------------------------------------------------------------//----------------------------------------------------------------------
+//----------------------------------------------------------------------
 CameraBackgroundSkyBoxBrush::CameraBackgroundSkyBoxBrush()
 : _vao(0)
 , _vertexBuffer(0)
