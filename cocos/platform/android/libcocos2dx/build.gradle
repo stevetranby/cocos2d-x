@@ -16,6 +16,11 @@ android {
         minSdk = 21
         versionCode = 31704
         versionName = "3.17"
+        externalNativeBuild {
+            cmake {
+                cppFlags ''
+            }
+        }
     }
 
     sourceSets {
@@ -41,6 +46,12 @@ android {
 
     buildFeatures {
         aidl = true
+    }
+    externalNativeBuild {
+        cmake {
+            path file('../../../../../scgame-x/CMakeLists.txt')
+            version '3.22.1'
+        }
     }
 }
 
