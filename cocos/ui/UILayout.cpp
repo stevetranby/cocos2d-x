@@ -199,6 +199,8 @@ void Layout::addChild(Node *child, int zOrder, int tag)
 
 void Layout::addChild(Node* child, int zOrder, const std::string &name)
 {
+    CCASSERT(child, "ArgumentException: child should not be NULL!");
+    if (! child) { return; } // STEVE: checking if _parent is null ... probably unrecoverable, but prevent crashes
     if (dynamic_cast<Widget*>(child)) {
         supplyTheLayoutParameterLackToChild(static_cast<Widget*>(child));
     }
@@ -1107,9 +1109,11 @@ Size Layout::getLayoutAccumulatedSize()const
     return layoutSize;
 }
 
-Vec2 Layout::getWorldCenterPoint(Widget* widget)const
+Vec2 Layout::getWorldCenterPoint(Widget* widget) const
 {
-    CC_ASSERT(widget != nullptr);
+    CCASSERT(widget, "ArgumentException: widget should not be NULL!");
+    if (! widget) { return Vec2::ZERO; } // STEVE: checking if _parent is null ... probably unrecoverable, but prevent crashes
+
     Layout *layout = dynamic_cast<Layout*>(widget);
     //FIXEDME: we don't need to calculate the content size of layout anymore
     Size widgetSize = layout ? layout->getLayoutAccumulatedSize() :  widget->getContentSize();
