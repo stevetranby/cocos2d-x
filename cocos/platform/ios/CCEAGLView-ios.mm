@@ -518,53 +518,54 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     [self.textInputView removeFromSuperview];
 }
 
--(void) doAnimationWhenKeyboardMoveWithDuration:(float) duration distance:(float) dis
+-(void) doAnimationWhenKeyboardMoveWithDuration:(float)duration distance:(float)dist
 {
+   __block float dist_block_var = dist;
+   [UIView animateWithDuration:duration
+                         delay:0
+                       options:UIViewAnimationOptionBeginFromCurrentState
+                    animations:^{
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
-    [UIView beginAnimations:nil context:nullptr];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:duration];
-        [UIView setAnimationBeginsFromCurrentState:YES];
+        NSLog(@"[animation] dist = %f, scale = %f \n", dist_block_var, cocos2d::GLView::getInstance()->getScaleY());
 
-        //NSLog(@"[animation] dis = %f, scale = %f \n", dis, cocos2d::GLView::getInstance()->getScaleY());
-        
-        if (dis < 0.0f) dis = 0.0f;
+        if (dist_block_var < 0.0f) { dist_block_var = 0.0f; }
 
        auto glview = cocos2d::Director::getInstance()->getOpenGLView();
-        dis *= glview->getScaleY();
+       dist_block_var *= glview->getScaleY();
+       dist_block_var /= self.contentScaleFactor;
 
-        dis /= self.contentScaleFactor;
+       // TODO: comment for @release
+       CGRect tvOS_rect = CGRectMake(originalRect_.origin.x, originalRect_.origin.y - dist_block_var, originalRect_.size.width, originalRect_.size.height);
 
 #if defined(CC_TARGET_OS_TVOS)
-        self.frame = CGRectMake(originalRect_.origin.x, originalRect_.origin.y - dis, originalRect_.size.width, originalRect_.size.height);
+       self.frame = tvOS_rect;
 #else
        switch (getFixedOrientation([[UIApplication sharedApplication] statusBarOrientation]))
        {
-            case UIInterfaceOrientationPortrait:
-                self.frame = CGRectMake(originalRect_.origin.x, originalRect_.origin.y - dis, originalRect_.size.width, originalRect_.size.height);
+           case UIInterfaceOrientationPortrait: {
+               self.frame = CGRectMake(originalRect_.origin.x, originalRect_.origin.y - dist_block_var, originalRect_.size.width, originalRect_.size.height);
                break;
-                
-            case UIInterfaceOrientationPortraitUpsideDown:
-                self.frame = CGRectMake(originalRect_.origin.x, originalRect_.origin.y + dis, originalRect_.size.width, originalRect_.size.height);
+           }
+           case UIInterfaceOrientationPortraitUpsideDown: {
+               self.frame = CGRectMake(originalRect_.origin.x, originalRect_.origin.y + dist_block_var, originalRect_.size.width, originalRect_.size.height);
                break;
-                
-            case UIInterfaceOrientationLandscapeLeft:
-                self.frame = CGRectMake(originalRect_.origin.x - dis, originalRect_.origin.y , originalRect_.size.width, originalRect_.size.height);
+           }
+           case UIInterfaceOrientationLandscapeLeft: {
+               self.frame = CGRectMake(originalRect_.origin.x - dist_block_var, originalRect_.origin.y , originalRect_.size.width, originalRect_.size.height);
                break;
-                
-            case UIInterfaceOrientationLandscapeRight:
-                self.frame = CGRectMake(originalRect_.origin.x + dis, originalRect_.origin.y , originalRect_.size.width, originalRect_.size.height);
+           }
+           case UIInterfaceOrientationLandscapeRight: {
+               self.frame = CGRectMake(originalRect_.origin.x + dist_block_var, originalRect_.origin.y , originalRect_.size.width, originalRect_.size.height);
                break;
-                
+           }
            default:
                break;
        }
 #endif
-        [UIView commitAnimations];
-#pragma clang diagnostic pop
+   }
+                    completion:^(BOOL finished) {
+       CCLOG("put delegate method here!");
+   }];
 }
 
 -(void) doAnimationWhenAnotherEditBeClicked
