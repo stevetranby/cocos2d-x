@@ -113,12 +113,15 @@ static id s_sharedDirectorCaller;
 
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doCaller:)];
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
-    CCLOG("setFrameInterval: %d", self.interval);
-    [displayLink setFrameInterval: self.interval];
-#pragma clang diagnostic pop
+    // Interval - 1 => Every Frame, 2 => Every other Frame (60 * intervalNew is assuming 60 fps display refresh rate)
+    // Frame Rate in Frames Per Second
+    float frameRate = 60 * self.interval;
+    CCLOG("frameRate: %f", frameRate);
+
+    [displayLink setPreferredFrameRateRange:CAFrameRateRangeMake(frameRate, frameRate, frameRate)];
+    //[displayLink setPreferredFrameRateRange:CAFrameRateRangeMake(60, 60, 60)];   // 60 FPS (default)
+    //[displayLink setPreferredFrameRateRange:CAFrameRateRangeMake(80, 120, 120)]; // 80-120 fps
+    //[displayLink setPreferredFrameRateRange:CAFrameRateRangeMake(30, 60, 48)];   // slow down
 
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
@@ -136,15 +139,20 @@ static id s_sharedDirectorCaller;
 
     displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(doCaller:)];
 
-    // Interval - 1 => Every Frame, 2 => Every other Frame (60 * intervalNew is assuming 60 fps display refresh rate)
+    // intervalNew - 1/fps (so for 60 fps intervalNew = 1/60)
     self.interval = (int)(60.0 * intervalNew);
-    CCLOG("setFrameInterval: %d", self.interval);
+    
+    // Interval - 1 => Every Frame, 2 => Every other Frame (60 * intervalNew is assuming 60 fps display refresh rate)
+    // Frame Rate in Frames Per Second
+    float frameRate = 60 * self.interval;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
-    [displayLink setFrameInterval: self.interval];
-#pragma clang diagnostic pop
+    CCLOG("setFrameInterval: %d", self.interval);
+    CCLOG("frameRate: %f", frameRate);
+
+    [displayLink setPreferredFrameRateRange:CAFrameRateRangeMake(frameRate, frameRate, frameRate)];
+    //[displayLink setPreferredFrameRateRange:CAFrameRateRangeMake(60, 60, 60)];   // 60 FPS (default)
+    //[displayLink setPreferredFrameRateRange:CAFrameRateRangeMake(80, 120, 120)]; // 80-120 fps
+    //[displayLink setPreferredFrameRateRange:CAFrameRateRangeMake(30, 60, 48)];   // slow down
 
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
