@@ -267,6 +267,23 @@ bool AudioPlayer::play2d()
     return ret;
 }
 
+// STEVE: Issues with rotateBufferThread and other OpenAL Crash reports
+// - https://github.com/cocos/engine-native/pull/4254/files
+// - https://github.com/cocos2d/cocos2d-x/issues/20062
+//
+// Pull Requests (PRs) That May be of interest:
+// - https://github.com/axmolengine/axmol/commit/facba25f12907583042f6e9f8f253bd265897de6
+// - https://github.com/cocos2d/cocos2d-x/issues/18597
+// - https://github.com/cocos2d/cocos2d-x/issues/19480
+// - https://github.com/cocos2d/cocos2d-x/pull/18865/files
+// - https://github.com/simdsoft/x-studio/commit/75e6c0c
+//
+// Suggestions:
+// - Increase PCMDATA_CACHEMAXSIZE value to 10485760
+// - Increase buffer count from 3 to 4 (not sure this does anything)
+// - Possibly need to null check all the internal fields (or eventually correctly synchronize reads/writes)
+// - e.g. _audioCache, _alSource, etc
+//
 // rotateBufferThread is used to rotate alBufferData for _alSource when playing big audio file
 void AudioPlayer::rotateBufferThread(int offsetFrame)
 {
@@ -293,7 +310,20 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
 
         while (!_isDestroyed) {
             alGetSourcei(_alSource, AL_SOURCE_STATE, &sourceState);
-            if (sourceState == AL_PLAYING) {
+
+            // STEVE: Here's a fix to add check if PAUSED as well as PLAYING
+            //
+            // On IOS, audio state will lie,
+            // when the system is not fully foreground,
+            // openAl will process the buffer in queue,
+            // but our condition cannot make sure that the audio is playing as it's too short.
+            //
+            // Interesting IOS system.
+            //
+            // Solution [may be] to load buffer even if it's paused, just make sure that there's no bufferProcessed in
+            //
+            //if (sourceState == AL_PLAYING) {}
+            if (sourceState == AL_PLAYING || sourceState == AL_PAUSED) {
                 alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &bufferProcessed);
                 while (bufferProcessed > 0) {
                     bufferProcessed--;

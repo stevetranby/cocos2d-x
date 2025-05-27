@@ -25,7 +25,16 @@
 
 #pragma once
 
-#define QUEUEBUFFER_NUM (3)
+
+// STEVE: Original
+//#define QUEUEBUFFER_NUM (3)
+//#define QUEUEBUFFER_TIME_STEP (0.05f)
+
+// STEVE: other options to help mitigage thread crashing on rotateBufferThread
+// STEVE: https://github.com/cocos/engine-native/pull/4254
+// STEVE: - QUEUEBUFFER_NUM - adds an extra buffer according to PR
+// STEVE: - QUEUEBUFFER_TIME_STEP - how much time of duration of audio is desired to be buffered (larger may cause latency)
+#define QUEUEBUFFER_NUM (4)
 #define QUEUEBUFFER_TIME_STEP (0.05f)
 
 #define QUOTEME_(x) #x

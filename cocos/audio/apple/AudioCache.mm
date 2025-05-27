@@ -49,7 +49,16 @@ unsigned int __idIndex = 0;
 }
 
 #define INVALID_AL_BUFFER_ID 0xFFFFFFFF
-#define PCMDATA_CACHEMAXSIZE 1048576
+
+// STEVE:
+// - 1MB  ( 1048576) - default
+// - 5MB  ( 5242880) - half of recommended?? might be enough
+// - 10MB (10485760) - recommended to mitigate against rotateBufferThread crash
+// - 20MB (20971520) - may help mitigate more, but uses more RAM
+//#define PCMDATA_CACHEMAXSIZE 1048576 // original
+//#define PCMDATA_CACHEMAXSIZE 5242880 // half recommended
+#define PCMDATA_CACHEMAXSIZE 10485760 // recommended
+//#define PCMDATA_CACHEMAXSIZE 20485760 // may need if crashes still happen
 
 @interface NSTimerWrapper : NSObject
 {
