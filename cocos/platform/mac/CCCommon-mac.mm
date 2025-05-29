@@ -50,19 +50,21 @@ void ccMessageBox(const char * msg, const char * title)
 
     NSAlert *alert = [[[NSAlert alloc] init] autorelease];
     [alert addButtonWithTitle:@"OK"];
-    [alert setMessageText:tmpMsg];
-    [alert setInformativeText:tmpTitle];
-    [alert setAlertStyle:NSWarningAlertStyle];
+    [alert setMessageText:tmpTitle];
+    [alert setInformativeText:tmpMsg];
+    [alert setAlertStyle:NSAlertStyleWarning];
 
     auto glview = Director::getInstance()->getOpenGLView();
     id win = glview->getCocoaWindow();
 
     if ([win isKindOfClass:[NSWindow class]]) {
         NSWindow* nswin = (NSWindow*)win;
+
         [alert beginSheetModalForWindow:nswin
-                          modalDelegate:[nswin delegate]
-                         didEndSelector:nil
-                            contextInfo:nil];
+                      completionHandler:^(NSModalResponse returnCode) {
+            NSLog(@"alert button clicked!");
+
+        }];
     } else {
         NSLog(@"[ERROR] win was not an NSWindow = %@", win);
     }
