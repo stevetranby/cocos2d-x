@@ -668,6 +668,7 @@ Node * CCBReader::readNodeGraph(Node * pParent)
                     if(!assigned && this->_CCBMemberVariableAssigner != nullptr)
                     {
                         assigned = this->_CCBMemberVariableAssigner->onAssignCCBMemberVariable(target, memberVarAssignmentName.c_str(), node);
+                        if (!assigned) { CCLOG("[WARNING] assigned was not assigned to member variable"); }
                     }
                 }
             }

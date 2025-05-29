@@ -171,6 +171,8 @@ bool AudioPlayer::play2d()
     bool ret = false;
     do
     {
+        if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); break; }
+
         if (_audioCache->_state != AudioCache::State::READY)
         {
             ALOGE("alBuffer isn't ready for play!");
@@ -292,6 +294,8 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
     long long rotateSleepTime = static_cast<long long>(QUEUEBUFFER_TIME_STEP * 1000) / 2;
     do
     {
+        if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); break; }
+
         BREAK_IF(!decoder.open(_audioCache->_fileFullPath.c_str()));
 
         uint32_t framesRead = 0;
@@ -406,6 +410,8 @@ bool AudioPlayer::setLoop(bool loop)
 
 bool AudioPlayer::setTime(float time)
 {
+    if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); return false; }
+
     if (!_isDestroyed && time >= 0.0f && time < _audioCache->_duration) {
 
         _currTime = time;
