@@ -148,7 +148,9 @@ protected: varType varName; public: virtual const varType& get##funName() const
  *            If you need protected or private, please declare.
  */
 #define CC_PROPERTY(varType, varName, funName)\
-protected: varType varName; public: virtual varType get##funName() const; virtual void set##funName(varType var)
+protected: varType varName;\
+public: virtual varType get##funName(void) const;\
+public: virtual void set##funName(varType var);
 
 #define CC_PROPERTY_PASS_BY_REF(varType, varName, funName)\
 protected: varType varName; public: virtual const varType& get##funName() const; virtual void set##funName(const varType& var)
