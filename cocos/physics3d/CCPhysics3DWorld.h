@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -36,8 +37,9 @@
 class btDynamicsWorld;
 class btDefaultCollisionConfiguration;
 class btCollisionDispatcher;
-class btDbvtBroadphase;
+struct btDbvtBroadphase;
 class btSequentialImpulseConstraintSolver;
+class btGhostPairCallback;
 class btRigidBody;
 class btCollisionObject;
 
@@ -151,12 +153,14 @@ CC_CONSTRUCTOR_ACCESS:
 
     void collisionChecking();
     bool needCollisionChecking();
+    void setGhostPairCallback();
     
 protected:
     std::vector<Physics3DObject*>      _objects;
     std::vector<Physics3DComponent*>   _physicsComponents; //physics3d components
     bool _needCollisionChecking;
     bool _collisionCheckingFlag;
+    bool _needGhostPairCallbackChecking;
     
 #if (CC_ENABLE_BULLET_INTEGRATION)
     btDynamicsWorld* _btPhyiscsWorld;
@@ -164,6 +168,7 @@ protected:
     btCollisionDispatcher* _dispatcher;
     btDbvtBroadphase* _broadphase;
     btSequentialImpulseConstraintSolver* _solver;
+    btGhostPairCallback *_ghostCallback;
     Physics3DDebugDrawer*                _debugDrawer;
 #endif // CC_ENABLE_BULLET_INTEGRATION
 };

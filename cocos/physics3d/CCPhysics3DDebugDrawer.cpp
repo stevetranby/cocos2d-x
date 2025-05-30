@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -22,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "CCPhysics3D.h"
+#include "physics3d/CCPhysics3D.h"
 #include "base/CCConfiguration.h"
 #include "base/ccMacros.h"
 #include "base/CCDirector.h"
@@ -55,7 +56,7 @@ void Physics3DDebugDrawer::drawLine( const btVector3& from,const btVector3& to,c
     _dirty = true;
 }
 
-void Physics3DDebugDrawer::drawContactPoint( const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color )
+void Physics3DDebugDrawer::drawContactPoint( const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int /*lifeTime*/,const btVector3& color )
 {
     drawLine(PointOnB, PointOnB + normalOnB * distance, color);
 }
@@ -65,7 +66,7 @@ void Physics3DDebugDrawer::reportErrorWarning( const char* warningString )
     CCLOG("%s", warningString);
 }
 
-void Physics3DDebugDrawer::draw3dText( const btVector3& location,const char* textString )
+void Physics3DDebugDrawer::draw3dText( const btVector3& /*location*/,const char* /*textString*/ )
 {
 
 }
@@ -127,7 +128,7 @@ void Physics3DDebugDrawer::ensureCapacity( int count )
     }
 }
 
-void Physics3DDebugDrawer::drawImplementation( const Mat4 &transform, uint32_t flags )
+void Physics3DDebugDrawer::drawImplementation( const Mat4 &transform, uint32_t /*flags*/ )
 {
     _program->use();
     _program->setUniformsForBuiltins(transform);

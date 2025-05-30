@@ -2,6 +2,7 @@
 * cocos2d-x   http://www.cocos2d-x.org
 *
 * Copyright (c) 2010-2011 - cocos2d-x community
+* Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 *
 * Portions Copyright (c) Microsoft Open Technologies, Inc.
 * All Rights Reserved
@@ -23,7 +24,7 @@
 #ifndef __AUDIO_CACHE_PLAYER_H_
 #define __AUDIO_CACHE_PLAYER_H_
 
-#include "AudioSourceReader.h"
+#include "audio/winrt/AudioSourceReader.h"
 
 NS_CC_BEGIN
 namespace experimental{
@@ -37,7 +38,7 @@ typedef struct AudioInfo
 enum class AudioPlayerState
 {
     ERRORED = -1,
-    INITIALZING,
+    INITIALIZING,
     READY,
     PLAYING,
     PAUSED,
@@ -51,14 +52,16 @@ public:
     ~AudioCache();
 
     void readDataTask();
-    void addCallback(const std::function<void()> &callback);
+    void addPlayCallback(const std::function<void()> &callback);
+    void addLoadCallback(const std::function<void(bool)> &callback);
     bool getChunk(AudioDataChunk& chunk);
     void doBuffering();
     bool isStreamingSource();
     void seek(const float ratio);
 
 protected:
-    void invokeCallbacks();
+    void invokePlayCallbacks();
+    void invokeLoadCallbacks();
     
 private:
     AudioCache(const AudioCache&);
@@ -73,7 +76,7 @@ private:
     std::string _fileFullPath;
     AudioSourceReader *_srcReader;
     std::vector<std::function<void()>> _callbacks;
-
+    std::vector<std::function<void(bool)>> _loadCallbacks;
 
     friend class AudioPlayer;
     friend class AudioEngineImpl;

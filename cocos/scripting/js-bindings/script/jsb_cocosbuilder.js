@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -97,6 +98,7 @@ cc.BuilderReader.load = function(file, owner, parentSize)
     }
 
     var nodesWithAnimationManagers = reader.getNodesWithAnimationManagers();
+    node._nodesWithAnimationManagers = nodesWithAnimationManagers;
     var animationManagersForNodes = reader.getAnimationManagersForNodes();
 
     var controllerClassCache = cc.BuilderReader._controllerClassCache;
@@ -123,6 +125,7 @@ cc.BuilderReader.load = function(file, owner, parentSize)
         // Callbacks
         var documentCallbackNames = animationManager.getDocumentCallbackNames();
         var documentCallbackNodes = animationManager.getDocumentCallbackNodes();
+        innerNode._documentCallbackNodes = documentCallbackNodes;
 
         for (var j = 0; j < documentCallbackNames.length; j++)
         {

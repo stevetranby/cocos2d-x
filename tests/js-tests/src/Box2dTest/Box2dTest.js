@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -26,7 +27,7 @@
 var TAG_SPRITE_MANAGER = 1;
 var PTM_RATIO = 32;
 
-var Box2DTestLayer = cc.Layer.extend({
+var Box2DTestLayer = cc.LayerColor.extend({
     world:null,
     //GLESDebugDraw *m_debugDraw;
 
@@ -36,7 +37,7 @@ var Box2DTestLayer = cc.Layer.extend({
             window.sideIndexBar.changeTest(0, 2);
         }
         //----start0----ctor
-        this._super();
+        this._super(cc.color(0, 0, 0, 255));
 
         cc.eventManager.addListener(cc.EventListener.create({
             event: cc.EventListener.TOUCH_ALL_AT_ONCE,

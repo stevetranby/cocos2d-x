@@ -1,6 +1,5 @@
 /****************************************************************************
- Copyright (c) 2013      Zynga Inc.
- Copyright (c) 2013-2015 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -23,28 +22,3 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef _CCLabelTextFormatter_h_
-#define _CCLabelTextFormatter_h_
-
-/// @cond DO_NOT_SHOW
-
-#include "platform/CCPlatformMacros.h"
-
-NS_CC_BEGIN
-
-class Label;
-
-class CC_DLL LabelTextFormatter
-{
-public:
-    
-    static bool multilineText(Label *theLabel);
-    static bool alignText(Label *theLabel);
-    static bool createStringSprites(Label *theLabel);
-
-};
-
-NS_CC_END
-
-/// @endcond
-#endif

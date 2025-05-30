@@ -1,7 +1,8 @@
 /****************************************************************************
 Copyright (c) 2012      greathqy
 Copyright (c) 2012      cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -24,8 +25,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+#include "platform/CCPlatformConfig.h"
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+
 #include "network/HttpCookie.h"
-#include "HttpConnection-winrt.h"
+#include "network/HttpConnection-winrt.h"
 
 NS_CC_BEGIN
 
@@ -35,9 +39,9 @@ namespace network {
     static void formatHeaders(std::vector<std::string>& headers)
     {
 #if defined(_XBOX_ONE)
-        for(auto iter = headers.begin(); iter != headers.end(); ++iter)
+        for(auto& header : headers)
         {
-            (*iter) += "\r\n";
+            header += "\r\n";
         }
 
         // append default headers
@@ -50,7 +54,7 @@ namespace network {
     }
 
     // Get user authentication token (Platform specific approach)
-    static bool getAuthenticationToken(std::string verb, std::string url, std::string headersXST, std::string bodyXST, std::string& token, std::string& signature)
+    static bool getAuthenticationToken(const std::string& verb, const std::string& url, const std::string& headersXST, const std::string& bodyXST, std::string& token, std::string& signature)
     {
 #if defined(_XBOX_ONE)
         using namespace Windows::Xbox::System;
@@ -562,22 +566,22 @@ namespace network {
         return _isInitialized = SUCCEEDED(hr);
     }
 
-    bool HttpConnection::open(std::string verb)
+    bool HttpConnection::open(const std::string& verb)
     {
         return open(verb, false, "");
     }
 
-    bool HttpConnection::open(std::string verb, bool userAuthentication)
+    bool HttpConnection::open(const std::string& verb, bool userAuthentication)
     {
         return open(verb, userAuthentication, "");
     }
 
-    bool HttpConnection::open(std::string verb, std::string cookieFile)
+    bool HttpConnection::open(const std::string& verb, const std::string& cookieFile)
     {
         return open(verb, false, cookieFile);
     }
 
-    bool HttpConnection::open(std::string verb, bool userAuthentication, std::string cookieFile)
+    bool HttpConnection::open(const std::string& verb, bool userAuthentication, const std::string& cookieFile)
     {
         if (!_isInitialized) {
             return false;
@@ -626,7 +630,7 @@ namespace network {
         return SUCCEEDED(hr);
     }
 
-    HRESULT HttpConnection::authenticateUser(std::string& verb, std::string& url, std::string& headers)
+    HRESULT HttpConnection::authenticateUser(const std::string& verb, const std::string& url, const std::string& headers)
     {
         HRESULT hr = S_OK;
         std::string authToken;
@@ -651,7 +655,7 @@ namespace network {
         return hr;
     }
 
-    HRESULT HttpConnection::processCookieFile(std::string& url, std::string& cookieFile)
+    HRESULT HttpConnection::processCookieFile(const std::string& url, const std::string& cookieFile)
     {
         HRESULT hr = S_OK;
 
@@ -661,13 +665,13 @@ namespace network {
         std::string cookieInfo = "";
         int cCnt = 0;
 
-        for(auto iter = cookies->begin(); iter != cookies->end(); iter++)
+        for(auto& cookie : *cookies)
         {
-            if(url.find(iter->domain) != std::string::npos)
+            if(url.find(cookie.domain) != std::string::npos)
             {
-                std::string keyVal = iter->name;
+                std::string keyVal = cookie.name;
                 keyVal.append("=");
-                keyVal.append(iter->value);
+                keyVal.append(cookie.value);
                 if(cCnt != 0) {
                     cookieInfo.append(";");
                 }
@@ -739,3 +743,5 @@ namespace network {
 }
 
 NS_CC_END
+
+#endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)

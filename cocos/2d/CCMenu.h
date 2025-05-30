@@ -1,7 +1,8 @@
 /****************************************************************************
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -92,7 +93,7 @@ public:
 
     /**
      * Creates a Menu with it's item, then use addChild() to add 
-     * other items. It is used for script, it can't init with undetermined
+     * other items. It is used for script, it can't be initialized with undetermined
      * number of variables.
      * @js NA
      */
@@ -142,16 +143,17 @@ public:
     void alignItemsInRowsWithArray(const ValueVector& columns);
 
     /**
-     * Determines if the menu is enable.
+     * Determines if the menu is enabled.
      * @see `setEnabled(bool)`.
      * @return whether the menu is enabled or not.
      */
     virtual bool isEnabled() const { return _enabled; }
 
     /**
-     * Set whether the menu is visible.
-     * The default value is true, a menu is default to visible.
-     *@param value true if menu is enable, false if menu is disable.
+     * Set whether the menu is enabled. If set to false, interacting with the menu
+     * will have no effect.
+     * The default value is true, a menu is enabled by default.
+     * @param value true if menu is to be enabled, false if menu is to be disabled.
      */
     virtual void setEnabled(bool value) { _enabled = value; };
 
@@ -170,8 +172,8 @@ public:
     
     virtual void onEnter() override;
     virtual void onExit() override;
-    virtual void setOpacityModifyRGB(bool bValue) override {CC_UNUSED_PARAM(bValue);}
-    virtual bool isOpacityModifyRGB(void) const override { return false;}
+    virtual void setOpacityModifyRGB(bool value) override;
+    virtual bool isOpacityModifyRGB() const override;
 
     virtual std::string getDescription() const override;
 
@@ -179,7 +181,7 @@ CC_CONSTRUCTOR_ACCESS:
     /**
      * @js ctor
      */
-    Menu() : _selectedItem(nullptr) {}
+    Menu() : _selectedItem(nullptr), _selectedWithCamera(nullptr) {}
     virtual ~Menu();
 
     /** initializes an empty Menu */
@@ -195,10 +197,10 @@ protected:
     /** whether or not the menu will receive events */
     bool _enabled;
 
-    virtual MenuItem* getItemForTouch(Touch * touch);
+    virtual MenuItem* getItemForTouch(Touch * touch, const Camera *camera);
     State _state;
     MenuItem *_selectedItem;
-
+    const Camera *_selectedWithCamera;
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Menu);
 };

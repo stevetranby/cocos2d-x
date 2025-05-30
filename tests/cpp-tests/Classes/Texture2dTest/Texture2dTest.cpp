@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -81,6 +82,7 @@ Texture2DTests::Texture2DTests()
     ADD_TEST_CASE(TextureTGA);
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     ADD_TEST_CASE(TextureWEBP);
+    ADD_TEST_CASE(TextureWEBPNoAlpha)
 #endif
     ADD_TEST_CASE(TexturePixelFormat);
     ADD_TEST_CASE(TextureBlend);
@@ -107,7 +109,7 @@ Texture2DTests::Texture2DTests()
     ADD_TEST_CASE(TextureConvertRGBA8888);
     ADD_TEST_CASE(TextureConvertI8);
     ADD_TEST_CASE(TextureConvertAI88);
-};
+}
 
 //------------------------------------------------------------------
 //
@@ -261,11 +263,36 @@ void TextureWEBP::onEnter()
     img->setPosition(Vec2( s.width/2.0f, s.height/2.0f));
     addChild(img);
     log("%s\n", Director::getInstance()->getTextureCache()->getCachedTextureInfo().c_str());
+    Texture2D* texture = Director::getInstance()->getTextureCache()->getTextureForKey("Images/test_image.webp");
+    log("pixel format:%d, premultiplied alpha:%d\n", static_cast<int>(texture->getPixelFormat()), texture->hasPremultipliedAlpha());
 }
 
 std::string TextureWEBP::title() const
 {
-    return "WEBP Test";
+    return "WEBP with alpha Test";
+}
+
+//------------------------------------------------------------------
+//
+// TextureWEBPNoAlpha
+//
+//------------------------------------------------------------------
+void TextureWEBPNoAlpha::onEnter()
+{
+    TextureDemo::onEnter();
+    auto s = Director::getInstance()->getWinSize();
+    
+    auto img = Sprite::create("Images/test_image_no_alpha.webp");
+    img->setPosition(Vec2( s.width/2.0f, s.height/2.0f));
+    addChild(img);
+    log("%s\n", Director::getInstance()->getTextureCache()->getCachedTextureInfo().c_str());
+    Texture2D* texture = Director::getInstance()->getTextureCache()->getTextureForKey("Images/test_image_no_alpha.webp");
+    log("pixel format:%d, premultiplied alpha:%d\n", static_cast<int>(texture->getPixelFormat()), texture->hasPremultipliedAlpha());
+}
+
+std::string TextureWEBPNoAlpha::title() const
+{
+    return "WEBP without alpha Test";
 }
 
 //------------------------------------------------------------------
@@ -1276,7 +1303,7 @@ void TextureAlias::onEnter()
     sprite->setPosition(Vec2( s.width/3.0f, s.height/2.0f));
     addChild(sprite);
     
-    // this is the default filterting
+    // this is the default filtering
     sprite->getTexture()->setAntiAliasTexParameters();
     
     //
@@ -1723,7 +1750,7 @@ std::string TextureCache1::title() const
 
 std::string TextureCache1::subtitle() const
 {
-    return "4 images should appear: alias, antialias, alias, antilias";
+    return "4 images should appear: alias, antialias, alias, antialias";
 }
 
 // TextureDrawAtPoint
@@ -1767,7 +1794,7 @@ void TextureDrawAtPoint::draw(Renderer *renderer, const Mat4 &transform, uint32_
 void TextureDrawAtPoint::onDraw(const Mat4 &transform, uint32_t flags)
 {
     Director* director = Director::getInstance();
-    CCASSERT(nullptr != director, "Director is null when seting matrix stack");
+    CCASSERT(nullptr != director, "Director is null when setting matrix stack");
     director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
 
@@ -1809,7 +1836,7 @@ void TextureDrawInRect::draw(Renderer *renderer, const Mat4 &transform, uint32_t
 void TextureDrawInRect::onDraw(const Mat4 &transform, uint32_t flags)
 {
     Director* director = Director::getInstance();
-    CCASSERT(nullptr != director, "Director is null when seting matrix stack");
+    CCASSERT(nullptr != director, "Director is null when setting matrix stack");
     director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
@@ -1916,7 +1943,7 @@ void TextureMemoryAlloc::updateImage(cocos2d::Ref *sender)
             break;
 	}
 
-    _background = Sprite::create(file.c_str());
+    _background = Sprite::create(file);
     addChild(_background, -10);
 	
     _background->setVisible(false);
@@ -1986,18 +2013,6 @@ void TexturePVRv3Premult::transformSprite(cocos2d::Sprite *sprite)
 }
 
 // Implementation of ETC1
-
-/*
-class TextureETC1 : public TextureDemo
-{
-public:
-    TextureETC1();
-    
-    virtual std::string title() const override;
-    virtual std::string subtitle() const override;
-};
- */
-
 TextureETC1::TextureETC1()
 {
     auto sprite = Sprite::create("Images/ETC1.pkm");
@@ -2015,7 +2030,46 @@ std::string TextureETC1::title() const
 
 std::string TextureETC1::subtitle() const
 {
-    return "only supported on android";
+    bool isSupportETCHardwareDecode = Configuration::getInstance()->supportsETC();
+    Application::Platform platform = Application::getInstance()->getTargetPlatform();
+    std::string ret;
+
+    static std::unordered_map<int, const char*> platformMap = {
+        {(int)Application::Platform::OS_WINDOWS, "Windows"},
+        {(int)Application::Platform::OS_LINUX, "Linux"},
+        {(int)Application::Platform::OS_MAC, "macOS"},
+        {(int)Application::Platform::OS_ANDROID, "Android"},
+        {(int)Application::Platform::OS_IPHONE, "iPhone"},
+        {(int)Application::Platform::OS_IPAD, "iPad"},
+        {(int)Application::Platform::OS_BLACKBERRY, "BlackBerry"},
+        {(int)Application::Platform::OS_NACL, "NativeClient"},
+        {(int)Application::Platform::OS_EMSCRIPTEN, "Emscripten"},
+        {(int)Application::Platform::OS_TIZEN, "Tizen"},
+        {(int)Application::Platform::OS_WINRT, "WinRT"},
+        {(int)Application::Platform::OS_WP8, "Windows Phone 8"}
+    };
+
+    if (isSupportETCHardwareDecode)
+    {
+        ret += "Hardware decode ETC1 on ";
+
+    }
+    else
+    {
+        ret += "Software decode ETC1 on ";
+    }
+
+    auto iter = platformMap.find((int)platform);
+    if (iter != platformMap.end())
+    {
+        ret += iter->second;
+    }
+    else
+    {
+        ret += "Unknown Platform";
+    }
+
+    return ret;
 }
 
 //Implement of S3TC Dxt1
@@ -2141,7 +2195,7 @@ std::string TextureATITCInterpolated::title() const
 }
 std::string TextureATITCInterpolated::subtitle() const
 {
-    return "ATITC RGBA Interpolated Alpha comrpessed texture test";
+    return "ATITC RGBA Interpolated Alpha compressed texture test";
 }
 
 static void addImageToDemo(TextureDemo& demo, float x, float y, const char* path, Texture2D::PixelFormat format)

@@ -30,7 +30,6 @@ This script will install environment variables needed to by cocos2d-x. It will s
 https://github.com/cocos2d/cocos2d-console
 * NDK_ROOT: used to build android native codes
 * ANDROID_SDK_ROOT: used to generate applicatoin on Android through commands
-* ANT_ROOT: used to generate applicatoin on Android through commands
 * COCOS_X_ROOT: path where cocos2d-x is installed
 * COCOS_TEMPLATES_ROOT: path where cocos2d-x's templates are installed
 
@@ -61,7 +60,6 @@ COCOS_X_ROOT = 'COCOS_X_ROOT'
 COCOS_TEMPLATES_ROOT = 'COCOS_TEMPLATES_ROOT'
 NDK_ROOT = 'NDK_ROOT'
 ANDROID_SDK_ROOT = 'ANDROID_SDK_ROOT'
-ANT_ROOT = 'ANT_ROOT'
 
 
 def _check_python_version():
@@ -188,7 +186,7 @@ class SetEnvVar(object):
 
         file = open(self.file_used_for_setup, 'a')
         file.write('\n# Add environment variable %s for cocos2d-x\n' % key)
-        file.write('export %s=%s\n' % (key, value))
+        file.write('export %s="%s"\n' % (key, value))
         file.write('export PATH=$%s:$PATH\n' % key)
         if key == ANDROID_SDK_ROOT:
             file.write(
@@ -341,8 +339,6 @@ class SetEnvVar(object):
             ret = self._is_ndk_root_valid(value)
         elif var_name == ANDROID_SDK_ROOT:
             ret = self._is_android_sdk_root_valid(value)
-        elif var_name == ANT_ROOT:
-            ret = self._is_ant_root_valid(value)
         else:
             ret = False
 
@@ -356,7 +352,11 @@ class SetEnvVar(object):
         if not ndk_root:
             return False
 
-        ndk_build_path = os.path.join(ndk_root, 'ndk-build')
+        if self._isWindows():
+            ndk_build_path = os.path.join(ndk_root, 'ndk-build.cmd')
+        else:
+            ndk_build_path = os.path.join(ndk_root, 'ndk-build')
+
         if os.path.isfile(ndk_build_path):
             return True
         else:
@@ -372,19 +372,6 @@ class SetEnvVar(object):
         else:
             android_path = os.path.join(android_sdk_root, 'tools', 'android')
         if os.path.isfile(android_path):
-            return True
-        else:
-            return False
-
-    def _is_ant_root_valid(self, ant_root):
-
-        ant_path = ''
-        if self._isWindows():
-            ant_path = os.path.join(ant_root, 'ant.bat')
-        else:
-            ant_path = os.path.join(ant_root, 'ant')
-
-        if os.path.isfile(ant_path):
             return True
         else:
             return False
@@ -482,7 +469,27 @@ class SetEnvVar(object):
                 self.set_windows_path(cocos_consle_root)
 
             self._force_update_env(COCOS_CONSOLE_ROOT, cocos_consle_root)
+    def set_cocos_x_root(self):
+        print("->Check environment variable %s" % COCOS_X_ROOT)
+        cocos_x_root = os.path.dirname(self.current_absolute_path)
+        old_dir = self._find_environment_variable(COCOS_X_ROOT)
+        if old_dir is None:
+            # add environment variable
+            if self._isWindows():
+                self.set_windows_path(cocos_x_root)
 
+            self._set_environment_variable(COCOS_X_ROOT, cocos_x_root)
+        else:
+            if old_dir == cocos_x_root:
+                # is same with before, nothing to do
+                return
+
+            # update the environment variable
+            if self._isWindows():
+                self.remove_dir_from_win_path(old_dir)
+                self.set_windows_path(cocos_x_root)
+
+            self._force_update_env(COCOS_X_ROOT, cocos_x_root)
     def set_templates_root(self):
         print("->Check environment variable %s" % COCOS_TEMPLATES_ROOT)
         cocos_templates_root = os.path.join(self.current_absolute_path, 'templates')
@@ -567,9 +574,6 @@ class SetEnvVar(object):
             ret = self._force_update_unix_env(var_name, value)
         return ret
 
-    def _get_ant_path(self):
-        return self._get_sdkpath_for_cmd("ant", False)
-
     def _get_androidsdk_path(self):
         return self._get_sdkpath_for_cmd("android")
 
@@ -596,9 +600,7 @@ class SetEnvVar(object):
         return ret
 
     def _find_value_from_sys(self, var_name):
-        if var_name == ANT_ROOT:
-            return self._get_ant_path()
-        elif var_name == NDK_ROOT:
+        if var_name == NDK_ROOT:
             return self._get_ndkbuild_path()
         elif var_name == ANDROID_SDK_ROOT:
             return self._get_androidsdk_path()
@@ -656,13 +658,14 @@ class SetEnvVar(object):
         else:
             return SetEnvVar.RESULT_DO_NOTHING
 
-    def set_environment_variables(self, ndk_root, android_sdk_root, ant_root):
+    def set_environment_variables(self, ndk_root, android_sdk_root, quiet):
 
         print('\nSetting up cocos2d-x...')
 
         self.file_used_for_setup = self._get_filepath_for_setup()
 
         self.set_console_root()
+        self.set_cocos_x_root()
         self.set_templates_root()
 
         if self._isWindows():
@@ -671,10 +674,9 @@ class SetEnvVar(object):
         else:
             print('->Configuration for Android platform only, you can also skip and manually edit "%s"\n' %
                   self.file_used_for_setup)
-
-        ndk_ret = self.set_variable(NDK_ROOT, ndk_root)
-        sdk_ret = self.set_variable(ANDROID_SDK_ROOT, android_sdk_root)
-        ant_ret = self.set_variable(ANT_ROOT, ant_root)
+        if(quiet) :
+            ndk_ret = self.set_variable(NDK_ROOT, ndk_root)
+            sdk_ret = self.set_variable(ANDROID_SDK_ROOT, android_sdk_root)
 
         # tip the backup file
         if (self.backup_file is not None) and (os.path.exists(self.backup_file)):
@@ -698,13 +700,13 @@ if __name__ == '__main__':
     parser.add_option('-a', '--androidsdkroot',
                       dest='android_sdk_root', help='directory of android sdk root')
     parser.add_option(
-        '-t', '--antroot', dest='ant_root', help='directory that contains ant/ant.bat')
+        '-q', '--quiet', dest='quiet',action="store_false", default = True, help='setup without setting NDK,SDK')
     opts, args = parser.parse_args()
 
     # set environment variables
     env = SetEnvVar()
     env.set_environment_variables(
-        opts.ndk_root, opts.android_sdk_root, opts.ant_root)
+        opts.ndk_root, opts.android_sdk_root, opts.quiet)
 
     if env._isWindows():
         import ctypes

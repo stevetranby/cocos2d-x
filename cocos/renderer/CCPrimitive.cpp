@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -53,6 +54,8 @@ const IndexBuffer* Primitive::getIndexData() const
 Primitive::Primitive()
 : _verts(nullptr)
 , _indices(nullptr)
+, _start(0)
+, _count(0)
 , _type(GL_POINTS)
 {
 }
@@ -79,7 +82,7 @@ bool Primitive::init(VertexData* verts, IndexBuffer* indices, int type)
         CC_SAFE_RELEASE(_indices);
         _indices = indices;
     }
-    
+
     _type = type;
     
     return true;
@@ -94,8 +97,8 @@ void Primitive::draw()
         {
             GLenum type = (_indices->getType() == IndexBuffer::IndexType::INDEX_TYPE_SHORT_16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indices->getVBO());
-            size_t offet = _start * _indices->getSizePerIndex();
-            glDrawElements((GLenum)_type, _count, type, (GLvoid*)offet);
+            size_t offset = _start * _indices->getSizePerIndex();
+            glDrawElements((GLenum)_type, _count, type, (GLvoid*)offset);
         }
         else
         {
@@ -105,6 +108,16 @@ void Primitive::draw()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+}
+
+void Primitive::setStart(int start)
+{
+    _start = start;
+}
+
+void Primitive::setCount(int count)
+{
+    _count = count;
 }
 
 NS_CC_END

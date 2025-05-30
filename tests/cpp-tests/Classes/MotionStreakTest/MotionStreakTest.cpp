@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include "MotionStreakTest.h"
 #include "../testResource.h"
 
@@ -14,6 +38,7 @@ MotionStreakTests::MotionStreakTests()
     ADD_TEST_CASE(MotionStreakTest1);
     ADD_TEST_CASE(MotionStreakTest2);
     ADD_TEST_CASE(Issue1358);
+    ADD_TEST_CASE(Issue12226);
 }
 
 //------------------------------------------------------------------
@@ -39,9 +64,9 @@ void MotionStreakTest1::onEnter()
     _target->setPosition(Vec2(s.width/4, 0));
 
     // create the streak object and add it to the scene
-    streak = MotionStreak::create(2, 3, 32, Color3B::GREEN, s_streak);
-    addChild(streak);
-    // schedule an update on each frame so we can syncronize the streak with the target
+    _streak = MotionStreak::create(2, 3, 32, Color3B::GREEN, s_streak);
+    addChild(_streak);
+    // schedule an update on each frame so we can synchronize the streak with the target
     schedule(CC_SCHEDULE_SELECTOR(MotionStreakTest1::onUpdate));
   
     auto a1 = RotateBy::create(2, 360);
@@ -61,12 +86,12 @@ void MotionStreakTest1::onEnter()
         TintTo::create(0.2f, 255, 255, 255),
         nullptr));
 
-    streak->runAction(colorAction);
+    _streak->runAction(colorAction);
 }
 
 void MotionStreakTest1::onUpdate(float delta)
 {
-    streak->setPosition( _target->convertToWorldSpace(Vec2::ZERO) );
+    _streak->setPosition( _target->convertToWorldSpace(Vec2::ZERO) );
 }
 
 std::string MotionStreakTest1::title() const
@@ -91,17 +116,17 @@ void MotionStreakTest2::onEnter()
     auto s = Director::getInstance()->getWinSize();
         
     // create the streak object and add it to the scene
-    streak = MotionStreak::create(3, 3, 64, Color3B::WHITE, s_streak );
-    addChild(streak);
+    _streak = MotionStreak::create(3, 3, 64, Color3B::WHITE, s_streak );
+    addChild(_streak);
     
-    streak->setPosition( Vec2(s.width/2, s.height/2) ); 
+    _streak->setPosition( Vec2(s.width/2, s.height/2) );
 }
 
 void MotionStreakTest2::onTouchesMoved(const std::vector<Touch*>& touches, Event* event)
 {
     auto touchLocation = touches[0]->getLocation();
     
-    streak->setPosition( touchLocation );
+    _streak->setPosition( touchLocation );
 }
 
 std::string MotionStreakTest2::title() const
@@ -122,8 +147,8 @@ void Issue1358::onEnter()
     // ask director the the window size
     auto size = Director::getInstance()->getWinSize();
     
-    streak = MotionStreak::create(2.0f, 1.0f, 50.0f, Color3B(255, 255, 0), "Images/Icon.png");
-    addChild(streak);
+    _streak = MotionStreak::create(2.0f, 1.0f, 50.0f, Color3B(255, 255, 0), "Images/Icon.png");
+    addChild(_streak);
     
     
     _center  = Vec2(size.width/2, size.height/2);
@@ -136,7 +161,7 @@ void Issue1358::onEnter()
 void Issue1358::update(float dt)
 {
     _angle += 1.0f;
-    streak->setPosition(Vec2(_center.x + cosf(_angle/180 * M_PI)*_radius,
+    _streak->setPosition(Vec2(_center.x + cosf(_angle/180 * M_PI)*_radius,
                             _center.y + sinf(_angle/ 180 * M_PI)*_radius));
 }
 
@@ -152,15 +177,71 @@ std::string Issue1358::subtitle() const
 
 //------------------------------------------------------------------
 //
+// Issue12226
+//
+//------------------------------------------------------------------
+
+void Issue12226::onEnter()
+{
+    MotionStreakTest::onEnter();
+
+    // ask director the the window size
+    auto size = Director::getInstance()->getWinSize();
+
+    auto radius = size.width/3;
+
+    auto outer = Sprite::create("Images/grossini.png");
+    outer->setPosition(size/2);
+    addChild(outer);
+
+
+    _streak = MotionStreak::create(1.0f, 3, radius * 1.5f, Color3B(0xA0, 0xA0, 0xA0), "ccb/particle-smoke.png");
+//    motionStreak->setOpacity(0x70);
+    _streak->setPosition(outer->getPosition());
+
+    this->addChild(_streak, outer->getLocalZOrder() - 1);
+
+    outer->setUserData(_streak);
+
+    const uint32_t length = (radius * 0.95);
+
+    std::function<void(float)> updateMotionStreak = [=](float dt) {
+
+        Vec2 position = Vec2(outer->getPositionX() + length * cosf(-1 * CC_DEGREES_TO_RADIANS(outer->getRotation() + 90.0f)),
+                             outer->getPositionY() + length * sinf(-1 * CC_DEGREES_TO_RADIANS(outer->getRotation() + 90.0f)));
+
+        _streak->setPosition(position);
+    };
+
+    outer->schedule(updateMotionStreak, 1 / 240.0f, CC_REPEAT_FOREVER, 0, "motion1scheduler");
+
+    auto rot = RotateBy::create(2, 360);
+    auto forever = RepeatForever::create(rot);
+    outer->runAction(forever);
+
+}
+
+std::string Issue12226::title() const
+{
+    return "Github Issue 12226";
+}
+
+std::string Issue12226::subtitle() const
+{
+    return "Image should look without artifacts";
+}
+
+//------------------------------------------------------------------
+//
 // MotionStreakTest
 //
 //------------------------------------------------------------------
 
-MotionStreakTest::MotionStreakTest(void)
+MotionStreakTest::MotionStreakTest()
 {
 }
 
-MotionStreakTest::~MotionStreakTest(void)
+MotionStreakTest::~MotionStreakTest()
 {
 }
 
@@ -193,6 +274,6 @@ void MotionStreakTest::onEnter()
 
 void MotionStreakTest::modeCallback(Ref *pSender)
 {
-    bool fastMode = streak->isFastMode();
-    streak->setFastMode(! fastMode);
+    bool fastMode = _streak->isFastMode();
+    _streak->setFastMode(! fastMode);
 }

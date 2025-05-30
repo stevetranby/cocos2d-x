@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include "Box2dView.h"
 #include "GLES-Render.h"
 #include "Test.h"
@@ -68,7 +92,7 @@ bool Box2dTestBed::initWithEntryID(int entryId)
     view->setScale(15);
     view->setAnchorPoint( Vec2(0,0) );
     view->setPosition(visibleOrigin.x+visibleSize.width/2, visibleOrigin.y+visibleSize.height/3);
-    auto label = Label::createWithTTF(view->title().c_str(), "fonts/arial.ttf", 28);
+    auto label = Label::createWithTTF(view->title(), "fonts/arial.ttf", 28);
     addChild(label, 1);
     label->setPosition(visibleOrigin.x+visibleSize.width/2, visibleOrigin.y+visibleSize.height-50);
     
@@ -104,7 +128,7 @@ void Box2dTestBed::onTouchMoved(Touch* touch, Event* event)
 // Box2DView
 //
 //------------------------------------------------------------------
-Box2DView::Box2DView(void)
+Box2DView::Box2DView()
 {
 }
 
@@ -160,7 +184,7 @@ void Box2DView::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 void Box2DView::onDraw(const Mat4 &transform, uint32_t flags)
 {
     Director* director = Director::getInstance();
-    CCASSERT(nullptr != director, "Director is null when seting matrix stack");
+    CCASSERT(nullptr != director, "Director is null when setting matrix stack");
     director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
 
@@ -212,12 +236,12 @@ void Box2DView::onTouchEnded(Touch* touch, Event* event)
 
 void Box2DView::onKeyPressed(EventKeyboard::KeyCode code, Event* event)
 {
-    log("Box2dView:onKeyPressed, keycode: %d", code);
+    log("Box2dView:onKeyPressed, keycode: %d", static_cast<int>(code));
     m_test->Keyboard(static_cast<unsigned char>(code));
 }
 
 void Box2DView::onKeyReleased(EventKeyboard::KeyCode code, Event* event)
 {
-    log("onKeyReleased, keycode: %d", code);
+    log("onKeyReleased, keycode: %d", static_cast<int>(code));
     m_test->KeyboardUp(static_cast<unsigned char>(code));
 }

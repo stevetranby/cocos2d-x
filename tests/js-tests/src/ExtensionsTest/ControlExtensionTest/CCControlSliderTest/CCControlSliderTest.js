@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -50,7 +51,7 @@ var ControlSliderTest = ControlScene.extend({
             slider.tag = 1;
 
             // When the value of the slider will change, the given selector will be call
-            slider.addTargetWithActionForControlEvents(this, this.valueChanged, cc.CONTROL_EVENT_VALUECHANGED);
+            slider.addTargetWithActionForControlEvents(this, this.upperValueChanged, cc.CONTROL_EVENT_VALUECHANGED);
 
             var restrictSlider = new cc.ControlSlider("extensions/sliderTrack.png", "extensions/sliderProgress.png", "extensions/sliderThumb.png");
             restrictSlider.anchorX = 0.5;
@@ -65,7 +66,7 @@ var ControlSliderTest = ControlScene.extend({
             restrictSlider.tag = 2;
 
             //same with restricted
-            restrictSlider.addTargetWithActionForControlEvents(this, this.valueChanged, cc.CONTROL_EVENT_VALUECHANGED);
+            restrictSlider.addTargetWithActionForControlEvents(this, this.lowerValueChanged, cc.CONTROL_EVENT_VALUECHANGED);
 
             this.addChild(slider);
             this.addChild(restrictSlider);
@@ -73,12 +74,13 @@ var ControlSliderTest = ControlScene.extend({
         }
         return false;
     },
-    valueChanged:function (sender, controlEvent) {
+    upperValueChanged:function (sender, controlEvent) {
         // Change value of label.
-        if (sender.tag == 1)
-            this._displayValueLabel.setString("Upper slider value = " + sender.getValue().toFixed(2));
-        if (sender.tag == 2)
-            this._displayValueLabel.setString("Lower slider value = " + sender.getValue().toFixed(2));
+        this._displayValueLabel.setString("Upper slider value = " + sender.getValue().toFixed(2));
+    },
+    lowerValueChanged: function (sender, controlEvent) {
+        // Change value of label.
+        this._displayValueLabel.setString("Lower slider value = " + sender.getValue().toFixed(2));
     }
 });
 

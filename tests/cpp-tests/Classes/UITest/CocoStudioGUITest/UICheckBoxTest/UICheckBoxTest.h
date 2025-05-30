@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -40,8 +41,10 @@ public:
     virtual bool init() override;
     void selectedEvent(cocos2d::Ref* sender,cocos2d::ui::CheckBox::EventType type);
     
+    void printWidgetResources(cocos2d::Ref* sender);
 protected:
     cocos2d::ui::Text* _displayValueLabel;
+    cocos2d::ui::CheckBox* _checkBox;
 };
 
 class UICheckBoxDefaultBehaviorTest : public UIScene

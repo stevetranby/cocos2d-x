@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -52,7 +53,7 @@ static bool isValidUniform(const char* name);
 Material* Material::createWithFilename(const std::string& filepath)
 {
     auto validfilename = FileUtils::getInstance()->fullPathForFilename(filepath);
-    if (validfilename.size() > 0) {
+    if (!validfilename.empty()) {
         auto mat = new (std::nothrow) Material();
         if (mat && mat->initWithFile(validfilename))
         {
@@ -105,10 +106,6 @@ bool Material::initWithGLProgramState(cocos2d::GLProgramState *state)
 
 bool Material::initWithFile(const std::string& validfilename)
 {
-    Data data = FileUtils::getInstance()->getDataFromFile(validfilename);
-    char* bytes = (char*)data.getBytes();
-    bytes[data.getSize()-1]='\0';
-
     // Warning: properties is not a "Ref" object, must be manually deleted
     Properties* properties = Properties::createNonRefCounted(validfilename);
 
@@ -175,7 +172,7 @@ bool Material::parseTechnique(Properties* techniqueProperties)
         }
         else if (strcmp(name, "renderState") == 0)
         {
-            parseRenderState(this, space);
+            parseRenderState(technique, space);
         }
 
         space = techniqueProperties->getNextNamespace();
@@ -423,8 +420,8 @@ std::string Material::getName() const
 
 Material::Material()
 : _name("")
-, _target(nullptr)
 , _currentTechnique(nullptr)
+, _target(nullptr)
 {
 }
 
@@ -442,6 +439,7 @@ Material* Material::clone() const
         for (const auto& technique: _techniques)
         {
             auto t = technique->clone();
+            t->_parent = material;
             material->_techniques.pushBack(t);
         }
 
@@ -467,7 +465,7 @@ const Vector<Technique*>& Material::getTechniques() const
 Technique* Material::getTechniqueByName(const std::string& name)
 {
     for(const auto& technique : _techniques) {
-        if (technique->getName().compare(name)==0)
+        if (technique->getName() == name)
             return technique;
     }
     return nullptr;

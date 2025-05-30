@@ -1,5 +1,30 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include "ParticleTest.h"
 #include "../testResource.h"
+#include "editor-support/cocostudio/CocosStudioExtension.h"
 
 USING_NS_CC;
 
@@ -81,6 +106,43 @@ std::string DemoSun::subtitle() const
 
 //------------------------------------------------------------------
 //
+// DemoPause
+//
+//------------------------------------------------------------------
+void DemoPause::onEnter()
+{
+    ParticleDemo::onEnter();
+    
+    _emitter = ParticleSmoke::create();
+    _emitter->retain();
+    _background->addChild(_emitter, 10);
+    
+    _emitter->setTexture( Director::getInstance()->getTextureCache()->addImage(s_fire) );
+    
+    setEmitterPosition();
+    schedule(CC_SCHEDULE_SELECTOR(DemoPause::pauseEmitter), 2.0f);
+
+
+}
+void DemoPause::pauseEmitter(float time)
+{
+    if (_emitter->isPaused())
+    {
+        _emitter->resumeEmissions();
+    }
+    else
+    {
+        _emitter->pauseEmissions();
+    }
+}
+
+std::string DemoPause::subtitle() const
+{
+    return "Pause Particle";
+}
+
+//------------------------------------------------------------------
+//
 // DemoGalaxy
 //
 //------------------------------------------------------------------
@@ -157,7 +219,7 @@ void DemoBigFlower::onEnter()
     _emitter->setRadialAccel(-120);
     _emitter->setRadialAccelVar(0);
 
-    // tagential
+    // tangential
     _emitter->setTangentialAccel(30);
     _emitter->setTangentialAccelVar(0);
 
@@ -241,7 +303,7 @@ void DemoRotFlower::onEnter()
     _emitter->setRadialAccel(-120);
     _emitter->setRadialAccelVar(0);
 
-    // tagential
+    // tangential
     _emitter->setTangentialAccel(30);
     _emitter->setTangentialAccelVar(0);
 
@@ -495,7 +557,7 @@ void DemoModernArt::onEnter()
     _emitter->setRadialAccel(70);
     _emitter->setRadialAccelVar(10);
 
-    // tagential
+    // tangential
     _emitter->setTangentialAccel(80);
     _emitter->setTangentialAccelVar(0);
 
@@ -975,6 +1037,7 @@ ParticleTests::ParticleTests()
     ADD_TEST_CASE(DemoModernArt);
     ADD_TEST_CASE(DemoRing);
     ADD_TEST_CASE(ParallaxParticle);
+    ADD_TEST_CASE(DemoPause);
     addTestCase("BoilingFoam", [](){return DemoParticleFromFile::create("BoilingFoam");});
     addTestCase("BurstPipe", [](){return DemoParticleFromFile::create("BurstPipe"); });
     addTestCase("Comet", [](){return DemoParticleFromFile::create("Comet"); });
@@ -1009,16 +1072,19 @@ ParticleTests::ParticleTests()
     ADD_TEST_CASE(ParticleResetTotalParticles);
 
     ADD_TEST_CASE(ParticleIssue12310);
+    ADD_TEST_CASE(ParticleSpriteFrame);
 }
 
-ParticleDemo::~ParticleDemo(void)
+ParticleDemo::~ParticleDemo()
 {
     CC_SAFE_RELEASE(_emitter);
 }
 
-void ParticleDemo::onEnter(void)
+void ParticleDemo::onEnter()
 {
     TestCase::onEnter();
+
+    MenuItemFont::setFontSize(32);
 
 	_color = LayerColor::create( Color4B(127,127,127,255) );
 	this->addChild(_color);
@@ -1316,7 +1382,7 @@ void ParticleReorder::reorderParticles(float dt)
 class RainbowEffect : public ParticleSystemQuad
 {
 public:
-    bool init();
+    bool init()override;
     virtual bool initWithTotalParticles(int numberOfParticles) override;
     virtual void update(float dt) override;
 };
@@ -1773,7 +1839,7 @@ std::string PremultipliedAlphaTest::subtitle() const
     return "no black halo, particles should fade out\n animation should be normal";
 }
 
-void PremultipliedAlphaTest::readdPaticle(float delta)
+void PremultipliedAlphaTest::readdParticle(float delta)
 {
     if (_hasEmitter)
     {
@@ -1816,7 +1882,7 @@ void PremultipliedAlphaTest::onEnter()
     this->addChild(_emitter, 10);
     _hasEmitter = true;
     
-    schedule(CC_SCHEDULE_SELECTOR(PremultipliedAlphaTest::readdPaticle), 1.0f);
+    schedule(CC_SCHEDULE_SELECTOR(PremultipliedAlphaTest::readdParticle), 1.0f);
 }
 
 // PremultipliedAlphaTest2
@@ -1959,7 +2025,9 @@ void ParticleResetTotalParticles::onEnter()
                                     {
                                         p->setTotalParticles(p->getTotalParticles() + 10 );
                                     });
+    add->setFontSizeObj(20);
     add->setPosition(Vec2(0, 25));
+    
     auto remove = MenuItemFont::create("remove 10 particles",
                                        [p](Ref*)->void
                                        {
@@ -1968,6 +2036,7 @@ void ParticleResetTotalParticles::onEnter()
                                            p->setTotalParticles(count);
                                        });
     remove->setPosition(Vec2(0, -25));
+    remove->setFontSizeObj(20);
     
     auto menu = Menu::create(add, remove, nullptr);
     menu->setPosition(Vec2(VisibleRect::center()));
@@ -2010,4 +2079,34 @@ void ParticleIssue12310::onEnter()
 std::string ParticleIssue12310::subtitle() const
 {
     return "You should see two Particle Emitters using different texture.";
+}
+
+//------------------------------------------------------------------
+//
+// ParticleSpriteFrame
+//
+//------------------------------------------------------------------
+void ParticleSpriteFrame::onEnter()
+{
+    ParticleDemo::onEnter();
+
+    _emitter = ParticleSmoke::create();
+    _emitter->retain();
+    _background->addChild(_emitter, 10);
+
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Particles/SpriteFrame.plist");
+
+    _emitter->setDisplayFrame( SpriteFrameCache::getInstance()->getSpriteFrameByName("dot.png") );
+
+    setEmitterPosition();
+}
+
+std::string ParticleSpriteFrame::title() const
+{
+    return "Particle from SpriteFrame";
+}
+
+std::string ParticleSpriteFrame::subtitle() const
+{
+    return "Should not use entire texture atlas";
 }

@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include "ActionManagerTest.h"
 #include "../testResource.h"
 #include "cocos2d.h"
@@ -18,7 +42,9 @@ ActionManagerTests::ActionManagerTests()
     ADD_TEST_CASE(PauseTest);
     ADD_TEST_CASE(StopActionTest);
     ADD_TEST_CASE(StopAllActionsTest);
+    ADD_TEST_CASE(StopActionsByFlagsTest);
     ADD_TEST_CASE(ResumeTest);
+    ADD_TEST_CASE(Issue14050Test);
 }
 
 //------------------------------------------------------------------
@@ -27,11 +53,11 @@ ActionManagerTests::ActionManagerTests()
 //
 //------------------------------------------------------------------
 
-ActionManagerTest::ActionManagerTest(void)
+ActionManagerTest::ActionManagerTest()
 {
 }
 
-ActionManagerTest::~ActionManagerTest(void)
+ActionManagerTest::~ActionManagerTest()
 {
 }
 
@@ -290,4 +316,89 @@ void ResumeTest::resumeGrossini(float time)
     auto pGrossini = getChildByTag(kTagGrossini);
     auto director = Director::getInstance();
     director->getActionManager()->resumeTarget(pGrossini);
+}
+
+//------------------------------------------------------------------
+//
+// StopActionsByFlagsTest
+//
+//------------------------------------------------------------------
+void StopActionsByFlagsTest::onEnter()
+{
+    ActionManagerTest::onEnter();
+
+    auto l = Label::createWithTTF("Should stop scale & move after 4 seconds but keep rotate", "fonts/Thonburi.ttf", 16.0f);
+    addChild(l);
+    l->setPosition( Vec2(VisibleRect::center().x, VisibleRect::top().y - 75) );
+
+    auto pMove1 = MoveBy::create(2, Vec2(200, 0));
+    auto pMove2 = MoveBy::create(2, Vec2(-200, 0));
+    auto pSequenceMove = Sequence::createWithTwoActions(pMove1, pMove2);
+    auto pRepeatMove = RepeatForever::create(pSequenceMove);
+    pRepeatMove->setFlags(kMoveFlag | kRepeatForeverFlag);
+
+    auto pScale1 = ScaleBy::create(2, 1.5f);
+    auto pScale2 = ScaleBy::create(2, 1.0f/1.5f);
+    auto pSequenceScale = Sequence::createWithTwoActions(pScale1, pScale2);
+    auto pRepeatScale = RepeatForever::create(pSequenceScale);
+    pRepeatScale->setFlags(kScaleFlag | kRepeatForeverFlag);
+
+    auto pRotate = RotateBy::create(2, 360);
+    auto pRepeatRotate = RepeatForever::create(pRotate);
+    pRepeatRotate->setFlags(kRotateFlag | kRepeatForeverFlag);
+
+    auto pChild = Sprite::create(s_pathGrossini);
+    pChild->setPosition( VisibleRect::center() );
+
+    addChild(pChild, 1, kTagGrossini);
+    pChild->runAction(pRepeatMove);
+    pChild->runAction(pRepeatScale);
+    pChild->runAction(pRepeatRotate);
+    this->scheduleOnce((SEL_SCHEDULE)&StopActionsByFlagsTest::stopAction, 4);
+}
+
+void StopActionsByFlagsTest::stopAction(float time)
+{
+    auto sprite = getChildByTag(kTagGrossini);
+    sprite->stopActionsByFlags(kMoveFlag | kScaleFlag);
+}
+
+std::string StopActionsByFlagsTest::subtitle() const
+{
+    return "Stop All Actions By Flags Test";
+}
+
+//------------------------------------------------------------------
+//
+// Issue14050Test
+//
+//------------------------------------------------------------------
+class SpriteIssue14050: public Sprite
+{
+public:
+    SpriteIssue14050()
+    {
+        log("SpriteIssue14050::constructor");
+    }
+    virtual ~SpriteIssue14050()
+    {
+        log("SpriteIssue14050::destructor");
+    }
+};
+
+void Issue14050Test::onEnter()
+{
+    ActionManagerTest::onEnter();
+
+    auto sprite = new (std::nothrow) SpriteIssue14050;
+    sprite->initWithFile("Images/grossini.png");
+    sprite->autorelease();
+
+    auto move = MoveBy::create(2, Vec2(100, 100));
+    sprite->runAction(move);
+}
+
+std::string Issue14050Test::subtitle() const
+{
+    return "Issue14050. Sprite should not leak.";
 }

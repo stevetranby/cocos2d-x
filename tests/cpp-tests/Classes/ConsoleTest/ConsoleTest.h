@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -72,10 +73,10 @@ protected:
     virtual ~ConsoleUploadFile();
 
     void uploadFile();
-    std::string _src_file_path;
-    std::string _target_file_name;
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(ConsoleUploadFile);
+
+    std::string _targetFileName;
 };
 
 #endif // _CONSOLE_TEST_H_

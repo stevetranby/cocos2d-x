@@ -18,6 +18,14 @@
 -- @return DrawNode#DrawNode self (return value: cc.DrawNode)
         
 --------------------------------
+-- When isolated is set, the position of the node is no longer affected by parent nodes.<br>
+-- Which means it will be drawn just like a root node.
+-- @function [parent=#DrawNode] setIsolated 
+-- @param self
+-- @param #bool isolated
+-- @return DrawNode#DrawNode self (return value: cc.DrawNode)
+        
+--------------------------------
 -- @overload self, vec2_table, vec2_table, vec2_table, vec2_table, color4f_table         
 -- @overload self, vec2_table, vec2_table, color4f_table         
 -- @function [parent=#DrawNode] drawRect
@@ -43,6 +51,13 @@
 -- @param #color4f_table color
 -- @return DrawNode#DrawNode self (return value: cc.DrawNode)
 
+--------------------------------
+-- 
+-- @function [parent=#DrawNode] setLineWidth 
+-- @param self
+-- @param #float lineWidth
+-- @return DrawNode#DrawNode self (return value: cc.DrawNode)
+        
 --------------------------------
 -- js NA
 -- @function [parent=#DrawNode] onDrawGLPoint 
@@ -112,7 +127,7 @@
 -- param origin The origin of the bezier path.<br>
 -- param control The control of the bezier path.<br>
 -- param destination The destination of the bezier path.<br>
--- param segments The The number of segments.<br>
+-- param segments The number of segments.<br>
 -- param color Set the quad bezier color.
 -- @function [parent=#DrawNode] drawQuadBezier 
 -- @param self
@@ -179,6 +194,12 @@
 -- @return DrawNode#DrawNode self (return value: cc.DrawNode)
         
 --------------------------------
+-- 
+-- @function [parent=#DrawNode] getLineWidth 
+-- @param self
+-- @return float#float ret (return value: float)
+        
+--------------------------------
 --  Draw a point.<br>
 -- param point A Vec2 used to point.<br>
 -- param pointSize The point size.<br>
@@ -192,12 +213,18 @@
 -- @return DrawNode#DrawNode self (return value: cc.DrawNode)
         
 --------------------------------
+-- 
+-- @function [parent=#DrawNode] isIsolated 
+-- @param self
+-- @return bool#bool ret (return value: bool)
+        
+--------------------------------
 --  Draw a cubic bezier curve with color and number of segments<br>
 -- param origin The origin of the bezier path.<br>
 -- param control1 The first control of the bezier path.<br>
 -- param control2 The second control of the bezier path.<br>
 -- param destination The destination of the bezier path.<br>
--- param segments The The number of segments.<br>
+-- param segments The number of segments.<br>
 -- param color Set the cubic bezier color.
 -- @function [parent=#DrawNode] drawCubicBezier 
 -- @param self
@@ -223,6 +250,15 @@
 -- @param #cc.Renderer renderer
 -- @param #mat4_table transform
 -- @param #unsigned int flags
+-- @return DrawNode#DrawNode self (return value: cc.DrawNode)
+        
+--------------------------------
+-- 
+-- @function [parent=#DrawNode] visit 
+-- @param self
+-- @param #cc.Renderer renderer
+-- @param #mat4_table parentTransform
+-- @param #unsigned int parentFlags
 -- @return DrawNode#DrawNode self (return value: cc.DrawNode)
         
 --------------------------------

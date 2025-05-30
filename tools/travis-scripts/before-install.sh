@@ -6,92 +6,125 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COCOS2DX_ROOT="$DIR"/../..
 HOST_NAME=""
+CURL="curl --retry 999 --retry-max-time 0"
 
-pushd $COCOS2DX_ROOT
-python download-deps.py -r=yes
-popd
-
-mkdir -p $HOME/bin
-cd $HOME/bin
-
-install_android_ndk()
+function install_android_ndk()
 {
-    # Download android ndk
-    if [ "$PLATFORM"x = "mac-ios"x ]; then
-        HOST_NAME="darwin"
+    sudo python -m pip install retry
+    if [ "$BUILD_TARGET" == "android_cpp_ndk-build" ]\
+        || [ "$BUILD_TARGET" == "android_lua_ndk-build" ]\
+        || [ "$BUILD_TARGET" == "android_cpp_cmake" ]\
+        || [ "$BUILD_TARGET" == "android_js_cmake" ]\
+        || [ "$BUILD_TARGET" == "android_lua_cmake" ] ; then
+        python $COCOS2DX_ROOT/tools/appveyor-scripts/setup_android.py
     else
-        HOST_NAME="linux"
+        python $COCOS2DX_ROOT/tools/appveyor-scripts/setup_android.py --ndk_only
     fi
-    echo "Download android-ndk-r9d-${HOST_NAME}-x86_64.tar.bz2 ..."
-    curl -O http://dl.google.com/android/ndk/android-ndk-r9d-${HOST_NAME}-x86_64.tar.bz2
-    echo "Decompress android-ndk-r9d-${HOST_NAME}-x86_64.tar.bz2 ..."
-    tar xjf android-ndk-r9d-${HOST_NAME}-x86_64.tar.bz2
-    # Rename ndk
-    mv android-ndk-r9d android-ndk
 }
 
-install_nacl_sdk()
+function install_linux_environment()
 {
-    # NaCl compilers are built for 32-bit linux so we need to install
-    # the runtime support for this.
-    if [ ! -e "/lib/ld-linux.so.2" ]; then
+    echo "Installing linux dependence packages ..."
+    echo -e "y" | bash $COCOS2DX_ROOT/build/install-deps-linux.sh
+    echo "Installing linux dependence packages finished!"
+}
+
+function download_deps()
+{
+    # install dpes
+    pushd $COCOS2DX_ROOT
+    python download-deps.py -r=yes
+    popd
+    echo "Downloading cocos2d-x dependence finished!"
+}
+
+function install_python_module_for_osx()
+{
+    pip install PyYAML
+    sudo pip install Cheetah
+}
+
+function install_latest_python()
+{
+    python -V
+    eval "$(pyenv init -)"
+    pyenv install 2.7.14
+    pyenv global 2.7.14
+    python -V
+}
+
+# set up environment according os and target
+function install_environement_for_pull_request()
+{
+    echo "Building pull request ..."
+
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
         sudo apt-get update
-        sudo apt-get install libc6:i386 libstdc++6:i386
+        sudo apt-get install ninja-build
+        ninja --version
+        if [ "$BUILD_TARGET" == "linux" ]; then
+            install_linux_environment
+        fi
+        if [ "$BUILD_TARGET" == "linux_clang_tidy" ]; then
+            install_linux_environment
+        fi
     fi
-    if [ ! -d nacl_sdl ]; then
-        echo "Download nacl_sdk ..."
-        wget http://storage.googleapis.com/nativeclient-mirror/nacl/nacl_sdk/nacl_sdk.zip
-        echo "Decompress nacl_sdk.zip"
-        unzip nacl_sdk.zip
+
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+        install_latest_python
+        install_python_module_for_osx
     fi
-    nacl_sdk/naclsdk update --force pepper_canary
+
+    # use NDK's clang to generate binding codes
+    install_android_ndk
+    download_deps
 }
 
-if [ "$GEN_COCOS_FILES"x = "YES"x ]; then
-    exit 0
-elif [ "$GEN_BINDING"x = "YES"x ]; then
-    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-        exit 0
+# should generate binding codes & cocos_files.json after merging
+function install_environement_for_after_merge()
+{
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+        install_latest_python
+        install_python_module_for_osx
     fi
+
+    echo "Building merge commit ..."
     install_android_ndk
-elif [ "$PLATFORM"x = "linux"x ]; then
-    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    download_deps
+}
+
+if [ "$BUILD_TARGET" == "android_cocos_new_cpp_test" ]; then
     sudo apt-get update
-    sudo apt-get install gcc-4.7 g++-4.7
-    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.6
-    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 90 --slave /usr/bin/g++ g++ /usr/bin/g++-4.7
-    g++ --version
-    bash $COCOS2DX_ROOT/build/install-deps-linux.sh
-    install_android_ndk
-elif [ "$PLATFORM"x = "nacl"x ]; then
-    install_nacl_sdk
-elif [ "$PLATFORM"x = "android"x ]; then
-    install_android_ndk
-elif [ "$PLATFORM"x = "emscripten"x ]; then
-    sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
-
-    install_android_ndk
-elif [ "$PLATFORM"x = "mac-ios"x ]; then
-    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-        exit 0
-    fi
-
-    if [ "$PUSH_TO_MAC"x = "YES"x ]; then
-        cd $COCOS2DX_ROOT
-        git config user.email ${GH_EMAIL_MAC}
-        git config user.name ${GH_USER_MAC}
-        git checkout -B $TRAVIS_BRANCH
-        cp tools/travis-scripts/travis_mac.yml ./.travis.yml
-        git add .travis.yml
-        cat .travis.yml
-        git commit --amend -m "`git log -1 --pretty=%B`"
-        git remote add travis-mac https://$GH_USER_MAC:$GH_PASSWORD_MAC@github.com/cocos-travis-mac/cocos2d-x.git
-        git push -f travis-mac $TRAVIS_BRANCH 2> /dev/null > /dev/null
-    else
-        echo "xctool version: `xctool --version`"
-        install_android_ndk
-    fi
-else
-    echo "Unknown \$PLATFORM: '$PLATFORM'"
-    exit 1
+    sudo apt-get install ninja-build
+    ninja --version
+    download_deps
+    sudo python -m pip install retry
+    python $COCOS2DX_ROOT/tools/appveyor-scripts/setup_android.py
+    exit 0
 fi
+
+if [ "$BUILD_TARGET" == "linux_cocos_new_lua_test" ]; then
+    download_deps
+    install_linux_environment
+    sudo python -m pip install retry
+    # set android ndk environment by setup_android.py
+    python $COCOS2DX_ROOT/tools/appveyor-scripts/setup_android.py --ndk_only
+    exit 0
+fi
+
+# build pull request
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    install_environement_for_pull_request
+fi
+
+# run after merging
+# - make cocos robot to send PR to cocos2d-x for new binding codes
+# - generate cocos_files.json for template
+if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    # only one job need to send PR, linux virtual machine has better performance
+    if [ $TRAVIS_OS_NAME == "linux" ] && [ x$GEN_BINDING_AND_COCOSFILE == x"true" ]; then
+        install_environement_for_after_merge
+    fi 
+fi
+
+echo "before-install.sh execution finished!"

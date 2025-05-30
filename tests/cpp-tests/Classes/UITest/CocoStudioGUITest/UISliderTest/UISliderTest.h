@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -38,9 +39,11 @@ public:
     ~UISliderTest();
     virtual bool init() override;
     void sliderEvent(cocos2d::Ref* sender, cocos2d::ui::Slider::EventType type);
+    void printWidgetResources(cocos2d::Ref* sender);
     
 protected:
     cocos2d::ui::TextBMFont* _displayValueLabel;
+    cocos2d::ui::Slider* _slider;
 };
 
 class UISliderTest_Scale9 : public UIScene
@@ -98,4 +101,30 @@ protected:
     cocos2d::ui::Text* _displayValueLabel;
 };
 
+class UISliderNewEventCallbackTest : public UIScene
+{
+public:
+    CREATE_FUNC(UISliderNewEventCallbackTest);
+
+    UISliderNewEventCallbackTest();
+    ~UISliderNewEventCallbackTest();
+    virtual bool init() override;
+
+protected:
+    cocos2d::ui::Text* _displayValueLabel;
+};
+
+class UISliderIssue12249Test : public UIScene
+{
+public:
+    CREATE_FUNC(UISliderIssue12249Test);
+    
+    UISliderIssue12249Test();
+    ~UISliderIssue12249Test();
+    virtual bool init() override;
+    void sliderEvent(cocos2d::Ref* sender, cocos2d::ui::Slider::EventType type);
+    
+protected:
+    cocos2d::ui::TextBMFont* _displayValueLabel;
+};
 #endif /* defined(__TestCpp__UISliderTest__) */

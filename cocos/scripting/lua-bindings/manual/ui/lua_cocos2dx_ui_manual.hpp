@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -46,7 +47,7 @@ TOLUA_API int register_all_cocos2dx_ui_manual(lua_State* L);
  * If you don't register the ui module, the package size would become smaller .
  * The current mechanism,this registering function is called in the lua_module_register.h
  */
-TOLUA_API int register_ui_moudle(lua_State* L);
+TOLUA_API int register_ui_module(lua_State* L);
 
 // end group
 /// @}

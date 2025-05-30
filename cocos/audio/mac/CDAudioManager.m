@@ -23,7 +23,7 @@
  */
 
 
-#import "CDAudioManager.h"
+#import "audio/mac/CDAudioManager.h"
 
 NSString * const kCDN_AudioManagerInitialised = @"kCDN_AudioManagerInitialised";
 
@@ -60,18 +60,18 @@ NSString * const kCDN_AudioManagerInitialised = @"kCDN_AudioManagerInitialised";
 }    
 
 -(void) load:(NSString*) filePath {
-    //We have alread loaded a file previously,  check if we are being asked to load the same file
+    //We have already loaded a file previously, check if we are being asked to load the same file
     if (state == kLAS_Init || ![filePath isEqualToString:audioSourceFilePath]) {
         CDLOGINFO(@"Denshion::CDLongAudioSource - Loading new audio source %@",filePath);
         //New file
         if (state != kLAS_Init) {
             [audioSourceFilePath release];//Release old file path
-            [audioSourcePlayer release];//Release old AVAudioPlayer, they can't be reused
+            [audioSourcePlayer release];//Release old CCAudioPlayer, they can't be reused
         }
         audioSourceFilePath = [filePath copy];
         NSError *error = nil;
         NSString *path = [CDUtilities fullPathFromRelativePath:audioSourceFilePath];
-        audioSourcePlayer = [(AVAudioPlayer*)[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:&error];
+        audioSourcePlayer = [(CCAudioPlayer*)[CCAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:&error];
         if (error == nil) {
             [audioSourcePlayer prepareToPlay];
             audioSourcePlayer.delegate = self;
@@ -190,12 +190,12 @@ NSString * const kCDN_AudioManagerInitialised = @"kCDN_AudioManagerInitialised";
     numberOfLoops = loopCount;
 }    
 
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+- (void)audioPlayerDidFinishPlaying:(CCAudioPlayer *)player successfully:(BOOL)flag {
     CDLOGINFO(@"Denshion::CDLongAudioSource - audio player finished");
 #if TARGET_IPHONE_SIMULATOR    
     CDLOGINFO(@"Denshion::CDLongAudioSource - workaround for OpenAL clobbered audio issue");
     //This is a workaround for an issue in all simulators (tested to 3.1.2).  Problem is 
-    //that OpenAL audio playback is clobbered when an AVAudioPlayer stops.  Workaround
+    //that OpenAL audio playback is clobbered when an CCAudioPlayer stops.  Workaround
     //is to keep the player playing on an endless loop with 0 volume and then when
     //it is played again reset the volume and set loop count appropriately.
     //NB: this workaround is not foolproof but it is good enough for most situations.
@@ -208,11 +208,11 @@ NSString * const kCDN_AudioManagerInitialised = @"kCDN_AudioManagerInitialised";
     }    
 }    
 
--(void)audioPlayerBeginInterruption:(AVAudioPlayer *)player {
+-(void)audioPlayerBeginInterruption:(CCAudioPlayer *)player {
     CDLOGINFO(@"Denshion::CDLongAudioSource - audio player interrupted");
 }
 
--(void)audioPlayerEndInterruption:(AVAudioPlayer *)player {
+-(void)audioPlayerEndInterruption:(CCAudioPlayer *)player {
     CDLOGINFO(@"Denshion::CDLongAudioSource - audio player resumed");
     if (self.backgroundMusic) {
         //Check if background music can play as rules may have changed during 
@@ -325,8 +325,9 @@ static BOOL configured = FALSE;
 
 -(BOOL) isOtherAudioPlaying {
     UInt32 isPlaying = 0;
-    UInt32 varSize = sizeof(isPlaying);
-    AudioSessionGetProperty (kAudioSessionProperty_OtherAudioIsPlaying, &varSize, &isPlaying);
+    //UInt32 varSize = sizeof(isPlaying);
+    //AudioSessionGetProperty (kAudioSessionProperty_OtherAudioIsPlaying, &varSize, &isPlaying);
+    isPlaying = [[AVAudioSession sharedInstance] isOtherAudioPlaying]; 
     return (isPlaying != 0);
 }
 
@@ -405,9 +406,9 @@ static BOOL configured = FALSE;
     if ((self = [super init])) {
         
         //Initialise the audio session 
-        AVAudioSession* session = [AVAudioSession sharedInstance];
-        session.delegate = self;
-    
+        //AVAudioSession* session = [AVAudioSession sharedInstance];
+        //session.delegate = self;
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
         _mode = mode;
         backgroundMusicCompletionSelector = nil;
         _isObservingAppEvents = FALSE;
@@ -474,33 +475,13 @@ static BOOL configured = FALSE;
 //however, on a 3gs running 3.1.2 no route change is generated when the user switches the 
 //ringer mute switch to off (i.e. enables sound) therefore polling is the only reliable way to
 //determine ringer switch state
--(BOOL) isDeviceMuted {
+ -(BOOL) isDeviceMuted {
 
 #if TARGET_IPHONE_SIMULATOR
     //Calling audio route stuff on the simulator causes problems
     return NO;
-#else    
-    CFStringRef newAudioRoute;
-    UInt32 propertySize = sizeof (CFStringRef);
-    
-    AudioSessionGetProperty (
-                             kAudioSessionProperty_AudioRoute,
-                             &propertySize,
-                             &newAudioRoute
-                             );
-    
-    if (newAudioRoute == NULL) {
-        //Don't expect this to happen but playing safe otherwise a null in the CFStringCompare will cause a crash
-        return YES;
-    } else {    
-        CFComparisonResult newDeviceIsMuted =    CFStringCompare (
-                                                                 newAudioRoute,
-                                                                 (CFStringRef) @"",
-                                                                 0
-                                                                 );
-        
-        return (newDeviceIsMuted == kCFCompareEqualTo);
-    }    
+#else
+    return NO;
 #endif
 }    
 
@@ -621,7 +602,7 @@ static BOOL configured = FALSE;
 - (void) applicationWillResignActive {
     _resigned = YES;
     
-    //Set the audio sesssion to one that allows sharing so that other audio won't be clobbered on resume
+    //Set the audio session to one that allows sharing so that other audio won't be clobbered on resume
     [self audioSessionSetCategory:AVAudioSessionCategoryAmbient];
     
     switch (_resignBehavior) {

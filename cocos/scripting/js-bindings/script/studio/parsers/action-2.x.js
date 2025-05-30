@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -113,7 +114,7 @@
             name: "Rotation",
             handle: function(options){
                 var frame = new ccs.RotationFrame();
-                var rotation = options["Rotation"];
+                var rotation = options["Rotation"] || options["Value"] || 0;
                 frame.setRotation(rotation);
                 return frame;
             }
@@ -260,6 +261,16 @@
 
                 return frame;
             }
+        },
+        {
+            name: "BlendFunc",
+            handle: function(options){
+                var frame = new ccs.BlendFuncFrame();
+                var blendFunc = options["BlendFunc"];
+                if(blendFunc && blendFunc["Src"] !== undefined && blendFunc["Dst"] !== undefined)
+                    frame.setBlendFunc(new cc.BlendFunc(blendFunc["Src"], blendFunc["Dst"]));
+                return frame;
+            }
         }
     ];
 
@@ -300,6 +311,6 @@
         });
     });
 
-    load.registerParser("action", "2.*", parser);
+    load.registerParser("action", "*", parser);
 
 })(ccs._load, ccs._parser);

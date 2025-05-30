@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #ifndef _RENDERTEXTURE_TEST_H_
 #define _RENDERTEXTURE_TEST_H_
 
@@ -20,7 +44,11 @@ public:
     virtual std::string subtitle() const override;
     void onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
     void clearImage(cocos2d::Ref* pSender);
-    void saveImage(cocos2d::Ref* pSender);
+    void clearImageTransparent(cocos2d::Ref* sender);
+    void saveImageWithPremultipliedAlpha(cocos2d::Ref* pSender);
+    void saveImageWithNonPremultipliedAlpha(cocos2d::Ref* pSender);
+
+    void addImage(cocos2d::Ref* sender);
 
 private:
     cocos2d::RenderTexture* _target;
@@ -51,7 +79,7 @@ public:
     void renderScreenShot();
 
 private:
-    cocos2d::SpriteBatchNode *mgr;;
+    cocos2d::SpriteBatchNode *mgr;
 
     cocos2d::Sprite *sp1;
     cocos2d::Sprite *sp2;
@@ -77,7 +105,7 @@ private:
     cocos2d::CustomCommand _renderCmds[4];
     void onBeforeClear();
     void onBeforeStencil();
-    void onBeforDraw();
+    void onBeforeDraw();
     void onAfterDraw();
     
 private:
@@ -95,7 +123,7 @@ public:
     CREATE_FUNC(RenderTextureTargetNode);
     RenderTextureTargetNode();
     
-    virtual void update(float t);
+    virtual void update(float t)override;
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
     
@@ -140,6 +168,38 @@ public:
     virtual std::string subtitle() const override;
     
     SimpleSprite* addNewSpriteWithCoords(const cocos2d::Vec2& p);
+};
+
+class Issue16113Test : public RenderTextureTest
+{
+public:
+    CREATE_FUNC(Issue16113Test);
+    Issue16113Test();
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+
+private:
+    cocos2d::RenderTexture* _rend;
+    cocos2d::Sprite* _spriteDraw;
+};
+
+class RenderTextureWithSprite3DIssue16894 : public RenderTextureTest
+{
+public:
+    CREATE_FUNC(RenderTextureWithSprite3DIssue16894);
+    RenderTextureWithSprite3DIssue16894();
+    virtual ~RenderTextureWithSprite3DIssue16894();
+
+    virtual void visit(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags) override;
+
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+
+private:
+    cocos2d::Sprite3D* _ship[3];
+
+    cocos2d::RenderTexture* _renderTexDefault;
+    cocos2d::RenderTexture* _renderTexWithBuffer;
 };
 
 #endif

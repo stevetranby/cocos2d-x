@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -24,7 +25,7 @@
  ****************************************************************************/
 
 //2015-01-14
-var UITextTest = UIScene.extend({
+var UITextTest = UIMainLayer.extend({
     init: function(){
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -42,7 +43,7 @@ var UITextTest = UIScene.extend({
 });
 
 //2015-01-14
-var UITextTest_LineWrap = UIScene.extend({
+var UITextTest_LineWrap = UIMainLayer.extend({
     init: function(){
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -74,7 +75,7 @@ var UITextTest_LineWrap = UIScene.extend({
 });
 
 //2015-01-14
-var UILabelTest_Effect = UIScene.extend({
+var UILabelTest_Effect = UIMainLayer.extend({
     init: function(){
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -120,7 +121,7 @@ var UILabelTest_Effect = UIScene.extend({
 });
 
 //2015-01-14
-var UITextTest_TTF = UIScene.extend({
+var UITextTest_TTF = UIMainLayer.extend({
     init: function(){
         if(this._super()){
             var widgetSize = this._widget.getContentSize();
@@ -128,7 +129,7 @@ var UITextTest_TTF = UIScene.extend({
             this._bottomDisplayLabel.setString("Text set TTF font");
 
             // Create the text, and set font with .ttf
-            var text = new ccui.Text("Text","A Damn Mess",30);
+            var text = new ccui.Text("Text","fonts/A Damn Mess.ttf",30);
             text.setPosition(widgetSize.width / 2, widgetSize.height / 2 + text.height / 4);
             this._mainNode.addChild(text);
 
@@ -138,7 +139,7 @@ var UITextTest_TTF = UIScene.extend({
 });
 
 //2015-01-14
-var UITextTest_IgnoreConentSize = UIScene.extend({
+var UITextTest_IgnoreContentSize = UIMainLayer.extend({
 
     init: function(){
         if(this._super()){
@@ -146,7 +147,7 @@ var UITextTest_IgnoreConentSize = UIScene.extend({
 
             this._bottomDisplayLabel.setString("");
 
-            var leftText = new ccui.Text("ignore conent", "Marker Felt",10);
+            var leftText = new ccui.Text("ignore content", "Marker Felt", 10);
             leftText.setPosition(cc.p(widgetSize.width / 2 - 50,
                 widgetSize.height / 2));
             leftText.ignoreContentAdaptWithSize(false);
@@ -156,7 +157,7 @@ var UITextTest_IgnoreConentSize = UIScene.extend({
             leftText.setTouchEnabled(true);
             this._mainNode.addChild(leftText);
 
-            var rightText = new ccui.Text("ignore conent", "Marker Felt",10);
+            var rightText = new ccui.Text("ignore content", "Marker Felt", 10);
             rightText.setPosition(cc.p(widgetSize.width / 2 + 50,
                 widgetSize.height / 2));
             rightText.setString("Text line with break\nText line with break\nText line with break\nText line with break\n");

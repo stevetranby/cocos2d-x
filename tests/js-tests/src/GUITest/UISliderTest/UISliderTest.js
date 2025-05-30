@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -23,7 +24,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-var UISliderTest = UIScene.extend({
+var UISliderTest = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -60,7 +61,7 @@ var UISliderTest = UIScene.extend({
     }
 });
 
-var UISliderTest_Scale9 = UIScene.extend({
+var UISliderTest_Scale9 = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -101,7 +102,7 @@ var UISliderTest_Scale9 = UIScene.extend({
 });
 
 //2015-01-14
-var UISliderNormalDefaultTest = UIScene.extend({
+var UISliderNormalDefaultTest = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -137,7 +138,7 @@ var UISliderNormalDefaultTest = UIScene.extend({
 });
 
 //2015-01-14
-var UISliderDisabledDefaultTest = UIScene.extend({
+var UISliderDisabledDefaultTest = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();

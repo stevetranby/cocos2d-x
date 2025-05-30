@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -318,7 +319,7 @@ var BMFontOpacityColorAlignmentTest = AtlasDemo.extend({
         // testing anchors
         label2.anchorX = 0.5;
         label2.anchorY = 0.5;
-        label2.color = cc.color.RED ;
+        label2.color = cc.color.RED;
         this.addChild(label2, 0, TAG_BITMAP_ATLAS2);
         label2.runAction(repeat.clone());
 
@@ -1011,7 +1012,7 @@ var BMFontGlyphDesignerTest = AtlasDemo.extend({
         return "Testing Glyph Designer";
     },
     subtitle:function () {
-        return "You should see a font with shawdows and outline";
+        return "You should see a font with shadows and outline";
     },
 
     //
@@ -1078,7 +1079,7 @@ var LabelTTFStrokeShadowTest = AtlasDemo.extend({
         var fontDefRedShadow = new cc.FontDefinition();
         fontDefRedShadow.fontName = "Arial";
         fontDefRedShadow.fontSize = 32;
-        fontDefRedShadow.textAlign = cc.TEXT_ALIGNMENT_CENTER;
+        fontDefRedShadow.textAlign = cc.TEXT_ALIGNMENT_LEFT;
         fontDefRedShadow.verticalAlign = cc.VERTICAL_TEXT_ALIGNMENT_TOP;
         fontDefRedShadow.fillStyle = redColor;
         fontDefRedShadow.boundingWidth = blockSize.width;
@@ -1099,7 +1100,7 @@ var LabelTTFStrokeShadowTest = AtlasDemo.extend({
         var fontDefBlueStroke = new cc.FontDefinition();
         fontDefBlueStroke.fontName = "Arial";
         fontDefBlueStroke.fontSize = 32;
-        fontDefBlueStroke.textAlign = cc.TEXT_ALIGNMENT_CENTER;
+        fontDefBlueStroke.textAlign = cc.TEXT_ALIGNMENT_LEFT;
         fontDefBlueStroke.verticalAlign = cc.VERTICAL_TEXT_ALIGNMENT_TOP;
         fontDefBlueStroke.fillStyle = blueColor;
         fontDefBlueStroke.boundingWidth = blockSize.width;
@@ -1118,7 +1119,7 @@ var LabelTTFStrokeShadowTest = AtlasDemo.extend({
         var fontDefRedStrokeShadow = new cc.FontDefinition();
         fontDefRedStrokeShadow.fontName = "Arial";
         fontDefRedStrokeShadow.fontSize = 32;
-        fontDefRedStrokeShadow.textAlign = cc.TEXT_ALIGNMENT_CENTER;
+        fontDefRedStrokeShadow.textAlign = cc.TEXT_ALIGNMENT_LEFT;
         fontDefRedStrokeShadow.verticalAlign = cc.VERTICAL_TEXT_ALIGNMENT_TOP;
         fontDefRedStrokeShadow.fillStyle = blueColor;
         fontDefRedStrokeShadow.boundingWidth = blockSize.width;
@@ -1965,7 +1966,7 @@ var WrapAlgorithmTest = AtlasDemo.extend({
             LabelTTF.setString(text);
             LabelTTF.setPosition(480 + i * 25, 300);
             LabelTTF.setAnchorPoint(0,1);
-            LabelTTF.boundingWidth = 3;
+            LabelTTF.boundingWidth = 13;
             LabelTTF.boundingHeight = 0;
             LabelTTF.enableStroke(cc.color(0, 0, 0, 1), 3.0);
             if (cc.sys.os === cc.sys.OS_WP8)
@@ -2014,6 +2015,39 @@ var WrapAlgorithmTest = AtlasDemo.extend({
     }
 });
 
+var labelTTFDrawModeTest = AtlasDemo.extend({
+    ctor:function () {
+        this._super();
+        var cacheLabel = new cc.LabelTTF();
+        cacheLabel.font = "32px 'Courier New'";
+        cacheLabel.string = "This is a labelTTF \ndrawn On cached Canvas!";
+        cacheLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
+        this.addChild(cacheLabel);
+        cacheLabel.x = winSize.width / 2;
+        cacheLabel.y = 3*winSize.height / 4 - cacheLabel.height;
+
+
+        var directLabel = new cc.LabelTTF();
+        if(cc._renderType === cc._RENDER_TYPE_CANVAS) {
+            directLabel.setDrawMode(false);
+            directLabel.string = "This is a labelTTF \ndrawn On Screen";
+        }
+        else
+            directLabel.string = "WebGL does NOT support to \ndraw labelTTF on Screen";
+        directLabel.font = "32px 'Courier New'";
+        directLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
+        this.addChild(directLabel);
+        directLabel.x = winSize.width / 2;
+        directLabel.y = winSize.height / 4 ;
+    },
+    title:function () {
+        return "LabelTTF DrawMode Test";
+    },
+    subtitle:function() {
+        return "Compare cacheMode to directMode";
+    }
+});
+
 //
 // Flow control
 //
@@ -2047,7 +2081,8 @@ var arrayOfLabelTest = [
     LabelTTFAlignment,
 
     LabelsEmpty,
-    LabelTTFStrokeShadowTest
+    LabelTTFStrokeShadowTest,
+    labelTTFDrawModeTest
 ];
 
 if (!cc.sys.isNative || cc.sys.isMobile) {

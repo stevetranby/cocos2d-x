@@ -1,9 +1,11 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := cocostudio_static
+LOCAL_MODULE := ccs
 
-LOCAL_MODULE_FILENAME := libcocostudio
+LOCAL_MODULE_FILENAME := libccs
+
+LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := CCActionFrame.cpp \
 CCActionFrameEasing.cpp \
@@ -34,6 +36,7 @@ CCComController.cpp \
 CCComRender.cpp \
 CCInputDelegate.cpp \
 DictionaryHelper.cpp \
+LocalizationManager.cpp \
 CCSGUIReader.cpp \
 CCSSceneReader.cpp \
 TriggerBase.cpp \
@@ -65,16 +68,24 @@ WidgetReader/Node3DReader/Node3DReader.cpp \
 WidgetReader/Sprite3DReader/Sprite3DReader.cpp \
 WidgetReader/UserCameraReader/UserCameraReader.cpp \
 WidgetReader/Particle3DReader/Particle3DReader.cpp \
+WidgetReader/SkeletonReader/BoneNodeReader.cpp \
+WidgetReader/SkeletonReader/SkeletonNodeReader.cpp \
+WidgetReader/GameNode3DReader/GameNode3DReader.cpp \
+WidgetReader/Light3DReader/Light3DReader.cpp \
 ActionTimeline/CCActionTimelineCache.cpp \
 ActionTimeline/CCFrame.cpp \
 ActionTimeline/CCTimeLine.cpp \
 ActionTimeline/CCActionTimeline.cpp \
 ActionTimeline/CCActionTimelineNode.cpp \
 ActionTimeline/CSLoader.cpp \
+ActionTimeline/CCBoneNode.cpp \
+ActionTimeline/CCSkeletonNode.cpp \
+ActionTimeline/CCSkinNode.cpp \
 FlatBuffersSerialize.cpp \
 WidgetCallBackHandlerProtocol.cpp \
 WidgetReader/ArmatureNodeReader/ArmatureNodeReader.cpp \
-CCObjectExtensionData.cpp \
+WidgetReader/TabControlReader/TabControlReader.cpp \
+CCComExtensionData.cpp \
 CocoStudio.cpp
 
 
@@ -85,8 +96,8 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/.. \
 
 LOCAL_CFLAGS += -fexceptions
 
-LOCAL_STATIC_LIBRARIES := cocos_ui_static
-LOCAL_STATIC_LIBRARIES += cocosdenshion_static
-LOCAL_STATIC_LIBRARIES += cocos_flatbuffers_static
+LOCAL_STATIC_LIBRARIES := ccui
+LOCAL_STATIC_LIBRARIES += ccds
+LOCAL_STATIC_LIBRARIES += ext_flatbuffers
 
 include $(BUILD_STATIC_LIBRARY)

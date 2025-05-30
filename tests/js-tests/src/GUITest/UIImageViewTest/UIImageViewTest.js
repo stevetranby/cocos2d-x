@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -23,7 +24,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-var UIImageViewTest = UIScene.extend({
+var UIImageViewTest = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             //init text
@@ -43,7 +44,7 @@ var UIImageViewTest = UIScene.extend({
     }
 });
 
-var UIImageViewTest_Scale9 = UIScene.extend({
+var UIImageViewTest_Scale9 = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -67,7 +68,7 @@ var UIImageViewTest_Scale9 = UIScene.extend({
 });
 
 //2015-01-14
-var UIImageViewTest_ContentSize = UIScene.extend({
+var UIImageViewTest_ContentSize = UIMainLayer.extend({
     init: function(){
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -127,7 +128,7 @@ var UIImageViewTest_ContentSize = UIScene.extend({
 });
 
 //2015-01-14
-var UIImageViewFlipTest = UIScene.extend({
+var UIImageViewFlipTest = UIMainLayer.extend({
     init: function(){
         if (this._super()) {
             cc.spriteFrameCache.addSpriteFrames("Images/blocks9ss.plist");

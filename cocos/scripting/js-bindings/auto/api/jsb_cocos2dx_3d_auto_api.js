@@ -57,20 +57,6 @@ getDuration : function (
 },
 
 /**
- * @method create
- * @param {String} arg0
- * @param {String} arg1
- * @return {cc.Animation3D}
- */
-create : function (
-str, 
-str 
-)
-{
-    return cc.Animation3D;
-},
-
-/**
  * @method Animation3D
  * @constructor
  */
@@ -85,6 +71,18 @@ Animation3D : function (
  * @class Animate3D
  */
 jsb.Animate3D = {
+
+/**
+ * @method setKeyFrameUserInfo
+ * @param {int} arg0
+ * @param {map_object} arg1
+ */
+setKeyFrameUserInfo : function (
+int, 
+map 
+)
+{
+},
 
 /**
  * @method getSpeed
@@ -274,6 +272,54 @@ Animate3D : function (
 };
 
 /**
+ * @class TextureCube
+ */
+jsb.TextureCube = {
+
+/**
+ * @method reloadTexture
+ * @return {bool}
+ */
+reloadTexture : function (
+)
+{
+    return false;
+},
+
+/**
+ * @method create
+ * @param {String} arg0
+ * @param {String} arg1
+ * @param {String} arg2
+ * @param {String} arg3
+ * @param {String} arg4
+ * @param {String} arg5
+ * @return {cc.TextureCube}
+ */
+create : function (
+str, 
+str, 
+str, 
+str, 
+str, 
+str 
+)
+{
+    return cc.TextureCube;
+},
+
+/**
+ * @method TextureCube
+ * @constructor
+ */
+TextureCube : function (
+)
+{
+},
+
+};
+
+/**
  * @class AttachNode
  */
 jsb.AttachNode = {
@@ -371,26 +417,6 @@ BillBoard : function (
  * @class Mesh
  */
 jsb.Mesh = {
-
-/**
- * @method setTexture
-* @param {cc.Texture2D|String} texture2d
-*/
-setTexture : function(
-str 
-)
-{
-},
-
-/**
- * @method getTexture
- * @return {cc.Texture2D}
- */
-getTexture : function (
-)
-{
-    return cc.Texture2D;
-},
 
 /**
  * @method getSkin
@@ -524,7 +550,7 @@ str
 
 /**
  * @method getIndexCount
- * @return {long}
+ * @return {int}
  */
 getIndexCount : function (
 )
@@ -544,7 +570,7 @@ meshindexdata
 
 /**
  * @method getMeshVertexAttribCount
- * @return {long}
+ * @return {int}
  */
 getMeshVertexAttribCount : function (
 )
@@ -712,7 +738,7 @@ int
 
 /**
  * @method getRootCount
- * @return {long}
+ * @return {int}
  */
 getRootCount : function (
 )
@@ -734,7 +760,7 @@ bone3d
 
 /**
  * @method getBoneCount
- * @return {long}
+ * @return {int}
  */
 getBoneCount : function (
 )
@@ -768,20 +794,20 @@ reload : function (
 
 /**
  * @method init
-* @param {String} str
-* @param {String} str
-* @param {String} str
-* @param {String} str
-* @param {String} str
-* @param {String} str
-* @return {bool|bool}
-*/
-init : function(
-str,
-str,
-str,
-str,
-str,
+ * @param {String} arg0
+ * @param {String} arg1
+ * @param {String} arg2
+ * @param {String} arg3
+ * @param {String} arg4
+ * @param {String} arg5
+ * @return {bool}
+ */
+init : function (
+str, 
+str, 
+str, 
+str, 
+str, 
 str 
 )
 {
@@ -919,6 +945,16 @@ int
 },
 
 /**
+ * @method getMeshes
+ * @return {Array}
+ */
+getMeshes : function (
+)
+{
+    return new Array();
+},
+
+/**
  * @method addMesh
  * @param {cc.Mesh} arg0
  */
@@ -944,14 +980,6 @@ removeAllAttachNode : function (
 setMaterial : function(
 material,
 int 
-)
-{
-},
-
-/**
- * @method genGLProgramState
- */
-genGLProgramState : function (
 )
 {
 },
@@ -984,7 +1012,7 @@ materialdatas
 
 /**
  * @method getMeshCount
- * @return {long}
+ * @return {int}
  */
 getMeshCount : function (
 )
@@ -1153,6 +1181,14 @@ bool
 },
 
 /**
+ * @method genMaterial
+ */
+genMaterial : function (
+)
+{
+},
+
+/**
  * @method removeAttachNode
  * @param {String} arg0
  */
@@ -1269,11 +1305,11 @@ jsb.Terrain = {
 
 /**
  * @method initHeightMap
- * @param {char} arg0
+ * @param {String} arg0
  * @return {bool}
  */
 initHeightMap : function (
-char 
+str 
 )
 {
     return false;
@@ -1300,16 +1336,6 @@ bool
 },
 
 /**
- * @method setIsEnableFrustumCull
- * @param {bool} arg0
- */
-setIsEnableFrustumCull : function (
-bool 
-)
-{
-},
-
-/**
  * @method setDetailMap
  * @param {unsigned int} arg0
  * @param {cc.Terrain::DetailMap} arg1
@@ -1323,10 +1349,20 @@ map
 
 /**
  * @method resetHeightMap
- * @param {char} arg0
+ * @param {String} arg0
  */
 resetHeightMap : function (
-char 
+str 
+)
+{
+},
+
+/**
+ * @method setLightDir
+ * @param {vec3_object} arg0
+ */
+setLightDir : function (
+vec3 
 )
 {
 },
@@ -1397,6 +1433,20 @@ vec3
 )
 {
     return 0;
+},
+
+/**
+ * @method initWithTerrainData
+ * @param {cc.Terrain::TerrainData} arg0
+ * @param {cc.Terrain::CrackFixedType} arg1
+ * @return {bool}
+ */
+initWithTerrainData : function (
+terraindata, 
+crackfixedtype 
+)
+{
+    return false;
 },
 
 /**
@@ -1474,13 +1524,23 @@ int
 },
 
 /**
- * @method getMaxHeight
- * @return {float}
+ * @method setLightMap
+ * @param {String} arg0
  */
-getMaxHeight : function (
+setLightMap : function (
+str 
 )
 {
-    return 0;
+},
+
+/**
+ * @method setIsEnableFrustumCull
+ * @param {bool} arg0
+ */
+setIsEnableFrustumCull : function (
+bool 
+)
+{
 },
 
 /**
@@ -1493,50 +1553,21 @@ getMinHeight : function (
     return 0;
 },
 
-};
-
 /**
- * @class TextureCube
+ * @method getMaxHeight
+ * @return {float}
  */
-jsb.TextureCube = {
-
-/**
- * @method reloadTexture
- * @return {bool}
- */
-reloadTexture : function (
+getMaxHeight : function (
 )
 {
-    return false;
+    return 0;
 },
 
 /**
- * @method create
- * @param {String} arg0
- * @param {String} arg1
- * @param {String} arg2
- * @param {String} arg3
- * @param {String} arg4
- * @param {String} arg5
- * @return {cc.TextureCube}
- */
-create : function (
-str, 
-str, 
-str, 
-str, 
-str, 
-str 
-)
-{
-    return cc.TextureCube;
-},
-
-/**
- * @method TextureCube
+ * @method Terrain
  * @constructor
  */
-TextureCube : function (
+Terrain : function (
 )
 {
 },

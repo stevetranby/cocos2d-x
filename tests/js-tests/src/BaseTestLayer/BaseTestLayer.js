@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +38,6 @@ var autoTestCurrentTestName = autoTestCurrentTestName || "N/A";
 var BaseTestLayerProps = {
 
     ctor:function(colorA, colorB ) {
-
-        cc.sys.garbageCollect();
 
         // default gradient colors
         var a = cc.color(98,99,117,255);
@@ -102,6 +101,8 @@ var BaseTestLayerProps = {
     //
     onEnter:function () {
         this._super();
+
+        cc.sys.garbageCollect();
 
         var t = this.getTitle();
         var label = new cc.LabelTTF(t, "Arial", 28);
@@ -292,3 +293,37 @@ var BaseTestLayerProps = {
 };
 
 var BaseTestLayer = cc.LayerGradient.extend(BaseTestLayerProps);
+
+var FlowControl = function (testArray) {
+
+    var sceneIdx = 0;
+
+    return {
+        length: testArray.length,
+        getId: function () {
+            return sceneIdx;
+        },
+        next: function () {
+            sceneIdx++;
+            sceneIdx = sceneIdx % testArray.length;
+
+            return new testArray[sceneIdx]();
+        },
+        previous: function () {
+            sceneIdx--;
+            if (sceneIdx < 0)
+                sceneIdx += testArray.length;
+
+            return new testArray[sceneIdx]();
+        },
+        current: function () {
+            return new testArray[sceneIdx]();
+        },
+        start: function() {
+            sceneIdx = 0;
+            var s = new cc.Scene();
+            s.addChild(this.current());
+            cc.director.runScene(s);
+        }
+    }
+};

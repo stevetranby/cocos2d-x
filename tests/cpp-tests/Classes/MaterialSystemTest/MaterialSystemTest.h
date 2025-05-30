@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -108,6 +109,9 @@ public:
 
     virtual void onEnter() override;
     virtual std::string subtitle() const override;
+    void parsingTesting(unsigned int count);
+protected:
+    unsigned int _maxParsingCoumt;
 };
 
 class Material_invalidate : public MaterialSystemBaseTest

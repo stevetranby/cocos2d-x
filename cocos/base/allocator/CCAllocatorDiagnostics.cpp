@@ -1,6 +1,7 @@
 
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  Author: Justin Graham (https://github.com/mannewalis)
  
  http://www.cocos2d-x.org
@@ -24,8 +25,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "CCAllocatorDiagnostics.h"
-#include "CCAllocatorGlobal.h"
+#include "base/allocator/CCAllocatorDiagnostics.h"
+#include "base/allocator/CCAllocatorGlobal.h"
 
 NS_CC_BEGIN
 NS_CC_ALLOCATOR_BEGIN

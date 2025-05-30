@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -43,7 +44,7 @@ class Skeleton3D;
 
 /**
  * @brief MeshSkin, A class maintain a collection of bones that affect Mesh vertex.
- * And it is responsible for computing matrix palletes that used by skin mesh rendering.
+ * And it is responsible for computing matrix palettes that used by skin mesh rendering.
  * @js NA
  * @lua NA
  */
@@ -97,7 +98,7 @@ protected:
     std::vector<Mat4>  _invBindPoses; //inverse bind pose of bone
 
     Bone3D* _rootBone;
-    Skeleton3D*     _skeleton; //skeleton the skin refered
+    Skeleton3D*     _skeleton; //skeleton the skin referred
     
     // Pointer to the array of palette matrices.
     // This array is passed to the vertex shader as a uniform.

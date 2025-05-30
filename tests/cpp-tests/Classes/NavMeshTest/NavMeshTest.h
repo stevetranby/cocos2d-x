@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -31,7 +32,7 @@
 
 DEFINE_TEST_SUITE(NavMeshTests);
 
-#if CC_USE_NAVMESH == 0
+#if ( CC_USE_NAVMESH == 0 ) || ( CC_USE_PHYSICS == 0 )
 class NavMeshDisabled : public TestCase
 {
 public:
@@ -88,9 +89,9 @@ public:
     
 protected:
 
-    virtual void touchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event){};
-    virtual void touchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event){};
-    virtual void touchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event);
+    virtual void touchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event)override{};
+    virtual void touchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event)override{};
+    virtual void touchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event)override;
 
 protected:
     cocos2d::Label *_debugLabel;
@@ -112,9 +113,9 @@ public:
 
 protected:
 
-    virtual void touchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event){};
-    virtual void touchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event){};
-    virtual void touchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event);
+    virtual void touchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event)override{};
+    virtual void touchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event)override{};
+    virtual void touchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event)override;
 
 protected:
     cocos2d::Label *_obstacleLabel;

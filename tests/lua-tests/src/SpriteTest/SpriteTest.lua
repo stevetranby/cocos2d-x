@@ -26,7 +26,7 @@ Sprite1.__index = Sprite1
 
 function Sprite1.addNewSpriteWithCoords(layer, point)
     local idx = math.floor(math.random() * 1400 / 100)
-    local x = math.floor(math.mod(idx,5) * 85)
+    local x = math.floor(math.fmod(idx,5) * 85)
     local y = math.floor(idx / 5) * 121
 
     local sprite = cc.Sprite:create("Images/grossini_dance_atlas.png", cc.rect(x,y,85,121) )
@@ -87,7 +87,7 @@ SpriteBatchNode1.__index = SpriteBatchNode1
 function SpriteBatchNode1.addNewSpriteWithCoords(layer, point)
     local BatchNode = layer:getChildByTag( kTagSpriteBatchNode )
     local idx = math.floor(math.random() * 1400 / 100)
-    local x = math.floor(math.mod(idx,5) * 85)
+    local x = math.floor(math.fmod(idx,5) * 85)
     local y = math.floor(idx / 5) * 121
 
     local sprite = cc.Sprite:createWithTexture(BatchNode:getTexture(), cc.rect(x,y,85,121) )
@@ -316,7 +316,7 @@ function SpriteFrameTest.flipSprites(dt)
 
     local fx = false
     local fy = false
-    local i  = math.mod(SpriteFrameTest.m_nCounter, 4)
+    local i  = math.fmod(SpriteFrameTest.m_nCounter, 4)
 
     if(i == 0) then
         fx = false
@@ -1580,6 +1580,7 @@ function SpriteTest()
         SpriteBatchNodeOffsetAnchorRotationalSkewScale.create,
         SpriteOffsetAnchorFlip.create
     }
+    Helper.index = 1
 
 	scene:addChild(Sprite1.create())
 	scene:addChild(CreateBackMenuItem())

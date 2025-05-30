@@ -2,7 +2,8 @@
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -88,10 +89,10 @@ public:
     
     /** Get all cameras.
      * 
-     * @return The vector of all cameras.
+     * @return The vector of all cameras, ordered by camera depth.
      * @js NA
      */
-    const std::vector<Camera*>& getCameras() const { return _cameras; }
+    const std::vector<Camera*>& getCameras();
 
     /** Get the default camera.
      * @js NA
@@ -104,15 +105,35 @@ public:
      * @js NA
      */
     const std::vector<BaseLight*>& getLights() const { return _lights; }
-    
+
     /** Render the scene.
      * @param renderer The renderer use to render the scene.
+     * @param eyeTransform The AdditionalTransform of camera.
+     * @param eyeProjection The projection matrix of camera.
      * @js NA
      */
-    void render(Renderer* renderer);
-    
+    virtual void render(Renderer* renderer, const Mat4& eyeTransform, const Mat4* eyeProjection = nullptr);
+
+    /** Render the scene.
+     * @param renderer The renderer use to render the scene.
+     * @param eyeTransforms The AdditionalTransform List of camera of multiView.
+     * @param eyeProjections The projection matrix List of camera of multiView.
+     * @param multiViewCount The number of multiView.
+     * @js NA
+     */
+    virtual void render(Renderer* renderer, const Mat4* eyeTransforms, const Mat4* eyeProjections, unsigned int multiViewCount);
+
     /** override function */
     virtual void removeAllChildren() override;
+    
+    /**
+     * Event callback that is invoked every time when Node enters the 'stage'.
+     * If the Node enters the 'stage' with a transition, this event is called when the transition starts.
+     * During onEnter you can't access a "sister/brother" node.
+     * If you override onEnter, you shall call its parent's one, e.g., Node::onEnter().
+     * @lua NA
+     */
+    virtual void onEnter() override;
     
 CC_CONSTRUCTOR_ACCESS:
     Scene();
@@ -134,9 +155,9 @@ protected:
     friend class Renderer;
     
     std::vector<Camera*> _cameras; //weak ref to Camera
-    Camera*              _defaultCamera; //weak ref, default camera created by scene, _cameras[0], Caution that the default camera can not be added to _cameras before onEnter is called
-    bool                 _cameraOrderDirty; // order is dirty, need sort
-    EventListenerCustom*       _event;
+    Camera*              _defaultCamera = nullptr; //weak ref, default camera created by scene, _cameras[0], Caution that the default camera can not be added to _cameras before onEnter is called
+    bool                 _cameraOrderDirty = true; // order is dirty, need sort
+    EventListenerCustom*       _event = nullptr;
 
     std::vector<BaseLight *> _lights;
     
@@ -145,15 +166,13 @@ private:
     
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION))
 public:
-    virtual void addChild(Node* child, int zOrder, int tag) override;
-    virtual void addChild(Node* child, int zOrder, const std::string &name) override;
     
 #if CC_USE_PHYSICS
     /** Get the physics world of the scene.
      * @return The physics world of the scene.
      * @js NA
      */
-    inline PhysicsWorld* getPhysicsWorld() { return _physicsWorld; }
+    PhysicsWorld* getPhysicsWorld() const { return _physicsWorld; }
 #endif
     
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
@@ -161,7 +180,7 @@ public:
      * @return The 3d physics world of the scene.
      * @js NA
      */
-    inline Physics3DWorld* getPhysics3DWorld() { return _physics3DWorld; }
+    Physics3DWorld* getPhysics3DWorld() { return _physics3DWorld; }
     
     /** 
      * Set Physics3D debug draw camera.
@@ -182,12 +201,12 @@ protected:
     void addChildToPhysicsWorld(Node* child);
 
 #if CC_USE_PHYSICS
-    PhysicsWorld* _physicsWorld;
+    PhysicsWorld* _physicsWorld = nullptr;
 #endif
     
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
-    Physics3DWorld*            _physics3DWorld;
-    Camera*                    _physics3dDebugCamera; //
+    Physics3DWorld*            _physics3DWorld = nullptr;
+    Camera*                    _physics3dDebugCamera = nullptr;
 #endif
 #endif // (CC_USE_PHYSICS || CC_USE_3D_PHYSICS)
     
@@ -203,8 +222,8 @@ public:
     void setNavMeshDebugCamera(Camera *camera);
 
 protected:
-    NavMesh*       _navMesh;
-    Camera *       _navMeshDebugCamera;
+    NavMesh*        _navMesh = nullptr;
+    Camera *        _navMeshDebugCamera = nullptr;
 #endif
     
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)

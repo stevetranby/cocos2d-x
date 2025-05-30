@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2015 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -156,12 +157,13 @@ class TestController;
 class TestSuite : public TestBase
 {
 public:
-    void addTestCase(const std::string& testName, std::function<cocos2d::Scene*()> callback);
+    void addTestCase(const std::string& testName, const std::function<cocos2d::Scene*()>& callback);
 
     virtual void restartCurrTest();
     virtual void enterNextTest();
     virtual void enterPreviousTest();
 
+    int getCurrTestIndex() { return _currTestIndex; }
     virtual void runThisTest() override;
 
 private:
@@ -179,7 +181,7 @@ class TestList : public TestBase, public cocos2d::extension::TableViewDataSource
 public:
     TestList();
 
-    void addTest(const std::string& testName, std::function<TestBase*()> callback);
+    void addTest(const std::string& testName, const std::function<TestBase*()>& callback);
 
     virtual void runThisTest() override;
 

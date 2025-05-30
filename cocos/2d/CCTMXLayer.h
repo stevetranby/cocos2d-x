@@ -2,7 +2,8 @@
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -35,6 +36,7 @@ NS_CC_BEGIN
 class TMXMapInfo;
 class TMXLayerInfo;
 class TMXTilesetInfo;
+class TMXTileAnimManager;
 struct _ccCArray;
 
 /**
@@ -88,7 +90,7 @@ public:
      * @param tilesetInfo An tileset info.
      * @param layerInfo A layer info.
      * @param mapInfo A map info.
-     * @return If initializes success，it will return true.
+     * @return If initializes successfully, it will return true.
      */
     bool initWithTilesetInfo(TMXTilesetInfo *tilesetInfo, TMXLayerInfo *layerInfo, TMXMapInfo *mapInfo);
 
@@ -115,7 +117,7 @@ public:
     CC_DEPRECATED_ATTRIBUTE Sprite* tileAt(const Vec2& tileCoordinate) { return getTileAt(tileCoordinate); };
     
     /** Returns the tile gid at a given tile coordinate. It also returns the tile flags.
-     * This method requires the the tile map has not been previously released (eg. don't call [layer releaseMap]).
+     * This method requires the tile map has not been previously released (eg. don't call [layer releaseMap]).
      * 
      * @param tileCoordinate The tile coordinate.
      * @param flags Tile flags.
@@ -127,7 +129,7 @@ public:
      */
     CC_DEPRECATED_ATTRIBUTE uint32_t tileGIDAt(const Vec2& tileCoordinate, TMXTileFlags* flags = nullptr){
         return getTileGIDAt(tileCoordinate, flags);
-    };
+    }
 
     /** Sets the tile gid (gid = tile global id) at a given tile coordinate.
      * The Tile GID can be obtained by using the method "tileGIDAt" or by using the TMX editor -> Tileset Mgr +1.
@@ -185,37 +187,37 @@ public:
      *
      * @return The layer name.
      */
-    inline const std::string& getLayerName(){ return _layerName; }
+    const std::string& getLayerName() { return _layerName; }
     
     /** Set the layer name.
      *
      * @param layerName The layer name.
      */
-    inline void setLayerName(const std::string& layerName){ _layerName = layerName; }
+    void setLayerName(const std::string& layerName) { _layerName = layerName; }
 
     /** Size of the layer in tiles.
      *
      * @return Size of the layer in tiles.
      */
-    inline const Size& getLayerSize() const { return _layerSize; };
+    const Size& getLayerSize() const { return _layerSize; }
     
     /** Set size of the layer in tiles.
      *
      * @param size Size of the layer in tiles.
      */
-    inline void setLayerSize(const Size& size) { _layerSize = size; };
+    void setLayerSize(const Size& size) { _layerSize = size; }
     
     /** Size of the map's tile (could be different from the tile's size).
      *
      * @return The size of the map's tile.
      */
-    inline const Size& getMapTileSize() const { return _mapTileSize; };
+    const Size& getMapTileSize() const { return _mapTileSize; }
     
     /** Set the size of the map's tile.
      *
      * @param size The size of the map's tile.
      */
-    inline void setMapTileSize(const Size& size) { _mapTileSize = size; };
+    void setMapTileSize(const Size& size) { _mapTileSize = size; }
     
     /** Pointer to the map of tiles.
      * @js NA
@@ -234,55 +236,55 @@ public:
      *
      * @return Tileset information for the layer.
      */
-    inline TMXTilesetInfo* getTileSet() const { return _tileSet; };
+    TMXTilesetInfo* getTileSet() const { return _tileSet; }
     
     /** Set tileset information for the layer.
      *
      * @param info The tileset information for the layer.
      * @js NA
      */
-    inline void setTileSet(TMXTilesetInfo* info) {
+    void setTileSet(TMXTilesetInfo* info) {
         CC_SAFE_RETAIN(info);
         CC_SAFE_RELEASE(_tileSet);
         _tileSet = info;
-    };
+    }
     
     /** Layer orientation, which is the same as the map orientation.
      *
      * @return Layer orientation, which is the same as the map orientation.
      */
-    inline int getLayerOrientation() const { return _layerOrientation; };
+    int getLayerOrientation() const { return _layerOrientation; }
     
     /** Set layer orientation, which is the same as the map orientation.
      *
      * @param orientation Layer orientation,which is the same as the map orientation.
      */
-    inline void setLayerOrientation(int orientation) { _layerOrientation = orientation; };
+    void setLayerOrientation(int orientation) { _layerOrientation = orientation; }
     
     /** Properties from the layer. They can be added using Tiled.
      *
      * @return Properties from the layer. They can be added using Tiled.
      */
-    inline const ValueMap& getProperties() const { return _properties; };
+    const ValueMap& getProperties() const { return _properties; }
     
     /** Properties from the layer. They can be added using Tiled.
      *
      * @return Properties from the layer. They can be added using Tiled.
      */
-    inline ValueMap& getProperties() { return _properties; };
+    ValueMap& getProperties() { return _properties; }
     
     /** Set an Properties from to layer.
      *
      * @param properties It is used to set the layer Properties.
      */
-    inline void setProperties(const ValueMap& properties) {
+    void setProperties(const ValueMap& properties) {
         _properties = properties;
-    };
+    }
     //
     // Override
     //
     /** TMXLayer doesn't support adding a Sprite manually.
-     @warning addchild(z, tag); is not supported on TMXLayer. Instead of setTileGID.
+     @warning addChild(z, tag); is not supported on TMXLayer. Instead of setTileGID.
      */
     using SpriteBatchNode::addChild;
     virtual void addChild(Node * child, int zOrder, int tag) override;
@@ -292,6 +294,22 @@ public:
     * @js NA
     */
     virtual std::string getDescription() const override;
+
+    /** Map from gid of animated tile to its instance.
+     *
+     * @return Map from gid of animated tile to its instance.
+     */
+    const std::map<uint32_t, std::vector<Vec2>>* getAnimTileCoord() {
+        return &_animTileCoord;
+    }
+
+    bool hasTileAnimation() const {
+        return !_animTileCoord.empty();
+    }
+
+    TMXTileAnimManager* getTileAnimManager() const {
+        return _tileAnimManager;
+    }
 
 protected:
     Vec2 getPositionForIsoAt(const Vec2& pos);
@@ -305,10 +323,12 @@ protected:
     Sprite* insertTileForGID(uint32_t gid, const Vec2& pos);
     Sprite* updateTileForGID(uint32_t gid, const Vec2& pos);
 
-    /* The layer recognizes some special properties, like cc_vertez */
+    intptr_t getZForPos(const Vec2& pos) const;
+
+    /* The layer recognizes some special properties, like cc_vertexz */
     void parseInternalProperties();
-    void setupTileSprite(Sprite* sprite, Vec2 pos, int gid);
-    Sprite* reusedTileWithRect(Rect rect);
+    void setupTileSprite(Sprite* sprite, const Vec2& pos, uint32_t gid);
+    Sprite* reusedTileWithRect(const Rect& rect);
     int getVertexZForPos(const Vec2& pos);
 
     // index
@@ -342,8 +362,79 @@ protected:
     TMXTilesetInfo* _tileSet;
     /** Layer orientation, which is the same as the map orientation */
     int _layerOrientation;
+    /** Stagger Axis */
+    int _staggerAxis;
+    /** Stagger Index */
+    int _staggerIndex;
+    /** Hex side length*/
+    int _hexSideLength;
     /** properties from the layer. They can be added using Tiled */
     ValueMap _properties;
+
+    /** map from gid of animated tile to its instance. Also useful for optimization*/
+    std::map<uint32_t, std::vector<Vec2>> _animTileCoord;
+    /** pointer to the tile animation manager of this layer */
+    TMXTileAnimManager *_tileAnimManager = nullptr;
+};
+
+/** @brief TMXTileAnimTask represents the frame-tick task of an animated tile.
+ * It is a assistant class for TMXTileAnimTicker.
+ */
+class CC_DLL TMXTileAnimTask : public Ref
+{
+public:
+    TMXTileAnimTask(TMXLayer *layer, TMXTileAnimInfo *animation, const Vec2 &tilePos);
+    static TMXTileAnimTask * create(TMXLayer *layer, TMXTileAnimInfo *animation, const Vec2 &tilePos);
+    /** start the animation task */
+    void start();
+    /** stop the animation task */
+    void stop();
+    bool isRunning() const {
+        return _isRunning;
+    }
+
+protected:
+    /** set texture of tile to current frame */
+    void setCurrFrame();
+    /** tick to next frame and schedule next tick */
+    void tickAndScheduleNext(float dt);
+
+    bool _isRunning = false;
+    /** key of schedule task for specific animated tile */
+    std::string _key;
+    TMXLayer *_layer = nullptr;
+    /** position of the animated tile */
+    Vec2 _tilePosition;
+    /** AnimationInfo on this tile */
+    TMXTileAnimInfo *_animation = nullptr;
+    /** Index of the frame that should be drawn currently */
+    uint32_t _currentFrame = 0;
+    uint32_t _frameCount = 0;
+};
+
+/** @brief TMXTileAnimManager controls all tile animation of a layer.
+ */
+class CC_DLL TMXTileAnimManager : public Ref
+{
+public:
+    static TMXTileAnimManager * create(TMXLayer *layer);
+    explicit TMXTileAnimManager(TMXLayer *layer);
+
+    /** start all tile animations */
+    void startAll();
+    /** stop all tile animations */
+    void stopAll();
+
+    /** get vector of tasks */
+    const Vector<TMXTileAnimTask*>& getTasks() const {
+        return _tasks;
+    }
+
+protected:
+    bool _started = false;
+    /** vector contains all tasks of this layer */
+    Vector<TMXTileAnimTask*> _tasks;
+    TMXLayer* _layer = nullptr;
 };
 
 // end of tilemap_parallax_nodes group
@@ -352,4 +443,3 @@ protected:
 NS_CC_END
 
 #endif //__CCTMX_LAYER_H__
-

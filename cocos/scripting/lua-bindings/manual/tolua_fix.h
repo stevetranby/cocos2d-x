@@ -1,9 +1,41 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 
 #ifndef __TOLUA_FIX_H_
 #define __TOLUA_FIX_H_
 
 #include "tolua++.h"
-    
+
+#if LUA_VERSION_NUM > 501
+#define lua_setfenv lua_setuservalue
+#define lua_open luaL_newstate
+#if !defined(LUA_COMPAT_5_1) && !defined(LUA_COMPAT_ALL)
+#define lua_objlen(L,i)		lua_rawlen(L, (i))
+#endif
+#endif
+
 #define TOLUA_REFID_PTR_MAPPING "toluafix_refid_ptr_mapping"
 #define TOLUA_REFID_TYPE_MAPPING "toluafix_refid_type_mapping"
 #define TOLUA_REFID_FUNCTION_MAPPING "toluafix_refid_function_mapping"
@@ -21,7 +53,7 @@ TOLUA_API void toluafix_open(lua_State* L);
  * If the userdata correspondings to the ptr don't exist, it would call lua_newuserdata to new a userdata.
  * If the userdata correspondings to the ptr exist,it would update the metatable information of the super.
  * In addition, this function would update some table in the Lua registry,such as toluafix_refid_ptr_mapping, toluafix_refid_type_mapping,tolua_value_root,and so on.
- * Meanwhile, Add a refrence about the userdata corresponding to the ptr in the tolua_ubox table.
+ * Meanwhile, Add a reference about the userdata corresponding to the ptr in the tolua_ubox table.
  * The ptr should be point to a Ref object.
  * 
  * @param L the current lua_State.
@@ -41,8 +73,8 @@ TOLUA_API int toluafix_pushusertype_ccobject(lua_State* L,
 
 /**
  * Find the value of Ref object pointer in the Lua registry by the refid.
- * Then, remove the corresponding refrence in some table in the Lua registry by refid, such as toluafix_refid_type_mapping, toluafix_refid_ptr_mapping,tolua_value_root,and so on.
- * Set the value of userdata nullptr and remove the refrence of userdata in the tolua_ubox table.
+ * Then, remove the corresponding reference in some table in the Lua registry by refid, such as toluafix_refid_type_mapping, toluafix_refid_ptr_mapping,tolua_value_root,and so on.
+ * Set the value of userdata nullptr and remove the reference of userdata in the tolua_ubox table.
  * This function is called in the destructor of the Ref automatically.
  *
  * @param L the current lua_State.
@@ -54,13 +86,13 @@ TOLUA_API int toluafix_pushusertype_ccobject(lua_State* L,
 TOLUA_API int toluafix_remove_ccobject_by_refid(lua_State* L, int refid);
 
 /**
- * Get the refrence id of the Lua function at the given accepteable index lo of stack.
- * Meanwhile add refrence about the Lua function through the toluafix_refid_function_mapping table in the Lua registry.
+ * Get the reference id of the Lua function at the given acceptable index lo of stack.
+ * Meanwhile add reference about the Lua function through the toluafix_refid_function_mapping table in the Lua registry.
  *
  * @param L the current lua_State.
- * @param lo the given accepteable index lo of stack.
+ * @param lo the given acceptable index lo of stack.
  * @param def useless.
- * @return 0 if the type of value at the given accepteable index lo of stack is not LUA_TFUNCTION; otherwise return the refrence id.
+ * @return 0 if the type of value at the given acceptable index lo of stack is not LUA_TFUNCTION; otherwise return the reference id.
  * @lua NA
  * @js NA
  */
@@ -70,7 +102,7 @@ TOLUA_API int toluafix_ref_function(lua_State* L, int lo, int def);
  * Push the Lua function found by the refid in the toluafix_refid_function_mapping table in the Lua registry on the top index of the current stack.
  *
  * @param L the current lua_State.
- * @param refid referenc id corresponding to the Lua function.
+ * @param refid reference id corresponding to the Lua function.
  * @lua NA
  * @js NA
  */
@@ -80,7 +112,7 @@ TOLUA_API void toluafix_get_function_by_refid(lua_State* L, int refid);
  * Remove the reference of the Lua function corresponding to the refid in the toluafix_refid_function_mapping table in the Lua registry.
  *
  * @param L the current lua_State.
- * @param refid referenc id corresponding to the Lua function.
+ * @param refid reference id corresponding to the Lua function.
  * @lua NA
  * @js NA
  */
@@ -90,10 +122,10 @@ TOLUA_API void toluafix_remove_function_by_refid(lua_State* L, int refid);
  * Verify the value at the given acceptable index is a function or not.
  * 
  * @param L the current lua_State.
- * @param lo the given accepteable index lo of stack.
+ * @param lo the given acceptable index lo of stack.
  * @param type useless.
  * @param def useless.
- * @param err if triggger the error, record the error message to err.
+ * @param err if trigger the error, record the error message to err.
  * @return 1 if the value at the given acceptable index is a function, otherwise return 0.
  * @lua NA
  * @js NA
@@ -108,10 +140,10 @@ TOLUA_API int toluafix_totable(lua_State* L, int lo, int def);
  * Verify the value at the given acceptable index is a table or not.
  * 
  * @param L the current lua_State.
- * @param lo the given accepteable index lo of stack.
+ * @param lo the given acceptable index lo of stack.
  * @param type useless.
  * @param def whether has the default value.
- * @param err if triggger the error, record the error message to err.
+ * @param err if trigger the error, record the error message to err.
  * @return 1 if the value at the given acceptable index is a table or have def value is not 0, otherwise return 0.
  * @lua NA
  * @js NA

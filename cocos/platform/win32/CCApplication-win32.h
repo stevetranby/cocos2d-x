@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -56,7 +57,7 @@ public:
     int run();
 
     /**
-    @brief    Get current applicaiton instance.
+    @brief    Get current application instance.
     @return Current application instance pointer.
     */
     static Application* getInstance();
@@ -65,16 +66,22 @@ public:
     CC_DEPRECATED_ATTRIBUTE static Application* sharedApplication();
     
     /* override functions */
-    virtual void setAnimationInterval(double interval);
+    virtual void setAnimationInterval(float interval) override;
+
     virtual LanguageType getCurrentLanguage();
 
-	virtual const char * getCurrentLanguageCode();
+    virtual const char * getCurrentLanguageCode();
     
     /**
      @brief Get target platform
      */
     virtual Platform getTargetPlatform();
     
+    /**
+    @brief Get application version
+    */
+    virtual std::string getVersion() override;
+
     /**
      @brief Open url in default browser
      @param String with url to open.
@@ -92,11 +99,11 @@ public:
      *  Gets the Resource root path.
      *  @deprecated Please use FileUtils::getInstance()->getSearchPaths() instead. 
      */
-    CC_DEPRECATED_ATTRIBUTE const std::string& getResourceRootPath(void);
+    CC_DEPRECATED_ATTRIBUTE const std::string& getResourceRootPath();
 
     void setStartupScriptFilename(const std::string& startupScriptFile);
 
-    const std::string& getStartupScriptFilename(void)
+    const std::string& getStartupScriptFilename()
     {
         return _startupScriptFilename;
     }

@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -86,6 +87,7 @@ Technique* Technique::clone() const
         for (const auto pass: _passes)
         {
             auto p = pass->clone();
+            p->_parent = technique;
             technique->_passes.pushBack(p);
         }
 

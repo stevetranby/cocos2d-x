@@ -1,7 +1,7 @@
 
 --------------------------------
 -- @module Text
--- @extend Widget
+-- @extend Widget,BlendProtocol
 -- @parent_module ccui
 
 --------------------------------
@@ -19,7 +19,7 @@
 -- return The font size.
 -- @function [parent=#Text] getFontSize 
 -- @param self
--- @return int#int ret (return value: int)
+-- @return float#float ret (return value: float)
         
 --------------------------------
 -- 
@@ -36,11 +36,26 @@
 -- @return Text#Text self (return value: ccui.Text)
 
 --------------------------------
+-- Return current effect type.
+-- @function [parent=#Text] getLabelEffectType 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
 --  Gets text color.<br>
 -- return Text color.
 -- @function [parent=#Text] getTextColor 
 -- @param self
 -- @return color4b_table#color4b_table ret (return value: color4b_table)
+        
+--------------------------------
+-- Returns the blending function that is currently being used.<br>
+-- return A BlendFunc structure with source and destination factor which specified pixel arithmetic.<br>
+-- js NA<br>
+-- lua NA
+-- @function [parent=#Text] getBlendFunc 
+-- @param self
+-- @return BlendFunc#BlendFunc ret (return value: cc.BlendFunc)
         
 --------------------------------
 --  Sets text vertical alignment.<br>
@@ -78,6 +93,12 @@
 -- @return Text#Text self (return value: ccui.Text)
         
 --------------------------------
+-- Return shadow effect offset value.
+-- @function [parent=#Text] getShadowOffset 
+-- @param self
+-- @return size_table#size_table ret (return value: size_table)
+        
+--------------------------------
 -- 
 -- @function [parent=#Text] setString 
 -- @param self
@@ -85,13 +106,25 @@
 -- @return Text#Text self (return value: ccui.Text)
         
 --------------------------------
+-- Return the outline effect size value.
+-- @function [parent=#Text] getOutlineSize 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
 -- 
 -- @function [parent=#Text] init 
 -- @param self
 -- @param #string textContent
 -- @param #string fontName
--- @param #int fontSize
+-- @param #float fontSize
 -- @return bool#bool ret (return value: bool)
+        
+--------------------------------
+-- Return the shadow effect blur radius.
+-- @function [parent=#Text] getShadowBlurRadius 
+-- @param self
+-- @return float#float ret (return value: float)
         
 --------------------------------
 -- Gets the touch scale enabled of label.<br>
@@ -110,7 +143,7 @@
 --------------------------------
 -- Sets the rendering size of the text, you should call this method<br>
 -- along with calling `ignoreContentAdaptWithSize(false)`, otherwise the text area<br>
--- size is caculated by the real size of the text content.<br>
+-- size is calculated by the real size of the text content.<br>
 -- param size The text rendering area size.
 -- @function [parent=#Text] setTextAreaSize 
 -- @param self
@@ -125,7 +158,7 @@
 -- return  String length.
 -- @function [parent=#Text] getStringLength 
 -- @param self
--- @return long#long ret (return value: long)
+-- @return int#int ret (return value: int)
         
 --------------------------------
 --  Gets the render size in auto mode.<br>
@@ -146,6 +179,12 @@
 -- @return Text#Text self (return value: ccui.Text)
         
 --------------------------------
+-- Return current effect color value.
+-- @function [parent=#Text] getEffectColor 
+-- @param self
+-- @return color4b_table#color4b_table ret (return value: color4b_table)
+        
+--------------------------------
 --  Gets the font type.<br>
 -- return The font type.
 -- @function [parent=#Text] getType 
@@ -160,12 +199,24 @@
 -- @return int#int ret (return value: int)
         
 --------------------------------
+-- Return whether the shadow effect is enabled.
+-- @function [parent=#Text] isShadowEnabled 
+-- @param self
+-- @return bool#bool ret (return value: bool)
+        
+--------------------------------
 -- Sets the font size of label.<br>
 -- param size The font size.
 -- @function [parent=#Text] setFontSize 
 -- @param self
--- @param #int size
+-- @param #float size
 -- @return Text#Text self (return value: ccui.Text)
+        
+--------------------------------
+-- Return the shadow effect color value.
+-- @function [parent=#Text] getShadowColor 
+-- @param self
+-- @return color4b_table#color4b_table ret (return value: color4b_table)
         
 --------------------------------
 --  Sets text color.<br>
@@ -181,6 +232,24 @@
 -- @function [parent=#Text] enableGlow 
 -- @param self
 -- @param #color4b_table glowColor
+-- @return Text#Text self (return value: ccui.Text)
+        
+--------------------------------
+-- Provides a way to treat each character like a Sprite.<br>
+-- warning No support system font.
+-- @function [parent=#Text] getLetter 
+-- @param self
+-- @param #int lettetIndex
+-- @return Sprite#Sprite ret (return value: cc.Sprite)
+        
+--------------------------------
+-- Sets the source blending function.<br>
+-- param blendFunc A structure with source and destination factor to specify pixel arithmetic. e.g. {GL_ONE, GL_ONE}, {GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA}.<br>
+-- js NA<br>
+-- lua NA
+-- @function [parent=#Text] setBlendFunc 
+-- @param self
+-- @param #cc.BlendFunc blendFunc
 -- @return Text#Text self (return value: ccui.Text)
         
 --------------------------------
@@ -206,13 +275,13 @@
 -- @return Text#Text self (return value: ccui.Text)
         
 --------------------------------
--- @overload self, string, string, int         
+-- @overload self, string, string, float         
 -- @overload self         
 -- @function [parent=#Text] create
 -- @param self
 -- @param #string textContent
 -- @param #string fontName
--- @param #int fontSize
+-- @param #float fontSize
 -- @return Text#Text ret (return value: ccui.Text)
 
 --------------------------------

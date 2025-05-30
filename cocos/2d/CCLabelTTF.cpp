@@ -1,7 +1,8 @@
 /****************************************************************************
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -25,7 +26,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "2d/CCLabelTTF.h"
 #include "2d/CCLabel.h"
-#include "deprecated/CCString.h"
+#include "base/ccUTF8.h"
 
 NS_CC_BEGIN
 
@@ -186,7 +187,7 @@ void LabelTTF::setFontName(const std::string& fontName)
     _contentDirty = true;
 }
 
-void LabelTTF::enableShadow(const Size &shadowOffset, float shadowOpacity, float shadowBlur, bool updateTexture)
+void LabelTTF::enableShadow(const Size &shadowOffset, float shadowOpacity, float shadowBlur, bool /*updateTexture*/)
 {
     Color4B temp(Color3B::BLACK);
     temp.a = 255 * shadowOpacity;
@@ -194,25 +195,25 @@ void LabelTTF::enableShadow(const Size &shadowOffset, float shadowOpacity, float
     _contentDirty = true;
 }
 
-void LabelTTF::disableShadow(bool updateTexture)
+void LabelTTF::disableShadow(bool /*updateTexture*/)
 {
     _renderLabel->disableEffect();
     _contentDirty = true;
 }
 
-void LabelTTF::enableStroke(const Color3B &strokeColor, float strokeSize, bool updateTexture)
+void LabelTTF::enableStroke(const Color3B &strokeColor, float strokeSize, bool /*updateTexture*/)
 {
     _renderLabel->enableOutline(Color4B(strokeColor),strokeSize);
     _contentDirty = true;
 }
 
-void LabelTTF::disableStroke(bool updateTexture)
+void LabelTTF::disableStroke(bool /*updateTexture*/)
 {
     _renderLabel->disableEffect();
     _contentDirty = true;
 }
 
-void LabelTTF::setFontFillColor(const Color3B &tintColor, bool updateTexture)
+void LabelTTF::setFontFillColor(const Color3B &tintColor, bool /*updateTexture*/)
 {
     _renderLabel->setTextColor(Color4B(tintColor));
 }
@@ -223,9 +224,11 @@ void LabelTTF::setTextDefinition(const FontDefinition& theDefinition)
     _contentDirty = true;
 }
 
-const FontDefinition& LabelTTF::getTextDefinition() const
+const FontDefinition& LabelTTF::getTextDefinition()
 {
-    return _renderLabel->getFontDefinition();
+    auto fontDef = _renderLabel->getFontDefinition();
+    _fontDef = fontDef;
+    return _fontDef;
 }
 
 void LabelTTF::setBlendFunc(const BlendFunc &blendFunc)

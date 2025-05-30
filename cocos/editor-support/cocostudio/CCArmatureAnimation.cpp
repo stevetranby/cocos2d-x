@@ -1,5 +1,6 @@
 /****************************************************************************
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -22,12 +23,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "cocostudio/CCArmatureAnimation.h"
-#include "cocostudio/CCArmature.h"
-#include "cocostudio/CCBone.h"
-#include "cocostudio/CCArmatureDefine.h"
-#include "cocostudio/CCUtilMath.h"
-#include "cocostudio/CCDatas.h"
+#include "editor-support/cocostudio/CCArmatureAnimation.h"
+
+#include "editor-support/cocostudio/CCArmature.h"
+#include "editor-support/cocostudio/CCArmatureDefine.h"
+#include "editor-support/cocostudio/CCBone.h"
+#include "editor-support/cocostudio/CCDatas.h"
+#include "editor-support/cocostudio/CCUtilMath.h"
+#include <utility>
 
 using namespace cocos2d;
 
@@ -71,7 +74,7 @@ ArmatureAnimation::ArmatureAnimation()
 
 }
 
-ArmatureAnimation::~ArmatureAnimation(void)
+ArmatureAnimation::~ArmatureAnimation()
 {
     CC_SAFE_RELEASE_NULL(_animationData);
 
@@ -173,7 +176,7 @@ void ArmatureAnimation::play(const std::string& animationName, int durationTo,  
     }
 //    CCASSERT(_animationData, "_animationData can not be null");
 
-    _movementData = _animationData->getMovement(animationName.c_str());
+    _movementData = _animationData->getMovement(animationName);
     if (nullptr == _movementData)
     {
         CCLOG("_movementData can not be null");
@@ -228,9 +231,9 @@ void ArmatureAnimation::play(const std::string& animationName, int durationTo,  
         movementBoneData = static_cast<MovementBoneData *>(_movementData->movBoneDataDic.at(bone->getName()));
 
         Tween *tween = bone->getTween();
-        if(movementBoneData && movementBoneData->frameList.size() > 0)
+        if(movementBoneData && !movementBoneData->frameList.empty())
         {
-            _tweenList.pushBack(tween);
+            _tweenList.push_back(tween);
             movementBoneData->duration = _movementData->duration;
             tween->play(movementBoneData, durationTo, durationTween, loop, tweenEasing);
 
@@ -267,7 +270,7 @@ void ArmatureAnimation::playWithIndex(int animationIndex, int durationTo, int lo
     CC_ASSERT((animationIndex > -1) && ((unsigned int)animationIndex < movName.size()));
 
     std::string animationName = movName.at(animationIndex);
-    play(animationName.c_str(), durationTo, loop);
+    play(animationName, durationTo, loop);
 }
 
 
@@ -352,13 +355,13 @@ void ArmatureAnimation::update(float dt)
         tween->update(dt);
     }
 
-    if(_frameEventQueue.size() > 0 || _movementEventQueue.size() > 0)
+    if(!_frameEventQueue.empty() || !_movementEventQueue.empty())
     {
         _armature->retain();
         _armature->autorelease();
     }
 
-    while (_frameEventQueue.size() > 0)
+    while (!_frameEventQueue.empty())
     {
         FrameEvent *event = _frameEventQueue.front();
         _frameEventQueue.pop();
@@ -381,7 +384,7 @@ void ArmatureAnimation::update(float dt)
         CC_SAFE_DELETE(event);
     }
 
-    while (_movementEventQueue.size() > 0)
+    while (!_movementEventQueue.empty())
     {
         MovementEvent *event = _movementEventQueue.front();
         _movementEventQueue.pop();
@@ -419,7 +422,7 @@ void ArmatureAnimation::updateHandler()
             {
                 _nextFrameIndex = _durationTween;
 
-                movementEvent(_armature, START, _movementID.c_str());
+                movementEvent(_armature, START, _movementID);
 
                 break;
             }
@@ -432,7 +435,7 @@ void ArmatureAnimation::updateHandler()
             _isComplete = true;
             _isPlaying = false;
 
-            movementEvent(_armature, COMPLETE, _movementID.c_str());
+            movementEvent(_armature, COMPLETE, _movementID);
 
             updateMovementList();
         }
@@ -444,7 +447,7 @@ void ArmatureAnimation::updateHandler()
             _currentFrame = _nextFrameIndex == 0 ? 0 : fmodf(_currentFrame, _nextFrameIndex);
             _nextFrameIndex = _durationTween > 0 ? _durationTween : 1;
 
-            movementEvent(_armature, START, _movementID.c_str());
+            movementEvent(_armature, START, _movementID);
         }
         break;
         default:
@@ -453,7 +456,7 @@ void ArmatureAnimation::updateHandler()
             _currentFrame = fmodf(_currentFrame, _nextFrameIndex);
             _toIndex = 0;
 
-            movementEvent(_armature, LOOP_COMPLETE, _movementID.c_str());
+            movementEvent(_armature, LOOP_COMPLETE, _movementID);
         }
         break;
         }
@@ -481,11 +484,11 @@ void ArmatureAnimation::setFrameEventCallFunc(Ref *target, SEL_FrameEventCallFun
     _frameEventCallFunc = callFunc;
 }
 
-void ArmatureAnimation::setMovementEventCallFunc(std::function<void(Armature *armature, MovementEventType movementType, const std::string& movementID)> listener)
+void ArmatureAnimation::setMovementEventCallFunc(const std::function<void(Armature *armature, MovementEventType movementType, const std::string& movementID)>& listener)
 {
     _movementEventListener = listener;
 }
-void ArmatureAnimation::setFrameEventCallFunc(std::function<void(Bone *bone, const std::string& frameEventName, int originFrameIndex, int currentFrameIndex)> listener)
+void ArmatureAnimation::setFrameEventCallFunc(const std::function<void(Bone *bone, const std::string& frameEventName, int originFrameIndex, int currentFrameIndex)>& listener)
 {
     _frameEventListener = listener;
 }
@@ -531,7 +534,7 @@ void ArmatureAnimation::updateMovementList()
     {
         if (_movementListLoop)
         {
-            play(_movementList.at(_movementIndex).c_str(), _movementListDurationTo, 0);
+            play(_movementList.at(_movementIndex), _movementListDurationTo, 0);
             _movementIndex++;
 
             if (_movementIndex >= _movementList.size())
@@ -543,7 +546,7 @@ void ArmatureAnimation::updateMovementList()
         {
             if (_movementIndex < _movementList.size())
             {
-                play(_movementList.at(_movementIndex).c_str(), _movementListDurationTo, 0);
+                play(_movementList.at(_movementIndex), _movementListDurationTo, 0);
                 _movementIndex++;
             }
             else

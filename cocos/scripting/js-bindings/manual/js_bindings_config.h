@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2012 Zynga Inc.
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +29,7 @@
 
 /** @def JSB_ASSERT_ON_FAIL
  Whether or not to assert when the arguments or conversions are incorrect.
- It is recommened to turn it off in Release mode.
+ It is recommended to turn it off in Release mode.
  */
 #ifndef JSB_ASSERT_ON_FAIL
 #define JSB_ASSERT_ON_FAIL 0
@@ -77,8 +78,8 @@
 
 /** @def JSB_REPRESENT_LONGLONG_AS_STR
  When JSB_REPRESENT_LONGLONG_AS_STR is defined, the long long will be represented as JS strings.
- Otherwise they will be represented as an array of two intengers.
- It is needed to to use an special representation since there are no 64-bit integers in JS.
+ Otherwise they will be represented as an array of two integers.
+ It is needed to use an special representation since there are no 64-bit integers in JS.
  Representing the long long as string could be a bit slower, but it is easier to debug from JS.
  Enabled by default.
  */
@@ -116,9 +117,7 @@ JSAutoCompartment ac(cx, obj)
 #define JSB_ENSURE_AUTOCOMPARTMENT(cx, obj)
 #endif
 
-#define JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET \
-JSAutoCompartment __jsb_ac(ScriptingCore::getInstance()->getGlobalContext(), ScriptingCore::getInstance()->getGlobalObject());
-
+#define JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
 
 /** @def JSB_INCLUDE_SYSTEM
  Whether or not it should include bindings for system components like LocalStorage

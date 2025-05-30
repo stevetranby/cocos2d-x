@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -27,7 +28,7 @@
  - Qt3D: http://qt-project.org/
  ****************************************************************************/
 
-#include "CCPass.h"
+#include "renderer/CCPass.h"
 #include "renderer/CCGLProgramState.h"
 #include "renderer/CCGLProgram.h"
 #include "renderer/CCTexture2D.h"
@@ -52,6 +53,7 @@ Pass* Pass::create(Technique* technique)
         pass->autorelease();
         return pass;
     }
+    CC_SAFE_DELETE(pass);
     return nullptr;
 }
 
@@ -63,6 +65,7 @@ Pass* Pass::createWithGLProgramState(Technique* technique, GLProgramState* progr
         pass->autorelease();
         return pass;
     }
+    CC_SAFE_DELETE(pass);
     return nullptr;
 }
 

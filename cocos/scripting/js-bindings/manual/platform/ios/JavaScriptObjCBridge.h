@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +25,10 @@
 
 #include <string>
 #include <vector>
-#include "jsb_helper.h"
+#include "scripting/js-bindings/manual/jsb_helper.h"
 #include "jsapi.h"
 #include "jsfriendapi.h"
-#include "js_bindings_config.h"
+#include "scripting/js-bindings/manual/js_bindings_config.h"
 using namespace std;
 
 #define JSO_ERR_OK                 (0)
@@ -73,12 +74,12 @@ private:
         ,m_returnType(TypeVoid)
         {
         }
-        ~CallInfo(void);
-        bool isValid(void) {
+        ~CallInfo();
+        bool isValid() {
             return m_valid;
         }
         
-        int getErrorCode(void) {
+        int getErrorCode() {
             return m_error;
         }
         ValueType getReturnValueType(){

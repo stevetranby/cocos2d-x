@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -26,9 +27,10 @@ THE SOFTWARE.
 #include "platform/CCCommon.h"
 #include "base/base64.h"
 #include "base/ccUtils.h"
+#include "platform/CCFileUtils.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-#include "CCWinRTUtils.h"
+#include "platform/winrt/CCWinRTUtils.h"
 
 using namespace Windows::Storage;
 using namespace Windows::Foundation;
@@ -128,7 +130,7 @@ float UserDefault::getFloatForKey(const char* pKey)
 float UserDefault::getFloatForKey(const char* pKey, float defaultValue)
 {
     float ret = (float)getDoubleForKey(pKey, (double)defaultValue);
- 
+
     return ret;
 }
 
@@ -180,7 +182,7 @@ Data UserDefault::getDataForKey(const char* pKey, const Data& defaultValue)
     {
         unsigned char* decodedData = nullptr;
         int decodedDataLen = base64Decode((unsigned char*) encodedData.c_str(), (unsigned int) encodedData.length(), &decodedData);
-        if (decodedData && decodedDataLen > 0) 
+        if (decodedData && decodedDataLen > 0)
         {
             ret.fastSet(decodedData, decodedDataLen);
         }
@@ -245,9 +247,9 @@ void UserDefault::setDataForKey(const char* pKey, const Data& value) {
         return;
     }
 
-    char *encodedData = 0;
+    char *encodedData = nullptr;
     base64Encode(value.getBytes(), static_cast<unsigned int>(value.getSize()), &encodedData);
-    
+
     setPlatformKeyValue(pKey, dynamic_cast<PropertyValue^>(PropertyValue::CreateString(PlatformStringFromString(encodedData))));
 
     if (encodedData)
@@ -311,7 +313,7 @@ void UserDefault::initXMLFilePath()
     {
         _filePath += FileUtils::getInstance()->getWritablePath() + XML_FILE_NAME;
         _isFilePathInitialized = true;
-    }    
+    }
 }
 
 // create new xml file
@@ -327,6 +329,21 @@ const string& UserDefault::getXMLFilePath()
 
 void UserDefault::flush()
 {
+}
+
+void UserDefault::deleteValueForKey(const char* key)
+{
+    // check the params
+    if (!key)
+    {
+        CCLOG("the key is invalid");
+    }
+
+    ApplicationDataContainer^ localSettings = ApplicationData::Current->LocalSettings;
+    auto values = localSettings->Values;
+    values->Remove(PlatformStringFromString(key));
+
+    flush();
 }
 
 NS_CC_END

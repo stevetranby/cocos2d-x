@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -27,8 +28,8 @@
 
 #include "base/ccConfig.h"
 #include "3d/CCSprite3D.h"
-#include "CCPhysics3DObject.h"
-#include "CCPhysics3DComponent.h"
+#include "physics3d/CCPhysics3DObject.h"
+#include "physics3d/CCPhysics3DComponent.h"
 
 #if CC_USE_3D_PHYSICS
 
@@ -49,6 +50,9 @@ public:
 
     /** creates a PhysicsSprite3D*/
     static PhysicsSprite3D* create(const std::string &modelPath, Physics3DRigidBodyDes* rigidDes, const cocos2d::Vec3& translateInPhysics = cocos2d::Vec3::ZERO, const cocos2d::Quaternion& rotInPhsyics = cocos2d::Quaternion::ZERO);
+    
+    /** creates a PhysicsSprite3D as a collider*/
+    static PhysicsSprite3D* createWithCollider(const std::string &modelPath, Physics3DColliderDes* colliderDes, const cocos2d::Vec3& translateInPhysics = cocos2d::Vec3::ZERO, const cocos2d::Quaternion& rotInPhsyics = cocos2d::Quaternion::ZERO);
     
     /** Get the Physics3DObject. */
     Physics3DObject* getPhysicsObj() const;

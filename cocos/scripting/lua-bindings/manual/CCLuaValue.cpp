@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -23,7 +24,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "CCLuaValue.h"
+#include "scripting/lua-bindings/manual/CCLuaValue.h"
 
 
 NS_CC_BEGIN
@@ -110,7 +111,7 @@ LuaValue& LuaValue::operator=(const LuaValue& rhs)
     return *this;
 }
 
-LuaValue::~LuaValue(void)
+LuaValue::~LuaValue()
 {
     if (_type == LuaValueTypeString)
     {

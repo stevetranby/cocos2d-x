@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -196,15 +197,13 @@ void PrettyPrinter::visit(const __Set *p)
     
     setIndentLevel(_indentLevel+1);
 
-    int i = 0;
     __Set* tmp = const_cast<__Set*>(p);
-    __SetIterator it = tmp->begin();
 
-    for (; it != tmp->end(); ++it, ++i) {
+    for (int i = 0, tmp_size = tmp->count(); i < tmp_size; ++i) {
         if (i > 0) {
             _result += "\n";
         }
-        _result += _indentStr.c_str();
+        _result += _indentStr;
         PrettyPrinter v(_indentLevel);
 //FIXME:james        (*it)->acceptVisitor(v);
         _result += v.getResult();

@@ -5,6 +5,13 @@
 -- @parent_module ccui
 
 --------------------------------
+-- Get the font size.<br>
+-- return The font size.
+-- @function [parent=#EditBox] getFontSize 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
 -- js NA<br>
 -- lua NA
 -- @function [parent=#EditBox] keyboardDidShow 
@@ -13,17 +20,59 @@
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
--- get a script Handler<br>
--- js NA<br>
--- lua NA
--- @function [parent=#EditBox] getScriptEditBoxHandler 
+-- Sets the maximum input length of the edit box.<br>
+-- Setting this value enables multiline input mode by default.<br>
+-- Available on Android, iOS and Windows Phone.<br>
+-- param maxLength The maximum length.
+-- @function [parent=#EditBox] setMaxLength 
 -- @param self
--- @return int#int ret (return value: int)
+-- @param #int maxLength
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
+-- 
+-- @function [parent=#EditBox] openKeyboard 
+-- @param self
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
+-- Set the font size.<br>
+-- param fontSize The font size.
+-- @function [parent=#EditBox] setFontSize 
+-- @param self
+-- @param #int fontSize
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
 -- Get the text entered in the edit box.<br>
 -- return The text entered in the edit box.
 -- @function [parent=#EditBox] getText 
+-- @param self
+-- @return char#char ret (return value: char)
+        
+--------------------------------
+-- Get the input mode of the edit box.<br>
+-- return One of the EditBox::InputMode constants.
+-- @function [parent=#EditBox] getInputMode 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
+-- @overload self, size_table, ccui.Scale9Sprite         
+-- @overload self, size_table, string, int         
+-- @overload self, size_table, ccui.Scale9Sprite, ccui.Scale9Sprite, ccui.Scale9Sprite         
+-- @function [parent=#EditBox] initWithSizeAndBackgroundSprite
+-- @param self
+-- @param #size_table size
+-- @param #ccui.Scale9Sprite normalSprite
+-- @param #ccui.Scale9Sprite pressedSprite
+-- @param #ccui.Scale9Sprite disabledSprite
+-- @return bool#bool ret (return value: bool)
+
+--------------------------------
+-- Get the placeholder's font name. only system font is allowed.<br>
+-- return The font name.
+-- @function [parent=#EditBox] getPlaceholderFontName 
 -- @param self
 -- @return char#char ret (return value: char)
         
@@ -36,12 +85,26 @@
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
--- Set the placeholder's font name.<br>
+-- Set the placeholder's font name. only system font is allowed.<br>
 -- param pFontName The font name.
 -- @function [parent=#EditBox] setPlaceholderFontName 
 -- @param self
 -- @param #char pFontName
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
+-- Get the placeholder's font size.<br>
+-- return The font size.
+-- @function [parent=#EditBox] getPlaceholderFontSize 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
+-- Return the capInsets of disabled state scale9sprite.<br>
+-- return The disabled scale9 renderer capInsets.
+-- @function [parent=#EditBox] getCapInsetsDisabledRenderer 
+-- @param self
+-- @return rect_table#rect_table ret (return value: rect_table)
         
 --------------------------------
 -- Get a text in the edit box that acts as a placeholder when an<br>
@@ -51,7 +114,7 @@
 -- @return char#char ret (return value: char)
         
 --------------------------------
--- Set the font name.<br>
+-- Set the font name. Only system font is allowed.<br>
 -- param pFontName The font name.
 -- @function [parent=#EditBox] setFontName 
 -- @param self
@@ -86,11 +149,29 @@
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
+-- Sets capInsets for edit box, only the disabled state scale9 renderer will be affected.<br>
+-- param capInsets  capInsets in Rect.
+-- @function [parent=#EditBox] setCapInsetsDisabledRenderer 
+-- @param self
+-- @param #rect_table capInsets
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
 -- Set the placeholder's font size.<br>
 -- param fontSize The font size.
 -- @function [parent=#EditBox] setPlaceholderFontSize 
 -- @param self
 -- @param #int fontSize
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
+-- Load disabled state texture for edit box.<br>
+-- param disabled    dark state texture.<br>
+-- param texType    @see `TextureResType`
+-- @function [parent=#EditBox] loadTextureDisabled 
+-- @param self
+-- @param #string disabled
+-- @param #int texType
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
@@ -126,6 +207,13 @@
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
 
 --------------------------------
+-- Get the return type that are to be applied to the edit box.<br>
+-- return One of the EditBox::KeyboardReturnType constants.
+-- @function [parent=#EditBox] getReturnType 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
 -- @overload self, color4b_table         
 -- @overload self, color3b_table         
 -- @function [parent=#EditBox] setFontColor
@@ -133,6 +221,13 @@
 -- @param #color3b_table color
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
 
+--------------------------------
+-- Get the font name.<br>
+-- return The font name.
+-- @function [parent=#EditBox] getFontName 
+-- @param self
+-- @return char#char ret (return value: char)
+        
 --------------------------------
 -- js NA<br>
 -- lua NA
@@ -142,41 +237,94 @@
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
--- 
--- @function [parent=#EditBox] touchDownAction 
+-- Sets capInsets for edit box, only the normal state scale9 renderer will be affected.<br>
+-- param capInsets    capInsets in Rect.
+-- @function [parent=#EditBox] setCapInsetsNormalRenderer 
 -- @param self
--- @param #cc.Ref sender
--- @param #int controlEvent
+-- @param #rect_table capInsets
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
--- Set the placeholder's font.<br>
--- param pFontName The font name.<br>
--- param fontSize The font size.
--- @function [parent=#EditBox] setPlaceholderFont 
+-- Load pressed state texture for edit box.<br>
+-- param pressed    pressed state texture.<br>
+-- param texType    @see `TextureResType`
+-- @function [parent=#EditBox] loadTexturePressed 
 -- @param self
--- @param #char pFontName
--- @param #int fontSize
+-- @param #string pressed
+-- @param #int texType
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
--- Set the font size.<br>
--- param fontSize The font size.
--- @function [parent=#EditBox] setFontSize 
+-- Get the font color of the widget's text.
+-- @function [parent=#EditBox] getFontColor 
 -- @param self
--- @param #int fontSize
--- @return EditBox#EditBox self (return value: ccui.EditBox)
+-- @return color4b_table#color4b_table ret (return value: color4b_table)
         
 --------------------------------
--- @overload self, size_table, ccui.Scale9Sprite         
--- @overload self, size_table, string, int         
--- @function [parent=#EditBox] initWithSizeAndBackgroundSprite
+-- Get the input flags that are to be applied to the edit box.<br>
+-- return One of the EditBox::InputFlag constants.
+-- @function [parent=#EditBox] getInputFlag 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
+-- Init edit box with specified size. This method should be invoked right after constructor.<br>
+-- param size The size of edit box.<br>
+-- param normalImage  normal state texture name.<br>
+-- param pressedImage  pressed state texture name.<br>
+-- param disabledImage  disabled state texture name.<br>
+-- return Whether initialization is successfully or not.
+-- @function [parent=#EditBox] initWithSizeAndTexture 
 -- @param self
 -- @param #size_table size
--- @param #string normal9SpriteBg
+-- @param #string normalImage
+-- @param #string pressedImage
+-- @param #string disabledImage
 -- @param #int texType
 -- @return bool#bool ret (return value: bool)
-
+        
+--------------------------------
+-- Get the text horizontal alignment.
+-- @function [parent=#EditBox] getTextHorizontalAlignment 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
+-- Return the capInsets of normal state scale9sprite.<br>
+-- return The normal scale9 renderer capInsets.
+-- @function [parent=#EditBox] getCapInsetsNormalRenderer 
+-- @param self
+-- @return rect_table#rect_table ret (return value: rect_table)
+        
+--------------------------------
+-- Return the capInsets of pressed state scale9sprite.<br>
+-- return The pressed scale9 renderer capInsets.
+-- @function [parent=#EditBox] getCapInsetsPressedRenderer 
+-- @param self
+-- @return rect_table#rect_table ret (return value: rect_table)
+        
+--------------------------------
+-- get a script Handler<br>
+-- js NA<br>
+-- lua NA
+-- @function [parent=#EditBox] getScriptEditBoxHandler 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
+-- Load textures for edit box.<br>
+-- param normal    normal state texture name.<br>
+-- param pressed    pressed state texture name.<br>
+-- param disabled    disabled state texture name.<br>
+-- param texType    @see `TextureResType`
+-- @function [parent=#EditBox] loadTextures 
+-- @param self
+-- @param #string normal
+-- @param #string pressed
+-- @param #string disabled
+-- @param #int texType
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
 --------------------------------
 -- Set a text in the edit box that acts as a placeholder when an<br>
 -- edit box is empty.<br>
@@ -184,14 +332,6 @@
 -- @function [parent=#EditBox] setPlaceHolder 
 -- @param self
 -- @param #char pText
--- @return EditBox#EditBox self (return value: ccui.EditBox)
-        
---------------------------------
--- Set the return type that are to be applied to the edit box.<br>
--- param returnType One of the EditBox::KeyboardReturnType constants.
--- @function [parent=#EditBox] setReturnType 
--- @param self
--- @param #int returnType
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
@@ -203,11 +343,37 @@
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
+-- Set the return type that are to be applied to the edit box.<br>
+-- param returnType One of the EditBox::KeyboardReturnType constants.
+-- @function [parent=#EditBox] setReturnType 
+-- @param self
+-- @param #int returnType
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
+-- Load normal state texture for edit box.<br>
+-- param normal    normal state texture.<br>
+-- param texType    @see `TextureResType`
+-- @function [parent=#EditBox] loadTextureNormal 
+-- @param self
+-- @param #string normal
+-- @param #int texType
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
 -- Gets the maximum input length of the edit box.<br>
 -- return Maximum input length.
 -- @function [parent=#EditBox] getMaxLength 
 -- @param self
 -- @return int#int ret (return value: int)
+        
+--------------------------------
+-- Sets capInsets for edit box, only the pressed state scale9 renderer will be affected.<br>
+-- param capInsets    capInsets in Rect
+-- @function [parent=#EditBox] setCapInsetsPressedRenderer 
+-- @param self
+-- @param #rect_table capInsets
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
 -- Set the text entered in the edit box.<br>
@@ -218,17 +384,31 @@
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
--- Sets the maximum input length of the edit box.<br>
--- Setting this value enables multiline input mode by default.<br>
--- Available on Android, iOS and Windows Phone.<br>
--- param maxLength The maximum length.
--- @function [parent=#EditBox] setMaxLength 
+-- Set the placeholder's font. Only system font is allowed.<br>
+-- param pFontName The font name.<br>
+-- param fontSize The font size.
+-- @function [parent=#EditBox] setPlaceholderFont 
 -- @param self
--- @param #int maxLength
+-- @param #char pFontName
+-- @param #int fontSize
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
--- Set the font.<br>
+-- Get the font color of the placeholder text when the edit box is empty.
+-- @function [parent=#EditBox] getPlaceholderFontColor 
+-- @param self
+-- @return color4b_table#color4b_table ret (return value: color4b_table)
+        
+--------------------------------
+-- Sets capInsets for edit box.<br>
+-- param capInsets    capInset in Rect.
+-- @function [parent=#EditBox] setCapInsets 
+-- @param self
+-- @param #rect_table capInsets
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
+-- Set the font. Only system font is allowed.<br>
 -- param pFontName The font name.<br>
 -- param fontSize The font size.
 -- @function [parent=#EditBox] setFont 
@@ -238,14 +418,23 @@
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------
+-- Set the text horizontal alignment.
+-- @function [parent=#EditBox] setTextHorizontalAlignment 
+-- @param self
+-- @param #int alignment
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
 -- @overload self, size_table, string, int         
 -- @overload self, size_table, ccui.Scale9Sprite, ccui.Scale9Sprite, ccui.Scale9Sprite         
+-- @overload self, size_table, string, string, string, int         
 -- @function [parent=#EditBox] create
 -- @param self
 -- @param #size_table size
--- @param #ccui.Scale9Sprite normalSprite
--- @param #ccui.Scale9Sprite pressedSprite
--- @param #ccui.Scale9Sprite disabledSprite
+-- @param #string normalImage
+-- @param #string pressedImage
+-- @param #string disabledImage
+-- @param #int texType
 -- @return EditBox#EditBox ret (return value: ccui.EditBox)
 
 --------------------------------
@@ -253,6 +442,16 @@
 -- @function [parent=#EditBox] setAnchorPoint 
 -- @param self
 -- @param #vec2_table anchorPoint
+-- @return EditBox#EditBox self (return value: ccui.EditBox)
+        
+--------------------------------
+-- js NA<br>
+-- lua NA
+-- @function [parent=#EditBox] draw 
+-- @param self
+-- @param #cc.Renderer renderer
+-- @param #mat4_table parentTransform
+-- @param #unsigned int parentFlags
 -- @return EditBox#EditBox self (return value: ccui.EditBox)
         
 --------------------------------

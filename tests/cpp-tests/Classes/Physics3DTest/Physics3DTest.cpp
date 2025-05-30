@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2012 cocos2d-x.org
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -52,28 +53,29 @@ static cocos2d::Scene* physicsScene = nullptr;
 Physics3DTests::Physics3DTests()
 {
 #if CC_USE_3D_PHYSICS == 0
-	ADD_TEST_CASE(Physics3DDemoDisabled);
+    ADD_TEST_CASE(Physics3DDemoDisabled);
 #else
     ADD_TEST_CASE(BasicPhysics3DDemo);
     ADD_TEST_CASE(Physics3DConstraintDemo);
     ADD_TEST_CASE(Physics3DKinematicDemo);
     ADD_TEST_CASE(Physics3DCollisionCallbackDemo);
+    ADD_TEST_CASE(Physics3DColliderDemo);
     ADD_TEST_CASE(Physics3DTerrainDemo);
 #endif
-};
+}
 
 #if CC_USE_3D_PHYSICS == 0
 void Physics3DDemoDisabled::onEnter()
 {
-	TTFConfig ttfConfig("fonts/arial.ttf", 16);
-	auto label = Label::createWithTTF(ttfConfig, "Should define CC_USE_3D_PHYSICS\n to run this test case");
-	
-	auto size = Director::getInstance()->getWinSize();
-	label->setPosition(Vec2(size.width / 2, size.height / 2));
+    TTFConfig ttfConfig("fonts/arial.ttf", 16);
+    auto label = Label::createWithTTF(ttfConfig, "Should define CC_USE_3D_PHYSICS\n to run this test case");
+    
+    auto size = Director::getInstance()->getWinSize();
+    label->setPosition(Vec2(size.width / 2, size.height / 2));
 
-	addChild(label);
+    addChild(label);
 
-	TestCase::onEnter();
+    TestCase::onEnter();
 }
 #else
 std::string Physics3DTestDemo::title() const
@@ -110,7 +112,7 @@ bool Physics3DTestDemo::init()
         
         TTFConfig ttfConfig("fonts/arial.ttf", 10);
         auto label = Label::createWithTTF(ttfConfig,"DebugDraw OFF");
-        auto menuItem = MenuItemLabel::create(label, [=](Ref *ref){
+        auto menuItem = MenuItemLabel::create(label, [=](Ref* /*ref*/){
             if (getPhysics3DWorld()->isDebugDrawEnabled()){
                 getPhysics3DWorld()->setDebugDrawEnable(false);
                 label->setString("DebugDraw OFF");
@@ -136,11 +138,12 @@ bool Physics3DTestDemo::init()
 void Physics3DTestDemo::onTouchesBegan(const std::vector<Touch*>& touches, cocos2d::Event  *event)
 {
     _needShootBox = true;
+    event->stopPropagation();
 }
 
 void Physics3DTestDemo::onTouchesMoved(const std::vector<Touch*>& touches, cocos2d::Event  *event)
 {
-    if (touches.size() && _camera)
+    if (!touches.empty() && _camera)
     {
         auto touch = touches[0];
         auto delta = touch->getDelta();
@@ -153,6 +156,7 @@ void Physics3DTestDemo::onTouchesMoved(const std::vector<Touch*>& touches, cocos
         {
             _needShootBox = false;
         }
+        event->stopPropagation();
     }
 }
 
@@ -168,22 +172,23 @@ void Physics3DTestDemo::onTouchesEnded(const std::vector<Touch*>& touches, cocos
         farP = _camera->unproject(farP);
         Vec3 dir(farP - nearP);
         shootBox(_camera->getPosition3D() + dir * 10.0f);
+        event->stopPropagation();
     }
 }
 
-Physics3DTestDemo::Physics3DTestDemo( void )
+Physics3DTestDemo::Physics3DTestDemo()
 : _angle(0.0f)
 , _camera(nullptr)
 {
 
 }
 
-void Physics3DTestDemo::update( float delta )
+void Physics3DTestDemo::update( float /*delta*/ )
 {
     
 }
 
-Physics3DTestDemo::~Physics3DTestDemo( void )
+Physics3DTestDemo::~Physics3DTestDemo()
 {
     
 }
@@ -529,6 +534,7 @@ void Physics3DConstraintDemo::onTouchesBegan(const std::vector<cocos2d::Touch*>&
             _constraint = Physics3DPointToPointConstraint::create(static_cast<Physics3DRigidBody*>(result.hitObj), position);
             physicsScene->getPhysics3DWorld()->addPhysics3DConstraint(_constraint, true);
             _pickingDistance = (result.hitPosition - nearP).length();
+            event->stopPropagation();
             return;
         }
     }
@@ -550,6 +556,7 @@ void Physics3DConstraintDemo::onTouchesMoved(const std::vector<cocos2d::Touch*>&
         _camera->unproject(size, &farP, &farP);
         auto dir = (farP - nearP).getNormalized();
         p2pConstraint->setPivotPointInB(nearP + dir * _pickingDistance);
+        event->stopPropagation();
         return;
     }
     Physics3DTestDemo::onTouchesMoved(touches, event);
@@ -560,6 +567,7 @@ void Physics3DConstraintDemo::onTouchesEnded(const std::vector<cocos2d::Touch*>&
     {
         physicsScene->getPhysics3DWorld()->removePhysics3DConstraint(_constraint);
         _constraint = nullptr;
+        event->stopPropagation();
         return;
     }
     Physics3DTestDemo::onTouchesEnded(touches, event);
@@ -583,13 +591,12 @@ bool Physics3DTerrainDemo::init()
     terrain->setCameraMask((unsigned short)CameraFlag::USER1);
 
     //create terrain
-    Physics3DRigidBodyDes rbDes;
-    rbDes.mass = 0.0f;
     std::vector<float> heidata = terrain->getHeightData();
     auto size = terrain->getTerrainSize();
-    rbDes.shape = Physics3DShape::createHeightfield(size.width, size.height, &heidata[0], 1.0f, terrain->getMinHeight(), terrain->getMaxHeight(), true, false, true);
-    auto rigidBody = Physics3DRigidBody::create(&rbDes);
-    auto component = Physics3DComponent::create(rigidBody);
+    Physics3DColliderDes colliderDes;
+    colliderDes.shape = Physics3DShape::createHeightfield(size.width, size.height, &heidata[0], 1.0f, terrain->getMinHeight(), terrain->getMaxHeight(), true, false, true);
+    auto collider = Physics3DCollider::create(&colliderDes);
+    auto component = Physics3DComponent::create(collider);
     terrain->addComponent(component);
     this->addChild(terrain);
     component->syncNodeToPhysics();
@@ -597,6 +604,7 @@ bool Physics3DTerrainDemo::init()
 
 
     //create several spheres
+    Physics3DRigidBodyDes rbDes;
     rbDes.mass = 1.f;
     rbDes.shape = Physics3DShape::createSphere(0.5f);
     float start_x = START_POS_X - ARRAY_SIZE_X/2 + 5.0f;
@@ -628,38 +636,37 @@ bool Physics3DTerrainDemo::init()
     //create mesh
     std::vector<Vec3> trianglesList = Bundle3D::getTrianglesList("Sprite3DTest/boss.c3b");
 
-    rbDes.mass = 0.0f;
-    rbDes.shape = Physics3DShape::createMesh(&trianglesList[0], (int)trianglesList.size() / 3);
-    rigidBody = Physics3DRigidBody::create(&rbDes);
-    component = Physics3DComponent::create(rigidBody);
-    auto sprite = Sprite3D::create("Sprite3DTest/boss.c3b");
-    sprite->addComponent(component);
+    colliderDes.shape = Physics3DShape::createMesh(&trianglesList[0], (int)trianglesList.size() / 3);
+
+    auto sprite = PhysicsSprite3D::createWithCollider("Sprite3DTest/boss.c3b", &colliderDes);
     sprite->setRotation3D(Vec3(-90.0f, 0.0f, 0.0f));
     sprite->setPosition3D(Vec3(0.0f, 15.0f, 0.0f));
     sprite->setCameraMask(2);
     this->addChild(sprite);
+    sprite->syncNodeToPhysics();
+    sprite->setSyncFlag(Physics3DComponent::PhysicsSyncFlag::NONE);
 
     std::vector<std::pair<Physics3DShape*, Mat4> > shapeList;
     {
         Mat4 localTrans;
         auto bodyshape = Physics3DShape::createBox(Vec3(2.0f, 4.0f, 2.0f));
         Mat4::createTranslation(0.0f, 2.0f, 0.0f, &localTrans);
-        shapeList.push_back(std::make_pair(bodyshape, localTrans));
+        shapeList.emplace_back(bodyshape, localTrans);
         auto headshape = Physics3DShape::createSphere(1.5f);
         Mat4::createTranslation(0.6f, 5.0f, -1.5f, &localTrans);
-        shapeList.push_back(std::make_pair(headshape, localTrans));
+        shapeList.emplace_back(headshape, localTrans);
         auto lhandshape = Physics3DShape::createBox(Vec3(1.0f, 3.0f, 1.0f));
         Mat4::createRotation(Vec3(1.0f, 0.0f, 0.0f), CC_DEGREES_TO_RADIANS(15.0f), &localTrans);
         localTrans.m[12] = -1.5f; localTrans.m[13] = 2.5f; localTrans.m[14] = -2.5f;
-        shapeList.push_back(std::make_pair(lhandshape, localTrans));
+        shapeList.emplace_back(lhandshape, localTrans);
         auto rhandshape = Physics3DShape::createBox(Vec3(1.0f, 3.0f, 1.0f));
         Mat4::createRotation(Vec3(1.0f, 0.0f, 0.0f), CC_DEGREES_TO_RADIANS(-15.0f), &localTrans);
         localTrans.m[12] = 2.0f; localTrans.m[13] = 2.5f; localTrans.m[14] = 1.f;
-        shapeList.push_back(std::make_pair(rhandshape, localTrans));
+        shapeList.emplace_back(rhandshape, localTrans);
 
         rbDes.mass = 10.0f;
         rbDes.shape = Physics3DShape::createCompoundShape(shapeList);
-        rigidBody = Physics3DRigidBody::create(&rbDes);
+        auto rigidBody = Physics3DRigidBody::create(&rbDes);
         component = Physics3DComponent::create(rigidBody);
         auto sprite = Sprite3D::create("Sprite3DTest/orc.c3b");
         sprite->addComponent(component);
@@ -735,6 +742,96 @@ bool Physics3DCollisionCallbackDemo::init()
             //}
             //CCLOG("------------BoxB Collision Info------------");
         });
+    }
+
+    physicsScene->setPhysics3DDebugCamera(_camera);
+    return true;
+}
+
+std::string Physics3DColliderDemo::subtitle() const
+{
+    return "Physics3D Trigger";
+}
+
+bool Physics3DColliderDemo::init()
+{
+    if (!Physics3DTestDemo::init())
+        return false;
+
+    Physics3DRigidBodyDes rbDes;
+    rbDes.mass = 1.0f;
+    rbDes.shape = Physics3DShape::createBox(Vec3(3.0f, 3.0f, 3.f));
+    auto playerBody = Physics3DRigidBody::create(&rbDes);
+    auto component = Physics3DComponent::create(playerBody);
+    playerBody->setKinematic(true);
+    auto sprite = Sprite3D::create("Sprite3DTest/box.c3t");
+    sprite->setTexture("Sprite3DTest/plane.png");
+    sprite->setScale(3.f);
+    sprite->setPosition3D(Vec3(0.0f, 0.f, 30.f));
+    sprite->addComponent(component);
+    sprite->setCameraMask((unsigned short)CameraFlag::USER1);
+    auto moveby = MoveBy::create(5.0f, Vec3(0.0f, 0.0f, -60.0f));
+    sprite->runAction(RepeatForever::create(Sequence::create(moveby, moveby->reverse(), nullptr)));
+    this->addChild(sprite);
+
+    {
+        Physics3DColliderDes colliderDes;
+        colliderDes.shape = Physics3DShape::createSphere(10.0f);
+        colliderDes.isTrigger = true;
+        auto collider = Physics3DCollider::create(&colliderDes);
+        auto component = Physics3DComponent::create(collider);
+        auto node = Node::create();
+        node->addComponent(component);
+        node->setCameraMask((unsigned short)CameraFlag::USER1);
+        this->addChild(node);
+
+        Physics3DRigidBodyDes rbDes;
+        rbDes.mass = 1.0f;
+        rbDes.shape = Physics3DShape::createBox(Vec3(10.0f, 10.0f, 1.f));
+        auto rigidBody = Physics3DRigidBody::create(&rbDes);
+        component = Physics3DComponent::create(rigidBody);
+        rigidBody->setKinematic(true);
+        auto doorLeft = Sprite3D::create("Sprite3DTest/box.c3t");
+        doorLeft->setTexture("Sprite3DTest/plane.png");
+        doorLeft->setScaleX(10.0f);
+        doorLeft->setScaleY(10.0f);
+        doorLeft->setScaleZ(1.0f);
+        doorLeft->setPosition3D(Vec3(-5.0f, 0.0f, 0.0f));
+        doorLeft->addComponent(component);
+        doorLeft->setCameraMask((unsigned short)CameraFlag::USER1);
+        node->addChild(doorLeft);
+
+        rbDes.mass = 1.0f;
+        rbDes.shape = Physics3DShape::createBox(Vec3(10.0f, 10.0f, 1.f));
+        rigidBody = Physics3DRigidBody::create(&rbDes);
+        component = Physics3DComponent::create(rigidBody);
+        rigidBody->setKinematic(true);
+        auto doorRight = Sprite3D::create("Sprite3DTest/box.c3t");
+        doorRight->setTexture("Sprite3DTest/plane.png");
+        doorRight->setScaleX(10.0f);
+        doorRight->setScaleY(10.0f);
+        doorRight->setScaleZ(1.0f);
+        doorRight->setPosition3D(Vec3(5.0f, 0.0f, 0.0f));
+        doorRight->addComponent(component);
+        doorRight->setCameraMask((unsigned short)CameraFlag::USER1);
+        node->addChild(doorRight);
+
+
+        collider->onTriggerEnter = [=](Physics3DObject *otherObject){
+            if (otherObject == playerBody){
+                auto moveby = MoveBy::create(1.0f, Vec3(-5.0f, 0.0f, 0.0f));
+                doorLeft->runAction(moveby);
+                doorRight->runAction(moveby->reverse());
+            }
+        };
+
+        collider->onTriggerExit = [=](Physics3DObject *otherObject){
+            if (otherObject == playerBody){
+                auto moveby = MoveBy::create(1.0f, Vec3(5.0f, 0.0f, 0.0f));
+                doorLeft->runAction(moveby);
+                doorRight->runAction(moveby->reverse());
+            }
+        };
     }
 
     physicsScene->setPhysics3DDebugCamera(_camera);

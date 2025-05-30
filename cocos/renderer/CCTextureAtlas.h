@@ -2,7 +2,8 @@
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -66,7 +67,7 @@ public:
     /** Creates a TextureAtlas with an filename and with an initial capacity for Quads.
 
      * The TextureAtlas capacity can be increased in runtime.
-     @param file A null terminated string contains the file path.
+     @param file The file path.
      @param capacity Capacity for Quads.
     */
     static TextureAtlas* create(const std::string& file , ssize_t capacity);
@@ -93,7 +94,7 @@ public:
     * The TextureAtlas capacity can be increased in runtime.
     *
      @attention Do not reinitialize the TextureAtlas because it will leak memory (issue #706).
-     @param file A null terminated string contains the file path.
+     @param file The file path.
      @param capacity Capacity for Quads.
     */
     bool initWithFile(const std::string& file, ssize_t capacity);
@@ -209,9 +210,9 @@ public:
     void listenRendererRecreated(EventCustom* event);
 
     /** Whether or not the array buffer of the VBO needs to be updated.*/
-    inline bool isDirty(void) { return _dirty; }
+    bool isDirty() { return _dirty; }
     /** Specify if the array buffer of the VBO needs to be updated. */
-    inline void setDirty(bool bDirty) { _dirty = bDirty; }
+    void setDirty(bool bDirty) { _dirty = bDirty; }
 
     /**Get quads total amount.
      * @js NA

@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -45,8 +46,10 @@ typedef SSIZE_T ssize_t;
     #define _USE_MATH_DEFINES       // make M_PI can be use
 #endif
 
+#if _MSC_VER < 1800
 #if !defined(isnan)
     #define isnan   _isnan
+#endif
 #endif
 
 #if _MSC_VER < 1900
@@ -87,19 +90,19 @@ typedef SSIZE_T ssize_t;
 #if _MSC_VER >= 1600 || defined(__MINGW32__)
     #include <stdint.h>
 #else
-    #include "./compat/stdint.h"
+    #include "platform/win32/compat/stdint.h"
 #endif
 
 #define _WINSOCKAPI_
 #ifndef NOMINMAX
   #define NOMINMAX
 #endif
-// Structure timeval has define in winsock.h, include windows.h for it.
-#include <Windows.h>
 
 #ifndef __MINGW32__
 
 #include <WinSock2.h>
+// Structure timeval has define in winsock.h, include windows.h for it.
+#include <Windows.h>
 
 NS_CC_BEGIN
 
@@ -117,6 +120,7 @@ NS_CC_END
 
 #undef _WINSOCKAPI_
 #include <winsock2.h>
+#include <Windows.h>
 
 // Conflicted with math.h isnan
 #include <cmath>
@@ -135,11 +139,6 @@ inline errno_t strcpy_s(char *strDestination, size_t numberOfElements,
 }
 #endif
 #endif // __MINGW32__
-
-// Conflicted with cocos2d::MessageBox, so we need to undef it.
-#ifdef MessageBox
-#undef MessageBox
-#endif
 
 // Conflicted with ParticleSystem::PositionType::RELATIVE, so we need to undef it.
 #ifdef RELATIVE

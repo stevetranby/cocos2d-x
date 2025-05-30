@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2013      cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -26,6 +27,8 @@
 #import "RootViewController.h"
 #import "cocos2d.h"
 #import "platform/ios/CCEAGLView-ios.h"
+#import "platform/ios/CCDirectorCaller-ios.h"
+
 
 @implementation RootViewController
 
@@ -39,31 +42,51 @@
 }
 */
 
-/*
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
+    // Initialize the CCEAGLView
+    CCEAGLView *eaglView = [CCEAGLView viewWithFrame: [UIScreen mainScreen].bounds
+                                         pixelFormat: (__bridge NSString *)cocos2d::GLViewImpl::_pixelFormat
+                                         depthFormat: cocos2d::GLViewImpl::_depthFormat
+                                  preserveBackbuffer: NO
+                                          sharegroup: nil
+                                       multiSampling: cocos2d::GLViewImpl::_multisamplingCount > 0 ? YES : NO
+                                     numberOfSamples: cocos2d::GLViewImpl::_multisamplingCount ];
+    
+    // Enable or disable multiple touches
+    [eaglView setMultipleTouchEnabled:NO];
+    
+    // Set EAGLView as view of RootViewController
+    self.view = eaglView;
 }
-*/
 
-/*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
 }
 
-*/
-// Override to allow orientations other than the default portrait orientation.
-// This method is deprecated on ios6
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return UIInterfaceOrientationIsLandscape( interfaceOrientation );
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 
-// For ios6, use supportedInterfaceOrientations & shouldAutorotate instead
-- (NSUInteger) supportedInterfaceOrientations{
-#ifdef __IPHONE_6_0
-    return UIInterfaceOrientationMaskAllButUpsideDown;
-#endif
+//In iOS 12.0+, Screen Time's bug cause UIApplicationDidBecomeActiveNotification and UIApplicationWillResignActiveNotification do not fired
+//so we need to active CCDirectorCaller manually
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [[CCDirectorCaller sharedDirectorCaller] setActive:YES];
 }
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
+
+// For ios6, use supportedInterfaceOrientations & shouldAutorotate instead
+#ifdef __IPHONE_6_0
+- (NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+#endif
 
 - (BOOL) shouldAutorotate {
     return YES;
@@ -76,7 +99,7 @@
 
     if (glview)
     {
-        CCEAGLView *eaglview = (CCEAGLView*) glview->getEAGLView();
+        CCEAGLView *eaglview = (__bridge CCEAGLView *)glview->getEAGLView();
 
         if (eaglview)
         {
@@ -87,9 +110,20 @@
 }
 
 //fix not hide status on ios7
-- (BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return YES;
+}
+
+// Controls the application's preferred home indicator auto-hiding when this view controller is shown.
+// (better use preferredScreenEdgesDeferringSystemGestures for controlling the home indicator)
+- (BOOL)prefersHomeIndicatorAutoHidden {
+    return NO;
+}
+
+// HOME Indicator need to be tapped twice 
+-(UIRectEdge)preferredScreenEdgesDeferringSystemGestures
+{
+    return UIRectEdgeBottom; 
 }
 
 - (void)didReceiveMemoryWarning {
@@ -97,17 +131,6 @@
     [super didReceiveMemoryWarning];
 
     // Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-
-- (void)dealloc {
-    [super dealloc];
 }
 
 

@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -24,10 +25,10 @@
  ****************************************************************************/
 
 
-var UIWebViewTest = UIScene.extend({
+var UIWebViewTest = UIMainLayer.extend({
 
     onEnter: function(){
-        UIScene.prototype.onEnter.call(this);
+        UIMainLayer.prototype.onEnter.call(this);
 
         var webView = new ccui.WebView("http://www.baidu.com");
         webView.setContentSize(320, 240);
@@ -37,79 +38,69 @@ var UIWebViewTest = UIScene.extend({
         window.webView = webView;
         this.addChild(webView);
 
-
-        webView.setEventListener(ccui.WebView.EventType.LOADED, function(sender, url){
-            cc.log("webview LOADED url:" + url);
-        });
-        webView.setEventListener(ccui.WebView.EventType.LOADING, function(sender, url){
-            cc.log("webview LOADING url:" + url);
-        });
-        webView.setEventListener(ccui.WebView.EventType.ERROR, function(sender, url){
-            cc.log("webview ERROR url:" + url);
-        });
+        var widgetSize = this._widget.getContentSize();
+        var playState = this._topDisplayLabel;
+        playState.setString("Press buttons to start");
+        playState.y = widgetSize.height / 2.0 + playState.height * 1.5;
+        this._bottomDisplayLabel.setString("");
 
         var list = [
             { name: "loadURL", func: function(){
-                cc.log("loadURL!");
+                playState.setString("loadURL!");
                 webView.loadURL("src/GUITest/UIWebViewTest/webview2.html");
             }},
-            { name: "reload", func: function(){
-                cc.log("reload!");
+            { name: "Reload", func: function(){
+                playState.setString("reload!");
                 webView.reload();
             }},
             { name: "goBack", func: function(){
                 if (webView.canGoBack())
                 {
-                    cc.log("goBack!");
+                    playState.setString("goBack!");
                     webView.goBack();    
                 }
                 else
                 {
-                    cc.log("can not goBack!");
+                    playState.setString("can not goBack!");
                 }
             }},
             { name: "goForward", func: function(){
-                if (webView.canGoForward())
-                {
-                    cc.log("goForward!");
+                if (webView.canGoForward()) {
+                    playState.setString("goForward!");
                     webView.goForward();
                 }
-                else
-                {
-                    cc.log("can not goForward!");
+                else {
+                    playState.setString("can not goForward!");
                 }
             }},
-            { name: "evaluateJS", func: function(){
-                cc.log("evaluateJS!");
+            { name: "EvaluateJS", func: function(){
+                playState.setString("evaluateJS!");
                 var code = "alert('evaluateJS!')";
                 webView.evaluateJS(code);
             }},
             { name: "Scale", func: function(){
                 var scale = ((Math.random() * 0.5 + 0.2) * 100 | 0) / 100;
-                cc.log("setScale(%f)!", scale);
+                playState.setString("setScale(" + scale + ")");
                 webView.setScale(scale);
             }},
-            { name: "AnchorPoint 0 / 1", func: function(){
-                var anp = webView.getAnchorPoint();
-                if(anp.x === 1)
-                    webView.setAnchorPoint(0, 0);
-                else
-                    webView.setAnchorPoint(1, 1);
-            }},
-            { name: "AnchorPoint 0.5", func: function(){
-                webView.setAnchorPoint(0.5, 0.5);
+            { name: "setAnchorPoint", func: function(){
+                var anpX = webView.getAnchorPoint().x === 1 ? 0: webView.getAnchorPoint().x+ 0.5;
+                var anpY = webView.getAnchorPoint().y === 1 ? 0: webView.getAnchorPoint().y+ 0.5;
+                webView.setAnchorPoint(anpX, anpY);
             }}
         ];
 
         var layer = this;
         list.forEach(function(item, i){
-            var but = new ccui.Button();
-            but.setPosition( 140 + (i / 5 | 0) * 500, 300 - (i % 5) * 35);
-            but.setTitleText(item.name);
-            but.setZoomScale(0.3);
-            but.setPressedActionEnabled(true);
-            but.addClickEventListener(item.func);
-            layer.addChild(but);
+            var button = new ccui.Button();
+            i+1 !== list.length ? button.setScale(1.3) : button.setScale(1);
+            button.setPosition( 140 + (i / 4 | 0) * 530, 320 - (i % 4) * 50);
+            button.setTitleText(item.name);
+            button.setTitleColor(cc.color.YELLOW);
+            button.setZoomScale(0.3);
+            button.setPressedActionEnabled(true);
+            button.addClickEventListener(item.func);
+            layer.addChild(button);
         });
 
     }

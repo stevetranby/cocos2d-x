@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -21,9 +22,9 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "lua_cocos2dx_cocosdenshion_manual.h"
-#include "lua_cocos2dx_cocosdenshion_auto.hpp"
-#include "CCLuaEngine.h"
+#include "scripting/lua-bindings/manual/cocosdenshion/lua_cocos2dx_cocosdenshion_manual.h"
+#include "scripting/lua-bindings/auto/lua_cocos2dx_cocosdenshion_auto.hpp"
+#include "scripting/lua-bindings/manual/CCLuaEngine.h"
 
 int  register_cocosdenshion_module(lua_State* L)
 {

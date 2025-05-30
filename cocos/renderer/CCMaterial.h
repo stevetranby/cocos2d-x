@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -119,7 +120,7 @@ public:
     void setTechnique(const std::string& techniqueName);
 
     /** returns a clone (deep-copy) of the material */
-    Material* clone() const;
+    virtual Material* clone() const;
 
 protected:
     Material();
@@ -137,8 +138,8 @@ protected:
     bool parseSampler(GLProgramState* glProgramState, Properties* properties);
     bool parseUniform(GLProgramState* programState, Properties* properties, const char* uniformName);
     bool parseRenderState(RenderState* renderState, Properties* properties);
-
-
+    
+    
     // material name
     std::string _name;
 

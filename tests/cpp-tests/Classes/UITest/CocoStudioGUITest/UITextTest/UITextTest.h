@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -63,10 +64,26 @@ public:
     virtual bool init() override;
 };
 
-class UITextTest_IgnoreConentSize : public UIScene
+class UITextTest_IgnoreContentSize : public UIScene
 {
 public:
-    CREATE_FUNC(UITextTest_IgnoreConentSize);
+    CREATE_FUNC(UITextTest_IgnoreContentSize);
+
+    virtual bool init() override;
+};
+
+class UITextTest_Clone : public UIScene
+{
+public:
+    CREATE_FUNC(UITextTest_Clone);
+
+    virtual bool init() override;
+};
+
+class Issue16073Test : public UIScene
+{
+public:
+    CREATE_FUNC(Issue16073Test);
 
     virtual bool init() override;
 };

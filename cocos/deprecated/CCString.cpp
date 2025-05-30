@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies
+Copyright (c) 2013-2017 Chukong Technologies
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -28,7 +29,7 @@ Copyright (c) 2013-2014 Chukong Technologies
 #include "base/ccMacros.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "CCArray.h"
+#include "deprecated/CCArray.h"
 #include "base/ccUtils.h"
 
 NS_CC_BEGIN
@@ -82,13 +83,12 @@ bool __String::initWithFormatAndValist(const char* format, va_list ap)
 
 bool __String::initWithFormat(const char* format, ...)
 {
-    bool bRet = false;
     _string.clear();
 
     va_list ap;
     va_start(ap, format);
 
-    bRet = initWithFormatAndValist(format, ap);
+    bool bRet = initWithFormatAndValist(format, ap);
 
     va_end(ap);
 
@@ -196,7 +196,7 @@ __Array* __String::componentsSeparatedByString(const char *delimiter)
         strTmp = strTmp.substr(cutAt + 1);
     }
     
-    if(strTmp.length() > 0)
+    if(!strTmp.empty())
     {
         result->addObject(__String::create(strTmp));
     }
@@ -210,7 +210,7 @@ bool __String::isEqual(const Ref* pObject)
     const __String* pStr = dynamic_cast<const __String*>(pObject);
     if (pStr != nullptr)
     {
-        if (0 == _string.compare(pStr->_string))
+        if (pStr->_string == _string)
         {
             bRet = true;
         }
@@ -220,7 +220,7 @@ bool __String::isEqual(const Ref* pObject)
 
 __String* __String::create(const std::string& str)
 {
-    __String* ret = new __String(str);
+    __String* ret = new (std::nothrow) __String(str);
     ret->autorelease();
     return ret;
 }
@@ -260,7 +260,7 @@ __String* __String::createWithFormat(const char* format, ...)
 __String* __String::createWithContentsOfFile(const std::string &filename)
 {
     std::string str = FileUtils::getInstance()->getStringFromFile(filename);
-    return __String::create(std::move(str));
+    return __String::create(str);
 }
 
 void __String::acceptVisitor(DataVisitor &visitor)
@@ -272,30 +272,5 @@ __String* __String::clone() const
 {
     return __String::create(_string);
 }
-
-namespace StringUtils {
-
-std::string format(const char* format, ...)
-{
-#define CC_MAX_STRING_LENGTH (1024*100)
-    
-    std::string ret;
-    
-    va_list ap;
-    va_start(ap, format);
-    
-    char* buf = (char*)malloc(CC_MAX_STRING_LENGTH);
-    if (buf != nullptr)
-    {
-        vsnprintf(buf, CC_MAX_STRING_LENGTH, format, ap);
-        ret = buf;
-        free(buf);
-    }
-    va_end(ap);
-    
-    return ret;
-}
-
-} // namespace StringUtils {
     
 NS_CC_END

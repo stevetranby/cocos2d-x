@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -35,6 +36,9 @@ public:
     CREATE_FUNC(UITextBMFontTest)
 
     virtual bool init() override;
+    void printWidgetResources(cocos2d::Ref* sender);
+protected:
+    cocos2d::ui::TextBMFont* _textBMFont;
 };
 
 #endif /* defined(__TestCpp__UITextBMFontTest__) */

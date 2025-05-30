@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  Created by Chris Hannon 2014 http://www.channon.us
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -125,8 +126,14 @@ var SocketIOTestLayer = cc.Layer.extend({
     },
 
     onExit: function() {
-        if(this._sioEndpoint) this._sioEndpoint.disconnect();
-        if(this._sioClient) this._sioClient.disconnect();
+        if(this._sioEndpoint) {
+            this._sioEndpoint.disconnect();
+            this._sioEndpoint = null;
+        }
+        if(this._sioClient) {
+            this._sioClient.disconnect();
+            this._sioClient = null;
+        }
 
         this._super();
     },
@@ -193,7 +200,7 @@ var SocketIOTestLayer = cc.Layer.extend({
     onMenuSIOEndpointClicked: function(sender) {
 
         //repeat the same connection steps for the namespace "testpoint"
-        var sioendpoint = SocketIO.connect("ws://tools.itharbors.com:4000/testpoint");
+        var sioendpoint = SocketIO.connect("ws://tools.itharbors.com:4000/testpoint", {"force new connection" : true});
 
         //a tag to differentiate in shared callbacks
         sioendpoint.tag = "Test Endpoint";
@@ -254,14 +261,18 @@ var SocketIOTestLayer = cc.Layer.extend({
 
     onMenuTestClientDisconnectClicked: function(sender) {
 
-        if(this._sioClient != null) this._sioClient.disconnect();
-
+        if(this._sioClient != null) {
+            this._sioClient.disconnect();
+            this._sioClient = null;
+        }
     },
 
     onMenuTestEndpointDisconnectClicked: function(sender) {
 
-        if(this._sioEndpoint != null) this._sioEndpoint.disconnect();
-
+        if(this._sioEndpoint != null) {
+            this._sioEndpoint.disconnect();
+            this._sioEndpoint = null;
+        }
     },
 
     toExtensionsMainLayer: function (sender) {

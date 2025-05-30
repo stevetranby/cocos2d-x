@@ -1,5 +1,6 @@
 /****************************************************************************
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -23,6 +24,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "2d/CCTweenFunction.h"
+#include <cmath>
 
 #define _USE_MATH_DEFINES // needed for M_PI and M_PI2
 #include <math.h> // M_PI
@@ -302,37 +304,33 @@ float expoEaseOut(float time)
 }
 float expoEaseInOut(float time)
 {
-    time /= 0.5f;
-    if (time < 1)
-    {
-        time = 0.5f * powf(2, 10 * (time - 1));
-    }
-    else
-    {
-        time = 0.5f * (-powf(2, -10 * (time - 1)) + 2);
-    }
+    if(time == 0 || time == 1) 
+        return time;
+    
+    if (time < 0.5f)
+        return 0.5f * powf(2, 10 * (time * 2 - 1));
 
-    return time;
+    return 0.5f * (-powf(2, -10 * (time * 2 - 1)) + 2);
 }
 
 
 // Circ Ease
 float circEaseIn(float time)
 {
-    return -1 * (sqrt(1 - time * time) - 1);
+    return -1 * (std::sqrt(1 - time * time) - 1);
 }
 float circEaseOut(float time)
 {
     time = time - 1;
-    return sqrt(1 - time * time);
+    return std::sqrt(1 - time * time);
 }
 float circEaseInOut(float time)
 {
     time = time * 2;
     if (time < 1)
-        return -0.5f * (sqrt(1 - time * time) - 1);
+        return -0.5f * (std::sqrt(1 - time * time) - 1);
     time -= 2;
-    return 0.5f * (sqrt(1 - time * time) + 1);
+    return 0.5f * (std::sqrt(1 - time * time) + 1);
 }
 
 
@@ -436,16 +434,16 @@ float backEaseInOut(float time)
 // Bounce Ease
 float bounceTime(float time)
 {
-    if (time < 1 / 2.75)
+    if (time < 1 / 2.75f)
     {
         return 7.5625f * time * time;
     }
-    else if (time < 2 / 2.75)
+    else if (time < 2 / 2.75f)
     {
         time -= 1.5f / 2.75f;
         return 7.5625f * time * time + 0.75f;
     }
-    else if(time < 2.5 / 2.75)
+    else if(time < 2.5f / 2.75f)
     {
         time -= 2.25f / 2.75f;
         return 7.5625f * time * time + 0.9375f;

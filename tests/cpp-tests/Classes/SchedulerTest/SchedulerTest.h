@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #ifndef _SCHEDULER_TEST_H_
 #define _SCHEDULER_TEST_H_
 
@@ -284,6 +308,16 @@ private:
     cocos2d::Node* testNode;
 };
 
+class SchedulerIssueWithReschedule : public SchedulerTestLayer
+{
+public:
+    CREATE_FUNC(SchedulerIssueWithReschedule);
+
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    void onEnter() override;
+};
+
 class ScheduleCallbackTest : public SchedulerTestLayer
 {
 public:
@@ -324,6 +358,102 @@ public:
 
     void onEnter() override;
     void update(float dt) override;
+};
+
+class SchedulerRemoveAllFunctionsToBePerformedInCocosThread : public SchedulerTestLayer
+{
+public:
+    CREATE_FUNC(SchedulerRemoveAllFunctionsToBePerformedInCocosThread);
+    
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    void onEnter() override;
+    void onExit() override;
+    void update(float dt) override;
+    
+private:
+    cocos2d::Sprite *_sprite;
+};
+
+class SchedulerIssue17149: public SchedulerTestLayer
+{
+public:
+    CREATE_FUNC(SchedulerIssue17149);
+    SchedulerIssue17149();
+    ~SchedulerIssue17149();
+    
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    virtual void onEnter() override;
+    virtual void update(float dt) override;
+    
+private:
+    class ClassA
+    {
+    public:
+        ClassA();
+        
+        void update(float dt);
+        
+        int _member1;
+        int _member2;
+        int _member3;
+    };
+    
+    class ClassB
+    {
+    public:
+        ClassB();
+        void update(float dt);
+        
+        int _member1;
+        int _member2;
+        int _member3;
+    };
+    
+    void *_memoryPool;
+};
+
+class SchedulerRemoveEntryWhileUpdate: public SchedulerTestLayer
+{
+public:
+    CREATE_FUNC(SchedulerRemoveEntryWhileUpdate);
+    
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    virtual void onEnter() override;
+    virtual void onExit() override;
+    
+private:
+    class TestClass
+    {
+    public:
+        TestClass(int index, TestClass *nextObj, cocos2d::Scheduler* scheduler);
+        void update(float dt);
+    private:
+        TestClass *_nextObj;
+        int _index;
+        cocos2d::Scheduler *_scheduler;
+        bool _cleanedUp;
+    };
+    std::vector<TestClass *> _testvector;
+};
+
+class SchedulerRemoveSelectorDuringCall: public SchedulerTestLayer
+{
+public:
+    CREATE_FUNC(SchedulerRemoveSelectorDuringCall);
+    
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    virtual void onEnter() override;
+    virtual void onExit() override;
+    
+private:
+    void callback( float );
+
+private:
+    bool _scheduled;
 };
 
 #endif

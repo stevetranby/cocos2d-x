@@ -1,16 +1,41 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
 
-#include "CCLuaJavaBridge.h"
+
+#include "scripting/lua-bindings/manual/platform/android/CCLuaJavaBridge.h"
 #include "platform/android/jni/JniHelper.h"
 #include <android/log.h>
+#include "base/ccUTF8.h"
 
 #define  LOG_TAG    "luajc"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 
 extern "C" {
-#include "tolua_fix.h"
+#include "scripting/lua-bindings/manual/tolua_fix.h"
 }
 
-LuaJavaBridge::CallInfo::~CallInfo(void)
+LuaJavaBridge::CallInfo::~CallInfo()
 {
 	if (m_returnType == TypeString && m_ret.stringValue)
 	{
@@ -18,7 +43,7 @@ LuaJavaBridge::CallInfo::~CallInfo(void)
 	}
 }
 
-bool LuaJavaBridge::CallInfo::execute(void)
+bool LuaJavaBridge::CallInfo::execute()
 {
 	switch (m_returnType)
     {
@@ -39,11 +64,18 @@ bool LuaJavaBridge::CallInfo::execute(void)
             break;
 
         case TypeString:
+        {
             m_retjs = (jstring)m_env->CallStaticObjectMethod(m_classID, m_methodID);
-            const char *stringBuff = m_env->GetStringUTFChars(m_retjs, 0);
-            m_ret.stringValue = new string(stringBuff);
-            m_env->ReleaseStringUTFChars(m_retjs, stringBuff);
+            bool bValidStr = true;
+            std::string strValue = cocos2d::StringUtils::getStringUTFCharsJNI(m_env, m_retjs, &bValidStr);
+            m_ret.stringValue = (false == bValidStr) ? nullptr : new string(strValue);
            break;
+        }
+
+        default:
+            m_error = LUAJ_ERR_TYPE_NOT_SUPPORT;
+            LOGD("Return type '%d' is not supported", static_cast<int>(m_returnType));
+            return false;
     }
 
 	if (m_env->ExceptionCheck() == JNI_TRUE)
@@ -79,11 +111,18 @@ bool LuaJavaBridge::CallInfo::executeWithArgs(jvalue *args)
              break;
 
          case TypeString:
-        	 m_retjs = (jstring)m_env->CallStaticObjectMethodA(m_classID, m_methodID, args);
-			 const char *stringBuff = m_env->GetStringUTFChars(m_retjs, 0);
-			 m_ret.stringValue = new string(stringBuff);
-			 m_env->ReleaseStringUTFChars(m_retjs, stringBuff);
+        {
+       		m_retjs = (jstring)m_env->CallStaticObjectMethodA(m_classID, m_methodID, args);
+        	bool bValidStr = true;
+            	std::string strValue = cocos2d::StringUtils::getStringUTFCharsJNI(m_env, m_retjs, &bValidStr);
+            	m_ret.stringValue = (false == bValidStr) ? nullptr : new string(strValue);
             break;
+        }
+
+        default:
+            m_error = LUAJ_ERR_TYPE_NOT_SUPPORT;
+            LOGD("Return type '%d' is not supported", static_cast<int>(m_returnType));
+            return false;
      }
 
 	if (m_env->ExceptionCheck() == JNI_TRUE)
@@ -117,15 +156,21 @@ int LuaJavaBridge::CallInfo::pushReturnValue(lua_State *L)
 			lua_pushboolean(L, m_ret.boolValue);
 			return 1;
 		case TypeString:
-			lua_pushstring(L, m_ret.stringValue->c_str());
+			if(m_ret.stringValue == nullptr){
+				lua_pushnil(L);
+			}else{
+				lua_pushstring(L, m_ret.stringValue->c_str());
+			}
 			return 1;
+        default:
+            break;
 	}
 
 	return 0;
 }
 
 
-bool LuaJavaBridge::CallInfo::validateMethodSig(void)
+bool LuaJavaBridge::CallInfo::validateMethodSig()
 {
     size_t len = m_methodSig.length();
     if (len < 3 || m_methodSig[0] != '(') // min sig is "()V"
@@ -199,7 +244,7 @@ LuaJavaBridge::ValueType LuaJavaBridge::CallInfo::checkType(const string& sig, s
 }
 
 
-bool LuaJavaBridge::CallInfo::getMethodInfo(void)
+bool LuaJavaBridge::CallInfo::getMethodInfo()
 {
     m_methodID = 0;
     m_env = 0;
@@ -349,7 +394,7 @@ int LuaJavaBridge::callJavaStaticMethod(lua_State *L)
 	return 1 + call.pushReturnValue(L);
 }
 
-// increase lua function refernece counter, return counter
+// increase lua function reference counter, return counter
 int LuaJavaBridge::retainLuaFunctionById(int functionId)
 {
     lua_State *L = s_luaState;

@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include <ctype.h>
 #include <algorithm>
 
@@ -7,16 +31,17 @@
 #include "2d/CCSpriteFrameCache.h"
 #include "renderer/CCTextureCache.h"
 
-#include "CCBReader.h"
-#include "CCNodeLoader.h"
-#include "CCNodeLoaderLibrary.h"
-#include "CCNodeLoaderListener.h"
-#include "CCBMemberVariableAssigner.h"
-#include "CCBSelectorResolver.h"
-#include "CCBAnimationManager.h"
-#include "CCBSequenceProperty.h"
-#include "CCBKeyframe.h"
+#include "editor-support/cocosbuilder/CCBAnimationManager.h"
+#include "editor-support/cocosbuilder/CCBKeyframe.h"
+#include "editor-support/cocosbuilder/CCBMemberVariableAssigner.h"
+#include "editor-support/cocosbuilder/CCBReader.h"
+#include "editor-support/cocosbuilder/CCBSelectorResolver.h"
+#include "editor-support/cocosbuilder/CCBSequenceProperty.h"
+#include "editor-support/cocosbuilder/CCNodeLoader.h"
+#include "editor-support/cocosbuilder/CCNodeLoaderLibrary.h"
+#include "editor-support/cocosbuilder/CCNodeLoaderListener.h"
 #include <sstream>
+#include <utility>
 
 using namespace cocos2d;
 using namespace cocos2d::extension;
@@ -128,7 +153,7 @@ CCBReader::~CCBReader()
 
 void CCBReader::setCCBRootPath(const char* ccbRootPath)
 {
-    CCASSERT(ccbRootPath != nullptr, "");
+    CCASSERT(ccbRootPath != nullptr, "ccbRootPath can't be nullptr!");
     _CCBRootPath = ccbRootPath;
 }
 
@@ -167,7 +192,7 @@ CCBReader::CCBAnimationManagerMapPtr CCBReader::getAnimationManagers()
     return _animationManagers;
 }
 
-void CCBReader::setAnimationManagers(CCBAnimationManagerMapPtr x)
+void CCBReader::setAnimationManagers(const CCBAnimationManagerMapPtr& x)
 {
     _animationManagers = x;
 }
@@ -220,7 +245,7 @@ Node* CCBReader::readNodeGraphFromFile(const char *pCCBFileName, Ref *pOwner, co
         strCCBFileName += strSuffix;
     }
 
-    std::string strPath = FileUtils::getInstance()->fullPathForFilename(strCCBFileName.c_str());
+    std::string strPath = FileUtils::getInstance()->fullPathForFilename(strCCBFileName);
 
     auto dataPtr = std::make_shared<Data>(FileUtils::getInstance()->getDataFromFile(strPath));
     
@@ -231,7 +256,7 @@ Node* CCBReader::readNodeGraphFromFile(const char *pCCBFileName, Ref *pOwner, co
 
 Node* CCBReader::readNodeGraphFromData(std::shared_ptr<cocos2d::Data> data, Ref *pOwner, const Size &parentSize)
 {
-    _data = data;
+    _data = std::move(data);
     _bytes =_data->getBytes();
     _currentByte = 0;
     _currentBit = 0;
@@ -296,7 +321,7 @@ void CCBReader::cleanUpNodeGraph(Node *node)
     }
 }
 
-Node* CCBReader::readFileWithCleanUp(bool bCleanUp, CCBAnimationManagerMapPtr am)
+Node* CCBReader::readFileWithCleanUp(bool bCleanUp, const CCBAnimationManagerMapPtr& am)
 {
     if (! readHeader())
     {
@@ -604,7 +629,7 @@ Node * CCBReader::readNodeGraph(Node * pParent)
         embeddedNode->setScaleY(ccbFileNode->getScaleY());
         embeddedNode->setTag(ccbFileNode->getTag());
         embeddedNode->setVisible(true);
-        //embeddedNode->ignoreAnchorPointForPosition(ccbFileNode->isIgnoreAnchorPointForPosition());
+        //embeddedNode->setIgnoreAnchorPointForPosition(ccbFileNode->isIgnoreAnchorPointForPosition());
         
         _animationManager->moveAnimationsFromNode(ccbFileNode, embeddedNode);
 
@@ -613,13 +638,6 @@ Node * CCBReader::readNodeGraph(Node * pParent)
         node = embeddedNode;
     }
 
-#ifdef CCB_ENABLE_JAVASCRIPT
-    /*
-     if (memberVarAssignmentType && memberVarAssignmentName && ![memberVarAssignmentName isEqualToString:@""])
-     {
-     [[JSCocoa sharedController] setObject:node withName:memberVarAssignmentName];
-     }*/
-#else
     if (memberVarAssignmentType != TargetType::NONE)
     {
         if(!_jsControlled)
@@ -696,8 +714,6 @@ Node * CCBReader::readNodeGraph(Node * pParent)
             }
         }
     }
-
-#endif // CCB_ENABLE_JAVASCRIPT
     
     delete _animatedProps;
     _animatedProps = nullptr;
@@ -796,11 +812,11 @@ CCBKeyframe* CCBReader::readKeyframe(PropertyType type)
         
         SpriteFrame* spriteFrame;
 
-        if (spriteSheet.length() == 0)
+        if (spriteSheet.empty())
         {
             spriteFile = _CCBRootPath + spriteFile;
 
-            Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(spriteFile.c_str());
+            Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(spriteFile);
             Rect bounds = Rect(0, 0, texture->getContentSize().width, texture->getContentSize().height);
             
             spriteFrame = SpriteFrame::createWithTexture(texture, bounds);
@@ -813,11 +829,11 @@ CCBKeyframe* CCBReader::readKeyframe(PropertyType type)
             // Load the sprite sheet only if it is not loaded            
             if (_loadedSpriteSheets.find(spriteSheet) == _loadedSpriteSheets.end())
             {
-                frameCache->addSpriteFramesWithFile(spriteSheet.c_str());
+                frameCache->addSpriteFramesWithFile(spriteSheet);
                 _loadedSpriteSheets.insert(spriteSheet);
             }
             
-            spriteFrame = frameCache->getSpriteFrameByName(spriteFile.c_str());
+            spriteFrame = frameCache->getSpriteFrameByName(spriteFile);
         }
         
         keyframe->setObject(spriteFrame);
@@ -936,7 +952,7 @@ bool CCBReader::readSequences()
 
 std::string CCBReader::lastPathComponent(const char* pPath) {
     std::string path(pPath);
-    size_t slashPos = path.find_last_of("/");
+    size_t slashPos = path.find_last_of('/');
     if(slashPos != std::string::npos) {
         return path.substr(slashPos + 1, path.length() - slashPos);
     }
@@ -945,7 +961,7 @@ std::string CCBReader::lastPathComponent(const char* pPath) {
 
 std::string CCBReader::deletePathExtension(const char* pPath) {
     std::string path(pPath);
-    size_t dotPos = path.find_last_of(".");
+    size_t dotPos = path.find_last_of('.');
     if(dotPos != std::string::npos) {
         return path.substr(0, dotPos);
     }
@@ -1054,7 +1070,7 @@ Vector<CCBAnimationManager*>& CCBReader::getAnimationManagersForNodes()
     return _animationManagersForNodes;
 }
 
-void CCBReader::addOwnerOutletName(std::string name)
+void CCBReader::addOwnerOutletName(const std::string& name)
 {
     _ownerOutletNames.push_back(name);
 }
@@ -1083,4 +1099,4 @@ void CCBReader::setResolutionScale(float scale)
     __ccbResolutionScale = scale;
 }
 
-};
+}

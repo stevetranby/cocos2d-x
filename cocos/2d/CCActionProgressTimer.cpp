@@ -1,7 +1,8 @@
 /****************************************************************************
 Copyright (C) 2010      Lam Pham
 Copyright (c) 2010-2012 cocos2d-x.org
-CopyRight (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
 http://www.cocos2d-x.org
 
@@ -25,20 +26,23 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "2d/CCActionProgressTimer.h"
 #include "2d/CCProgressTimer.h"
+#include "ui/UILoadingBar.h"
 
 NS_CC_BEGIN
 
 #define kProgressTimerCast ProgressTimer*
 
 // implementation of ProgressTo
-
 ProgressTo* ProgressTo::create(float duration, float percent)
 {
     ProgressTo *progressTo = new (std::nothrow) ProgressTo();
-    progressTo->initWithDuration(duration, percent);
-    progressTo->autorelease();
-
-    return progressTo;
+    if (progressTo && progressTo->initWithDuration(duration, percent))
+    {
+        progressTo->autorelease();
+        return progressTo;
+    }
+    delete progressTo;
+    return nullptr;
 }
 
 bool ProgressTo::initWithDuration(float duration, float percent)
@@ -55,11 +59,8 @@ bool ProgressTo::initWithDuration(float duration, float percent)
 
 ProgressTo* ProgressTo::clone() const
 {
-    // no copy constructor    
-    auto a = new (std::nothrow) ProgressTo();
-    a->initWithDuration(_duration, _to);
-    a->autorelease();
-    return a;
+    // no copy constructor
+    return ProgressTo::create(_duration, _to);
 }
 
 ProgressTo* ProgressTo::reverse() const
@@ -71,12 +72,23 @@ ProgressTo* ProgressTo::reverse() const
 void ProgressTo::startWithTarget(Node *target)
 {
     ActionInterval::startWithTarget(target);
-    _from = ((kProgressTimerCast)(target))->getPercentage();
+
+    ui::LoadingBar* loading_bar = dynamic_cast<ui::LoadingBar*>(target);
+    if (loading_bar){
+        _from = loading_bar->getPercent();
+    } else {
+        _from = static_cast<ProgressTimer*>(target)->getPercentage();
+    };
 }
 
 void ProgressTo::update(float time)
 {
-    ((kProgressTimerCast)(_target))->setPercentage(_from + (_to - _from) * time);
+    ui::LoadingBar* loading_bar = dynamic_cast<ui::LoadingBar*>(_target);
+    if (loading_bar){
+        loading_bar->setPercent(_from + (_to - _from) * time);
+    } else {
+        static_cast<ProgressTimer*>(_target)->setPercentage(_from + (_to - _from) * time);
+    };
 }
 
 // implementation of ProgressFromTo
@@ -84,15 +96,18 @@ void ProgressTo::update(float time)
 ProgressFromTo* ProgressFromTo::create(float duration, float fromPercentage, float toPercentage)
 {
     ProgressFromTo *progressFromTo = new (std::nothrow) ProgressFromTo();
-    progressFromTo->initWithDuration(duration, fromPercentage, toPercentage);
-    progressFromTo->autorelease();
+    if (progressFromTo && progressFromTo->initWithDuration(duration, fromPercentage, toPercentage)) {
+        progressFromTo->autorelease();
+        return progressFromTo;
+    }
 
-    return progressFromTo;
+    delete progressFromTo;
+    return nullptr;
 }
 
 bool ProgressFromTo::initWithDuration(float duration, float fromPercentage, float toPercentage)
 {
-    if (ActionInterval::initWithDuration(duration))
+ if (ActionInterval::initWithDuration(duration))
     {
         _to = toPercentage;
         _from = fromPercentage;
@@ -105,11 +120,8 @@ bool ProgressFromTo::initWithDuration(float duration, float fromPercentage, floa
 
 ProgressFromTo* ProgressFromTo::clone() const
 {
-    // no copy constructor    
-    auto a = new (std::nothrow) ProgressFromTo();
-    a->initWithDuration(_duration, _from, _to);
-    a->autorelease();
-    return a;
+    // no copy constructor
+    return ProgressFromTo::create(_duration, _from, _to);
 }
 
 
@@ -125,7 +137,12 @@ void ProgressFromTo::startWithTarget(Node *target)
 
 void ProgressFromTo::update(float time)
 {
-    ((kProgressTimerCast)(_target))->setPercentage(_from + (_to - _from) * time);
+    ui::LoadingBar* loading_bar = dynamic_cast<ui::LoadingBar*>(_target);
+    if (loading_bar){
+        loading_bar->setPercent(_from + (_to - _from) * time);
+    } else {
+        static_cast<ProgressTimer*>(_target)->setPercentage(_from + (_to - _from) * time);
+    };
 }
 
 NS_CC_END

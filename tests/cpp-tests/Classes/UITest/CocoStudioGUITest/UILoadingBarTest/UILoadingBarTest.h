@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -37,10 +38,12 @@ public:
     UILoadingBarTest_Left();
     ~UILoadingBarTest_Left();
     virtual bool init() override;
-    void update(float delta);
+    void update(float delta)override;
+    void printWidgetResources(cocos2d::Ref* sender);
     
 protected:
     int _count;
+    cocos2d::ui::LoadingBar* _loadingBar;
 };
 
 class UILoadingBarTest_Right : public UIScene
@@ -51,7 +54,7 @@ public:
     UILoadingBarTest_Right();
     ~UILoadingBarTest_Right();
     virtual bool init() override;
-    void update(float delta);
+    void update(float delta)override;
     
 protected:
     int _count;
@@ -65,7 +68,7 @@ public:
     UILoadingBarTest_Left_Scale9();
     ~UILoadingBarTest_Left_Scale9();
     virtual bool init() override;
-    void update(float delta);
+    void update(float delta)override;
     
 protected:
     int _count;
@@ -79,7 +82,7 @@ public:
     UILoadingBarTest_Right_Scale9();
     ~UILoadingBarTest_Right_Scale9();
     virtual bool init() override;
-    void update(float delta);
+    void update(float delta)override;
     
 protected:
     int _count;
@@ -111,6 +114,33 @@ public:
 protected:
     int _count;
     
+};
+
+class UILoadingBarIssue12249 : public UIScene
+{
+public:
+    CREATE_FUNC(UILoadingBarIssue12249);
+    
+    UILoadingBarIssue12249();
+    ~UILoadingBarIssue12249();
+    virtual bool init() override;
+    void update(float delta)override;
+    
+protected:
+    int _count;
+};
+
+class UILoadingBarTest_Direction : public UIScene
+{
+public:
+    CREATE_FUNC(UILoadingBarTest_Direction);
+
+    UILoadingBarTest_Direction();
+    ~UILoadingBarTest_Direction();
+    virtual bool init() override;
+protected:
+    int _count;
+    cocos2d::ui::LoadingBar* _loadingBar;
 };
 
 #endif /* defined(__TestCpp__UILoadingBarTest__) */

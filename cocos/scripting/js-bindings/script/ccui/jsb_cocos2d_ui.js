@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +28,157 @@
 //
 
 var ccui = ccui || {};
+
+
+cc.EditBox = ccui.EditBox;
+delete ccui.EditBox;
+
+/**
+ * @constant
+ * @type Number
+ */
+cc.KEYBOARD_RETURNTYPE_DEFAULT = 0;
+
+/**
+ * @constant
+ * @type Number
+ */
+cc.KEYBOARD_RETURNTYPE_DONE = 1;
+
+/**
+ * @constant
+ * @type Number
+ */
+cc.KEYBOARD_RETURNTYPE_SEND = 2;
+
+/**
+ * @constant
+ * @type Number
+ */
+cc.KEYBOARD_RETURNTYPE_SEARCH = 3;
+
+/**
+ * @constant
+ * @type Number
+ */
+cc.KEYBOARD_RETURNTYPE_GO = 4;
+
+/**
+ * The EditBox::InputMode defines the type of text that the user is allowed * to enter.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_MODE_ANY = 0;
+
+/**
+ * The user is allowed to enter an e-mail address.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_MODE_EMAILADDR = 1;
+
+/**
+ * The user is allowed to enter an integer value.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_MODE_NUMERIC = 2;
+
+/**
+ * The user is allowed to enter a phone number.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_MODE_PHONENUMBER = 3;
+
+/**
+ * The user is allowed to enter a URL.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_MODE_URL = 4;
+
+/**
+ * The user is allowed to enter a real number value.
+ * This extends kEditBoxInputModeNumeric by allowing a decimal point.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_MODE_DECIMAL = 5;
+
+/**
+ * The user is allowed to enter any text, except for line breaks.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_MODE_SINGLELINE = 6;
+
+/**
+ * Indicates that the text entered is confidential data that should be
+ * obscured whenever possible. This implies EDIT_BOX_INPUT_FLAG_SENSITIVE.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_FLAG_PASSWORD = 0;
+
+/**
+ * Indicates that the text entered is sensitive data that the
+ * implementation must never store into a dictionary or table for use
+ * in predictive, auto-completing, or other accelerated input schemes.
+ * A credit card number is an example of sensitive data.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_FLAG_SENSITIVE = 1;
+
+/**
+ * This flag is a hint to the implementation that during text editing,
+ * the initial letter of each word should be capitalized.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_WORD = 2;
+
+/**
+ * This flag is a hint to the implementation that during text editing,
+ * the initial letter of each sentence should be capitalized.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_SENTENCE = 3;
+
+/**
+ * Capitalize all characters automatically.
+ * @constant
+ * @type Number
+ */
+cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_ALL_CHARACTERS = 4;
+
+var _p = cc.EditBox.prototype;
+
+_p._setMaxLength = _p.setMaxLength;
+_p.setMaxLength = function(maxLength) {
+    if (maxLength < 0) {
+        maxLength = 65535;
+    }
+    this._setMaxLength(maxLength);
+};
+_p.setLineHeight = function () {};
+_p.setTabIndex = function () {};
+_p.getTabIndex = function () { return -1; };
+_p.setFocus = function () {};
+_p.isFocused = function () { return false; };
+_p.stayOnTop = function () {};
+
+
+cc.Scale9Sprite = ccui.Scale9Sprite;
+
+// GUI
+/**
+ * @type {Object}
+ * UI Helper
+ */
+ccui.helper = ccui.Helper;
 
 // =====================Constants=====================
 
@@ -200,6 +352,15 @@ ccui.ListView.GRAVITY_TOP = 3;
 ccui.ListView.GRAVITY_BOTTOM = 4;
 ccui.ListView.GRAVITY_CENTER_VERTICAL = 5;
 
+//list view magnetic type
+ccui.ListView.MAGNETIC_NONE = 0;
+ccui.ListView.MAGNETIC_CENTER = 1;
+ccui.ListView.MAGNETIC_BOTH_END = 2;
+ccui.ListView.MAGNETIC_LEFT = 3;
+ccui.ListView.MAGNETIC_RIGHT = 4;
+ccui.ListView.MAGNETIC_TOP = 5;
+ccui.ListView.MAGNETIC_BOTTOM = 6;
+
 /*
  * UIScrollView
  */
@@ -219,13 +380,13 @@ ccui.ScrollView.EVENT_BOUNCE_TOP = 5;
 ccui.ScrollView.EVENT_BOUNCE_BOTTOM = 6;
 ccui.ScrollView.EVENT_BOUNCE_LEFT = 7;
 ccui.ScrollView.EVENT_BOUNCE_RIGHT = 8;
+ccui.ScrollView.EVENT_CONTAINER_MOVED = 9;
+ccui.ScrollView.EVENT_AUTOSCROLL_ENDED = 10;
 
-
-ccui.ScrollView.AUTO_SCROLL_MAX_SPEED = 1000;
-ccui.ScrollView.SCROLLDIR_UP = cc.p(0, 1);
-ccui.ScrollView.SCROLLDIR_DOWN = cc.p(0, -1);
-ccui.ScrollView.SCROLLDIR_LEFT = cc.p(-1, 0);
-ccui.ScrollView.SCROLLDIR_RIGHT = cc.p(1, 0);
+ccui.ScrollView.MOVEDIR_TOP = 0;
+ccui.ScrollView.MOVEDIR_BOTTOM = 1;
+ccui.ScrollView.MOVEDIR_LEFT = 2;
+ccui.ScrollView.MOVEDIR_RIGHT = 3;
 
 /*
  * UIPageView
@@ -236,6 +397,12 @@ ccui.PageView.EVENT_TURNING = 0;
 //PageView touch direction
 ccui.PageView.TOUCH_DIR_LEFT = 0;
 ccui.PageView.TOUCH_DIR_RIGHT = 1;
+ccui.PageView.TOUCH_DIR_UP = 2;
+ccui.PageView.TOUCH_DIR_DOWN = 3;
+
+//PageView direction
+ccui.PageView.DIRECTION_LEFT = 0;
+ccui.PageView.DIRECTION_RIGHT = 1;
 
 /*
  * UIButton
@@ -296,6 +463,9 @@ ccui.LoadingBar.RENDERER_ZORDER = -1;
  */
 //Slider event type
 ccui.Slider.EVENT_PERCENT_CHANGED = 0;
+ccui.Slider.EVENT_SLIDEBALL_DOWN = 1;
+ccui.Slider.EVENT_SLIDEBALL_UP = 2;
+ccui.Slider.EVENT_SLIDEBALL_CANCEL = 3;
 
 //Render zorder
 ccui.Slider.BASEBAR_RENDERER_ZORDER = -3;
@@ -328,6 +498,12 @@ ccui.TextField.EVENT_DELETE_BACKWARD = 3;
 
 ccui.TextField.RENDERER_ZORDER = -1;
 
+/*
+ * UIRadioButton
+ */
+ccui.RadioButton.EVENT_SELECTED = 0;
+ccui.RadioButton.EVENT_UNSELECTED = 1;
+ccui.RadioButtonGroup.EVENT_SELECT_CHANGED = 0;
 
 /*
  * UIMargin
@@ -389,7 +565,7 @@ if (ccui.WebView)
 
     ccui.WebView.prototype._loadURL = ccui.WebView.prototype.loadURL;
     ccui.WebView.prototype.loadURL = function (url) {
-        if (url.indexOf("http://") >= 0)
+        if (url.indexOf("http://") >= 0 || url.indexOf("https://") >= 0)
         {
             this._loadURL(url);
         }
@@ -423,7 +599,7 @@ if (ccui.WebView)
 }
 if (ccui.VideoPlayer)
 {
-    /** 
+    /**
      * The VideoPlayer support list of events
      * @type {{PLAYING: string, PAUSED: string, STOPPED: string, COMPLETED: string}}
      */
@@ -480,3 +656,33 @@ if (ccui.VideoPlayer)
 ccui.Widget.prototype.addNode = ccui.Widget.prototype.addChild;
 ccui.Widget.prototype.getSize = ccui.Widget.prototype.getContentSize;
 ccui.Widget.prototype.setSize = ccui.Widget.prototype.setContentSize;
+
+/*
+ * UIWidget's event listeners wrapper
+ */
+ccui.Widget.prototype._addTouchEventListener = ccui.Widget.prototype.addTouchEventListener;
+ccui.Widget.prototype.addTouchEventListener = function (selector, target) {
+    if (target === undefined)
+        this._addTouchEventListener(selector);
+    else
+        this._addTouchEventListener(selector.bind(target));
+};
+
+function _ui_addEventListener(selector, target) {
+    if (target === undefined)
+        this._addEventListener(selector);
+    else
+        this._addEventListener(selector.bind(target));
+}
+function _ui_applyEventListener(ctor) {
+    var proto = ctor.prototype;
+    proto._addEventListener = proto.addEventListener;
+    proto.addEventListener = _ui_addEventListener;
+}
+
+_ui_applyEventListener(ccui.CheckBox);
+_ui_applyEventListener(ccui.Slider);
+_ui_applyEventListener(ccui.TextField);
+_ui_applyEventListener(ccui.PageView);
+_ui_applyEventListener(ccui.ScrollView);
+_ui_applyEventListener(ccui.ListView);

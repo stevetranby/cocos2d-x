@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2010-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -30,8 +31,10 @@
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
 
 #include "jsapi.h"
+#include "physics3d/CCPhysics3DObject.h"
 
 void register_all_cocos2dx_physics3d_manual(JSContext *cx, JS::HandleObject global);
+bool jsval_to_physics3DRigidBodyDes(JSContext* cx, JS::HandleValue v, cocos2d::Physics3DRigidBodyDes* des);
 
 #endif
 

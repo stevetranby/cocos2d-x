@@ -2,6 +2,7 @@
 * cocos2d-x   http://www.cocos2d-x.org
 *
 * Copyright (c) 2010-2011 - cocos2d-x community
+* Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 *
 * Portions Copyright (c) Microsoft Open Technologies, Inc.
 * All Rights Reserved
@@ -28,15 +29,12 @@
 #include <unordered_map>
 
 #include "base/CCRef.h"
-#include "AudioEngine.h"
-#include "AudioCachePlayer.h"
+#include "audio/include/AudioEngine.h"
+#include "audio/winrt/AudioCachePlayer.h"
 
 NS_CC_BEGIN
     namespace experimental{
 #define MAX_AUDIOINSTANCES 32
-
-
- class AudioEngineThreadPool;
 
  class CC_DLL AudioEngineImpl : public cocos2d::Ref
  {
@@ -58,6 +56,7 @@ NS_CC_BEGIN
      void setFinishCallback(int audioID, const std::function<void(int, const std::string &)> &callback);
      void uncache(const std::string& filePath);
      void uncacheAll();
+     AudioCache* preload(const std::string& filePath, std::function<void(bool)> callback);
      void update(float dt);
 
  private:
@@ -72,7 +71,6 @@ NS_CC_BEGIN
      std::vector<int> _toRemoveAudioIDs;
      bool _lazyInitLoop;
      int _currentAudioID;
-     AudioEngineThreadPool* _threadPool;
  };
 }
 

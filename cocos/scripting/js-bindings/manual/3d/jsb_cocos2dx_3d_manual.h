@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -27,7 +28,9 @@
 #define __jsb_cocos2dx_3d_manual_h__
 
 #include "jsapi.h"
+#include "3d/CCTerrain.h"
 
 void register_all_cocos2dx_3d_manual(JSContext *cx, JS::HandleObject global);
+bool jsval_to_TerrainData(JSContext* cx, JS::HandleValue v, cocos2d::Terrain::TerrainData* ret);
 
 #endif

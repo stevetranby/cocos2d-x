@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -67,6 +68,10 @@ public:
     virtual bool init() override;
     
     CREATE_FUNC(UILayoutTest_BackGroundImage);
+
+    void printWidgetResources(cocos2d::Ref* sender);
+protected:
+    cocos2d::ui::Layout* _layout;
 };
 
 class UILayoutTest_BackGroundImage_Scale9 : public UIScene
@@ -119,6 +124,16 @@ public:
     CREATE_FUNC(UILayoutTest_Layout_Relative_Location);
 };
 
+class UILayoutTest_Layout_Scaled_Widget : public UIScene
+{
+public:
+    UILayoutTest_Layout_Scaled_Widget();
+    ~UILayoutTest_Layout_Scaled_Widget();
+    virtual bool init() override;
+    
+    CREATE_FUNC(UILayoutTest_Layout_Scaled_Widget);
+};
+
 class UILayoutComponentTest : public UIScene
 {
 public:
@@ -145,6 +160,14 @@ public:
     virtual bool init() override;
 
     CREATE_FUNC(UILayoutComponent_Berth_Stretch_Test);
+};
+
+class UILayoutTest_Issue19890 : public UIScene
+{
+public:
+    virtual bool init() override;
+
+    CREATE_FUNC(UILayoutTest_Issue19890);
 };
 
 #endif /* defined(__TestCpp__UILayoutTest__) */

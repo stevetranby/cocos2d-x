@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,12 +37,12 @@
 static JSClass js_class; \
 static JSObject* js_proto; \
 static JSObject* js_parent; \
-static void _js_register(JSContext* cx, JS::HandleObject global);
+static void _js_register(JSContext* cx, JS::HandleObject global)
 
 #define JS_BINDED_CLASS_GLUE_IMPL(klass) \
 JSClass klass::js_class = {}; \
 JSObject* klass::js_proto = NULL; \
-JSObject* klass::js_parent = NULL; \
+JSObject* klass::js_parent = NULL
 
 #define JS_BINDED_FUNC(klass, name) \
 bool name(JSContext *cx, unsigned argc, jsval *vp)
@@ -54,7 +55,8 @@ bool klass::_js_constructor(JSContext *cx, unsigned argc, jsval *vp)
 
 #define JS_BINDED_FUNC_IMPL(klass, name) \
 static bool klass##_func_##name(JSContext *cx, unsigned argc, jsval *vp) { \
-JSObject* thisObj = JS_THIS_OBJECT(cx, vp); \
+JS::CallArgs args = JS::CallArgsFromVp(argc, vp); \
+JS::RootedObject thisObj(cx, args.thisv().toObjectOrNull()); \
 klass* obj = (klass*)JS_GetPrivate(thisObj); \
 if (obj) { \
 return obj->name(cx, argc, vp); \
@@ -82,7 +84,7 @@ bool _js_get_##propName(JSContext *cx, const JS::CallArgs& args)
 #define JS_BINDED_PROP_GET_IMPL(klass, propName) \
 static bool _js_get_##klass##_##propName(JSContext *cx, unsigned argc, jsval *vp) { \
 JS::CallArgs args = JS::CallArgsFromVp(argc, vp); \
-JSObject* obj = args.thisv().toObjectOrNull(); \
+JS::RootedObject obj(cx, args.thisv().toObjectOrNull()); \
 klass* cobj = (klass*)JS_GetPrivate(obj); \
 if (cobj) { \
 return cobj->_js_get_##propName(cx, args); \
@@ -98,7 +100,7 @@ bool _js_set_##propName(JSContext *cx, const JS::CallArgs& args)
 #define JS_BINDED_PROP_SET_IMPL(klass, propName) \
 static bool _js_set_##klass##_##propName(JSContext *cx, unsigned argc, jsval *vp) { \
 JS::CallArgs args = JS::CallArgsFromVp(argc, vp); \
-JSObject* obj = args.thisv().toObjectOrNull(); \
+JS::RootedObject obj(cx, args.thisv().toObjectOrNull()); \
 klass* cobj = (klass*)JS_GetPrivate(obj); \
 if (cobj) { \
 return cobj->_js_set_##propName(cx, args); \
@@ -110,7 +112,7 @@ bool klass::_js_set_##propName(JSContext *cx, const JS::CallArgs& args)
 
 #define JS_BINDED_PROP_ACCESSOR(klass, propName) \
 JS_BINDED_PROP_GET(klass, propName); \
-JS_BINDED_PROP_SET(klass, propName);
+JS_BINDED_PROP_SET(klass, propName)
 
 #define JS_BINDED_PROP_DEF_GETTER(klass, propName) \
 JS_PSG(#propName, _js_get_##klass##_##propName, JSPROP_ENUMERATE | JSPROP_PERMANENT)

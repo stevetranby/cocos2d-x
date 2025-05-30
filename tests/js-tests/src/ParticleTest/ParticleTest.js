@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -135,10 +136,13 @@ var particleSceneArr = [
     },
     function() {
         return new ParticleResizeTest();
+    },
+    function() {
+        return new DemoPause();
     }
 ];
 
-if( 'opengl' in cc.sys.capabilities ){
+if( 'opengl' in cc.sys.capabilities && cc._renderType === cc.game.RENDER_TYPE_WEBGL){
     particleSceneArr.push( function () {
         return new ParallaxParticle();
     });
@@ -295,7 +299,7 @@ var ParticleDemo = BaseTestLayer.extend({
 
         this.addChild(menu, 100);
         //TODO
-        var labelAtlas = new cc.LabelAtlas("0123456789", s_fpsImages, 16, 24, '.');
+        var labelAtlas = new cc.LabelAtlas("0123456789", s_fpsImages, 12, 32, '.');
         this.addChild(labelAtlas, 100, TAG_LABEL_ATLAS);
         labelAtlas.x = s.width - 66;
         labelAtlas.y = 50;
@@ -432,6 +436,23 @@ var DemoSun = ParticleDemo.extend({
     }
 });
 
+var DemoPause = ParticleDemo.extend({
+    onEnter:function () {
+    this._super();
+
+    this._emitter = new cc.ParticleSmoke();
+    this._background.addChild(this._emitter, 10);
+    this._emitter.texture = cc.textureCache.addImage(s_fire);
+    if (this._emitter.setShapeType)
+    this._emitter.setShapeType(cc.ParticleSystem.BALL_SHAPE);
+
+    this.setEmitterPosition();
+    },
+    title:function () {
+    return "Pause Particle";
+    }
+    });
+
 var DemoGalaxy = ParticleDemo.extend({
     onEnter:function () {
         this._super();
@@ -496,7 +517,7 @@ var DemoBigFlower = ParticleDemo.extend({
         this._emitter.radialAccel = -120;
         this._emitter.radialAccelVar = 0;
 
-        // tagential
+        // tangential
         this._emitter.tangentialAccel = 30;
         this._emitter.tangentialAccelVar = 0;
 

@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -49,8 +50,8 @@ public:
     NavMeshDebugDraw();
     virtual ~NavMeshDebugDraw();
 
-    virtual void depthMask(bool state);
-    virtual void texture(bool state){};
+    virtual void depthMask(bool state) override;
+    virtual void texture(bool /*state*/) override {};
     virtual void begin(duDebugDrawPrimitives prim, float size = 1.0f) override;
 
     virtual void vertex(const float* pos, unsigned int color) override;

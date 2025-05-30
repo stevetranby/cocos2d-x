@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 var NavMeshTestIdx = -1;
 
 var physicsScene = null;
@@ -53,7 +77,7 @@ var NavMeshBaseTestDemo = NavMeshTestScene.extend({
         this._angle = 0.0;
 
         var size = cc.winSize;
-        this._camera = cc.Camera.createPerspective(30.0, size.width / size.height, 1.0, 1000.0);
+        this._camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 30.0, size.width / size.height, 1.0, 1000.0);
         this._camera.setPosition3D(cc.math.vec3(0, 50, 100));
         this._camera.lookAt(cc.math.vec3(0, 0, 0), cc.math.vec3(0, 1, 0));
         this._camera.setCameraFlag(cc.CameraFlag.USER1);
@@ -75,9 +99,9 @@ var NavMeshBaseTestDemo = NavMeshTestScene.extend({
         var trianglesList = jsb.Bundle3D.getTrianglesList("NavMesh/scene.obj");
         var rbDes = jsb.physics3DRigidBodyDes();
         rbDes.mass = 0;
-        rbDes.shape = jsb.Physics3DShape.createMesh(trianglesList, trianglesList.length/3);
-        var rigidBody = jsb.Physics3DRigidBody.create(rbDes);
-        var component = jsb.Physics3DComponent.create(rigidBody);
+        rbDes.shape = new jsb.Physics3DShape(jsb.Physics3DShape.ShapeType.MESH, trianglesList, trianglesList.length/3);
+        var rigidBody = new jsb.Physics3DRigidBody(rbDes);
+        var component = new jsb.Physics3DComponent(rigidBody);
         var sprite = jsb.Sprite3D.create("NavMesh/scene.obj");
         sprite.addComponent(component);
         sprite.setCameraMask(cc.CameraFlag.USER1);
@@ -90,11 +114,11 @@ var NavMeshBaseTestDemo = NavMeshTestScene.extend({
         physicsScene.setNavMesh(navMesh);
         physicsScene.setNavMeshDebugCamera(this._camera);
 
-        var ambientLight = jsb.AmbientLight.create(cc.color(64, 64, 64));
+        var ambientLight = new jsb.AmbientLight(cc.color(64, 64, 64));
         ambientLight.setCameraMask(cc.CameraFlag.USER1);
         this.addChild(ambientLight);
 
-        var dirLight = jsb.DirectionLight.create(cc.math.vec3(1.2, -1.1, 0.5), cc.color(255, 255, 255));
+        var dirLight = new jsb.DirectionLight(cc.math.vec3(1.2, -1.1, 0.5), cc.color(255, 255, 255));
         dirLight.setCameraMask(cc.CameraFlag.USER1);
         this.addChild(dirLight);
     },
@@ -157,8 +181,8 @@ var NavMeshBaseTestDemo = NavMeshTestScene.extend({
         node.setCameraMask(cc.CameraFlag.USER1);
         physicsScene.addChild(node);
 
-        var animation = jsb.Animation3D.create(filePath);
-        var animate = jsb.Animate3D.create(animation);
+        var animation = new jsb.Animation3D(filePath);
+        var animate = new jsb.Animate3D(animation);
 
         if (animate){
             agentNode.runAction(new cc.RepeatForever(animate));

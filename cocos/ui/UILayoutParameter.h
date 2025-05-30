@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -142,7 +143,7 @@ public:
     LayoutParameter() : _margin(Margin())
     {
         _layoutParameterType = Type::NONE;
-    };
+    }
     
     /**
      * Default destructor.
@@ -252,7 +253,7 @@ public:
     : _linearGravity(LinearGravity::NONE)
     {
         _layoutParameterType = Type::LINEAR;
-    };
+    }
     
     /**
      * Default destructor.
@@ -344,7 +345,7 @@ public:
     _put(false)
     {
         _layoutParameterType = Type::RELATIVE;
-    };
+    }
     
     /**
      * Default destructor

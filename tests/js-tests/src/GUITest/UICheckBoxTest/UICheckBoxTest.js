@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -23,7 +24,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-var UICheckBoxTest = UIScene.extend({
+var UICheckBoxTest = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             //init text
@@ -65,7 +66,7 @@ var UICheckBoxTest = UIScene.extend({
 });
 
 //2015-01-14
-var UICheckBoxDefaultBehaviorTest = UIScene.extend({
+var UICheckBoxDefaultBehaviorTest = UIMainLayer.extend({
 
     init: function(){
         if(this._super()){
@@ -79,7 +80,7 @@ var UICheckBoxDefaultBehaviorTest = UIScene.extend({
             this._bottomDisplayLabel.setString("");
 
             // Add the alert
-            var alert = new ccui.Text("Only left two and the last checkbox can be cliked!","Marker Felt",20 );
+            var alert = new ccui.Text("Only left two can be clicked!", "Marker Felt", 20);
             alert.setColor(cc.color(159, 168, 176));
             alert.setPosition(cc.p(widgetSize.width / 2, widgetSize.height / 2 - alert.getContentSize().height * 1.75));
             this._mainNode.addChild(alert);
@@ -110,6 +111,7 @@ var UICheckBoxDefaultBehaviorTest = UIScene.extend({
 
             var checkBoxDisabled2 = new ccui.CheckBox("ccs-res/cocosui/check_box_normal.png", "ccs-res/cocosui/check_box_active.png");
             checkBoxDisabled2.setPosition(cc.p(widgetSize.width / 2 + 70, widgetSize.height / 2));
+            checkBoxDisabled2.setEnabled(false);
             checkBoxDisabled2.setBright(false);
             checkBoxDisabled2.setSelected(true);
             this._mainNode.addChild(checkBoxDisabled2);

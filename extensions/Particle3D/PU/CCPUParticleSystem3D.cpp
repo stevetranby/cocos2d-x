@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (C) 2013 Henry van Merode. All rights reserved.
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -87,15 +88,19 @@ void PUParticle3D::initForEmission()
     // Reset freeze flag
     freezed = false;
 
-    for (auto it : behaviours) {
-        it->initParticleForEmission(this);
+    if (!behaviours.empty()){
+        for (auto &it : behaviours) {
+            it->initParticleForEmission(this);
+        }
     }
 }
 
 void PUParticle3D::initForExpiration( float timeElapsed )
 {
-    for (auto it : behaviours) {
-        it->initParticleForExpiration(this, timeElapsed);
+    if (!behaviours.empty()){
+        for (auto &it : behaviours) {
+            it->initParticleForExpiration(this, timeElapsed);
+        }
     }
 }
 
@@ -103,8 +108,10 @@ void PUParticle3D::process( float timeElapsed )
 {
     timeFraction = (totalTimeToLive - timeToLive) / totalTimeToLive;
 
-    for (auto it : behaviours) {
-        it->updateBehaviour(this, timeElapsed);
+    if (!behaviours.empty()){
+        for (auto &it : behaviours) {
+            it->updateBehaviour(this, timeElapsed);
+        }
     }
 }
 
@@ -270,11 +277,11 @@ bool PUParticleSystem3D::initWithFilePath( const std::string &filePath )
 {
     std::string fullPath = FileUtils::getInstance()->fullPathForFilename(filePath);
     convertToUnixStylePath(fullPath);
-    std::string::size_type pos = fullPath.find_last_of("/");
+    std::string::size_type pos = fullPath.find_last_of('/');
     std::string materialFolder = "materials";
     if (pos != std::string::npos){
         std::string temp = fullPath.substr(0, pos);
-        pos = temp.find_last_of("/");
+        pos = temp.find_last_of('/');
         if (pos != std::string::npos){
             materialFolder = temp.substr(0, pos + 1) + materialFolder;
         }
@@ -422,7 +429,7 @@ void PUParticleSystem3D::resumeParticleSystem()
 
 void PUParticleSystem3D::update(float delta)
 {
-    if (_isMarkedForEmission) return;
+    if (!_isEnabled || _isMarkedForEmission) return;
     if (_state != State::RUNNING){
         if (_state == State::PAUSE) 
             return;
@@ -442,6 +449,11 @@ void PUParticleSystem3D::forceUpdate( float delta )
 
     prepared();
 
+    Vec3 currentPos = getDerivedPosition();
+    _latestPositionDiff = currentPos - _latestPosition;
+    _latestPosition = currentPos;
+    _latestOrientation = getDerivedOrientation();
+
     if (!_emitters.empty()){
         emitParticles(delta);
         preUpdator(delta);
@@ -449,10 +461,6 @@ void PUParticleSystem3D::forceUpdate( float delta )
         postUpdator(delta);
     }
 
-    Vec3 currentPos = getDerivedPosition();
-    _latestPositionDiff = currentPos - _latestPosition;
-    _latestPosition = currentPos;
-    _latestOrientation = getDerivedOrientation();
     _timeElapsedSinceStart += delta;
 }
 
@@ -724,7 +732,7 @@ void PUParticleSystem3D::emitParticles( float elapsedTime )
 
 }
 
-const float PUParticleSystem3D::getDefaultWidth( void ) const
+float PUParticleSystem3D::getDefaultWidth() const
 {
     return _defaultWidth;
 }
@@ -734,7 +742,7 @@ void PUParticleSystem3D::setDefaultWidth( const float width )
     _defaultWidth = width;
 }
 
-const float PUParticleSystem3D::getDefaultHeight( void ) const
+float PUParticleSystem3D::getDefaultHeight() const
 {
     return _defaultHeight;
 }
@@ -744,7 +752,7 @@ void PUParticleSystem3D::setDefaultHeight( const float height )
     _defaultHeight = height;
 }
 
-const float PUParticleSystem3D::getDefaultDepth( void ) const
+float PUParticleSystem3D::getDefaultDepth() const
 {
     return _defaultDepth;
 }
@@ -1004,7 +1012,7 @@ void PUParticleSystem3D::initParticleForExpiration( PUParticle3D* particle, floa
         it->particleExpired(this, particle);
     }
     ///** Externs are also called to perform expiration activities. If needed, affectors and emitters may be added, but at the moment
-    //	there is no reason for (and we don´t want to waste cpu resources).
+    //	there is no reason for (and we don't want to waste cpu resources).
     //*/
     //if (!mExterns.empty())
     //{
@@ -1041,6 +1049,8 @@ void PUParticleSystem3D::convertToUnixStylePath( std::string &path )
     for (auto &iter : path){
         if (iter == '\\') iter = '/';
     }
+#else
+    CC_UNUSED_PARAM(path);
 #endif
 }
 
@@ -1165,13 +1175,14 @@ void PUParticleSystem3D::removeAllListener()
 
 void PUParticleSystem3D::draw( Renderer *renderer, const Mat4 &transform, uint32_t flags )
 {
+    if (!_isEnabled) return;
     if (getAliveParticleCount() <= 0) return;
     if (_render)
         _render->render(renderer, transform, this);
 
     if (!_emittedSystemParticlePool.empty())
     {
-        for (auto iter : _emittedSystemParticlePool)
+        for (auto &iter : _emittedSystemParticlePool)
         {
             PUParticle3D *particle = static_cast<PUParticle3D *>(iter.second.getFirst());
             while (particle)
@@ -1185,6 +1196,7 @@ void PUParticleSystem3D::draw( Renderer *renderer, const Mat4 &transform, uint32
 
 void PUParticleSystem3D::processParticle( ParticlePool &pool, bool &firstActiveParticle, bool &firstParticle, float elapsedTime )
 {
+    Vec3 scale = getDerivedScale();
     PUParticle3D *particle = static_cast<PUParticle3D *>(pool.getFirst());
     //Mat4 ltow = getNodeToWorldTransform();
     //Vec3 scl;
@@ -1257,7 +1269,7 @@ void PUParticleSystem3D::processParticle( ParticlePool &pool, bool &firstActiveP
             //    particle->heightInWorld = scl.y * particle->height;
             //    particle->depthInWorld = scl.z * particle->depth;
             //}
-            processMotion(particle, elapsedTime, firstActiveParticle);
+            processMotion(particle, elapsedTime, scale, firstActiveParticle);
         }
         else{
             initParticleForExpiration(particle, elapsedTime);
@@ -1298,7 +1310,7 @@ bool PUParticleSystem3D::makeParticleLocal( PUParticle3D* particle )
     return true;
 }
 
-void PUParticleSystem3D::processMotion( PUParticle3D* particle, float timeElapsed, bool firstParticle )
+void PUParticleSystem3D::processMotion( PUParticle3D* particle, float timeElapsed, const Vec3 &scl, bool /*firstParticle*/ )
 {
     if (particle->isFreezed())
     return;
@@ -1345,14 +1357,13 @@ void PUParticleSystem3D::processMotion( PUParticle3D* particle, float timeElapse
         particle->direction *= (_maxVelocity / particle->direction.length());
     }
 
-    Vec3 scale = getDerivedScale();
     // Update the position with the direction.
-    particle->position.add(particle->direction.x * scale.x * _particleSystemScaleVelocity * timeElapsed
-                             , particle->direction.y * scale.y * _particleSystemScaleVelocity * timeElapsed
-                             , particle->direction.z * scale.z * _particleSystemScaleVelocity * timeElapsed);
+    particle->position.add(particle->direction.x * scl.x * _particleSystemScaleVelocity * timeElapsed
+        , particle->direction.y * scl.y * _particleSystemScaleVelocity * timeElapsed
+        , particle->direction.z * scl.z * _particleSystemScaleVelocity * timeElapsed);
 }
 
-void PUParticleSystem3D::calulateRotationOffset( void )
+void PUParticleSystem3D::calulateRotationOffset()
 {
     if (_isMarkedForEmission)
     {
@@ -1379,7 +1390,7 @@ int PUParticleSystem3D::getAliveParticleCount() const
     sz += _particlePool.getActiveDataList().size();
 
     if (!_emittedEmitterParticlePool.empty()){
-        for (auto iter : _emittedEmitterParticlePool){
+        for (auto &iter : _emittedEmitterParticlePool){
             sz += iter.second.getActiveDataList().size();
         }
     }
@@ -1387,7 +1398,7 @@ int PUParticleSystem3D::getAliveParticleCount() const
     if (_emittedSystemParticlePool.empty()) 
         return sz;
 
-    for (auto iter : _emittedSystemParticlePool){
+    for (auto &iter : _emittedSystemParticlePool){
         auto pool = iter.second;
         sz += pool.getActiveDataList().size();
         PUParticle3D *particle = static_cast<PUParticle3D *>(pool.getFirst());

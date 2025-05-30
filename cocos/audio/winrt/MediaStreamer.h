@@ -2,6 +2,7 @@
 * cocos2d-x   http://www.cocos2d-x.org
 *
 * Copyright (c) 2010-2011 - cocos2d-x community
+* Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 * 
 * Portions Copyright (c) Microsoft Open Technologies, Inc.
 * All Rights Reserved
@@ -28,8 +29,8 @@ private:
     WAVEFORMATEX      m_waveFormat;
     uint32            m_maxStreamLengthInBytes;
     std::vector<byte> m_data;
-    UINT32            m_offset;
-    UINT32            m_dataLen;
+    size_t            m_offset;
+    size_t            m_dataLen;
     Platform::String^      m_filename;
 
     Platform::Array<byte>^ ReadData(_In_ Platform::String^ filename);
@@ -50,7 +51,7 @@ internal:
         return m_waveFormat;
     }
 
-    UINT32 GetMaxStreamLengthInBytes()
+    size_t GetMaxStreamLengthInBytes()
     {
 		return m_dataLen;
     }

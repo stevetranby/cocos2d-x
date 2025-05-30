@@ -1,5 +1,6 @@
 ﻿/****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -25,9 +26,13 @@
 #ifndef __cocos2d_libs__FlatBuffersSerialize__
 #define __cocos2d_libs__FlatBuffersSerialize__
 
-#include "cocos2d.h"
+#include <string>
+#include <vector>
+
 #include "ExtensionMacros.h"
-#include "cocostudio/CocosStudioExport.h"
+#include "editor-support/cocostudio/CocosStudioExport.h"
+#include "platform/CCPlatformMacros.h"
+#include "ui/UIWidget.h"
 
 namespace flatbuffers
 {
@@ -78,6 +83,7 @@ namespace flatbuffers
     struct BoolFrame;
     struct InnerActionFrame;
     struct EasingData;
+    struct BlendFrame;
 }
 
 namespace tinyxml2
@@ -107,10 +113,10 @@ public:
     /* serialize flat buffers with XML */
     std::string serializeFlatBuffersWithXMLFile(const std::string& xmlFileName,
                                                 const std::string& flatbuffersFileName);
-    
+
     // NodeTree
     flatbuffers::Offset<flatbuffers::NodeTree> createNodeTree(const tinyxml2::XMLElement* objectData,
-                                                              std::string classType);
+                                                              const std::string& classType);
     
     // NodeAction
     flatbuffers::Offset<flatbuffers::NodeAction> createNodeAction(const tinyxml2::XMLElement* objectData);
@@ -123,6 +129,7 @@ public:
     flatbuffers::Offset<flatbuffers::IntFrame> createIntFrame(const tinyxml2::XMLElement* objectData);
     flatbuffers::Offset<flatbuffers::BoolFrame> createBoolFrame(const tinyxml2::XMLElement* objectData);
     flatbuffers::Offset<flatbuffers::InnerActionFrame> createInnerActionFrame(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::BlendFrame> createBlendFrame(const tinyxml2::XMLElement* objectData);
     
     flatbuffers::Offset<flatbuffers::EasingData> createEasingData(const tinyxml2::XMLElement* objectData);
 
@@ -130,17 +137,22 @@ public:
     flatbuffers::Offset<flatbuffers::AnimationInfo> createAnimationInfo(const tinyxml2::XMLElement* objectData);
     /**/
     
-    int getResourceType(std::string key);
+    int getResourceType(const std::string& key);
     std::string getGUIClassName(const std::string &name);
     std::string getWidgetReaderClassName(cocos2d::ui::Widget *widget);
     
     /* create flat buffers with XML */
     flatbuffers::FlatBufferBuilder* createFlatBuffersWithXMLFileForSimulator(const std::string& xmlFileName);
     flatbuffers::Offset<flatbuffers::NodeTree> createNodeTreeForSimulator(const tinyxml2::XMLElement* objectData,
-                                                                          std::string classType);
+                                                                          const std::string& classType);
     flatbuffers::Offset<flatbuffers::ProjectNodeOptions> createProjectNodeOptionsForSimulator(const tinyxml2::XMLElement* objectData);
 	/**/
     std::string getCsdVersion() { return _csdVersion; }
+
+    /* Serialize language XML file to Flat Buffers file. */
+    std::string serializeFlatBuffersWithXMLFileForLanguageData(const std::string& xmlFilePath,
+                                                               const std::string& flatBuffersFilePath,
+                                                               const std::string& languageName);
     
 public:
     std::vector<flatbuffers::Offset<flatbuffers::String>> _textures;

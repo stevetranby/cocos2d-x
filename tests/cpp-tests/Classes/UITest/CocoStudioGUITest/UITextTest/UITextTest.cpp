@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include "UITextTest.h"
 
 USING_NS_CC;
@@ -10,7 +34,9 @@ UITextTests::UITextTests()
     ADD_TEST_CASE(UITextTest_LineWrap);
     ADD_TEST_CASE(UILabelTest_Effect);
     ADD_TEST_CASE(UITextTest_TTF);
-    ADD_TEST_CASE(UITextTest_IgnoreConentSize);
+    ADD_TEST_CASE(UITextTest_IgnoreContentSize);
+    ADD_TEST_CASE(UITextTest_Clone);
+    ADD_TEST_CASE(Issue16073Test);
 }
 
 // UITextTest
@@ -218,15 +244,15 @@ bool UITextTest_TTF::init()
     return false;
 }
 
-// UITextTest_IgnoreConentSize
+// UITextTest_IgnoreContentSize
 
-bool UITextTest_IgnoreConentSize::init()
+bool UITextTest_IgnoreContentSize::init()
 {
     if (UIScene::init())
     {
         Size widgetSize = _widget->getContentSize();
 
-        Text* leftText = Text::create("ignore conent",
+        Text* leftText = Text::create("ignore content",
                                    "fonts/Marker Felt.ttf",10);
         leftText->setPosition(Vec2(widgetSize.width / 2.0f - 50,
                                 widgetSize.height / 2.0f));
@@ -238,7 +264,7 @@ bool UITextTest_IgnoreConentSize::init()
         _uiLayer->addChild(leftText);
 
 
-        Text* rightText = Text::create("ignore conent",
+        Text* rightText = Text::create("ignore content",
                                       "fonts/Marker Felt.ttf",10);
         rightText->setPosition(Vec2(widgetSize.width / 2.0f + 50,
                                    widgetSize.height / 2.0f));
@@ -263,3 +289,52 @@ bool UITextTest_IgnoreConentSize::init()
     }
     return false;
 }
+
+// UITextTest_IgnoreContentSize
+
+bool UITextTest_Clone::init()
+{
+    if (UIScene::init())
+    {
+        Size widgetSize = _widget->getContentSize();
+
+        Text* singleText = Text::create("ignore content",
+            "fonts/Marker Felt.ttf", 30);
+        singleText->setPosition(Vec2(widgetSize.width / 2.0f - 80,
+            widgetSize.height / 2.0f));
+        singleText->setString("CHUKONG");
+        singleText->setTouchScaleChangeEnabled(true);
+        singleText->setTouchEnabled(true);
+        singleText->enableOutline(Color4B(255,0,0,100), 10);
+        singleText->enableShadow(Color4B::YELLOW, Size(2,-2), 0);
+        _uiLayer->addChild(singleText);
+
+        auto cloneText = singleText->clone();
+        cloneText->setPosition(Vec2(widgetSize.width / 2.0f + 80,
+            widgetSize.height / 2.0f));
+        _uiLayer->addChild(cloneText);
+
+        return true;
+    }
+    return false;
+}
+
+// Issue16073Test
+
+bool Issue16073Test::init()
+{
+    if (UIScene::init())
+    {
+        Size widgetSize = _widget->getContentSize();
+
+        Text* singleText = Text::create("mwhahaha\360", "Verdana", 40);
+
+        singleText->setPosition(Vec2(widgetSize.width / 2.0f - 80,
+                                     widgetSize.height / 2.0f));
+        _uiLayer->addChild(singleText);
+
+        return true;
+    }
+    return false;
+}
+

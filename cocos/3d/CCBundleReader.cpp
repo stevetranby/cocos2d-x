@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -22,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "CCBundleReader.h"
+#include "3d/CCBundleReader.h"
 #include "platform/CCFileUtils.h"
 
 NS_CC_BEGIN
@@ -32,12 +33,12 @@ BundleReader::BundleReader()
     _buffer = nullptr;
     _position = 0;
     _length = 0;
-};
+}
 
 BundleReader::~BundleReader()
 {
     
-};
+}
 
 void BundleReader::init(char* buffer, ssize_t length)
 {
@@ -87,7 +88,7 @@ ssize_t BundleReader::read(void* ptr, ssize_t size, ssize_t count)
 char* BundleReader::readLine(int num,char* line)
 {
     if (!_buffer)
-        return 0;
+        return nullptr;
 
     char* buffer = (char*)_buffer+_position;
     char* p = line;

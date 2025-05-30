@@ -1,5 +1,6 @@
 /****************************************************************************
 Copyright (c) 2010-2014 cocos2d-x.org
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -23,43 +24,34 @@ THE SOFTWARE.
  ****************************************************************************/
 package org.cocos2dx.lib;
 
+import android.util.Log;
+
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.InflaterInputStream;
-import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-
-import javax.net.ssl.HttpsURLConnection;
-
 import java.net.ProtocolException;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.security.KeyStore;
-
 import javax.net.ssl.TrustManagerFactory;
-
-import org.cocos2dx.lib.Cocos2dxHelper;
-
-import android.content.res.AssetManager;
-import android.util.Log;
 
 public class Cocos2dxHttpURLConnection
 {
@@ -76,7 +68,7 @@ public class Cocos2dxHttpURLConnection
             urlConnection.setRequestProperty("Accept-Encoding", "identity");
             urlConnection.setDoInput(true);
         } catch (Exception e) {
-            Log.e("Cocos2dxHttpURLConnection exception", e.toString());
+            Log.e("URLConnection exception", e.toString());
             return null;
         }
 
@@ -95,7 +87,7 @@ public class Cocos2dxHttpURLConnection
                 urlConnection.setDoOutput(true);
             }
         } catch (ProtocolException e) {
-            Log.e("Cocos2dxHttpURLConnection exception", e.toString());
+            Log.e("URLConnection exception", e.toString());
         }
 
     }
@@ -140,11 +132,11 @@ public class Cocos2dxHttpURLConnection
 
             httpsURLConnection.setSSLSocketFactory(context.getSocketFactory());
         } catch (Exception e) {
-            Log.e("Cocos2dxHttpURLConnection exception", e.toString());
+            Log.e("URLConnection exception", e.toString());
         }
     }
 
-	//Add header
+    //Add header
     static void addRequestHeader(HttpURLConnection urlConnection, String key, String value) {
         urlConnection.setRequestProperty(key, value);
     }
@@ -176,12 +168,12 @@ public class Cocos2dxHttpURLConnection
             }
             out.close();
         } catch (IOException e) {
-            Log.e("Cocos2dxHttpURLConnection exception", e.toString());
+            Log.e("URLConnection exception", e.toString());
         }
     }
 
     static String getResponseHeaders(HttpURLConnection http) {
-    	Map<String, List<String>> headers = http.getHeaderFields();
+        Map<String, List<String>> headers = http.getHeaderFields();
         if (null == headers) {
             return null;
         }
@@ -277,7 +269,7 @@ public class Cocos2dxHttpURLConnection
         } catch (IOException e) {
             in = http.getErrorStream();
         } catch (Exception e) {
-            Log.e("Cocos2dxHttpURLConnection exception", e.toString());
+            Log.e("URLConnection exception", e.toString());
             return null;
         }
 
@@ -293,7 +285,7 @@ public class Cocos2dxHttpURLConnection
             bytestream.close();
             return retbuffer;
         } catch (Exception e) {
-            Log.e("Cocos2dxHttpURLConnection exception", e.toString());
+            Log.e("URLConnection exception", e.toString());
         }
 
         return null;
@@ -304,7 +296,7 @@ public class Cocos2dxHttpURLConnection
         try {
             code = http.getResponseCode();
         } catch (IOException e) {
-            Log.e("Cocos2dxHttpURLConnection exception", e.toString());
+            Log.e("URLConnection exception", e.toString());
         }
         return code;
     }
@@ -315,7 +307,7 @@ public class Cocos2dxHttpURLConnection
             msg = http.getResponseMessage();
         } catch (IOException e) {
             msg = e.toString();
-            Log.e("Cocos2dxHttpURLConnection exception", msg);
+            Log.e("URLConnection exception", msg);
         }
 
         return msg;
@@ -398,15 +390,15 @@ public class Cocos2dxHttpURLConnection
 
     private static String str2Seconds(String strTime) {
         Calendar c = Calendar.getInstance();
-        long millisSecond = 0;
+        long milliseconds = 0;
 
         try {
             c.setTime(new SimpleDateFormat("EEE, dd-MMM-yy hh:mm:ss zzz", Locale.US).parse(strTime));
-            millisSecond = c.getTimeInMillis()/1000;
+            milliseconds = c.getTimeInMillis() / 1000;
         } catch (ParseException e) {
-            Log.e("Cocos2dxHttpURLConnection exception", e.toString());
+            Log.e("URLConnection exception", e.toString());
         }
 
-        return Long.toString(millisSecond);
+        return Long.toString(milliseconds);
     }
 }

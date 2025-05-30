@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include "TextureCacheTest.h"
 
 // enable log
@@ -8,6 +32,7 @@ USING_NS_CC;
 TextureCacheTests::TextureCacheTests()
 {
     ADD_TEST_CASE(TextureCacheTest);
+    ADD_TEST_CASE(TextureCacheUnbindTest);
 }
 
 TextureCacheTest::TextureCacheTest()
@@ -25,7 +50,7 @@ TextureCacheTest::TextureCacheTest()
     this->addChild(_labelLoading);
     this->addChild(_labelPercent);
 
-    // load textrues
+    // load textures
     Director::getInstance()->getTextureCache()->addImageAsync("Images/HelloWorld.png", CC_CALLBACK_1(TextureCacheTest::loadingCallBack, this));
     Director::getInstance()->getTextureCache()->addImageAsync("Images/grossini.png", CC_CALLBACK_1(TextureCacheTest::loadingCallBack, this));
     Director::getInstance()->getTextureCache()->addImageAsync("Images/grossini_dance_01.png", CC_CALLBACK_1(TextureCacheTest::loadingCallBack, this));
@@ -129,4 +154,53 @@ void TextureCacheTest::addSprite()
     this->addChild(s13);
     this->addChild(s14);
     this->addChild(s15);
+}
+
+TextureCacheUnbindTest::TextureCacheUnbindTest()
+{
+    auto size = Director::getInstance()->getWinSize();
+
+    Label* nothing =
+      Label::createWithTTF
+      ("There should be\nnothing below", "fonts/arial.ttf", 15);
+    nothing->setPosition(Vec2(size.width / 4, 5 * size.height / 6));
+    this->addChild(nothing);
+    
+    Label* something =
+      Label::createWithTTF
+      ("There should be\na white square below", "fonts/arial.ttf", 15);
+    something->setPosition(Vec2(3 * size.width / 4, 5 * size.height / 6));
+    this->addChild(something);
+
+    auto cache = Director::getInstance()->getTextureCache();
+    
+    cache->removeTextureForKey("Images/texture2048x2048.png");
+
+    cache->addImageAsync
+      ("Images/texture2048x2048.png",
+       CC_CALLBACK_1(TextureCacheUnbindTest::textureLoadedA, this),
+       "A");
+    cache->addImageAsync
+      ("Images/texture2048x2048.png",
+       CC_CALLBACK_1(TextureCacheUnbindTest::textureLoadedB, this),
+       "B");
+    cache->unbindImageAsync("A");
+}
+
+void TextureCacheUnbindTest::textureLoadedA(Texture2D* texture)
+{
+  auto size = Director::getInstance()->getWinSize();
+  auto s = Sprite::create("Images/texture2048x2048.png");
+  s->setScale(0.15);
+  s->setPosition(size.width / 4, size.height / 2);
+  this->addChild(s);
+}
+
+void TextureCacheUnbindTest::textureLoadedB(Texture2D* texture)
+{
+  auto size = Director::getInstance()->getWinSize();
+  auto s = Sprite::create("Images/texture2048x2048.png");
+  s->setScale(0.15);
+  s->setPosition(3 * size.width / 4, size.height / 2);
+  this->addChild(s);
 }

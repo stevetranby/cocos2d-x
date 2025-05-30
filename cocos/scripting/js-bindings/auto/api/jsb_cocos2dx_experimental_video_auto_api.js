@@ -37,11 +37,13 @@ play : function (
 },
 
 /**
- * @method pause
+ * @method isUserInputEnabled
+ * @return {bool}
  */
-pause : function (
+isUserInputEnabled : function (
 )
 {
+    return false;
 },
 
 /**
@@ -50,14 +52,6 @@ pause : function (
  */
 setKeepAspectRatioEnabled : function (
 bool 
-)
-{
-},
-
-/**
- * @method resume
- */
-resume : function (
 )
 {
 },
@@ -101,6 +95,26 @@ str
 },
 
 /**
+ * @method setStyle
+ * @param {cc.experimental::ui::VideoPlayer::StyleType} arg0
+ */
+setStyle : function (
+styletype 
+)
+{
+},
+
+/**
+ * @method seekTo
+ * @param {float} arg0
+ */
+seekTo : function (
+float 
+)
+{
+},
+
+/**
  * @method isKeepAspectRatioEnabled
  * @return {bool}
  */
@@ -131,6 +145,16 @@ isFullScreenEnabled : function (
 },
 
 /**
+ * @method isLooping
+ * @return {bool}
+ */
+isLooping : function (
+)
+{
+    return false;
+},
+
+/**
  * @method isPlaying
  * @return {bool}
  */
@@ -141,11 +165,21 @@ isPlaying : function (
 },
 
 /**
- * @method seekTo
- * @param {float} arg0
+ * @method setLooping
+ * @param {bool} arg0
  */
-seekTo : function (
-float 
+setLooping : function (
+bool 
+)
+{
+},
+
+/**
+ * @method setUserInputEnabled
+ * @param {bool} arg0
+ */
+setUserInputEnabled : function (
+bool 
 )
 {
 },

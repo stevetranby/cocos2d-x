@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +29,8 @@
 #include <vector>
 #include "jsapi.h"
 #include "jsfriendapi.h"
-#include "js_bindings_config.h"
-#include "jsb_helper.h"
+#include "scripting/js-bindings/manual/js_bindings_config.h"
+#include "scripting/js-bindings/manual/jsb_helper.h"
 
 using namespace std;
 
@@ -78,7 +79,6 @@ private:
         , m_methodSig(methodSig)
         , m_returnType(TypeVoid)
         , m_argumentsCount(0)
-        , m_retjstring(NULL)
         , m_env(NULL)
         , m_classID(NULL)
         , m_methodID(NULL)
@@ -86,17 +86,17 @@ private:
             memset(&m_ret, 0, sizeof(m_ret));
             m_valid =  validateMethodSig() && getMethodInfo();
         }
-        ~CallInfo(void);
+        ~CallInfo();
 
-        bool isValid(void) {
+        bool isValid() {
             return m_valid;
         }
 
-        int getErrorCode(void) {
+        int getErrorCode() {
             return m_error;
         }
 
-        JNIEnv *getEnv(void) {
+        JNIEnv *getEnv() {
             return m_env;
         }
 
@@ -116,7 +116,7 @@ private:
         	return m_ret;
         }
 
-        bool execute(void);
+        bool execute();
         bool executeWithArgs(jvalue *args);
 
 
@@ -132,14 +132,13 @@ private:
         ValueType   m_returnType;
 
         ReturnValue m_ret;
-        jstring     m_retjstring;
 
         JNIEnv     *m_env;
         jclass      m_classID;
         jmethodID   m_methodID;
 
-        bool validateMethodSig(void);
-        bool getMethodInfo(void);
+        bool validateMethodSig();
+        bool getMethodInfo();
         ValueType checkType(const string& sig, size_t *pos);
     };
 

@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -73,7 +74,7 @@ public:
         effect->retain();
         effect->setTarget(this);
 
-        _effects.push_back(std::make_tuple(order,effect,QuadCommand()));
+        _effects.emplace_back(order,effect,QuadCommand());
 
         std::sort(std::begin(_effects), std::end(_effects), tuple_sort);
     }
@@ -93,18 +94,21 @@ public:
 
                 if(std::get<0>(effect) >=0)
                     break;
-                QuadCommand &q = std::get<2>(effect);
-                q.init(_globalZOrder, _texture->getName(), std::get<1>(effect)->getGLProgramState(), _blendFunc, &_quad, 1, transform, flags);
-                renderer->addCommand(&q);
+                auto glProgramState = std::get<1>(effect)->getGLProgramState();
+                if (glProgramState)
+                {
+                    QuadCommand &q = std::get<2>(effect);
+                    q.init(_globalZOrder, _texture->getName(), glProgramState, _blendFunc, &_quad, 1, transform, flags);
+                    renderer->addCommand(&q);
+                }
                 idx++;
-
             }
 
             // normal effect: order == 0
             _trianglesCommand.init(_globalZOrder, _texture->getName(), getGLProgramState(), _blendFunc, _polyInfo.triangles, transform, flags);
             renderer->addCommand(&_trianglesCommand);
 
-            // postive effects: oder >= 0
+            // positive effects: order >= 0
             for(auto it = std::begin(_effects)+idx; it != std::end(_effects); ++it) {
                 QuadCommand &q = std::get<2>(*it);
                 q.init(_globalZOrder, _texture->getName(), std::get<1>(*it)->getGLProgramState(), _blendFunc, &_quad, 1, transform, flags);
@@ -144,8 +148,8 @@ bool Effect::initGLProgramState(const std::string &fragmentFilename)
     _fragSource = fragSource;
 #endif
     
-    _glprogramstate = GLProgramState::getOrCreateWithGLProgram(glprogram);
-    _glprogramstate->retain();
+    _glprogramstate = (glprogram == nullptr ? nullptr : GLProgramState::getOrCreateWithGLProgram(glprogram));
+    CC_SAFE_RETAIN(_glprogramstate);
 
     return _glprogramstate != nullptr;
 }
@@ -194,15 +198,24 @@ protected:
 
 void EffectBlur::setTarget(EffectSprite *sprite)
 {
+    if (_glprogramstate == nullptr)
+        return;
+    
     Size size = sprite->getTexture()->getContentSizeInPixels();
     _glprogramstate->setUniformVec2("resolution", size);
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     _glprogramstate->setUniformFloat("blurRadius", _blurRadius);
     _glprogramstate->setUniformFloat("sampleNum", _blurSampleNum);
+#endif
 }
 
 bool EffectBlur::init(float blurRadius, float sampleNum)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     initGLProgramState("Shaders/example_Blur.fsh");
+#else
+    initGLProgramState("Shaders/example_Blur_winrt.fsh");
+#endif
     _blurRadius = blurRadius;
     _blurSampleNum = sampleNum;
     
@@ -403,8 +416,8 @@ bool EffectNormalMapped::init()
 }
 bool EffectNormalMapped::initNormalMap(const std::string& normalMapFileName)
 {
-    auto normalMapTextrue = Director::getInstance()->getTextureCache()->addImage(normalMapFileName);
-    getGLProgramState()->setUniformTexture("u_normalMap", normalMapTextrue);
+    auto normalMapTexture = Director::getInstance()->getTextureCache()->addImage(normalMapFileName);
+    getGLProgramState()->setUniformTexture("u_normalMap", normalMapTexture);
     return true;
 }
 void EffectNormalMapped::setTarget(EffectSprite* sprite)
@@ -438,6 +451,10 @@ void EffectNormalMapped::setLightColor(const Color4F& color)
 }
 
 EffectSpriteTest::EffectSpriteTest()
+{
+}
+
+bool EffectSpriteTest::init()
 {
     if (ShaderTestDemo2::init()) {
 
@@ -497,11 +514,17 @@ EffectSpriteTest::EffectSpriteTest()
 
 //        _sprite->addEffect( _effects.at(8), -10 );
 //        _sprite->addEffect( _effects.at(1), 1 );
-
+        
+        return true;
     }
+    return false;
 }
 
 EffectSpriteLamp::EffectSpriteLamp()
+{
+}
+
+bool EffectSpriteLamp::init()
 {
     if (ShaderTestDemo2::init()) {
         
@@ -518,18 +541,20 @@ EffectSpriteLamp::EffectSpriteLamp()
         this->addChild(_lightSprite);
         _lightSprite->setPosition(Vec2(pos.x, s.height- pos.y));
         Mat4 mat = _sprite->getNodeToWorldTransform();
-        Point lightPosInLocalSpace=PointApplyAffineTransform(Vec2(pos.x, pos.y),_sprite->worldToNodeTransform());
+        Point lightPosInLocalSpace = PointApplyAffineTransform(Vec2(pos.x, pos.y), _sprite->getWorldToNodeAffineTransform());
         lampEffect->setLightColor(Color4F(1,1,1,1));
         lampEffect->setLightPos(Vec3(lightPosInLocalSpace.x, lightPosInLocalSpace.y, 50));
         lampEffect->setKBump(2);
         _sprite->setEffect(lampEffect);
         _effect = lampEffect;
-        auto listerner = EventListenerTouchAllAtOnce::create();
-        listerner->onTouchesBegan = CC_CALLBACK_2(EffectSpriteLamp::onTouchesBegan, this);
-        listerner->onTouchesMoved = CC_CALLBACK_2(EffectSpriteLamp::onTouchesMoved, this);
-        listerner->onTouchesEnded = CC_CALLBACK_2(EffectSpriteLamp::onTouchesEnded, this);
-        _eventDispatcher->addEventListenerWithSceneGraphPriority(listerner, this);
+        auto listener = EventListenerTouchAllAtOnce::create();
+        listener->onTouchesBegan = CC_CALLBACK_2(EffectSpriteLamp::onTouchesBegan, this);
+        listener->onTouchesMoved = CC_CALLBACK_2(EffectSpriteLamp::onTouchesMoved, this);
+        listener->onTouchesEnded = CC_CALLBACK_2(EffectSpriteLamp::onTouchesEnded, this);
+        _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+        return true;
     }
+    return false;
 }
 
 
@@ -543,7 +568,7 @@ void EffectSpriteLamp::onTouchesBegan(const std::vector<Touch*>& touches, Event 
         _lightSprite->setPosition(Vec2( loc_winSpace.x,  s.height - loc_winSpace.y));
         Vec3 pos(loc_winSpace.x,loc_winSpace.y, 50);
         Mat4 mat = _sprite->getNodeToWorldTransform();
-        Point lightPosInLocalSpace=PointApplyAffineTransform(Vec2(pos.x, pos.y),_sprite->worldToNodeTransform());
+        Point lightPosInLocalSpace = PointApplyAffineTransform(Vec2(pos.x, pos.y), _sprite->getWorldToNodeAffineTransform());
         ((EffectNormalMapped*)_effect)->setLightPos(Vec3(lightPosInLocalSpace.x, lightPosInLocalSpace.y, 50));
     }
 }
@@ -558,7 +583,7 @@ void EffectSpriteLamp::onTouchesMoved(const std::vector<Touch*>& touches, Event 
         _lightSprite->setPosition(Vec2( loc_winSpace.x, s.height - loc_winSpace.y));
         Vec3 pos(loc_winSpace.x,loc_winSpace.y, 50);
         Mat4 mat = _sprite->getNodeToWorldTransform();
-        Point lightPosInLocalSpace=PointApplyAffineTransform(Vec2(pos.x, pos.y),_sprite->worldToNodeTransform());
+        Point lightPosInLocalSpace = PointApplyAffineTransform(Vec2(pos.x, pos.y), _sprite->getWorldToNodeAffineTransform());
         ((EffectNormalMapped*)_effect)->setLightPos(Vec3(lightPosInLocalSpace.x, lightPosInLocalSpace.y, 50));
     }
 }
@@ -573,7 +598,7 @@ void EffectSpriteLamp::onTouchesEnded(const std::vector<Touch*>& touches, Event 
         _lightSprite->setPosition(Vec2( loc_winSpace.x, s.height - loc_winSpace.y));
         Vec3 pos(loc_winSpace.x,loc_winSpace.y, 50);
         Mat4 mat = _sprite->getNodeToWorldTransform();
-        Point lightPosInLocalSpace=PointApplyAffineTransform(Vec2(pos.x, pos.y),_sprite->worldToNodeTransform());
+        Point lightPosInLocalSpace = PointApplyAffineTransform(Vec2(pos.x, pos.y), _sprite->getWorldToNodeAffineTransform());
         ((EffectNormalMapped*)_effect)->setLightPos(Vec3(lightPosInLocalSpace.x, lightPosInLocalSpace.y, 50));
     }
 }

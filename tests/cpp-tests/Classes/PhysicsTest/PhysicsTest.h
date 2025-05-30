@@ -1,22 +1,37 @@
-#ifndef _PHYSICS_TEST_H_
-#define _PHYSICS_TEST_H_
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
 
-#include "cocos2d.h"
-#include "../BaseTest.h"
+#pragma once
 
 #include <map>
 
-DEFINE_TEST_SUITE(PhysicsTests);
+#include "../BaseTest.h"
 
-#if CC_USE_PHYSICS == 0
-class PhysicsDemoDisabled : public TestCase
-{
-public:
-    CREATE_FUNC(PhysicsDemoDisabled);
-    
-    virtual void onEnter() override;
-};
-#else
+#if CC_USE_PHYSICS
+
+
+DEFINE_TEST_SUITE(PhysicsTests);
 
 class PhysicsDemo : public TestCase
 {
@@ -38,20 +53,31 @@ public:
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
     void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
     void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
-
+    
     void toggleDebug();
+    
 protected:
+    
     cocos2d::Texture2D* _spriteTexture;
     cocos2d::SpriteBatchNode* _ball;
     std::unordered_map<int, cocos2d::Node*> _mouses;
     bool _debugDraw;
 };
 
+class PhysicsDemoLogoSmash : public PhysicsDemo
+{
+public:
+    CREATE_FUNC(PhysicsDemoLogoSmash);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+};
+
 class PhysicsDemoClickAdd : public PhysicsDemo
 {
 public:
     CREATE_FUNC(PhysicsDemoClickAdd);
-
+    
     virtual ~PhysicsDemoClickAdd();
     void onEnter() override;
     virtual std::string subtitle() const override;
@@ -60,20 +86,11 @@ public:
     void onAcceleration(cocos2d::Acceleration* acc, cocos2d::Event* event);
 };
 
-class PhysicsDemoLogoSmash : public PhysicsDemo
-{
-public:
-    CREATE_FUNC(PhysicsDemoLogoSmash);
-
-    void onEnter() override;
-    virtual std::string title() const override;
-};
-
 class PhysicsDemoPyramidStack : public PhysicsDemo
 {
 public:
     CREATE_FUNC(PhysicsDemoPyramidStack);
-
+    
     void onEnter() override;
     void updateOnce(float delta);
     virtual std::string title() const override;
@@ -83,9 +100,9 @@ class PhysicsDemoRayCast : public PhysicsDemo
 {
 public:
     CREATE_FUNC(PhysicsDemoRayCast);
-
+    
     PhysicsDemoRayCast();
-
+    
     void onEnter() override;
     virtual std::string title() const override;
     void update(float delta) override;
@@ -101,20 +118,20 @@ private:
     int _mode;
 };
 
-class PhysicsDemoJoints : public PhysicsDemo
-{
-public:
-    CREATE_FUNC(PhysicsDemoJoints);
-
-    void onEnter() override;
-    virtual std::string title() const override;
-};
-
 class PhysicsDemoActions : public PhysicsDemo
 {
 public:
     CREATE_FUNC(PhysicsDemoActions);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+};
 
+class PhysicsDemoJoints : public PhysicsDemo
+{
+public:
+    CREATE_FUNC(PhysicsDemoJoints);
+    
     void onEnter() override;
     virtual std::string title() const override;
 };
@@ -123,7 +140,7 @@ class PhysicsDemoPump : public PhysicsDemo
 {
 public:
     CREATE_FUNC(PhysicsDemoPump);
-
+    
     void onEnter() override;
     void update(float delta) override;
     virtual std::string title() const override;
@@ -142,7 +159,7 @@ class PhysicsDemoOneWayPlatform : public PhysicsDemo
 {
 public:
     CREATE_FUNC(PhysicsDemoOneWayPlatform);
-
+    
     void onEnter() override;
     virtual std::string title() const override;
     
@@ -153,7 +170,7 @@ class PhysicsDemoSlice : public PhysicsDemo
 {
 public:
     CREATE_FUNC(PhysicsDemoSlice);
-
+    
     void onEnter() override;
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
@@ -171,7 +188,7 @@ class PhysicsDemoBug3988 : public PhysicsDemo
 {
 public:
     CREATE_FUNC(PhysicsDemoBug3988);
-
+    
     void onEnter() override;
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
@@ -218,10 +235,10 @@ public:
     virtual std::string subtitle() const override;
 };
 
-class Bug5482 : public PhysicsDemo
+class PhysicsDemoBug5482 : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(Bug5482);
+    CREATE_FUNC(PhysicsDemoBug5482);
     
     void onEnter() override;
     void onExit() override;
@@ -274,5 +291,14 @@ public:
     virtual std::string subtitle() const override;
 };
 
-#endif
-#endif
+class PhysicsIssue15932 : public PhysicsDemo
+{
+public:
+    CREATE_FUNC(PhysicsIssue15932);
+
+    void onEnter() override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+};
+
+#endif // #if CC_USE_PHYSICS

@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -237,7 +238,7 @@ var AsyncLoadSprite3DTest = Sprite3DTestDemo.extend({
         this._super();
 
         var label = new cc.LabelTTF("AsyncLoad Sprite3D", "Arial", 15);
-        var item = new cc.MenuItemLabel(label, this. menuCallback_asyncLoadSprite, this);
+        var item = new cc.MenuItemLabel(label, this.menuCallback_asyncLoadSprite, this);
 
         var s = cc.winSize;
         item.setPosition(s.width / 2, s.height / 2);
@@ -251,11 +252,16 @@ var AsyncLoadSprite3DTest = Sprite3DTestDemo.extend({
         this.addChild(node);
 
         this.menuCallback_asyncLoadSprite();
+
+        this.asyncPool = null;
     },
 
     menuCallback_asyncLoadSprite:function(sender){
+        if (!this.asyncPool) {
+            this.asyncPool = cc.AsyncTaskPool.getInstance();
+        }
         //Note that you must stop the tasks before leaving the scene.
-        cc.AsyncTaskPool.getInstance().stopTasks(cc.AsyncTaskPool.TaskType.TASK_IO);
+        this.asyncPool.stopTasks(cc.AsyncTaskPool.TaskType.TASK_IO);
 
         var node = this.getChildByTag(101);
         node.removeAllChildren(); // remove all loaded sprites
@@ -266,7 +272,6 @@ var AsyncLoadSprite3DTest = Sprite3DTestDemo.extend({
         for(var i = 0; i < this._path.length; ++i){
             jsb.Sprite3D.createAsync(this._path[i], this.asyncLoad_Callback, this, i);
         }
-
     },
 
     asyncLoad_Callback:function(sprite, data){
@@ -306,9 +311,9 @@ var Sprite3DWithSkinTest = Sprite3DTestDemo.extend({
         this.addChild(sprite);
         sprite.setPosition(position);
 
-        var animation = jsb.Animation3D.create("Sprite3DTest/orc.c3b");
+        var animation = new jsb.Animation3D("Sprite3DTest/orc.c3b");
         if(animation){
-            var animate = jsb.Animate3D.create(animation);
+            var animate = new jsb.Animate3D(animation);
             var inverse = Math.random() < 0.33 ? true : false;
 
             var rand2 = Math.random();
@@ -316,7 +321,7 @@ var Sprite3DWithSkinTest = Sprite3DTestDemo.extend({
             if(rand2 < 0.33)
                 speed = animate.getSpeed() + Math.random();
             else if(rand2 < 0.66)            
-                spped = animate.getSpeed() - 0.5 * Math.random();
+                speed = animate.getSpeed() - 0.5 * Math.random();
 
             animate.setSpeed(inverse ? -speed : speed);
             sprite.runAction(new cc.RepeatForever(animate));
@@ -371,14 +376,14 @@ var Animate3DTest = (function(){
             this.addChild(sprite);
             this._sprite = sprite;
 
-            var animation = jsb.Animation3D.create("Sprite3DTest/tortoise.c3b");
+            var animation = new jsb.Animation3D("Sprite3DTest/tortoise.c3b");
             if(animation){
-                var animate = jsb.Animate3D.create(animation, 0, 1.933);
+                var animate = new jsb.Animate3D(animation, 0, 1.933);
                 this._swim = new cc.RepeatForever(animate);
                 sprite.runAction(this._swim);
 
                 this._swim.retain();
-                this._hurt = jsb.Animate3D.create(animation, 1.933, 2.8);
+                this._hurt = new jsb.Animate3D(animation, 1.933, 2.8);
                 this._hurt.retain();
 
                 this._state = State.SWIMMING;
@@ -484,9 +489,9 @@ var AttachmentTest = Sprite3DTestDemo.extend({
         var sp = new jsb.Sprite3D("Sprite3DTest/axe.c3b");
         sprite.getAttachNode("Bip001 R Hand").addChild(sp);
 
-        var animation = jsb.Animation3D.create("Sprite3DTest/orc.c3b");
+        var animation = new jsb.Animation3D("Sprite3DTest/orc.c3b");
         if(animation){
-            var animate = jsb.Animate3D.create(animation);
+            var animate = new jsb.Animate3D(animation);
             sprite.runAction(cc.repeatForever(animate));
         }
 
@@ -566,9 +571,9 @@ var Sprite3DReskinTest = (function(){
             sprite.setRotation3D(cc.math.vec3(0, 0, 0));
             this.addChild(sprite);
             sprite.setPosition(cc.p(position.x, position.y - 60));
-            var animation = jsb.Animation3D.create("Sprite3DTest/ReskinGirl.c3b");
+            var animation = new jsb.Animation3D("Sprite3DTest/ReskinGirl.c3b");
             if(animation){
-                var animate = jsb.Animate3D.create(animation);
+                var animate = new jsb.Animate3D(animation);
                 sprite.runAction(cc.repeatForever(animate));
             }
             this._sprite = sprite;
@@ -602,7 +607,7 @@ var Sprite3DReskinTest = (function(){
 })();
 
 var Sprite3DWithOBBPerformanceTest = Sprite3DTestDemo.extend({
-    _title:"OBB Collison Performance Test",
+    _title:"OBB Collision Performance Test",
     _subtitle:"",
     _drawOBB:null,
     _drawDebug:null,
@@ -700,9 +705,9 @@ var Sprite3DWithOBBPerformanceTest = Sprite3DTestDemo.extend({
         this.addChild(sprite);
 
         this._sprite = sprite;
-        var animation = jsb.Animation3D.create("Sprite3DTest/tortoise.c3b");
+        var animation = new jsb.Animation3D("Sprite3DTest/tortoise.c3b");
         if(animation){
-            var animate = jsb.Animate3D.create(animation);
+            var animate = new jsb.Animate3D(animation);
             sprite.runAction(cc.repeatForever(animate));
         }
 
@@ -810,9 +815,9 @@ var Sprite3DMirrorTest = Sprite3DTestDemo.extend({
         var sp = new jsb.Sprite3D("Sprite3DTest/axe.c3b");
         sprite.getAttachNode("Bip001 R Hand").addChild(sp);
 
-        var animation = jsb.Animation3D.create(fileName);
+        var animation = new jsb.Animation3D(fileName);
         if(animation){
-            var animate = jsb.Animate3D.create(animation);
+            var animate = new jsb.Animate3D(animation);
             sprite.runAction(cc.repeatForever(animate));
         }
 
@@ -829,9 +834,9 @@ var Sprite3DMirrorTest = Sprite3DTestDemo.extend({
         sp = new jsb.Sprite3D("Sprite3DTest/axe.c3b");
         sprite.getAttachNode("Bip001 R Hand").addChild(sp);
         
-        var animation = jsb.Animation3D.create(fileName);
+        var animation = new jsb.Animation3D(fileName);
         if(animation){
-            var animate = jsb.Animate3D.create(animation);
+            var animate = new jsb.Animate3D(animation);
             sprite.runAction(cc.repeatForever(animate));
         }
     }
@@ -854,9 +859,9 @@ var QuaternionTest = Sprite3DTestDemo.extend({
         sprite.setPosition(cc.p(s.width/2 + this._radius * Math.cos(this._accAngle), s.height / 2 + this._radius * Math.sin(this._accAngle)));
         this.addChild(sprite);
         this._sprite = sprite;
-        var animation = jsb.Animation3D.create("Sprite3DTest/tortoise.c3b");
+        var animation = new jsb.Animation3D("Sprite3DTest/tortoise.c3b");
         if(animation){
-            var animate = jsb.Animate3D.create(animation, 0, 1.933);
+            var animate = new jsb.Animate3D(animation, 0, 1.933);
             sprite.runAction(cc.repeatForever(animate));
         }
 
@@ -929,7 +934,7 @@ var UseCaseSprite3D1 = Sprite3DTestDemo.extend({
 
         var s = cc.winSize;
         //setup camera
-        var camera = cc.Camera.createPerspective(40, s.width/s.height, 0.01, 1000);
+        var camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 40, s.width/s.height, 0.01, 1000);
         camera.setCameraFlag(cc.CameraFlag.USER1);
         camera.setPosition3D(cc.math.vec3(0, 30, 100));
         camera.lookAt(cc.math.vec3(0, 0, 0));
@@ -937,9 +942,9 @@ var UseCaseSprite3D1 = Sprite3DTestDemo.extend({
 
         var sprite = new jsb.Sprite3D("Sprite3DTest/girl.c3b");
         sprite.setScale(0.15);
-        var animation = jsb.Animation3D.create("Sprite3DTest/girl.c3b");
+        var animation = new jsb.Animation3D("Sprite3DTest/girl.c3b");
         if(animation){
-            var animate = jsb.Animate3D.create(animation);
+            var animate = new jsb.Animate3D(animation);
             sprite.runAction(cc.repeatForever(animate));
         }
 
@@ -992,7 +997,7 @@ var UseCaseSprite3D2 = Sprite3DTestDemo.extend({
 
         var s = cc.winSize;
         //setup camera
-        var camera = cc.Camera.createPerspective(40, s.width/s.height, 0.01, 1000);
+        var camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 40, s.width/s.height, 0.01, 1000);
         camera.setCameraFlag(cc.CameraFlag.USER1);
         camera.setPosition3D(cc.math.vec3(0, 30, 100));
         camera.lookAt(cc.math.vec3(0, 0, 0));
@@ -1006,9 +1011,9 @@ var UseCaseSprite3D2 = Sprite3DTestDemo.extend({
 
         var sprite = new jsb.Sprite3D("Sprite3DTest/girl.c3b");
         sprite.setScale(0.5);
-        var animation = jsb.Animation3D.create("Sprite3DTest/girl.c3b");
+        var animation = new jsb.Animation3D("Sprite3DTest/girl.c3b");
         if(animation){
-            var animate = jsb.Animate3D.create(animation);
+            var animate = new jsb.Animate3D(animation);
             sprite.runAction(cc.repeatForever(animate));
         }
         sprite.setPosition(s.width/4, s.height/4);
@@ -1139,9 +1144,9 @@ var Sprite3DWithSkinOutlineTest = Sprite3DTestDemo.extend({
         effect2.setOutlineWidth(0.02);
         sprite.addEffect(effect2, -2);
 
-        var animation = jsb.Animation3D.create("Sprite3DTest/orc.c3b");
+        var animation = new jsb.Animation3D("Sprite3DTest/orc.c3b");
         if(animation){
-            var animate = jsb.Animate3D.create(animation);
+            var animate = new jsb.Animate3D(animation);
             var inverse = Math.random() < 0.33 ? true : false;
 
             var rand2 = Math.random();
@@ -1149,7 +1154,7 @@ var Sprite3DWithSkinOutlineTest = Sprite3DTestDemo.extend({
             if(rand2 < 0.33)
                 speed = animate.getSpeed() + Math.random();
             else if(rand2 < 0.66)            
-                spped = animate.getSpeed() - 0.5 * Math.random();
+                speed = animate.getSpeed() - 0.5 * Math.random();
 
             animate.setSpeed(inverse ? -speed : speed);
             sprite.runAction(new cc.RepeatForever(animate));
@@ -1175,7 +1180,7 @@ var Sprite3DLightMapTest = Sprite3DTestDemo.extend({
         //the assets are from the OpenVR demo
         //get the visible size.
         var visibleSize = cc.director.getVisibleSize();
-        this._camera = cc.Camera.createPerspective(60, visibleSize.width/visibleSize.height, 0.1, 200);
+        this._camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 60, visibleSize.width/visibleSize.height, 0.1, 200);
         this._camera.setCameraFlag(cc.CameraFlag.USER1);
         this._camera.setPosition3D(cc.math.vec3(0, 25, 15));
         this._camera.setRotation3D(cc.math.vec3(-35, 0, 0));
@@ -1187,10 +1192,10 @@ var Sprite3DLightMapTest = Sprite3DTestDemo.extend({
         this.setCameraMask(2);
 
         //add a point light
-        var light = jsb.PointLight.create(cc.math.vec3(35, 75, -20.5), cc.color(255, 255, 255), 150);
+        var light = new jsb.PointLight(cc.math.vec3(35, 75, -20.5), cc.color(255, 255, 255), 150);
         this.addChild(light);
         //set the ambient light 
-        var ambient = jsb.AmbientLight.create(cc.color(55, 55, 55));
+        var ambient = new jsb.AmbientLight(cc.color(55, 55, 55));
         this.addChild(ambient);
 
         //create a listener
@@ -1230,7 +1235,7 @@ var Sprite3DUVAnimationTest = Sprite3DTestDemo.extend({
     _title:"Testing UV Animation",
     _subtitle:"",
     _cylinder_texture_offset:0,
-    _shining_duraion:0,
+    _shining_duration:0,
     _state:null,
     fade_in:true,
 
@@ -1239,7 +1244,7 @@ var Sprite3DUVAnimationTest = Sprite3DTestDemo.extend({
 
         var visibleSize = cc.director.getVisibleSize();
         //use custom camera
-        var camera = cc.Camera.createPerspective(60, visibleSize.width/visibleSize.height, 0.1, 200);
+        var camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 60, visibleSize.width/visibleSize.height, 0.1, 200);
         camera.setCameraFlag(cc.CameraFlag.USER1);
         this.addChild(camera);
         this.setCameraMask(2);
@@ -1257,7 +1262,7 @@ var Sprite3DUVAnimationTest = Sprite3DTestDemo.extend({
         cylinder.setGLProgramState(this._state);
 
         this._state.setUniformFloat("offset", this._cylinder_texture_offset);
-        this._state.setUniformFloat("duration", this._shining_duraion);
+        this._state.setUniformFloat("duration", this._shining_duration);
 
         //pass mesh's attribute to shader
         var offset = 0;
@@ -1288,18 +1293,18 @@ var Sprite3DUVAnimationTest = Sprite3DTestDemo.extend({
         this._cylinder_texture_offset = this._cylinder_texture_offset > 1 ? 0 : this._cylinder_texture_offset;
 
         if(this.fade_in){
-            this._shining_duraion += 0.5 * dt;
-            if(this._shining_duraion > 1)
+            this._shining_duration += 0.5 * dt;
+            if(this._shining_duration > 1)
                 this.fade_in = false;
         }else{
-            this._shining_duraion -= 0.5 * dt;
-            if(this._shining_duraion < 0)
+            this._shining_duration -= 0.5 * dt;
+            if(this._shining_duration < 0)
                 this.fade_in = true;
         }
 
         //pass the result to shader
         this._state.setUniformFloat("offset", this._cylinder_texture_offset);
-        this._state.setUniformFloat("duration", this._shining_duraion);
+        this._state.setUniformFloat("duration", this._shining_duration);
     }
 });
 
@@ -1373,7 +1378,7 @@ var Sprite3DFakeShadowTest = Sprite3DTestDemo.extend({
         state.setUniformTexture("u_shadowTexture", shadowTexture);
         state.setUniformVec3("u_target_pos", this._targetPos);
         
-        this._camera = cc.Camera.createPerspective(60, s.width/s.height, 1, 1000);
+        this._camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 60, s.width/s.height, 1, 1000);
         this._camera.setCameraFlag(cc.CameraFlag.USER1);
         this._camera.setPosition3D(cc.math.vec3(0, 20, 25));
         this._camera.lookAt(cc.math.vec3(0, 0, 0));
@@ -1498,7 +1503,7 @@ var Sprite3DBasicToonShaderTest = Sprite3DTestDemo.extend({
     ctor:function(){
         this._super();
 
-        var camera = cc.Camera.createPerspective(60, cc.winSize.width/cc.winSize.height, 1, 1000);
+        var camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 60, cc.winSize.width/cc.winSize.height, 1, 1000);
         camera.setCameraFlag(cc.CameraFlag.USER1);
         this.addChild(camera);
         this.setCameraMask(2);
@@ -1541,7 +1546,7 @@ var Sprite3DCubeMapTest = Sprite3DTestDemo.extend({
         this._super();
 
         var visibleSize = cc.director.getVisibleSize();
-        var camera = cc.Camera.createPerspective(60, visibleSize.width/visibleSize.height, 10, 1000);
+        var camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 60, visibleSize.width/visibleSize.height, 10, 1000);
         camera.setCameraFlag(cc.CameraFlag.USER1);
         camera.setPosition3D(cc.math.vec3(0, 0, 50));
 
@@ -1592,7 +1597,6 @@ var Sprite3DCubeMapTest = Sprite3DTestDemo.extend({
         var skybox = jsb.Skybox.create();
         skybox.setTexture(textureCube);
         this.addChild(skybox);
-        skybox.setScale(700);
 
         this.addChild(camera);
         this.setCameraMask(2);
@@ -1610,6 +1614,70 @@ var Sprite3DCubeMapTest = Sprite3DTestDemo.extend({
         }
     }
 });
+
+var Sprite3DNormalMappingTest = Sprite3DTestDemo.extend({
+                                                        
+    _title:"NormalMapping Test",
+    _subtitle:"",
+    _angle:0.0,
+    _reverseDir:false,
+    _radius:100,
+    _light:null,
+    _TAG_GROSSINI:10,
+    ctor:function(){
+    this._super();
+ 
+    var visibleSize = cc.director.getVisibleSize();
+    var sphere1 = new jsb.Sprite3D("Sprite3DTest/sphere.c3b");
+    sphere1.setPosition3D(cc.math.vec3(-30, 0, 0));
+    sphere1.setRotation3D(cc.math.vec3(90, 0, 0));
+    sphere1.setScale(2);
+    sphere1.setCameraMask(2);
+    sphere1.setTexture("Sprite3DTest/brickwork-texture.jpg");
+    this.addChild(sphere1);
+ 
+    var sphere2 = new jsb.Sprite3D("Sprite3DTest/sphere_bumped.c3b");
+    sphere2.setPosition3D(cc.math.vec3(30, 0, 0));
+    sphere2.setRotation3D(cc.math.vec3(90, 0, 0));
+    sphere2.setScale(20);
+    sphere2.setCameraMask(2);
+    sphere2.setTexture("Sprite3DTest/brickwork-texture.jpg");
+    this.addChild(sphere2);
+ 
+    _light = new jsb.PointLight(cc.math.vec3(0, 0, 0), cc.color(255, 255, 255), 1000);
+ 
+                                                        
+    var camera = new cc.Camera(cc.Camera.Mode.PERSPECTIVE, 60, visibleSize.width/visibleSize.height, 1, 1000);
+    camera.setCameraFlag(cc.CameraFlag.USER1);
+    camera.setPosition3D(cc.math.vec3(0, 0, 100));
+    camera.lookAt(cc.math.vec3(0,0,0));
+    this.addChild(camera);
+    this.addChild(_light, 1, this._TAG_GROSSINI);
+    var angleReverseDir = cc.callFunc(function(){
+                                      
+                                      if(this._reverseDir){
+                                      this._angle -= 0.01;
+                                      if(this._angle < 0.0)
+                                      {
+                                      this._reverseDir = false;
+                                      }
+                                      }
+                                      else{
+                                      this._angle += 0.01;
+                                      if(3.14159 < this._angle)
+                                      {
+                                      this._reverseDir = true;
+                                      }
+                                      }
+                                      this.getChildByTag(this._TAG_GROSSINI).setPosition3D(cc.math.vec3(this._radius * Math.cos(this._angle), 0, this._radius * Math.sin(this._angle)));
+                                      
+                                      }, this);
+    var seq1 = cc.sequence(angleReverseDir);
+    _light.runAction(cc.repeatForever(seq1));
+    
+    }
+});
+
 //
 // Flow control
 //
@@ -1640,6 +1708,7 @@ if (cc.sys.os !== cc.sys.OS_WP8 || cc.sys.os !== cc.sys.OS_WINRT) {
         Sprite3DUVAnimationTest,
         Sprite3DFakeShadowTest,
         Sprite3DBasicToonShaderTest,
+        Sprite3DNormalMappingTest
     ]);
 }
 

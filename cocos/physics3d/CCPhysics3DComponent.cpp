@@ -1,5 +1,6 @@
  /****************************************************************************
- Copyright (c) 2015 Chukong Technologies Inc.
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -22,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "CCPhysics3D.h"
+#include "physics3d/CCPhysics3D.h"
 #include "2d/CCNode.h"
 #include "2d/CCScene.h"
 
@@ -79,7 +80,7 @@ Physics3DComponent::Physics3DComponent()
 
 void Physics3DComponent::setEnabled(bool b)
 {
-    bool oldBool = b;
+    bool oldBool = _enabled;
     Component::setEnabled(b);
     if (_physics3DObj && oldBool != _enabled)
     {
@@ -100,7 +101,7 @@ void Physics3DComponent::addToPhysicsWorld(Physics3DWorld* world)
         {
             auto parent = _owner->getParent();
             while (parent) {
-                for (int i = 0; i < components.size(); i++) {
+                for (size_t i = 0; i < components.size(); i++) {
                     if (parent == components[i]->getOwner())
                     {
                         //insert it here
@@ -176,7 +177,8 @@ void Physics3DComponent::setSyncFlag(PhysicsSyncFlag syncFlag)
 
 void Physics3DComponent::syncPhysicsToNode()
 {
-    if (_physics3DObj->getObjType() == Physics3DObject::PhysicsObjType::RIGID_BODY)
+    if (_physics3DObj->getObjType() == Physics3DObject::PhysicsObjType::RIGID_BODY
+     || _physics3DObj->getObjType() == Physics3DObject::PhysicsObjType::COLLIDER)
     {
         Mat4 parentMat;
         if (_owner->getParent())
@@ -209,7 +211,8 @@ void Physics3DComponent::syncPhysicsToNode()
 
 void Physics3DComponent::syncNodeToPhysics()
 {
-    if (_physics3DObj->getObjType() == Physics3DObject::PhysicsObjType::RIGID_BODY)
+    if (_physics3DObj->getObjType() == Physics3DObject::PhysicsObjType::RIGID_BODY
+     || _physics3DObj->getObjType() == Physics3DObject::PhysicsObjType::COLLIDER)
     {
         auto mat = _owner->getNodeToWorldTransform();
         //remove scale, no scale support for physics
@@ -233,6 +236,11 @@ void Physics3DComponent::syncNodeToPhysics()
             auto motionState = body->getMotionState();
             motionState->setWorldTransform(convertMat4TobtTransform(mat));
             body->setMotionState(motionState);
+        }
+        else if (_physics3DObj->getObjType() == Physics3DObject::PhysicsObjType::COLLIDER)
+        {
+            auto object = static_cast<Physics3DCollider*>(_physics3DObj)->getGhostObject();
+            object->setWorldTransform(convertMat4TobtTransform(mat));
         }
     }
 }

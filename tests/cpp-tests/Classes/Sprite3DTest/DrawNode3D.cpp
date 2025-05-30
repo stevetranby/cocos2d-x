@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -141,6 +142,7 @@ void DrawNode3D::onDraw(const Mat4 &transform, uint32_t flags)
     glProgram->use();
     glProgram->setUniformsForBuiltins(transform);
     glEnable(GL_DEPTH_TEST);
+    RenderState::StateBlock::_defaultState->setDepthTest(true);
     GL::blendFunc(_blendFunc.src, _blendFunc.dst);
 
     if (_dirty)
@@ -169,7 +171,6 @@ void DrawNode3D::onDraw(const Mat4 &transform, uint32_t flags)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1,_bufferCount);
-	glDisable(GL_DEPTH_TEST);
     CHECK_GL_ERROR_DEBUG();
 }
 

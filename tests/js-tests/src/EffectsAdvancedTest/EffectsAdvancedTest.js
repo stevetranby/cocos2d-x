@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -151,7 +152,7 @@ var EffectAdvanceTextLayer = cc.Layer.extend({
 
 var Effect1 = EffectAdvanceTextLayer.extend({
     title:function () {
-        return "Lens + Waves3d and OrbitCamera";
+        return "Lens + Waves3d";
     },
 
     onEnter:function () {
@@ -170,10 +171,6 @@ var Effect1 = EffectAdvanceTextLayer.extend({
         var reuse = cc.reuseGrid(1);
         var delay = cc.delayTime(8);
 
-        var orbit = cc.orbitCamera(5, 1, 2, 0, 180, 0, -90);
-        var orbit_back = orbit.reverse();
-
-        target.runAction(cc.sequence(orbit, orbit_back).repeatForever());
         target.runAction(cc.sequence(lens, delay, reuse, waves));
     }
 });
@@ -241,17 +238,15 @@ var Lens3DTarget = cc.Node.extend({
     },
 
     update: function(dt) {
-        this._lens3D.x = this.x;
-	    this._lens3D.y = this.y;
+        this._lens3D.setPosition(this._position);
     },
-
     onEnter: function() {
-        cc.log("Lens3DTarget onEnter");
+        cc.Node.prototype.onEnter.call(this);
         this.scheduleUpdate();
     },
 
     onExit: function() {
-        cc.log("Lens3DTarget onExit");
+        cc.Node.prototype.onExit.call(this);
         this.unscheduleUpdate();
     }
 
@@ -271,6 +266,7 @@ var Effect4 = EffectAdvanceTextLayer.extend({
     onEnter:function () {
         this._super();
 
+        var bgNodeGrid = this.getChildByTag(EffectsAdvancedTest.TAG_BACKGROUND);
         var lens = cc.lens3D(10, cc.size(32, 24), cc.p(100, 180), 150);
         var move = cc.jumpBy(5, cc.p(380, 0), 100, 4);
         var move_back = move.reverse();
@@ -282,11 +278,12 @@ var Effect4 = EffectAdvanceTextLayer.extend({
          */
         var director = cc.director;
         var target = Lens3DTarget.create(lens);
+
         // Please make sure the target been added to its parent.
         this.addChild(target);
 
         director.getActionManager().addAction(seq, target, false);
-        this.runAction(cc.sequence(lens, cc.callFunc(
+        bgNodeGrid.runAction(cc.sequence(lens, cc.callFunc(
             function(sender) {
                 sender.removeChild(target, true);
             }
@@ -307,11 +304,6 @@ var Effect5 = EffectAdvanceTextLayer.extend({
 
         var bg = this.getChildByTag(EffectsAdvancedTest.TAG_BACKGROUND);
         bg.runAction(stopEffect);
-    },
-
-    onExit:function () {
-        this._super();
-        cc.director.setProjection(cc.Director.PROJECTION_3D);
     }
 });
 

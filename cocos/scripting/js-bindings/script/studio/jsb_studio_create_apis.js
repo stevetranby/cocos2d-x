@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014 Chukong Technologies Inc.
+ * Copyright (c) 2014-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,8 +62,8 @@ ccs.Skin.prototype._ctor = function(fileName, rect) {
         if(fileName[0] == "#"){
             ccs.Skin.prototype.initWithSpriteFrameName.call(this, fileName.substr(1));
         } else {
-            rect ? ccs.Skin.prototype.initWithFile.call(this, fileName)
-                : ccs.Skin.prototype.initWithFile.call(this, fileName, rect);
+            rect ? ccs.Skin.prototype.initWithFile.call(this, fileName, rect)
+                : ccs.Skin.prototype.initWithFile.call(this, fileName);
         }
     }
 };
@@ -98,6 +99,15 @@ ccs.ActionTimelineData.prototype._ctor = function(actionTag) {
     }
 };
 
-ccs.ObjectExtensionData.prototype._ctor = function() {
-    ccs.ObjectExtensionData.prototype.init.call(this);
+ccs.ComExtensionData.prototype._ctor = function() {
+    ccs.ComExtensionData.prototype.init.call(this);
+};
+
+ccs.BoneNode.prototype._ctor = function (length) {
+    ccs.BoneNode.prototype.init.call(this);
+    length !== undefined && this.setDebugDrawLength(length);
+};
+
+ccs.SkeletonNode.prototype._ctor = function () {
+    ccs.SkeletonNode.prototype.init.call(this);
 };

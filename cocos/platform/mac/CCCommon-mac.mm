@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -42,26 +43,25 @@ void LuaLog(const char * format)
 }
 
 // ios no MessageBox, use log instead
-void MessageBox(const char * msg, const char * title)
+void ccMessageBox(const char * msg, const char * title)
 {
     NSString * tmpTitle = (title) ? [NSString stringWithUTF8String : title] : nil;
     NSString * tmpMsg = (msg) ? [NSString stringWithUTF8String : msg] : nil;
 
-	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-	[alert addButtonWithTitle:@"OK"];
-	[alert setMessageText:tmpMsg];
-	[alert setInformativeText:tmpTitle];
-	[alert setAlertStyle:NSWarningAlertStyle];
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    [alert addButtonWithTitle:@"OK"];
+    [alert setMessageText:tmpMsg];
+    [alert setInformativeText:tmpTitle];
+    [alert setAlertStyle:NSWarningAlertStyle];
 
     auto glview = Director::getInstance()->getOpenGLView();
     id window = glview->getCocoaWindow();
-	[alert beginSheetModalForWindow:window
-					  modalDelegate:[window delegate]
-					 didEndSelector:nil
-						contextInfo:nil];
+    [alert beginSheetModalForWindow:window
+                      modalDelegate:[window delegate]
+                     didEndSelector:nil
+                        contextInfo:nil];
 }
 
 NS_CC_END
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_MAC
-

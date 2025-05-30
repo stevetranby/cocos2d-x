@@ -1,6 +1,7 @@
 /* Copyright (c) 2012 Scott Lembcke and Howling Moon Software
  * Copyright (c) 2012 cocos2d-x.org
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +39,34 @@
 
 NS_CC_BEGIN
 
+static const int DEFAULT_LINE_WIDTH = 2;
+
+/*
+ * Code of Triangulate copied & pasted from http://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml,
+ * Added some changes for cocos2d
+ */
+class Triangulate
+{
+public:
+    
+    // triangulate a contour/polygon, places results in STL vector
+    // as series of triangles.
+    static V2F_C4B_T2F_Triangle * processTriangles(const Vec2 *verts,V2F_C4B_T2F_Triangle * triangles,int n,const Color4F &fillColor);
+
+    // compute area of a contour/polygon
+    static float computeArea(const Vec2 *verts,int n);
+    
+    // decide if point Px/Py is inside triangle defined by
+    // (Ax,Ay) (Bx,By) (Cx,Cy)
+    static bool isInsideTriangle(float Ax, float Ay,
+                               float Bx, float By,
+                               float Cx, float Cy,
+                               float Px, float Py);
+    
+private:
+    static bool checkSnip(const Vec2 *verts,int u,int v,int w,int n,int *V);
+};
+
 class PointArray;
 /**
  * @addtogroup _2d
@@ -56,7 +85,7 @@ public:
      *
      * @return Return an autorelease object.
      */
-    static DrawNode* create();
+    static DrawNode* create(GLfloat defaultLineWidth = DEFAULT_LINE_WIDTH);
     
     /** Draw a point.
      *
@@ -143,7 +172,7 @@ public:
      * @param origin The origin of the bezier path.
      * @param control The control of the bezier path.
      * @param destination The destination of the bezier path.
-     * @param segments The The number of segments.
+     * @param segments The number of segments.
      * @param color Set the quad bezier color.
      */
     void drawQuadBezier(const Vec2 &origin, const Vec2 &control, const Vec2 &destination, unsigned int segments, const Color4F &color);
@@ -154,7 +183,7 @@ public:
      * @param control1 The first control of the bezier path.
      * @param control2 The second control of the bezier path.
      * @param destination The destination of the bezier path.
-     * @param segments The The number of segments.
+     * @param segments The number of segments.
      * @param color Set the cubic bezier color.
      */
     void drawCubicBezier(const Vec2 &origin, const Vec2 &control1, const Vec2 &control2, const Vec2 &destination, unsigned int segments, const Color4F &color);
@@ -163,7 +192,7 @@ public:
      *
      * @param config A array point.
      * @param tension The tension of the spline.
-     * @param segments The The number of segments.
+     * @param segments The number of segments.
      * @param color Set the Spline color.
      */
     void drawCardinalSpline(PointArray *config, float tension,  unsigned int segments, const Color4F &color);
@@ -171,7 +200,7 @@ public:
     /** Draws a Catmull Rom path.
      *
      * @param points A point array  of control point.
-     * @param segments The The number of segments.
+     * @param segments The number of segments.
      * @param color The Catmull Rom color.
      */
     void drawCatmullRom(PointArray *points, unsigned int segments, const Color4F &color);
@@ -274,7 +303,7 @@ public:
      * @param from The origin of the bezier path.
      * @param control The control of the bezier path.
      * @param to The destination of the bezier path.
-     * @param segments The The number of segments.
+     * @param segments The number of segments.
      * @param color The quadratic bezier color.
      * @js NA
      */
@@ -298,21 +327,36 @@ public:
     /**
      * @js NA
      */
-	void onDraw(const Mat4 &transform, uint32_t flags);
+    virtual void onDraw(const Mat4 &transform, uint32_t flags);
     /**
      * @js NA
      */
-	void onDrawGLLine(const Mat4 &transform, uint32_t flags);
+    virtual void onDrawGLLine(const Mat4 &transform, uint32_t flags);
     /**
      * @js NA
      */
-    void onDrawGLPoint(const Mat4 &transform, uint32_t flags);
+    virtual void onDrawGLPoint(const Mat4 &transform, uint32_t flags);
     
     // Overrides
     virtual void draw(Renderer *renderer, const Mat4 &transform, uint32_t flags) override;
+
+    virtual void visit(Renderer* renderer, const Mat4 &parentTransform, uint32_t parentFlags) override;
     
+    void setLineWidth(GLfloat lineWidth);
+
+    // Get CocosStudio guide lines width.
+    GLfloat getLineWidth();
+
+    /**
+    * When isolated is set, the position of the node is no longer affected by parent nodes.
+    * Which means it will be drawn just like a root node.
+    */
+    void setIsolated(bool isolated) { _isolated = isolated; }
+
+    bool isIsolated() const { return _isolated; }
+
 CC_CONSTRUCTOR_ACCESS:
-    DrawNode();
+    DrawNode(GLfloat lineWidth = DEFAULT_LINE_WIDTH);
     virtual ~DrawNode();
     virtual bool init() override;
 
@@ -321,36 +365,42 @@ protected:
     void ensureCapacityGLPoint(int count);
     void ensureCapacityGLLine(int count);
 
-    GLuint      _vao;
-    GLuint      _vbo;
-    GLuint      _vaoGLPoint;
-    GLuint      _vboGLPoint;
-    GLuint      _vaoGLLine;
-    GLuint      _vboGLLine;
+    void setupBuffer();
 
-    int         _bufferCapacity;
-    GLsizei     _bufferCount;
-    V2F_C4B_T2F *_buffer;
+    GLuint      _vao = 0;
+    GLuint      _vbo = 0;
+    GLuint      _vaoGLPoint = 0;
+    GLuint      _vboGLPoint = 0;
+    GLuint      _vaoGLLine = 0;
+    GLuint      _vboGLLine = 0;
+
+    int         _bufferCapacity = 0;
+    GLsizei     _bufferCount = 0;
+    V2F_C4B_T2F *_buffer = nullptr;
     
-    int         _bufferCapacityGLPoint;
-    GLsizei     _bufferCountGLPoint;
-    V2F_C4B_T2F *_bufferGLPoint;
+    int         _bufferCapacityGLPoint = 0;
+    GLsizei     _bufferCountGLPoint = 0;
+    V2F_C4B_T2F *_bufferGLPoint = nullptr;
     Color4F     _pointColor;
-    int         _pointSize;
+    int         _pointSize = 0;
     
-    int         _bufferCapacityGLLine;
-    GLsizei     _bufferCountGLLine;
-    V2F_C4B_T2F *_bufferGLLine;
+    int         _bufferCapacityGLLine = 0;
+    GLsizei     _bufferCountGLLine = 0;
+    V2F_C4B_T2F *_bufferGLLine = nullptr;
 
     BlendFunc   _blendFunc;
     CustomCommand _customCommand;
     CustomCommand _customCommandGLPoint;
     CustomCommand _customCommandGLLine;
 
-    bool        _dirty;
-    bool        _dirtyGLPoint;
-    bool        _dirtyGLLine;
+    bool        _dirty = false;
+    bool        _dirtyGLPoint = false;
+    bool        _dirtyGLLine = false;
+    bool        _isolated = false;
+    
+    GLfloat         _lineWidth = 0.0f;
 
+    GLfloat  _defaultLineWidth = 0.0f;
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(DrawNode);
 };

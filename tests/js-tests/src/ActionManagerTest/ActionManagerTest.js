@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2008-2010 Ricardo Quesada
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -94,17 +95,22 @@ var CrashTest = ActionManagerTest.extend({
 
         //Sum of all action's duration is 1.5 second.
         child.runAction(cc.rotateBy(1.5, 90));
-        child.runAction(cc.sequence(
-            cc.delayTime(1.4),
-            cc.fadeOut(1.1))
-        );
+        // child.runAction(cc.sequence(
+        //     cc.delayTime(1.4),
+        //     cc.fadeOut(1.1))
+        // );
 
         //After 1.5 second, self will be removed.
-        //this.runAction(cc.sequence(
-        //    cc.delayTime(1.4),
-        //    cc.callFunc(this.onRemoveThis, this))
-        //);
+        this.runAction(cc.sequence(
+           cc.delayTime(1.4),
+           cc.callFunc(this.onRemoveThis, this))
+        );
         //----end0----
+    },
+
+    onExitTransitionDidStart: function () {
+        this.stopAllActions();
+        this._super();
     },
 
     onRemoveThis:function () {
@@ -262,7 +268,7 @@ var PauseTest = ActionManagerTest.extend({
 //------------------------------------------------------------------
 var RemoveTest = ActionManagerTest.extend({
     title:function () {
-        return "Remove Test";
+        return "Stop Action Test";
     },
     onEnter:function () {
         //----start3----onEnter

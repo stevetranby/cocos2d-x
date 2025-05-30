@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -102,7 +103,7 @@ MeshVertexData* MeshVertexData::create(const MeshData& meshdata)
     }
     
     bool needCalcAABB = (meshdata.subMeshAABB.size() != meshdata.subMeshIndices.size());
-    for (size_t i = 0; i < meshdata.subMeshIndices.size(); i++) {
+    for (size_t i = 0, size = meshdata.subMeshIndices.size(); i < size; ++i) {
 
         auto& index = meshdata.subMeshIndices[i];
         auto indexBuffer = IndexBuffer::create(IndexBuffer::IndexType::INDEX_TYPE_SHORT_16, (int)(index.size()));

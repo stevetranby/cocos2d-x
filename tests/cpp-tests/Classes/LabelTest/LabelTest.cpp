@@ -1,4 +1,29 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include "LabelTest.h"
+#include <cmath>
 #include "../testResource.h"
 #include "cocos2d.h"
 
@@ -818,7 +843,7 @@ std::string LabelGlyphDesigner::title() const
 
 std::string LabelGlyphDesigner::subtitle() const
 {
-    return "You should see a font with shawdows and outline";
+    return "You should see a font with shadows and outline";
 }
 
 //------------------------------------------------------------------
@@ -1210,7 +1235,7 @@ void BitmapFontMultiLineAlignment::onTouchesMoved(const std::vector<Touch*>& tou
     this->_arrowsShouldRetain->setPosition(Vec2(MAX(MIN(location.x, ArrowsMax*winSize.width), ArrowsMin*winSize.width), 
         this->_arrowsShouldRetain->getPosition().y));
 
-    float labelWidth = fabs(this->_arrowsShouldRetain->getPosition().x - this->_labelShouldRetain->getPosition().x) * 2;
+    float labelWidth = std::fabs(this->_arrowsShouldRetain->getPosition().x - this->_labelShouldRetain->getPosition().x) * 2;
 
     _labelShouldRetain->setWidth(labelWidth);
 }
@@ -1278,7 +1303,7 @@ std::string BMFontOneAtlas::subtitle() const
 /// BMFontUnicode
 BMFontUnicode::BMFontUnicode()
 {
-    auto strings = FileUtils::getInstance()->getValueMapFromFile("fonts/strings.xml");
+    auto strings = FileUtils::getInstance()->getValueMapFromFile("strings/LabelFNTUNICODELanguages.xml");
     std::string chinese  = strings["chinese1"].asString();
     std::string russian  = strings["russian"].asString();
     std::string spanish  = strings["spanish"].asString();
@@ -1310,7 +1335,7 @@ std::string BMFontUnicode::title() const
 
 std::string BMFontUnicode::subtitle() const
 {
-    return "You should see 4 differnt labels:\nIn Spanish, Chinese, Russian and Korean";
+    return "You should see 4 different labels:\nIn Spanish, Chinese, Russian and Korean";
 }
 
 // BMFontInit
@@ -1334,7 +1359,7 @@ std::string BMFontInit::title() const
 
 std::string BMFontInit::subtitle() const
 {
-    return "Testing LabelBMFont::create() wihtout params";
+    return "Testing LabelBMFont::create() without params";
 }
 
 // TTFFontInit
@@ -1359,7 +1384,7 @@ std::string TTFFontInit::title() const
 
 std::string TTFFontInit::subtitle() const
 {
-    return "Testing LabelTTF::create() wihtout params";
+    return "Testing LabelTTF::create() without params";
 }
 
 TTFFontShadowAndStroke::TTFFontShadowAndStroke()

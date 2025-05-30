@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -43,6 +44,9 @@ NS_CC_BEGIN
  * 
  * It supports the following base types:
  * bool, int, float, double, string
+ *
+ * @warning: On windows, linux, use XML to store data, which means there are some limitations of
+ * the key string, for example, `/` is not valid.
  */
 class CC_DLL UserDefault
 {
@@ -202,6 +206,13 @@ public:
      */
     virtual void flush();
 
+    /**
+    * delete any value by key,
+    * @param key The key to delete value.
+    * @js NA
+    */
+    virtual void deleteValueForKey(const char* key);
+    
     /** Returns the singleton.
      * @js NA
      * @lua NA
@@ -220,11 +231,11 @@ public:
     * If you don't want to system default implementation after setting delegate, you can just pass nullptr
     * to this function.
     *
-    * @warm It will delete previous delegate
+    * @warning It will delete previous delegate
     */
     static void setDelegate(UserDefault *delegate);
 
-    /** @deprecated Use getInstace() instead.
+    /** @deprecated Use getInstance() instead.
      * @js NA
      * @lua NA
      */
@@ -238,7 +249,7 @@ public:
      */
     static const std::string& getXMLFilePath();
     /** All supported platforms other iOS & Android and CC_PLATFORM_WINRT use xml file to save values. This function checks whether the xml file exists or not.
-     * @return True if the xml file exists, flase if not.
+     * @return True if the xml file exists, false if not.
      * @js NA
      */
     static bool isXMLFileExist();

@@ -1,5 +1,6 @@
 /****************************************************************************
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -37,13 +38,14 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 class Label;
+class Sprite;
 
 namespace ui {
 
 /**
  *  For creating a system font or a TTF font Text
  */
-class CC_GUI_DLL Text : public Widget
+class CC_GUI_DLL Text : public Widget, public cocos2d::BlendProtocol
 {
 
     DECLARE_CLASS_GUI_INFO
@@ -95,7 +97,7 @@ public:
      */
     static Text* create(const std::string& textContent,
                         const std::string& fontName,
-                        int fontSize);
+                        float fontSize);
 
     /**
      * Changes the string value of label.
@@ -134,14 +136,14 @@ public:
      *
      * @param size The font size.
      */
-    void setFontSize(int size);
+    void setFontSize(float size);
 
     /**
      * Gets the font size of label.
      *
      * @return The font size.
      */
-    int getFontSize()const;
+    float getFontSize()const;
 
     /**
      * Sets the font name of label.
@@ -205,7 +207,7 @@ public:
     /**
      * Sets the rendering size of the text, you should call this method
      * along with calling `ignoreContentAdaptWithSize(false)`, otherwise the text area
-     * size is caculated by the real size of the text content.
+     * size is calculated by the real size of the text content.
      *
      * @param size The text rendering area size.
      *
@@ -294,11 +296,64 @@ public:
      */
     void disableEffect(LabelEffect effect);
 
+    /**
+    * Return whether the shadow effect is enabled.
+    */
+    bool isShadowEnabled() const;
+    /**
+    * Return shadow effect offset value.
+    */
+    Size getShadowOffset() const;
+    /**
+    * Return the shadow effect blur radius.
+    */
+    float getShadowBlurRadius() const;
+    /**
+    * Return the shadow effect color value.
+    */
+    Color4B getShadowColor() const;
+    /**
+    * Return the outline effect size value.
+    */
+    int getOutlineSize() const;
+    /**
+    * Return current effect type.
+    */
+    LabelEffect getLabelEffectType() const;
+    /**
+    * Return current effect color value.
+    */
+    Color4B getEffectColor() const;
+    
+    /**
+     * Provides a way to treat each character like a Sprite.
+     * @warning No support system font.
+     */
+    virtual Sprite * getLetter(int lettetIndex);
+    
+    /**
+     * Sets the source blending function.
+     *
+     * @param blendFunc A structure with source and destination factor to specify pixel arithmetic. e.g. {GL_ONE, GL_ONE}, {GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA}.
+     * @js NA
+     * @lua NA
+     */
+    virtual void setBlendFunc(const BlendFunc &blendFunc) override;
+    
+    /**
+     * Returns the blending function that is currently being used.
+     *
+     * @return A BlendFunc structure with source and destination factor which specified pixel arithmetic.
+     * @js NA
+     * @lua NA
+     */
+    virtual const BlendFunc &getBlendFunc() const override;
+
 CC_CONSTRUCTOR_ACCESS:
     virtual bool init() override;
     virtual bool init(const std::string& textContent,
                       const std::string& fontName,
-                      int fontSize);
+                      float fontSize);
 
 protected:
     virtual void initRenderer() override;
@@ -316,7 +371,7 @@ protected:
     float _normalScaleValueX;
     float _normalScaleValueY;
     std::string _fontName;
-    int _fontSize;
+    float _fontSize;
     float _onSelectedScaleOffset;
     Label* _labelRenderer;
     bool _labelRendererAdaptDirty;

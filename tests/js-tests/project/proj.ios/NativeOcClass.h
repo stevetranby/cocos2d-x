@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013-2014 Chukong Technologies Inc.
+ * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,5 +30,6 @@
 +(void) callNativeWithParam:(NSString *)str;
 +(NSString *)callNativeWithReturnString;
 +(BOOL)callNativeUIWithTitle:(NSString *) title andContent:(NSString *)content;
++(BOOL)callNativeUIWithTitle:(NSString *) title andContent:(NSString *)content addBool:(BOOL)logicSwitch;
 +(int)callNativeWithAdd:(NSNumber *)num1 and:(NSNumber *)num2;
 @end

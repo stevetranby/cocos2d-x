@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2011-2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -24,7 +25,7 @@
  ****************************************************************************/
 
 
-var UILabelTest = UIScene.extend({
+var UILabelTest = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             //init text
@@ -47,7 +48,7 @@ var UILabelTest = UIScene.extend({
     }
 });
 
-var UILabelTest_LineWrap = UIScene.extend({
+var UILabelTest_LineWrap = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -75,7 +76,7 @@ var UILabelTest_LineWrap = UIScene.extend({
 });
 
 
-var UILabelTest_TTF = UIScene.extend({
+var UILabelTest_TTF = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             //init text

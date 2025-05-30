@@ -1,7 +1,8 @@
 /****************************************************************************
 Copyright (c) 2009      On-Core
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (C) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
 http://www.cocos2d-x.org
 
@@ -38,7 +39,7 @@ class Texture2D;
  * @{
  */
 
-/** FBO class that grabs the the contents of the screen */
+/** FBO class that grabs the contents of the screen */
 class Grabber : public Ref
 {
 public:
@@ -46,13 +47,13 @@ public:
     Constructor.
      * @js ctor
      */
-    Grabber(void);
+    Grabber();
     /**
     Destructor.
      * @js NA
      * @lua NA
      */
-    ~Grabber(void);
+    ~Grabber();
     /**Init the grab structure, will set the texture as the FBO color attachment.*/
     void grab(Texture2D *texture);
     /**Begin capture the screen, which will save the old FBO, clear color, and set the new FBO, clear the background.*/

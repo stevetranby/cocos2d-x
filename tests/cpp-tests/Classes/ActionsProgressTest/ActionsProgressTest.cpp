@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2012 cocos2d-x.org
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -44,11 +45,11 @@ ActionsProgressTests::ActionsProgressTests()
 // SpriteDemo
 //
 //------------------------------------------------------------------
-SpriteDemo::SpriteDemo(void)
+SpriteDemo::SpriteDemo()
 {
 }
 
-SpriteDemo::~SpriteDemo(void)
+SpriteDemo::~SpriteDemo()
 {
 }
 
@@ -88,7 +89,7 @@ void SpriteProgressToRadial::onEnter()
     auto right = ProgressTimer::create(Sprite::create(s_pathBlock));
     right->setType(ProgressTimer::Type::RADIAL);
     // Makes the ridial CCW
-    right->setReverseProgress(true);
+    right->setReverseDirection(true);
     addChild(right);
     right->setPosition(s.width-100, s.height/2);
     right->runAction( RepeatForever::create(to2));

@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2015 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -29,7 +30,7 @@ extern "C" {
 #include "tolua++.h"
 }
 
-#include "tolua_fix.h"
+#include "scripting/lua-bindings/manual/tolua_fix.h"
 
 namespace cocostudio
 {

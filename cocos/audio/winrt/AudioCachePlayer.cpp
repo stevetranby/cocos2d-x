@@ -2,6 +2,7 @@
 * cocos2d-x   http://www.cocos2d-x.org
 *
 * Copyright (c) 2010-2011 - cocos2d-x community
+* Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 *
 * Portions Copyright (c) Microsoft Open Technologies, Inc.
 * All Rights Reserved
@@ -20,7 +21,9 @@
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
 
-#include "AudioCachePlayer.h"
+#include "audio/winrt/AudioCachePlayer.h"
+#include "base/CCDirector.h"
+#include "base/CCScheduler.h"
 
 using namespace cocos2d;
 using namespace cocos2d::experimental;
@@ -62,8 +65,6 @@ void AudioCache::readDataTask()
         return;
     }
 
-    std::wstring path(_fileFullPath.begin(), _fileFullPath.end());
-
     if (nullptr != _srcReader) {
         delete _srcReader;
         _srcReader = nullptr;
@@ -94,16 +95,18 @@ void AudioCache::readDataTask()
         _audInfo._wfx = _srcReader->getWaveFormatInfo();
         _isReady = true;
         _retry = false;
-        invokeCallbacks();
+        invokePlayCallbacks();
     }
 
     if (!_isReady) {
         _retry = true;
         log("Failed to read input file: %s.\n", _fileFullPath.c_str());
     }
+
+    invokeLoadCallbacks();
 }
 
-void AudioCache::addCallback(const std::function<void()> &callback)
+void AudioCache::addPlayCallback(const std::function<void()> &callback)
 {
     _cbMutex.lock();
     if (_isReady) {
@@ -119,7 +122,21 @@ void AudioCache::addCallback(const std::function<void()> &callback)
     }
 }
 
-void AudioCache::invokeCallbacks()
+void AudioCache::addLoadCallback(const std::function<void(bool)> &callback)
+{
+    if (_isReady) {
+        callback(true);
+    }
+    else {
+        _loadCallbacks.push_back(callback);
+    }
+
+    if (_retry) {
+        readDataTask();
+    }
+}
+
+void AudioCache::invokePlayCallbacks()
 {
     _cbMutex.lock();
     auto cnt = _callbacks.size();
@@ -129,6 +146,19 @@ void AudioCache::invokeCallbacks()
     }
     _callbacks.clear();
     _cbMutex.unlock();
+}
+
+void AudioCache::invokeLoadCallbacks()
+{
+    auto scheduler = Director::getInstance()->getScheduler();
+    scheduler->performFunctionInCocosThread([&](){
+        auto cnt = _loadCallbacks.size();
+        for (size_t ind = 0; ind < cnt; ind++)
+        {
+            _loadCallbacks[ind](_isReady);
+        }
+        _loadCallbacks.clear();
+    });
 }
 
 bool AudioCache::getChunk(AudioDataChunk& chunk)
@@ -181,7 +211,7 @@ AudioPlayer::AudioPlayer()
     , _finishCallback(nullptr)
     , _xaMasterVoice(nullptr)
     , _xaSourceVoice(nullptr)
-    , _state(AudioPlayerState::INITIALZING)
+    , _state(AudioPlayerState::INITIALIZING)
 {
     init();
 }
@@ -460,7 +490,7 @@ bool AudioPlayer::submitBuffers()
         if (!_cachedBufferQ.size() || (_isStreaming && _cachedBufferQ.size() < QUEUEBUFFER_NUM)) {
             AudioDataChunk chunk;
             if (_cache->getChunk(chunk) && chunk._dataSize) {
-                _xaBuffer.AudioBytes = chunk._dataSize;
+                _xaBuffer.AudioBytes = static_cast<UINT32>(chunk._dataSize);
                 _xaBuffer.pAudioData = chunk._data->data();
                 _xaBuffer.Flags = chunk._endOfStream ? XAUDIO2_END_OF_STREAM : 0;
                 _cachedBufferQ.push(chunk);

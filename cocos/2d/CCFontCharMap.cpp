@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2013      Zynga Inc.
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
 
@@ -34,9 +35,9 @@ NS_CC_BEGIN
 FontCharMap * FontCharMap::create(const std::string& plistFile)
 {
     std::string pathStr = FileUtils::getInstance()->fullPathForFilename(plistFile);
-    std::string relPathStr = pathStr.substr(0, pathStr.find_last_of("/"))+"/";
+    std::string relPathStr = pathStr.substr(0, pathStr.find_last_of('/'))+"/";
 
-    ValueMap dict = FileUtils::getInstance()->getValueMapFromFile(pathStr.c_str());
+    ValueMap dict = FileUtils::getInstance()->getValueMapFromFile(pathStr);
 
     CCASSERT(dict["version"].asInt() == 1, "Unsupported version. Upgrade cocos2d version");
 
@@ -98,20 +99,9 @@ FontCharMap::~FontCharMap()
 
 }
 
-int * FontCharMap::getHorizontalKerningForTextUTF16(const std::u16string& text, int &outNumLetters) const
+int* FontCharMap::getHorizontalKerningForTextUTF32(const std::u32string& /*text*/, int & /*outNumLetters*/) const
 {
-    outNumLetters = static_cast<int>(text.length());
-    
-    if (outNumLetters <= 0)
-        return nullptr;
-    
-    auto kernings = new int[outNumLetters];
-    if (!kernings)
-        return nullptr;
-    
-    memset(kernings, 0, outNumLetters * sizeof(int));
-    
-    return kernings;
+    return nullptr;
 }
 
 FontAtlas * FontCharMap::createFontAtlas()
@@ -124,7 +114,7 @@ FontAtlas * FontCharMap::createFontAtlas()
     int itemsPerColumn = (int)(s.height / _itemHeight);
     int itemsPerRow = (int)(s.width / _itemWidth);
 
-    tempAtlas->setCommonLineHeight(_itemHeight);
+    tempAtlas->setLineHeight(_itemHeight);
 
     auto contentScaleFactor = CC_CONTENT_SCALE_FACTOR();
 
@@ -136,18 +126,17 @@ FontAtlas * FontCharMap::createFontAtlas()
     tempDefinition.width = _itemWidth / contentScaleFactor;
     tempDefinition.height = _itemHeight / contentScaleFactor;
     tempDefinition.xAdvance = _itemWidth;
+    tempDefinition.rotated = false;
 
     int charId = _mapStartChar;
     for (int row = 0; row < itemsPerColumn; ++row)
     {
         for (int col = 0; col < itemsPerRow; ++col)
         {
-            tempDefinition.letteCharUTF16 = charId;
-
             tempDefinition.U = _itemWidth * col / contentScaleFactor;
             tempDefinition.V = _itemHeight * row / contentScaleFactor;
 
-            tempAtlas->addLetterDefinition(tempDefinition);
+            tempAtlas->addLetterDefinition(charId, tempDefinition);
             charId++;
         }
     }

@@ -25,12 +25,6 @@
         
 --------------------------------
 -- 
--- @function [parent=#SkeletonRenderer] isOpacityModifyRGB 
--- @param self
--- @return bool#bool ret (return value: bool)
-        
---------------------------------
--- 
 -- @function [parent=#SkeletonRenderer] initWithData 
 -- @param self
 -- @param #spSkeletonData skeletonData
@@ -45,23 +39,49 @@
 -- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
         
 --------------------------------
+-- @overload self, string, string, float         
+-- @overload self, string, spAtlas, float         
+-- @function [parent=#SkeletonRenderer] initWithJsonFile
+-- @param self
+-- @param #string skeletonDataFile
+-- @param #spAtlas atlas
+-- @param #float scale
+-- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
+
+--------------------------------
 -- 
 -- @function [parent=#SkeletonRenderer] setSlotsToSetupPose 
 -- @param self
 -- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
         
 --------------------------------
--- 
--- @function [parent=#SkeletonRenderer] setOpacityModifyRGB 
+-- @overload self, string, string, float         
+-- @overload self, string, spAtlas, float         
+-- @function [parent=#SkeletonRenderer] initWithBinaryFile
 -- @param self
--- @param #bool value
+-- @param #string skeletonDataFile
+-- @param #spAtlas atlas
+-- @param #float scale
 -- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
-        
+
 --------------------------------
 -- 
 -- @function [parent=#SkeletonRenderer] setToSetupPose 
 -- @param self
 -- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
+        
+--------------------------------
+-- 
+-- @function [parent=#SkeletonRenderer] setDebugMeshesEnabled 
+-- @param self
+-- @param #bool enabled
+-- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
+        
+--------------------------------
+-- 
+-- @function [parent=#SkeletonRenderer] isTwoColorTint 
+-- @param self
+-- @return bool#bool ret (return value: bool)
         
 --------------------------------
 -- 
@@ -95,20 +115,30 @@
 -- @return float#float ret (return value: float)
         
 --------------------------------
--- @overload self, string, string, float         
--- @overload self, string, spAtlas, float         
--- @function [parent=#SkeletonRenderer] initWithFile
+-- 
+-- @function [parent=#SkeletonRenderer] setTwoColorTint 
 -- @param self
--- @param #string skeletonDataFile
--- @param #spAtlas atlas
--- @param #float scale
+-- @param #bool enabled
 -- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
-
+        
+--------------------------------
+-- 
+-- @function [parent=#SkeletonRenderer] getDebugMeshesEnabled 
+-- @param self
+-- @return bool#bool ret (return value: bool)
+        
 --------------------------------
 -- 
 -- @function [parent=#SkeletonRenderer] setBlendFunc 
 -- @param self
 -- @param #cc.BlendFunc blendFunc
+-- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
+        
+--------------------------------
+-- 
+-- @function [parent=#SkeletonRenderer] setVertexEffect 
+-- @param self
+-- @param #spVertexEffect effect
 -- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
         
 --------------------------------
@@ -137,9 +167,9 @@
 
 --------------------------------
 -- 
--- @function [parent=#SkeletonRenderer] getBoundingBox 
+-- @function [parent=#SkeletonRenderer] create 
 -- @param self
--- @return rect_table#rect_table ret (return value: rect_table)
+-- @return SkeletonRenderer#SkeletonRenderer ret (return value: sp.SkeletonRenderer)
         
 --------------------------------
 -- 
@@ -152,6 +182,25 @@
 -- @function [parent=#SkeletonRenderer] onExit 
 -- @param self
 -- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
+        
+--------------------------------
+-- 
+-- @function [parent=#SkeletonRenderer] setOpacityModifyRGB 
+-- @param self
+-- @param #bool value
+-- @return SkeletonRenderer#SkeletonRenderer self (return value: sp.SkeletonRenderer)
+        
+--------------------------------
+-- 
+-- @function [parent=#SkeletonRenderer] getBoundingBox 
+-- @param self
+-- @return rect_table#rect_table ret (return value: rect_table)
+        
+--------------------------------
+-- 
+-- @function [parent=#SkeletonRenderer] isOpacityModifyRGB 
+-- @param self
+-- @return bool#bool ret (return value: bool)
         
 --------------------------------
 -- @overload self, spSkeletonData, bool         

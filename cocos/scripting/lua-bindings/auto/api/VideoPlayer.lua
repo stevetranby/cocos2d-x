@@ -5,7 +5,7 @@
 -- @parent_module ccexp
 
 --------------------------------
--- brief Get the local video filie name.<br>
+-- brief Get the local video file name.<br>
 -- return The video file name.
 -- @function [parent=#VideoPlayer] getFileName 
 -- @param self
@@ -25,10 +25,11 @@
 -- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
         
 --------------------------------
--- Pauses playback.
--- @function [parent=#VideoPlayer] pause 
+-- Checks whether the VideoPlayer is set to listen user input to resume and pause the video<br>
+-- return true if the videoplayer user input is set, false otherwise.
+-- @function [parent=#VideoPlayer] isUserInputEnabled 
 -- @param self
--- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
+-- @return bool#bool ret (return value: bool)
         
 --------------------------------
 -- Causes the video player to keep aspect ratio or no when displaying the video.<br>
@@ -37,12 +38,6 @@
 -- @function [parent=#VideoPlayer] setKeepAspectRatioEnabled 
 -- @param self
 -- @param #bool enable
--- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
-        
---------------------------------
--- Resumes playback.
--- @function [parent=#VideoPlayer] resume 
--- @param self
 -- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
         
 --------------------------------
@@ -74,6 +69,22 @@
 -- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
         
 --------------------------------
+-- Set the style of the player<br>
+-- param style The corresponding style
+-- @function [parent=#VideoPlayer] setStyle 
+-- @param self
+-- @param #int style
+-- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
+        
+--------------------------------
+-- Seeks to specified time position.<br>
+-- param sec   The offset in seconds from the start to seek to.
+-- @function [parent=#VideoPlayer] seekTo 
+-- @param self
+-- @param #float sec
+-- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
+        
+--------------------------------
 -- Indicates whether the video player keep aspect ratio when displaying the video.
 -- @function [parent=#VideoPlayer] isKeepAspectRatioEnabled 
 -- @param self
@@ -95,6 +106,13 @@
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
+-- Checks whether the VideoPlayer is set with looping mode.<br>
+-- return true if the videoplayer is set to loop, false otherwise.
+-- @function [parent=#VideoPlayer] isLooping 
+-- @param self
+-- @return bool#bool ret (return value: bool)
+        
+--------------------------------
 -- Checks whether the VideoPlayer is playing.<br>
 -- return True if currently playing, false otherwise.
 -- @function [parent=#VideoPlayer] isPlaying 
@@ -102,11 +120,19 @@
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
--- Seeks to specified time position.<br>
--- param sec   The offset in seconds from the start to seek to.
--- @function [parent=#VideoPlayer] seekTo 
+-- brief Set if playback is done in loop mode<br>
+-- param looping the video will or not automatically restart at the end
+-- @function [parent=#VideoPlayer] setLooping 
 -- @param self
--- @param #float sec
+-- @param #bool looping
+-- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
+        
+--------------------------------
+-- Set if the player will enable user input for basic pause and resume of video<br>
+-- param enableInput If true, input will be handled for basic functionality (pause/resume)
+-- @function [parent=#VideoPlayer] setUserInputEnabled 
+-- @param self
+-- @param #bool enableInput
 -- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
         
 --------------------------------
@@ -122,6 +148,30 @@
 -- @param #cc.Renderer renderer
 -- @param #mat4_table transform
 -- @param #unsigned int flags
+-- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
+        
+--------------------------------
+-- Pauses playback.
+-- @function [parent=#VideoPlayer] pause 
+-- @param self
+-- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
+        
+--------------------------------
+-- 
+-- @function [parent=#VideoPlayer] onEnter 
+-- @param self
+-- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
+        
+--------------------------------
+-- 
+-- @function [parent=#VideoPlayer] onExit 
+-- @param self
+-- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
+        
+--------------------------------
+-- Resumes playback.
+-- @function [parent=#VideoPlayer] resume 
+-- @param self
 -- @return experimental::ui::VideoPlayer#experimental::ui::VideoPlayer self (return value: cc.experimental::ui::VideoPlayer)
         
 --------------------------------

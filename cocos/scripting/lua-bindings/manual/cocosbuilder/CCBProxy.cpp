@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -22,8 +23,9 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "CCBProxy.h"
-#include "LuaScriptHandlerMgr.h"
+#include "scripting/lua-bindings/manual/cocosbuilder/CCBProxy.h"
+#include "scripting/lua-bindings/manual/cocos2d/LuaScriptHandlerMgr.h"
+#include "deprecated/CCString.h"
 
 CCBReader* CCBProxy::createCCBReader()
 {
@@ -78,7 +80,7 @@ const char* CCBProxy::getNodeTypeName(Node* pNode)
     }
     
     if (NULL != dynamic_cast<ui::Scale9Sprite*>(pNode)) {
-        return "cc.LayerGradient";
+        return "ccui.Scale9Sprite";
     }
     
     if (NULL != dynamic_cast<Menu*>(pNode)) {

@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013-2014 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -58,7 +59,7 @@ public:
     /**Get the number of vertices.*/
     int getVertexNumber() const;
     /**
-    Update all or part of vertice data, if the range specified exceeds the vertex buffer, it will be clipped.
+    Update all or part of vertices data, if the range specified exceeds the vertex buffer, it will be clipped.
     @param verts The pointer of the vertex data.
     @param count The number of vertices to update.
     @param begin The first vertex to update.

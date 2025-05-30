@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2013      cocos2d-x.org
- Copyright (c) 2013-2015 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -32,8 +33,66 @@
 #define __COCOS2D_CCDEPRECATED_H__
 
 #include <math.h>
-#include "math/CCGeometry.h"
+
+#include "2d/CCActionCamera.h"
+#include "2d/CCActionCatmullRom.h"
+#include "2d/CCActionEase.h"
+#include "2d/CCActionGrid.h"
+#include "2d/CCActionGrid3D.h"
+#include "2d/CCActionInstant.h"
+#include "2d/CCActionPageTurn3D.h"
+#include "2d/CCActionProgressTimer.h"
+#include "2d/CCActionTiledGrid.h"
+#include "2d/CCActionTween.h"
+#include "2d/CCAnimationCache.h"
+#include "2d/CCAtlasNode.h"
+#include "2d/CCClippingNode.h"
+#include "2d/CCGrid.h"
+#include "2d/CCLabelAtlas.h"
+#include "2d/CCLabelBMFont.h"
+#include "2d/CCLabelTTF.h"
+#include "2d/CCLayer.h"
+#include "2d/CCMenu.h"
+#include "2d/CCMenuItem.h"
+#include "2d/CCMotionStreak.h"
+#include "2d/CCParallaxNode.h"
+#include "2d/CCParticleBatchNode.h"
+#include "2d/CCParticleExamples.h"
+#include "2d/CCParticleSystemQuad.h"
+#include "2d/CCProgressTimer.h"
+#include "2d/CCSpriteFrameCache.h"
+#include "2d/CCTMXLayer.h"
+#include "2d/CCTMXObjectGroup.h"
+#include "2d/CCTMXTiledMap.h"
+#include "2d/CCTMXXMLParser.h"
+#include "2d/CCTextFieldTTF.h"
+#include "2d/CCTileMapAtlas.h"
+#include "2d/CCTransition.h"
+#include "2d/CCTransitionPageTurn.h"
+#include "2d/CCTransitionProgress.h"
+#include "base/CCConfiguration.h"
+#include "base/CCDataVisitor.h"
+#include "base/CCEvent.h"
+#include "base/CCIMEDelegate.h"
+#include "base/CCScheduler.h"
+#include "base/CCUserDefault.h"
 #include "base/ccTypes.h"
+#include "deprecated/CCArray.h"
+#include "deprecated/CCBool.h"
+#include "deprecated/CCDictionary.h"
+#include "deprecated/CCDouble.h"
+#include "deprecated/CCFloat.h"
+#include "deprecated/CCInteger.h"
+#include "deprecated/CCNotificationCenter.h"
+#include "deprecated/CCSet.h"
+#include "math/CCAffineTransform.h"
+#include "math/CCGeometry.h"
+#include "platform/CCApplication.h"
+#include "platform/CCFileUtils.h"
+#include "renderer/CCGLProgram.h"
+#include "renderer/CCGLProgramCache.h"
+#include "renderer/CCTextureAtlas.h"
+#include "renderer/ccGLStateCache.h"
 
 NS_CC_BEGIN
 
@@ -261,7 +320,7 @@ CC_DEPRECATED_ATTRIBUTE static inline Vec2 ccpFromSize(const Size& s)
 }
 
 /** Run a math operation function on each point component
- * absf, fllorf, ceilf, roundf
+ * absf, floorf, ceilf, roundf
  * any function that has the signature: float func(float);
  * For example: let's try to take the floor of x,y
  * ccpCompOp(p,floorf);
@@ -1024,7 +1083,7 @@ CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLBindTexture2DN(GLuint textureUnit
 CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLDeleteTexture(GLuint textureId) { GL::deleteTexture(textureId); }
 CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLDeleteTextureN(GLuint textureUnit, GLuint textureId) { GL::deleteTexture(textureId); }
 CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLBindVAO(GLuint vaoId) { GL::bindVAO(vaoId); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLEnable( int flags ) { /* ignore */ };
+CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLEnable( int flags ) { /* ignore */ }
 CC_DEPRECATED_ATTRIBUTE typedef int ccGLServerState;
 
 CC_DEPRECATED_ATTRIBUTE typedef Data CCData;
@@ -1063,11 +1122,11 @@ CC_DEPRECATED_ATTRIBUTE const unsigned int KM_GL_MODELVIEW = 0x1700;
 CC_DEPRECATED_ATTRIBUTE const unsigned int KM_GL_PROJECTION = 0x1701;
 CC_DEPRECATED_ATTRIBUTE const unsigned int KM_GL_TEXTURE = 0x1702;
 
-CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLFreeAll(void);
-CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLPushMatrix(void);
-CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLPopMatrix(void);
+CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLFreeAll();
+CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLPushMatrix();
+CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLPopMatrix();
 CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLMatrixMode(unsigned int mode);
-CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLLoadIdentity(void);
+CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLLoadIdentity();
 CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLLoadMatrix(const Mat4* pIn);
 CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLMultMatrix(const Mat4* pIn);
 CC_DEPRECATED_ATTRIBUTE void CC_DLL kmGLTranslatef(float x, float y, float z);

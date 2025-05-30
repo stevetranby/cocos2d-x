@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014-2015 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  Author: Justin Graham (https://github.com/mannewalis)
  
  http://www.cocos2d-x.org
@@ -27,6 +28,7 @@
 #define CC_ALLOCATOR_STRATEGY_DEFAULT_H
 /// @cond DO_NOT_SHOW
 
+#include <stdlib.h>
 #include "base/allocator/CCAllocatorMacros.h"
 #include "base/allocator/CCAllocatorBase.h"
 

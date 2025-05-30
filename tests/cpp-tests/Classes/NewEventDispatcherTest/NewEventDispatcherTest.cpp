@@ -1,3 +1,27 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 //
 //  NewEventDispatcherTest.cpp
 //  samples
@@ -25,10 +49,14 @@ EventDispatcherTests::EventDispatcherTests()
     ADD_TEST_CASE(GlobalZTouchTest);
     ADD_TEST_CASE(StopPropagationTest);
     ADD_TEST_CASE(PauseResumeTargetTest);
+    ADD_TEST_CASE(PauseResumeTargetTest2);
+    ADD_TEST_CASE(PauseResumeTargetTest3);
     ADD_TEST_CASE(Issue4129);
     ADD_TEST_CASE(Issue4160);
     ADD_TEST_CASE(DanglingNodePointersTest);
     ADD_TEST_CASE(RegisterAndUnregisterWhileEventHanldingTest);
+    ADD_TEST_CASE(WindowEventsTest);
+    ADD_TEST_CASE(Issue8194);
     ADD_TEST_CASE(Issue9898)
 }
 
@@ -167,35 +195,37 @@ protected:
     , _removeListenerOnTouchEnded(false)
     {
     }
-    
-public:
-    void onEnter() override
+
+    virtual bool init() override
     {
-        Sprite::onEnter();
-        
+        if (!Sprite::init())
+            return false;
+
         auto listener = EventListenerTouchOneByOne::create();
         listener->setSwallowTouches(true);
         
-        listener->onTouchBegan = [=](Touch* touch, Event* event){
-            
+        listener->onTouchBegan = [this](Touch* touch, Event* event){
             Vec2 locationInNode = this->convertToNodeSpace(touch->getLocation());
             Size s = this->getContentSize();
             Rect rect = Rect(0, 0, s.width, s.height);
             
             if (rect.containsPoint(locationInNode))
             {
+                log("TouchableSprite: onTouchBegan ...");
                 this->setColor(Color3B::RED);
                 return true;
             }
             return false;
         };
         
-        listener->onTouchEnded = [=](Touch* touch, Event* event){
+        listener->onTouchEnded = [this](Touch* touch, Event* event){
+            log("TouchableSprite: onTouchEnded ...");
             this->setColor(Color3B::WHITE);
             
             if (_removeListenerOnTouchEnded)
             {
-                _eventDispatcher->removeEventListener(listener);
+                _eventDispatcher->removeEventListener(_listener);
+                _listener = nullptr;
             }
         };
         
@@ -209,15 +239,19 @@ public:
         }
 
         _listener = listener;
+        return true;
     }
     
-    void onExit() override
+    virtual void onExit() override
     {
-        _eventDispatcher->removeEventListener(_listener);
+        if (_listener != nullptr && _fixedPriority != 0)
+        {
+            _eventDispatcher->removeEventListener(_listener);
+        }
         
         Sprite::onExit();
     }
-
+public:
     void removeListenerOnTouchEnded(bool toRemove) { _removeListenerOnTouchEnded = toRemove; };
     
     inline EventListener* getListener() { return _listener; };
@@ -322,7 +356,7 @@ void RemoveListenerWhenDispatching::onEnter()
         }
     }, MenuItemFont::create("Enabled"), MenuItemFont::create("Disabled"), nullptr);
     
-    toggleItem->setPosition(origin + Vec2(size.width/2, 80));
+    toggleItem->setPosition(origin + Vec2(size.width * 0.8, 80));
     auto menu = Menu::create(toggleItem, nullptr);
     menu->setPosition(Vec2(0, 0));
     menu->setAnchorPoint(Vec2(0, 0));
@@ -358,7 +392,7 @@ void CustomEventTest::onEnter()
         char* buf = static_cast<char*>(event->getUserData());
         str += buf;
         str += " times";
-        statusLabel->setString(str.c_str());
+        statusLabel->setString(str);
     });
     
     _eventDispatcher->addEventListenerWithFixedPriority(_listener, 1);
@@ -384,7 +418,7 @@ void CustomEventTest::onEnter()
         char* buf = static_cast<char*>(event->getUserData());
         str += buf;
         str += " times";
-        statusLabel2->setString(str.c_str());
+        statusLabel2->setString(str);
     });
     
     _eventDispatcher->addEventListenerWithFixedPriority(_listener2, 1);
@@ -569,7 +603,7 @@ void RemoveAndRetainNodeTest::onEnter()
                                      CallFunc::create([this](){
                                         _spriteSaved = true;
                                         _sprite->retain();
-                                        _sprite->removeFromParent();
+                                        _sprite->removeFromParentAndCleanup(false);
                                      }),
                                      DelayTime::create(5.0f),
                                      CallFunc::create([this](){
@@ -616,7 +650,7 @@ void RemoveListenerAfterAddingTest::onEnter()
         _eventDispatcher->removeEventListener(listener);
     });
 
-    item1->setPosition(VisibleRect::center() + Vec2(0, 80));
+    item1->setPosition(VisibleRect::leftBottom() + Vec2(0, 80));
     
     auto addNextButton = [this](){
         auto next = MenuItemFont::create("Please Click Me To Reset!", [this](Ref* sender){
@@ -643,7 +677,7 @@ void RemoveListenerAfterAddingTest::onEnter()
         addNextButton();
     });
     
-    item2->setPosition(VisibleRect::center() + Vec2(0, 40));
+    item2->setPosition(VisibleRect::leftBottom() + Vec2(0, 40));
     
     auto item3 = MenuItemFont::create("Click Me 3", [=](Ref* sender){
         auto listener = EventListenerTouchOneByOne::create();
@@ -658,10 +692,10 @@ void RemoveListenerAfterAddingTest::onEnter()
         addNextButton();
     });
     
-    item3->setPosition(VisibleRect::center());
+    item3->setPosition(VisibleRect::leftBottom());
     
     auto menu = Menu::create(item1, item2, item3, nullptr);
-    menu->setPosition(VisibleRect::leftBottom());
+    menu->setPosition(VisibleRect::rightBottom() * 0.8 + Vec2(0, 40));
     menu->setAnchorPoint(Vec2::ZERO);
 
     addChild(menu);
@@ -951,9 +985,8 @@ StopPropagationTest::StopPropagationTest()
     };
     
     auto keyboardEventListener = EventListenerKeyboard::create();
-    keyboardEventListener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event){
+    keyboardEventListener->onKeyPressed = [](EventKeyboard::KeyCode /*key*/, Event* event){
         auto target = static_cast<Sprite*>(event->getCurrentTarget());
-        CC_UNUSED_PARAM(target);
         CCASSERT(target->getTag() == TAG_BLUE_SPRITE || target->getTag() == TAG_BLUE_SPRITE2, "Yellow blocks shouldn't response event.");
         // Stop propagation, so yellow blocks will not be able to receive event.
         event->stopPropagation();
@@ -1099,6 +1132,155 @@ std::string PauseResumeTargetTest::subtitle() const
     return "Yellow block uses fixed priority";
 }
 
+// PauseResumeTargetTest2
+PauseResumeTargetTest2::PauseResumeTargetTest2()
+{
+    MenuItemFont::getFontSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    Size size = Director::getInstance()->getVisibleSize();
+
+    _touchableSprite = TouchableSprite::create();
+    _touchableSprite->retain();
+    _touchableSprite->setTexture("Images/CyanSquare.png");
+    _touchableSprite->setPosition(origin+Vec2(size.width/2, size.height/2) + Vec2(-80, 40));
+    addChild(_touchableSprite);
+
+    _itemPauseTouch = MenuItemFont::create("pauseTouch", [=](Ref* sender){
+        _itemPauseTouch->setEnabled(false);
+        _itemResumeTouch->setEnabled(true);
+
+        _eventDispatcher->pauseEventListenersForTarget(_touchableSprite);
+    });
+
+    _itemPauseTouch->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
+    _itemPauseTouch->setPosition(VisibleRect::right() + Vec2(-150, 0));
+
+    _itemResumeTouch = MenuItemFont::create("resumeTouch", [=](Ref* sender){
+        _itemPauseTouch->setEnabled(true);
+        _itemResumeTouch->setEnabled(false);
+
+        _eventDispatcher->resumeEventListenersForTarget(_touchableSprite);
+    });
+
+    _itemResumeTouch->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
+    _itemResumeTouch->setPosition(VisibleRect::right() + Vec2(0, 0));
+
+    _itemAddToScene = MenuItemFont::create("addToScene", [=](Ref* sender){
+        _itemAddToScene->setEnabled(false);
+        _itemRemoveFromScene->setEnabled(true);
+
+        this->addChild(_touchableSprite);
+    });
+
+    _itemAddToScene->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
+    _itemAddToScene->setPosition(VisibleRect::right() + Vec2(-150, -50));
+
+    _itemRemoveFromScene = MenuItemFont::create("removeFromScene", [=](Ref* sender){
+        _itemAddToScene->setEnabled(true);
+        _itemRemoveFromScene->setEnabled(false);
+        _touchableSprite->removeFromParentAndCleanup(false);
+    });
+
+    _itemRemoveFromScene->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
+    _itemRemoveFromScene->setPosition(VisibleRect::right() + Vec2(0, -50));
+
+    _itemAddToScene->setEnabled(false);
+    _itemResumeTouch->setEnabled(false);
+
+    _itemPauseTouch->setFontSizeObj(20);
+    _itemResumeTouch->setFontSizeObj(20);
+    _itemAddToScene->setFontSizeObj(20);
+    _itemRemoveFromScene->setFontSizeObj(20);
+
+    auto menu = Menu::create(_itemPauseTouch, _itemResumeTouch, _itemAddToScene, _itemRemoveFromScene, nullptr);
+    menu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    menu->setPosition(Vec2::ZERO);
+
+    addChild(menu);
+}
+
+PauseResumeTargetTest2::~PauseResumeTargetTest2()
+{
+    _touchableSprite->release();
+}
+
+std::string PauseResumeTargetTest2::title() const
+{
+    return "PauseResumeTargetTest2";
+}
+
+std::string PauseResumeTargetTest2::subtitle() const
+{
+    return "";
+}
+
+// PauseResumeTargetTest3
+PauseResumeTargetTest3::PauseResumeTargetTest3()
+{
+    MenuItemFont::getFontSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    Size size = Director::getInstance()->getVisibleSize();
+
+    _touchableSprite = Sprite::create("Images/CyanSquare.png");
+    _touchableSprite->setPosition(origin+Vec2(size.width/2, size.height/2) + Vec2(-80, 40));
+    addChild(_touchableSprite);
+
+    auto item = MenuItemFont::create("addListener", [=](Ref* sender){
+
+        MenuItemFont* senderItem = static_cast<MenuItemFont*>(sender);
+        senderItem->setEnabled(false);
+
+        auto listener = EventListenerTouchOneByOne::create();
+        listener->setSwallowTouches(true);
+
+        listener->onTouchBegan = [=](Touch* touch, Event* event){
+            Vec2 locationInNode = _touchableSprite->convertToNodeSpace(touch->getLocation());
+            Size s = _touchableSprite->getContentSize();
+            Rect rect = Rect(0, 0, s.width, s.height);
+
+            if (rect.containsPoint(locationInNode))
+            {
+                log("TouchableSprite: onTouchBegan ...");
+                _touchableSprite->setColor(Color3B::RED);
+                return true;
+            }
+            return false;
+        };
+
+        listener->onTouchEnded = [this](Touch* touch, Event* event){
+            log("TouchableSprite: onTouchEnded ...");
+            _touchableSprite->setColor(Color3B::WHITE);
+        };
+
+        _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, _touchableSprite);
+        _eventDispatcher->pauseEventListenersForTarget(_touchableSprite);
+    });
+
+    item->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
+    item->setPosition(VisibleRect::right());
+
+    auto menu = Menu::create(item, nullptr);
+    menu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    menu->setPosition(Vec2::ZERO);
+
+    addChild(menu);
+}
+
+PauseResumeTargetTest3::~PauseResumeTargetTest3()
+{
+
+}
+
+std::string PauseResumeTargetTest3::title() const
+{
+    return "PauseResumeTargetTest3";
+}
+
+std::string PauseResumeTargetTest3::subtitle() const
+{
+    return "Sprite should not be touchable";
+}
+
 // Issue4129
 Issue4129::Issue4129()
 : _bugFixed(false)
@@ -1107,7 +1289,7 @@ Issue4129::Issue4129()
         
         auto label = Label::createWithSystemFont("Yeah, this issue was fixed.", "", 20);
         label->setAnchorPoint(Vec2(0, 0.5f));
-        label->setPosition(Vec2(VisibleRect::left()));
+        label->setPosition(Vec2(VisibleRect::left() + Vec2(0, 30)));
         this->addChild(label);
         
         // After test, remove it.
@@ -1370,6 +1552,109 @@ std::string RegisterAndUnregisterWhileEventHanldingTest::subtitle() const
     return  "Tap the square multiple times - should not crash!";
 }
 
+//
+WindowEventsTest::WindowEventsTest()
+{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+    auto dispatcher = Director::getInstance()->getEventDispatcher();
+    dispatcher->addCustomEventListener(GLViewImpl::EVENT_WINDOW_RESIZED, [](EventCustom* event) {
+        // TODO: need to create resizeable window
+        log("<<< WINDOW RESIZED! >>> ");
+    });
+    dispatcher->addCustomEventListener(GLViewImpl::EVENT_WINDOW_FOCUSED, [](EventCustom* event) {
+        log("<<< WINDOW FOCUSED! >>> ");
+    });
+    dispatcher->addCustomEventListener(GLViewImpl::EVENT_WINDOW_UNFOCUSED, [](EventCustom* event) {
+        log("<<< WINDOW BLURRED! >>> ");
+    });
+#endif
+}
+
+std::string WindowEventsTest::title() const
+{
+    return "WindowEventsTest";
+}
+
+std::string WindowEventsTest::subtitle() const
+{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+    return  "Resize and Switch to another window and back. Read Logs.";
+#else
+    return  "Unsupported platform.";
+#endif
+}
+
+
+// https://github.com/cocos2d/cocos2d-x/issues/8194
+Issue8194::Issue8194()
+{
+    auto origin = Director::getInstance()->getVisibleOrigin();
+    auto size = Director::getInstance()->getVisibleSize();
+    static bool nodesAdded = false;
+#define tagA 100
+#define tagB 101
+    // dispatch custom event in another custom event, make the custom event "Issue8194" take effect immediately
+    _listener = getEventDispatcher()->addCustomEventListener(Director::EVENT_AFTER_UPDATE, [this](cocos2d::EventCustom *event){
+        if (nodesAdded)
+        {
+            // CCLOG("Fire Issue8194 Event");
+            getEventDispatcher()->dispatchCustomEvent("Issue8194");
+            
+            // clear test nodes and listeners
+            getEventDispatcher()->removeCustomEventListeners("Issue8194");
+            removeChildByTag(tagA);
+            removeChildByTag(tagB);
+            nodesAdded = false;
+        }
+    });
+    
+    // When click this menuitem, it will add two node A and B, then send a custom event.
+    // Because Node B's localZOrder < A's, the custom event should process by node B.
+    auto menuItem = MenuItemFont::create("Dispatch Custom Event", [this](Ref *sender) {
+        // add nodeA to scene
+        auto nodeA = Node::create();
+        addChild(nodeA, 1, tagA);
+        
+        cocos2d::EventListenerCustom* listenerA = cocos2d::EventListenerCustom::create("Issue8194", [&](cocos2d::EventCustom *event){
+            _subtitleLabel->setString("Bug has been fixed.");
+            event->stopPropagation();
+        });
+        getEventDispatcher()->addEventListenerWithSceneGraphPriority(listenerA, nodeA);
+       
+        // add nodeB to scene
+        auto nodeB = Node::create();
+        addChild(nodeB, -1, tagB);
+        
+        cocos2d::EventListenerCustom* listenerB = cocos2d::EventListenerCustom::create("Issue8194", [&](cocos2d::EventCustom *event){
+            _subtitleLabel->setString("Bug exist yet.");
+            event->stopPropagation();
+        });
+        getEventDispatcher()->addEventListenerWithSceneGraphPriority(listenerB, nodeB);
+        
+        nodesAdded = true;
+    });
+    
+    menuItem->setPosition(origin.x + size.width/2, origin.y + size.height/2);
+    auto menu = Menu::create(menuItem, nullptr);
+    menu->setPosition(Vec2::ZERO);
+    addChild(menu);
+}
+
+Issue8194::~Issue8194()
+{
+    getEventDispatcher()->removeEventListener(_listener);
+}
+
+std::string Issue8194::title() const
+{
+    return "Issue 8194";
+}
+
+std::string Issue8194::subtitle() const
+{
+    return  "After click button, should show 'Bug has been fixed.'";
+}
+
 Issue9898::Issue9898()
 {
     auto origin = Director::getInstance()->getVisibleOrigin();
@@ -1395,7 +1680,7 @@ Issue9898::Issue9898()
 
 std::string Issue9898::title() const
 {
-    return "";
+    return "Issue 9898";
 }
 
 std::string Issue9898::subtitle() const

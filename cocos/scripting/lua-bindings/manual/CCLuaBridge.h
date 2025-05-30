@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2013 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -27,7 +28,7 @@
 
 #include <string>
 #include <map>
-#include "CCLuaEngine.h"
+#include "scripting/lua-bindings/manual/CCLuaEngine.h"
 
 extern "C" {
 #include "lua.h"
@@ -69,7 +70,7 @@ public:
      *
      * @return the LuaStack object.
      */
-    static LuaStack *getStack(void);
+    static LuaStack *getStack();
     /**
      * Push the function pointer corresponding to functionId on the top of lua stack by searching the `lua_bridge_function_id` table.
      * If it don't find the function pointer corresponding to functionId, it will reset stack top index to the index before searching.
@@ -90,9 +91,9 @@ public:
     
     /**
      *
-     * The retain count woulde be reduced by 1 corresponding to functionId in the `lua_bridge_function_id_retain` table if it could be found.
+     * The retain count would be reduced by 1 corresponding to functionId in the `lua_bridge_function_id_retain` table if it could be found.
      * If `lua_bridge_function_id` table or `lua_bridge_function_id_retain` aren't found, it would return 0.
-     * If the vaule of retain count is 0 after reducing, it would update the `lua_bridge_function_id_retain` table and `lua_bridge_function_id_retain` table to remove the  reference corresponding to this functionId
+     * If the value of retain count is 0 after reducing, it would update the `lua_bridge_function_id_retain` table and `lua_bridge_function_id_retain` table to remove the  reference corresponding to this functionId
      *
      * @param functionId the value used to search the `lua_bridge_function_id` table and `lua_bridge_function_id` table.
      * @return the retain count or 0.
