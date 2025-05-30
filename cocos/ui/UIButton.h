@@ -385,6 +385,10 @@ protected:
 
 private:
     std::string _fontName;
+
+    // STEVE
+public:
+    virtual void setPositionZ(float z) override;
 };
 
 }
