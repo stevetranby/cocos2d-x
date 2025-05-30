@@ -2028,6 +2028,15 @@ ResourceData Layout::getRenderFile()
     return rData;
 }
 
+
+// STEVE
+void Layout::setPositionZ(float positionZ)
+{
+    Widget::setPositionZ(positionZ);
+    if(_colorRender) { _colorRender->setPositionZ(positionZ - .1f); }
+    if(_gradientRender) { _gradientRender->setPositionZ(positionZ - .1f); }
+}
+
 }
 
 NS_CC_END
