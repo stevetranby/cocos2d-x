@@ -106,9 +106,11 @@ private:
     @}
     */
 
+public: // STEVE (allow public access to lighting shader macros)
     /**Get macro define for lights in current openGL driver.*/
     std::string getShaderMacrosForLight() const;
 
+private:
     /**Predefined shaders.*/
     std::unordered_map<std::string, GLProgram*> _programs;
 };
