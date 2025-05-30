@@ -443,7 +443,7 @@ Texture2D::Texture2D()
 , _hasPremultipliedAlpha(false)
 , _hasMipmaps(false)
 , _shaderProgram(nullptr)
-, _antialiasEnabled(true)
+, _antialiasEnabled(false) // STEVE
 , _ninePatchInfo(nullptr)
 , _valid(true)
 , _alphaTexture(nullptr)
