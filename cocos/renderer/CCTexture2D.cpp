@@ -445,7 +445,7 @@ Texture2D::Texture2D()
 , _hasPremultipliedAlpha(false)
 , _hasMipmaps(false)
 , _shaderProgram(nullptr)
-, _antialiasEnabled(false) // STEVE
+, _antialiasEnabled(false) // STEVE (change default texture anti-aliasing to FALSE))
 , _ninePatchInfo(nullptr)
 , _valid(true)
 , _alphaTexture(nullptr)

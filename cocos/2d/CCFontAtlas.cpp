@@ -51,8 +51,7 @@ FontAtlas::FontAtlas(Font &theFont)
 , _currentPageData(nullptr)
 , _fontAscender(0)
 , _rendererRecreatedListener(nullptr)
-//STEVE
-, _antialiasEnabled(false)
+, _antialiasEnabled(false) //STEVE (change default texture anti-aliasing to FALSE)
 , _currLineHeight(0)
 {
     _font->retain();
