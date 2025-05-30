@@ -973,6 +973,17 @@ ResourceData Button::getDisabledFile()
     return rData;
 }
 
+// STEVE
+void Button::setPositionZ(float z)
+{
+    Node::setPositionZ(z);
+
+    _buttonNormalRenderer->setPositionZ(z);
+    _buttonDisableRenderer->setPositionZ(z);
+    _buttonClickedRenderer->setPositionZ(z);
+
+    _titleRenderer->setPositionZ(z + .1f);
+}
 }
 
 NS_CC_END

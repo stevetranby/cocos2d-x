@@ -653,6 +653,10 @@ protected:
     bool _passFocusToChild;
      //when finding the next focused widget, use this variable to pass focus between layout & widget
     bool _isFocusPassing;
+
+public:
+    // STEVE
+    void setPositionZ(float z) override;
 };
     
 }
