@@ -37,12 +37,12 @@ set(COCOS_CORE_LIB cocos2d)
 include(2d/CMakeLists.txt)
 include(3d/CMakeLists.txt)
 include(platform/CMakeLists.txt)
-include(physics/CMakeLists.txt)
-include(physics3d/CMakeLists.txt)
+#include(physics/CMakeLists.txt)
+#include(physics3d/CMakeLists.txt)
 include(math/CMakeLists.txt)
-include(navmesh/CMakeLists.txt)
+#include(navmesh/CMakeLists.txt)
 include(renderer/CMakeLists.txt)
-include(vr/CMakeLists.txt)
+#include(vr/CMakeLists.txt)
 include(base/CMakeLists.txt)
 include(deprecated/CMakeLists.txt)
 include(ui/CMakeLists.txt)
@@ -53,7 +53,7 @@ include(storage/CMakeLists.txt)
 # default value for cocos2dx extensions modules build
 option(BUILD_EDITOR_COCOSBUILDER "Build editor support for cocosbuilder" ON)
 option(BUILD_EDITOR_COCOSTUDIO "Build editor support for cocostudio" ON)
-option(BUILD_EDITOR_SPINE "Build editor support for spine" ON)
+option(BUILD_EDITOR_SPINE "Build editor support for spine" OFF)
 option(BUILD_EXTENSIONS "Build extension library" ON)
 
 if(BUILD_EDITOR_COCOSBUILDER)
@@ -66,10 +66,10 @@ if(BUILD_EDITOR_COCOSTUDIO)
     set(COCOS_EDITOR_SUPPORT_SRC ${COCOS_EDITOR_SUPPORT_SRC} ${COCOS_CS_SRC} ${COCOS_CS_HEADER})
 endif(BUILD_EDITOR_COCOSTUDIO)
 
-if(BUILD_EDITOR_SPINE)
-    include(editor-support/spine/CMakeLists.txt)
-    set(COCOS_EDITOR_SUPPORT_SRC ${COCOS_EDITOR_SUPPORT_SRC} ${COCOS_SPINE_SRC} ${COCOS_SPINE_HEADER})
-endif(BUILD_EDITOR_SPINE)
+#if(BUILD_EDITOR_SPINE)
+#    include(editor-support/spine/CMakeLists.txt)
+#    set(COCOS_EDITOR_SUPPORT_SRC ${COCOS_EDITOR_SUPPORT_SRC} ${COCOS_SPINE_SRC} ${COCOS_SPINE_HEADER})
+#endif(BUILD_EDITOR_SPINE)
 
 if(BUILD_EXTENSIONS)
     include(../extensions/CMakeLists.txt)
@@ -79,16 +79,16 @@ set(COCOS_HEADER cocos2d.h
     ${COCOS_2D_HEADER}
     ${COCOS_3D_HEADER}
     ${COCOS_PLATFORM_HEADER}
-    ${COCOS_PHYSICS_HEADER}
-    ${COCOS_PHYSICS3D_HEADER}
+#    ${COCOS_PHYSICS_HEADER}
+#    ${COCOS_PHYSICS3D_HEADER}
     ${COCOS_MATH_HEADER}
-    ${COCOS_NAVMESH_HEADER}
+#    ${COCOS_NAVMESH_HEADER}
     ${COCOS_RENDERER_HEADER}
-    ${COCOS_VR_HEADER}
+#    ${COCOS_VR_HEADER}
     ${COCOS_BASE_HEADER}
     ${COCOS_AUDIO_HEADER}
     ${COCOS_UI_HEADER}
-    ${COCOS_DEPRECATED_HEADER}
+#    ${COCOS_DEPRECATED_HEADER}
     ${COCOS_NETWORK_HEADER}
     ${COCOS_EDITOR_SUPPORT_HEADER}
     ${COCOS_EXTENSIONS_HEADER}
@@ -99,16 +99,16 @@ set(COCOS_SRC cocos2d.cpp
     ${COCOS_2D_SRC}
     ${COCOS_3D_SRC}
     ${COCOS_PLATFORM_SRC}
-    ${COCOS_PHYSICS_SRC}
-    ${COCOS_PHYSICS3D_SRC}
+#    ${COCOS_PHYSICS_SRC}
+#    ${COCOS_PHYSICS3D_SRC}
     ${COCOS_MATH_SRC}
-    ${COCOS_NAVMESH_SRC}
+#    ${COCOS_NAVMESH_SRC}
     ${COCOS_RENDERER_SRC}
-    ${COCOS_VR_SRC}
+#    ${COCOS_VR_SRC}
     ${COCOS_BASE_SRC}
     ${COCOS_AUDIO_SRC}
     ${COCOS_UI_SRC}
-    ${COCOS_DEPRECATED_SRC}
+#    ${COCOS_DEPRECATED_SRC}
     ${COCOS_NETWORK_SRC}
     ${COCOS_EDITOR_SUPPORT_SRC}
     ${COCOS_EXTENSIONS_SRC}
