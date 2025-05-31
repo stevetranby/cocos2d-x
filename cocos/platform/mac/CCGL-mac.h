@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "platform/CCPlatformConfig.h"
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
 
+#define GL_SILENCE_DEPRECATION // Defined before OpenGL and GLUT includes to avoid deprecation messages
 #import <OpenGL/gl.h>
 #import <OpenGL/glu.h>
 #import <OpenGL/glext.h>

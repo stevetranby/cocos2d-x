@@ -175,11 +175,15 @@ static CGSize _calculateShrinkedSizeForString(NSAttributedString **str,
 #define SENSOR_DELAY_GAME 0.02
 
 #if !defined(CC_TARGET_OS_TVOS)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+// DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
 @interface CCAccelerometerDispatcher : NSObject<UIAccelerometerDelegate>
 {
     cocos2d::Acceleration *_acceleration;
     CMMotionManager *_motionManager;
 }
+#pragma clang diagnostic pop
 
 + (id) sharedAccelerometerDispatcher;
 - (id) init;
@@ -247,7 +251,13 @@ static CCAccelerometerDispatcher* s_pAccelerometerDispatcher;
 
     double tmp = _acceleration->x;
 
-    switch ([[UIApplication sharedApplication] statusBarOrientation])
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+#pragma clang diagnostic pop
+
+    switch (orientation)
     {
         case UIInterfaceOrientationLandscapeRight:
             _acceleration->x = -_acceleration->y;
@@ -294,6 +304,10 @@ int Device::getDPI()
             scale = [[UIScreen mainScreen] scale];
         }
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             dpi = 132 * scale;
         } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
@@ -301,6 +315,8 @@ int Device::getDPI()
         } else {
             dpi = 160 * scale;
         }
+#pragma clang diagnostic pop
+
     }
     return dpi;
 }

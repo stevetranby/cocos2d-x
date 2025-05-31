@@ -75,12 +75,25 @@
 
     self.responseError = nil;
     self.connError = nil;
-    
+
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
+    // TODO: STEVE: deprecated use this instead:
+//    NSURLSession *session = [NSURLSession sharedSession];
+//    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+//                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+//                                      {
+//        // do something with the data
+//    }];
+//    [dataTask resume];
     // create the connection with the target request and this class as the delegate
     self.conn = [[[NSURLConnection alloc] initWithRequest:request
                                                  delegate:self
                                          startImmediately:NO] autorelease];
-    
+#pragma clang diagnostic pop
+
     [self.conn scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     
     // start the connection
@@ -95,7 +108,9 @@
  * of this method.
  **/
 - (void) connection:(NSURLConnection *)connection 
- didReceiveResponse:(NSURLResponse *)response {
+ didReceiveResponse:(NSURLResponse *)response
+{
+    (void)connection;
 #ifdef COCOS2D_DEBUG
     NSLog(@"Received response from request to url %@", srcURL);
 #endif
@@ -132,9 +147,10 @@
  * This delegate method is called for each chunk of data received from the server.  The chunk size
  * is dependent on the network type and the server configuration.  
  */
-- (void)connection:(NSURLConnection *)connection 
+- (void)connection:(NSURLConnection *)connection
     didReceiveData:(NSData *)data
 {
+    (void)connection;
     //NSLog(@"get some data");
     [responseData appendData:data];
     getDataTime++;
@@ -147,6 +163,7 @@
 - (void)connection:(NSURLConnection *)connection 
   didFailWithError:(NSError *)error
 {
+    (void)connection;
     //NSLog(@"Load failed with error %@", [error localizedDescription]);
     self.connError = error;
     
@@ -159,6 +176,7 @@
  **/
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    (void)connection;
     finish = true;
 }
 
@@ -177,16 +195,27 @@
     CFArrayRef certArrayRef = CFArrayCreate(NULL, (void*)&cert, 1, NULL);
     SecTrustRef serverTrust = protectionSpace.serverTrust;
     SecTrustSetAnchorCertificates(serverTrust, certArrayRef);
-    
+
     //Verify that trust
     SecTrustResultType trustResult;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     SecTrustEvaluate(serverTrust, &trustResult);
-    
+#pragma clang diagnostic pop
+
     if(trustResult == kSecTrustResultRecoverableTrustFailure)
     {
         CFDataRef errDataRef = SecTrustCopyExceptions(serverTrust);
         SecTrustSetExceptions(serverTrust, errDataRef);
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
         SecTrustEvaluate(serverTrust, &trustResult);
+#pragma clang diagnostic pop
+
         CFRelease(errDataRef);
     }
     [certData release];
@@ -204,6 +233,8 @@
 
 - (void) connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
+    (void)connection;
+    
     id <NSURLAuthenticationChallengeSender> sender = challenge.sender;
     NSURLProtectionSpace *protectionSpace = challenge.protectionSpace;
     

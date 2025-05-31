@@ -80,20 +80,28 @@ int Application::run()
     // Retain glview to avoid glview being released in the while loop
     glview->retain();
 
-    unsigned int ctx_updated_count = 0;
+    // STEVE: HACK: this is to fix issue with Mojave
+    // TODO: should look into only doing this if on Mojave
+    //int ctx_updated_count = 4;
+    for (int i=0; i<4; ++i)
+    {
+        NSOpenGLContext* ctx = (NSOpenGLContext*)glview->getNSGLContext();
+        [ctx update];
+
+        lastTime = getCurrentMillSecond();
+        director->mainLoop();
+        glview->pollEvents();
+
+        curTime = getCurrentMillSecond();
+        if (curTime - lastTime < _animationInterval)
+        {
+            usleep(static_cast<useconds_t>((_animationInterval - curTime + lastTime)*1000));
+        }
+    }
 
     while (!glview->windowShouldClose())
     {
         lastTime = getCurrentMillSecond();
-
-        // hack to fix issue #19080, black screen on macOS 10.14
-        // stevetranby: look into doing this outside loop to get rid of condition test per frame
-        if(ctx_updated_count < 2) {
-            ctx_updated_count++;
-            NSOpenGLContext* ctx = (NSOpenGLContext*)glview->getNSGLContext();
-            [ctx update];
-        }
-
         director->mainLoop();
         glview->pollEvents();
 
@@ -132,6 +140,22 @@ Application::Platform Application::getTargetPlatform()
 
 std::string Application::getVersion() {
     NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    if (version) {
+        return [version UTF8String];
+    }
+    return "";
+}
+
+std::string Application::getBuildVersion() {
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    if (version) {
+        return [version UTF8String];
+    }
+    return "";
+}
+
+std::string Application::getCopyrightString() {
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"NSHumanReadableCopyright"];
     if (version) {
         return [version UTF8String];
     }
@@ -183,11 +207,14 @@ LanguageType Application::getCurrentLanguage()
     return utils::getLanguageTypeByISO2([languageCode UTF8String]);
 }
 
-bool Application::openURL(const std::string &url)
+//bool Application::openURL(const std::string &url)
+void Application::openURL(const std::string &url, const std::function<void(bool)>& completionHandler)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
-    return [[NSWorkspace sharedWorkspace] openURL:nsUrl];
+
+    BOOL success = [[NSWorkspace sharedWorkspace] openURL:nsUrl];
+    completionHandler((bool)success);
 }
 
 void Application::setResourceRootPath(const std::string& rootResDir)

@@ -77,6 +77,7 @@ void ProgressTo::startWithTarget(Node *target)
     if (loading_bar){
         _from = loading_bar->getPercent();
     } else {
+        CC_ASSERT(target != nullptr);
         _from = static_cast<ProgressTimer*>(target)->getPercentage();
     };
 }
@@ -87,6 +88,7 @@ void ProgressTo::update(float time)
     if (loading_bar){
         loading_bar->setPercent(_from + (_to - _from) * time);
     } else {
+        CC_ASSERT(_target != nullptr);
         static_cast<ProgressTimer*>(_target)->setPercentage(_from + (_to - _from) * time);
     };
 }
@@ -141,6 +143,7 @@ void ProgressFromTo::update(float time)
     if (loading_bar){
         loading_bar->setPercent(_from + (_to - _from) * time);
     } else {
+        CC_ASSERT(_target != nullptr);
         static_cast<ProgressTimer*>(_target)->setPercentage(_from + (_to - _from) * time);
     };
 }

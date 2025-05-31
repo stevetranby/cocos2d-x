@@ -26,10 +26,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+#include "CCSpriteFrame.h"
+
 #include "renderer/CCTextureCache.h"
-#include "2d/CCSpriteFrame.h"
 #include "base/CCDirector.h"
 #include "platform/CCFileUtils.h"
+
+#include <sstream>
 
 NS_CC_BEGIN
 
@@ -245,6 +248,59 @@ const PolygonInfo& SpriteFrame::getPolygonInfo() const
 bool SpriteFrame::hasPolygonInfo() const
 {
     return _polygonInfo.triangles.vertCount != 0;
+}
+
+
+using std::stringstream;
+using std::string;
+using std::ostream;
+
+ostream& operator<< (ostream &out, const Vec2 &v) {
+    out << "{" << v.x << "," << v.y << "}";
+    return out;
+}
+
+ostream& operator<< (ostream &out, const cocos2d::Size& s) {
+    out << "{" << s.width << "x" << s.height << "}";
+    return out;
+}
+
+ostream& operator<< (ostream &out, const cocos2d::Rect& r) {
+    out << "{" << r.origin << "," << r.size << "}";
+    return out;
+}
+
+ostream& operator<< (ostream &out, const Texture2D& t) {
+    out << "{" << t.getDescription() << "}";
+    return out;
+}
+
+ostream& operator<< (ostream& out, const PolygonInfo& p) {
+    out << "{ " << "polyinfo: ";
+    out << "a: " << p.getArea() << ", ";
+    out << "r: " << p.getRect() << ", ";
+    //out << "fn: " << p.getFilename();
+    out << " }";
+    return out;
+}
+
+std::string SpriteFrame::getDescription()
+{
+    std::stringstream ss;
+    ss << "{ _offset: " << _offset;
+    ss << ", _anchorPoint: " << _anchorPoint;
+    ss << ", _originalSize: " << _originalSize;
+    ss << ", _rectInPixels: " << _rectInPixels;
+    ss << ", _rect: " << _rect;
+    ss << ", _centerRect: " << _centerRect;
+    ss << ", _rect: " << _rect;
+    ss << ", _offsetInPixels: " << _offsetInPixels;
+    ss << ", _originalSizeInPixels: " << _originalSizeInPixels;
+    ss << ", _texture: " << (*_texture);
+    ss << ", _textureFilename: " << _textureFilename;
+    ss << ", _polygonInfo: " << _polygonInfo;
+    ss << " }";
+    return ss.str();
 }
 
 NS_CC_END

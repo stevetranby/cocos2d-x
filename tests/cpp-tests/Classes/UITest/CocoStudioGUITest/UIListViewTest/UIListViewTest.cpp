@@ -875,7 +875,7 @@ bool UIListViewTest_Magnetic::init()
             eNextType = ListView::MagneticType::BOTTOM;
             sString = "BOTTOM";
         }
-        else if(eCurrentType == ListView::MagneticType::BOTTOM)
+        else //if(eCurrentType == ListView::MagneticType::BOTTOM)
         {
             eNextType = ListView::MagneticType::NONE;
             sString = "NONE";

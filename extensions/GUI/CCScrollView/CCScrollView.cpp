@@ -52,6 +52,8 @@ static float convertDistanceFromPointToInch(float pointDis)
     return pointDis * factor / Device::getDPI();
 }
 
+void ScrollViewDelegate::scrollViewDidScroll(ScrollView* /* view */) {}
+void ScrollViewDelegate::scrollViewDidZoom(ScrollView* /* view */) {}
 
 ScrollView::ScrollView()
 : _delegate(nullptr)
@@ -73,7 +75,8 @@ ScrollView::ScrollView()
 
 ScrollView::~ScrollView()
 {
-
+    // STEVE - github repo says not needed?
+    CC_SAFE_RELEASE(_animatedScrollAction);
 }
 
 ScrollView* ScrollView::create(Size size, Node* container/* = nullptr*/)
@@ -585,7 +588,7 @@ void ScrollView::onBeforeDraw()
         Rect frame = getViewRect();
         auto glview = Director::getInstance()->getOpenGLView();
 
-        if (glview->getVR() == nullptr) {
+        //STEVE - if (glview->getVR() == nullptr) {
             if (glview->isScissorEnabled()) {
                 _scissorRestored = true;
                 _parentScissorRect = glview->getScissorRect();
@@ -602,7 +605,7 @@ void ScrollView::onBeforeDraw()
                 glEnable(GL_SCISSOR_TEST);
                 glview->setScissorInPoints(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
             }
-        }
+        //STEVE - }
     }
 }
 
@@ -622,14 +625,14 @@ void ScrollView::onAfterDraw()
     if (_clippingToBounds)
     {
         auto glview = Director::getInstance()->getOpenGLView();
-        if (glview->getVR() == nullptr) {
+        //STEVE - if (glview->getVR() == nullptr) {
             if (_scissorRestored) {//restore the parent's scissor rect
                 glview->setScissorInPoints(_parentScissorRect.origin.x, _parentScissorRect.origin.y, _parentScissorRect.size.width, _parentScissorRect.size.height);
             }
             else {
                 glDisable(GL_SCISSOR_TEST);
             }
-        }
+        //STEVE - }
     }
 }
 

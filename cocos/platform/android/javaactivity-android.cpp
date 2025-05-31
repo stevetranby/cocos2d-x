@@ -88,6 +88,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
 
 JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h)
 {
+	//LOGD("steve");
     DataManager::setProcessID(getpid());
     DataManager::setFrameSize(w, h);
 
@@ -105,7 +106,14 @@ JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, j
     {
         cocos2d::GL::invalidateStateCache();
         cocos2d::GLProgramCache::getInstance()->reloadDefaultGLPrograms();
+
+        //STEVE - currently still using this ... but if don't use DrawPrimitives anywhere prob
+        // not needed, and should be using DrawNode instead.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         cocos2d::DrawPrimitives::init();
+#pragma GCC diagnostic pop
+
         cocos2d::VolatileTextureMgr::reloadAllTextures();
 
         cocos2d::EventCustom recreatedEvent(EVENT_RENDERER_RECREATED);
@@ -113,6 +121,7 @@ JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, j
         director->setGLDefaultValues();
     }
     cocos2d::network::_preloadJavaDownloaderClass();
+    LOGD("steve:exit");
 }
 
 JNIEXPORT jintArray Java_org_cocos2dx_lib_Cocos2dxActivity_getGLContextAttrs(JNIEnv*  env, jobject thiz)

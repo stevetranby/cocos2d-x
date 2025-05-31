@@ -254,7 +254,7 @@ THE SOFTWARE.
 
 /** Use physics integration API. */
 #ifndef CC_USE_PHYSICS
-#define CC_USE_PHYSICS 1
+#define CC_USE_PHYSICS 0
 #endif
 
 #if (CC_USE_PHYSICS)
@@ -272,20 +272,20 @@ THE SOFTWARE.
 /** Use 3d physics integration API. */
 #ifndef CC_USE_3D_PHYSICS
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX /*|| CC_TARGET_PLATFORM == CC_PLATFORM_WINRT*/)
-#define CC_USE_3D_PHYSICS 1
+#define CC_USE_3D_PHYSICS 0
 #endif
 #endif
 
 #if (CC_USE_3D_PHYSICS)
 /** Use bullet physics engine. */
 #ifndef CC_ENABLE_BULLET_INTEGRATION
-#define CC_ENABLE_BULLET_INTEGRATION 1
+#define CC_ENABLE_BULLET_INTEGRATION 0
 #endif
 #endif
 
 /** Use 3D navigation API */
 #ifndef CC_USE_NAVMESH
-#define CC_USE_NAVMESH 1
+#define CC_USE_NAVMESH 0
 #endif
 
 /** Use culling or not. */
@@ -305,25 +305,25 @@ THE SOFTWARE.
 #define CC_USE_JPEG  1
 #endif // CC_USE_JPEG
 
-/** Support TIFF or not. If your application don't use TIFF format picture, you can undefine this macro to save package size.
- */
-#ifndef CC_USE_TIFF
-#define CC_USE_TIFF  1
-#endif // CC_USE_TIFF
-
-/** Support webp or not. If your application don't use webp format picture, you can undefine this macro to save package size.
- */
-#ifndef CC_USE_WEBP
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
-#define CC_USE_WEBP  1
-#endif
-#endif // CC_USE_WEBP
+///** Support TIFF or not. If your application don't use TIFF format picture, you can undefine this macro to save package size.
+// */
+//#ifndef CC_USE_TIFF
+//#define CC_USE_TIFF  1
+//#endif // CC_USE_TIFF
+//
+///** Support webp or not. If your application don't use webp format picture, you can undefine this macro to save package size.
+// */
+//#ifndef CC_USE_WEBP
+//#if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
+//#define CC_USE_WEBP  1
+//#endif
+//#endif // CC_USE_WEBP
 
 /** Support WIC (Windows Image Component) or not. Replaces PNG, TIFF and JPEG
  */
 #ifndef CC_USE_WIC
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-#define CC_USE_WIC  1
+#define CC_USE_WIC  0
 #undef CC_USE_TIFF
 #undef CC_USE_JPEG
 #undef CC_USE_PNG
@@ -332,7 +332,7 @@ THE SOFTWARE.
 
 /** Enable Script binding. */
 #ifndef CC_ENABLE_SCRIPT_BINDING
-#define CC_ENABLE_SCRIPT_BINDING 1
+#define CC_ENABLE_SCRIPT_BINDING 0
 #endif
 
 /** When CC_ENABLE_SCRIPT_BINDING and CC_ENABLE_GC_FOR_NATIVE_OBJECTS are both 1
@@ -414,7 +414,7 @@ THE SOFTWARE.
  * Whether to strip FPS related data and functions, such as cc_fps_images_png
  */
 #ifndef CC_STRIP_FPS
-#define CC_STRIP_FPS 0
+#define CC_STRIP_FPS 1
 #endif
 
 #define CC_LABEL_MAX_LENGTH ((1<<16)/4)

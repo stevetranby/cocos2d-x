@@ -176,7 +176,7 @@ void AnimationCache::parseVersion2(const ValueMap& animations)
             float delayUnits = entry["delayUnits"].asFloat();
             Value& userInfo = entry["notification"];
 
-            AnimationFrame *animFrame = AnimationFrame::create(spriteFrame, delayUnits, userInfo.getType() == Value::Type::MAP ? userInfo.asValueMap() : ValueMapNull);
+            AnimationFrame *animFrame = AnimationFrame::create(spriteFrame, delayUnits, userInfo.getType() == Value::Type::MAP ? userInfo.asValueMap() : ValueMap());
 
             array.pushBack(animFrame);
         }
@@ -326,7 +326,7 @@ void AnimationCache::addAnimWithName(const string& animName, const string& frame
     if(animSpriteFrames.size() > 0)
     {
         //CCLOG("adding animation with name = %s", animName->getCString());
-        Animation *anim = Animation::createWithSpriteFrames(animSpriteFrames, frameDelay);
+        auto anim = Animation::createWithSpriteFrames(animSpriteFrames, frameDelay);
         animCache->addAnimation(anim, animName);
     }
     else

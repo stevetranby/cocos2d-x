@@ -195,7 +195,7 @@ public:
     
     /** 
      * Requests that the vector capacity be at least enough to contain n elements.
-     * @param capacity Minimum capacity requested of the Vector.
+     * @param n - The minimum capacity requested of the Vector.
      */
     void reserve(ssize_t n)
     {
@@ -218,7 +218,7 @@ public:
      */
     ssize_t size() const
     {
-        return  _data.size();
+        return  static_cast<ssize_t>(_data.size());
     }
     
     /** @brief Returns whether the Vector is empty (i.e. whether its size is 0).
@@ -269,7 +269,7 @@ public:
     T at(ssize_t index) const
     {
         CCASSERT( index >= 0 && index < size(), "index out of range in getObjectAtIndex()");
-        return _data[index];
+        return _data[static_cast<size_t>(index)];
     }
 
     /** Returns the first element in the Vector. */
@@ -482,7 +482,7 @@ public:
         CCASSERT(index >= 0 && index < size(), "Invalid index!");
         CCASSERT(object != nullptr, "The object should not be nullptr");
         
-        _data[index]->release();
+        CC_SAFE_RELEASE(_data[index]);
         _data[index] = object;
         object->retain();
     }

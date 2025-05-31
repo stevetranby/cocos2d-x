@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include <assert.h>
 
 #ifdef _USRDLL
-#define CC_DLL __attribute__ ((visibility("default"))) 
+#define CC_DLL __attribute__ ((visibility("default")))
 #else
 #define CC_DLL
 #endif
@@ -44,7 +44,75 @@ THE SOFTWARE.
 #define CC_ASSERT(cond) assert(cond)
 #endif
 
+
+//----------------------------------------------------------------------
+// C++17 Attribute Features
+//
+// https://infektor.net/posts/2017-01-19-using-cpp17-attributes-today.html
+//
+//
+
+#ifndef __has_cpp_attribute
+#define __has_cpp_attribute(name) 0
+#endif
+
 #define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
+
+
+//----------------------------------------------------------------------
+
+// c++11/14/17 attributes
+#if defined(__has_cpp_attribute)
+#  if __has_cpp_attribute(maybe_unused)
+#    define MAYBE_UNUSED [[maybe_unused]]
+#  elif __has_cpp_attribute(gnu::unused)
+#    define MAYBE_UNUSED [[gnu::unused]]
+#  else
+#    define MAYBE_UNUSED
+#  endif
+#else
+#  define MAYBE_UNUSED
+#endif
+
+#if defined(__has_cpp_attribute)
+#  if __has_cpp_attribute(nodiscard)
+#    define NODISCARD [[nodiscard]]
+#  elif __has_cpp_attribute(gnu::warn_unused_result)
+#    define NODISCARD [[gnu::warn_unused_result]]
+#  else
+#    define NODISCARD
+#  endif
+#else
+#    define NODISCARD
+#endif
+
+#if defined(__has_cpp_attribute)
+#  if __has_cpp_attribute(fallthrough)
+#    define FALLTHROUGH [[fallthrough]]
+#  elif __has_cpp_attribute(clang::fallthrough)
+#    define FALLTHROUGH [[clang::fallthrough]]
+#  else
+#    define FALLTHROUGH
+#  endif
+#else
+#  define FALLTHROUGH
+#endif
+
+
+//----------------------------------------------------------------------
+// Printf-like VA_ARGS for all compilers
+// Passing variable name as string to function with default parameters
+// https://stackoverflow.com/questions/9969490/passing-variable-name-as-string-to-function-with-default-parameters
+//
+
+#define ST_STRINGIFY_IMPL(s) #s
+#define ST_STRINGIFY(s) ST_STRINGIFY_IMPL(s)
+#define ST_ARG1_IMPL(a, ...) a
+#define ST_ARG1(...) ST_ARG1_IMPL(__VA_ARGS__, 0)
+
+#define MACRO_MyFuncNeedingZeroOrMoreVarArgs(...) MyFuncNeedingZeroOrMoreVarArgs(ST_STRINGIFY(ARG1(__VA_ARGS__)), __VA_ARGS__)
+
+//----------------------------------------------------------------------
 
 /* Define NULL pointer value */
 #ifndef NULL

@@ -151,9 +151,17 @@ public:
         */
         UNIFORM_SAMPLER0,
         UNIFORM_SAMPLER1,
-        UNIFORM_SAMPLER2,
-        UNIFORM_SAMPLER3,
+//        UNIFORM_SAMPLER2,
+//        UNIFORM_SAMPLER3,
         /**@}*/
+
+        /** @{
+         * Sampler 0-3, used for texture.
+         */
+        UNIFORM_SAMPLER_SIZE_0,
+        UNIFORM_SAMPLER_SIZE_1,
+        /**@}*/
+
         UNIFORM_MAX,
     };
 
@@ -312,8 +320,17 @@ public:
     */
     static const char* UNIFORM_NAME_SAMPLER0;
     static const char* UNIFORM_NAME_SAMPLER1;
-    static const char* UNIFORM_NAME_SAMPLER2;
-    static const char* UNIFORM_NAME_SAMPLER3;
+//    static const char* UNIFORM_NAME_SAMPLER2;
+//    static const char* UNIFORM_NAME_SAMPLER3;
+
+    /**
+     @{ Sampler Size uniform 0-3, used for textures {width x height}.
+     */
+    static const char* UNIFORM_NAME_SAMPLER_SIZE_0;
+    static const char* UNIFORM_NAME_SAMPLER_SIZE_1;
+//    static const char* UNIFORM_NAME_SAMPLER_SIZE_2;
+//    static const char* UNIFORM_NAME_SAMPLER_SIZE_3;
+
     /**
     @}
     */
@@ -333,10 +350,10 @@ public:
     /**Attribute position.*/
     static const char* ATTRIBUTE_NAME_POSITION;
     /**@{ Attribute Texcoord 0-3.*/
-    static const char* ATTRIBUTE_NAME_TEX_COORD;
+    static const char* ATTRIBUTE_NAME_TEX_COORD0;
     static const char* ATTRIBUTE_NAME_TEX_COORD1;
-    static const char* ATTRIBUTE_NAME_TEX_COORD2;
-    static const char* ATTRIBUTE_NAME_TEX_COORD3;
+//    static const char* ATTRIBUTE_NAME_TEX_COORD2;
+//    static const char* ATTRIBUTE_NAME_TEX_COORD3;
     /**@}*/
     /**Attribute normal.*/
     static const char* ATTRIBUTE_NAME_NORMAL;
