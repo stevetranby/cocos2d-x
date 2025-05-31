@@ -107,39 +107,6 @@ void main(void)
     #endif
 #endif
 
-    #if (MAX_SPOT_LIGHT_NUM > 0)
-        for (int i = 0; i < MAX_SPOT_LIGHT_NUM; ++i)
-        {
-            vec3 spotLightDir = u_SpotLightSourcePosition[i] - ePosition.xyz;
-            v_vertexToSpotLightDirection[i].x = dot(eTangent, spotLightDir);
-            v_vertexToSpotLightDirection[i].y = dot(eBinormal, spotLightDir);
-            v_vertexToSpotLightDirection[i].z = dot(eNormal, spotLightDir);
-
-            v_spotLightDirection[i].x = dot(eTangent, u_SpotLightSourceDirection[i]);
-            v_spotLightDirection[i].y = dot(eBinormal, u_SpotLightSourceDirection[i]);
-            v_spotLightDirection[i].z = dot(eNormal, u_SpotLightSourceDirection[i]);
-        }
-    #endif
-#else
-    #if (MAX_POINT_LIGHT_NUM > 0)
-        for (int i = 0; i < MAX_POINT_LIGHT_NUM; ++i)
-        {
-            v_vertexToPointLightDirection[i] = u_PointLightSourcePosition[i].xyz - ePosition.xyz;
-        }
-    #endif
-
-    #if (MAX_SPOT_LIGHT_NUM > 0)
-        for (int i = 0; i < MAX_SPOT_LIGHT_NUM; ++i)
-        {
-            v_vertexToSpotLightDirection[i] = u_SpotLightSourcePosition[i] - ePosition.xyz;
-        }
-    #endif
-
-    #if ((MAX_DIRECTIONAL_LIGHT_NUM > 0) || (MAX_POINT_LIGHT_NUM > 0) || (MAX_SPOT_LIGHT_NUM > 0))
-        v_normal = CC_NormalMatrix * a_normal;
-    #endif
-#endif
-
     TextureCoordOut = a_texCoord0;
     TextureCoordOut.y = 1.0 - TextureCoordOut.y;
     gl_Position = CC_PMatrix * ePosition;
@@ -289,49 +256,6 @@ void main()
             v_dirLightDirection[i].z = dot(eNormal, u_DirLightSourceDirection[i]);
         }
     #endif
-
-    #if (MAX_POINT_LIGHT_NUM > 0)
-        for (int i = 0; i < MAX_POINT_LIGHT_NUM; ++i)
-        {
-            vec3 pointLightDir = u_PointLightSourcePosition[i].xyz - ePosition.xyz;
-            v_vertexToPointLightDirection[i].x = dot(eTangent, pointLightDir);
-            v_vertexToPointLightDirection[i].y = dot(eBinormal, pointLightDir);
-            v_vertexToPointLightDirection[i].z = dot(eNormal, pointLightDir);
-        }
-    #endif
-
-    #if (MAX_SPOT_LIGHT_NUM > 0)
-        for (int i = 0; i < MAX_SPOT_LIGHT_NUM; ++i)
-        {
-            vec3 spotLightDir = u_SpotLightSourcePosition[i] - ePosition.xyz;
-            v_vertexToSpotLightDirection[i].x = dot(eTangent, spotLightDir);
-            v_vertexToSpotLightDirection[i].y = dot(eBinormal, spotLightDir);
-            v_vertexToSpotLightDirection[i].z = dot(eNormal, spotLightDir);
-
-            v_spotLightDirection[i].x = dot(eTangent, u_SpotLightSourceDirection[i]);
-            v_spotLightDirection[i].y = dot(eBinormal, u_SpotLightSourceDirection[i]);
-            v_spotLightDirection[i].z = dot(eNormal, u_SpotLightSourceDirection[i]);
-        }
-    #endif
-#else
-    #if (MAX_POINT_LIGHT_NUM > 0)
-        for (int i = 0; i < MAX_POINT_LIGHT_NUM; ++i)
-        {
-            v_vertexToPointLightDirection[i] = u_PointLightSourcePosition[i].xyz- ePosition.xyz;
-        }
-    #endif
-
-    #if (MAX_SPOT_LIGHT_NUM > 0)
-        for (int i = 0; i < MAX_SPOT_LIGHT_NUM; ++i)
-        {
-            v_vertexToSpotLightDirection[i] = u_SpotLightSourcePosition[i] - ePosition.xyz;
-        }
-    #endif
-
-    #if ((MAX_DIRECTIONAL_LIGHT_NUM > 0) || (MAX_POINT_LIGHT_NUM > 0) || (MAX_SPOT_LIGHT_NUM > 0))
-        v_normal = CC_NormalMatrix * normal;
-    #endif
-#endif
 
     #if (MAX_POINT_LIGHT_NUM > 0)
         for (int i = 0; i < MAX_POINT_LIGHT_NUM; ++i)
