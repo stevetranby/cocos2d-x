@@ -40,7 +40,7 @@
 #include "renderer/CCTechnique.h"
 #include "renderer/CCMaterial.h"
 #include "renderer/CCPass.h"
-#include "xxhash.h"
+#include "external/xxhash/xxhash.h"
 
 NS_CC_BEGIN
 

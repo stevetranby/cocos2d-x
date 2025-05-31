@@ -59,7 +59,15 @@ THE SOFTWARE.
 #include "ui/UIEditBox/UIEditBox.h"
 #include "ui/UILayoutComponent.h"
 #include "ui/UITabControl.h"
-#include "editor-support/cocostudio/CocosStudioExtension.h"
+
+NS_CC_BEGIN
+
+class CC_DLL NodeExtension
+{
+public:
+    NodeExtension();
+    ~NodeExtension();
+};
 
 /**
  * @addtogroup ui

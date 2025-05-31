@@ -57,7 +57,7 @@
 #include "editor-support/cocostudio/WidgetReader/PageViewReader/PageViewReader.h"
 #include "editor-support/cocostudio/WidgetReader/ListViewReader/ListViewReader.h"
 
-#include "tinyxml2.h"
+#include "external/tinyxml2/tinyxml2.h"
 #include "flatbuffers/flatbuffers.h"
 #include "flatbuffers/util.h"
 

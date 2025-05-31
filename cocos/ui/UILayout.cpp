@@ -39,7 +39,19 @@ THE SOFTWARE.
 #include "2d/CCSprite.h"
 #include "base/CCEventFocus.h"
 #include "base/CCStencilStateManager.h"
-#include "editor-support/cocostudio/CocosStudioExtension.h"
+
+//#include <algorithm>
+
+
+NS_CC_BEGIN
+
+class CC_DLL NodeExtension
+{
+public:
+    NodeExtension();
+    ~NodeExtension();
+};
+NS_CC_END
 
 
 NS_CC_BEGIN

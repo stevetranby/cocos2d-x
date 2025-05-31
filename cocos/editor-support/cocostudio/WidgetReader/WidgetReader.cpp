@@ -32,7 +32,7 @@
 #include "editor-support/cocostudio/CCComExtensionData.h"
 #include "editor-support/cocostudio/CSParseBinary_generated.h"
 
-#include "tinyxml2.h"
+#include "external/tinyxml2/tinyxml2.h"
 #include "flatbuffers/flatbuffers.h"
 #include "ui/UILayoutComponent.h"
 #include "editor-support/cocostudio/ActionTimeline/CSLoader.h"

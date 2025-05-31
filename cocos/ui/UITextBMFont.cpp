@@ -25,9 +25,19 @@ THE SOFTWARE.
 
 #include "ui/UITextBMFont.h"
 #include "2d/CCLabel.h"
-#include "editor-support/cocostudio/CocosStudioExtension.h"
+#include "ui/UIHelper.h"
 
 NS_CC_BEGIN
+
+//----------------------------------------------------------------------
+class CC_DLL NodeExtension
+{
+public:
+    NodeExtension();
+    ~NodeExtension();
+};
+
+//----------------------------------------------------------------------
 
 namespace ui {
     

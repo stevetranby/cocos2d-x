@@ -28,7 +28,18 @@ THE SOFTWARE.
 #include "ui/UIHelper.h"
 #include "2d/CCSprite.h"
 #include "2d/CCCamera.h"
-#include "editor-support/cocostudio/CocosStudioExtension.h"
+
+NS_CC_BEGIN
+
+class CC_DLL NodeExtension
+{
+public:
+    NodeExtension();
+    ~NodeExtension();
+};
+NS_CC_END
+
+//----------------------------------------------------------------------
 
 NS_CC_BEGIN
 

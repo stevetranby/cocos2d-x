@@ -25,7 +25,20 @@ THE SOFTWARE.
 
 #include "ui/UIAbstractCheckButton.h"
 #include "2d/CCSprite.h"
-#include "editor-support/cocostudio/CocosStudioExtension.h"
+
+// STEVE - remove this, but note it from merge, steve made it so that copy/pasted NodeExtension instead for fewer includes during build - `#include "editor-support/cocostudio/CocosStudioExtension.h"`
+#include "ui/UIHelper.h"
+NS_CC_BEGIN
+class CC_DLL NodeExtension
+{
+public:
+    NodeExtension();
+    ~NodeExtension();
+};
+NS_CC_END
+// STEVE-END
+
+
 
 NS_CC_BEGIN
 

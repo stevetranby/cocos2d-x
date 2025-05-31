@@ -35,7 +35,7 @@
 #include "editor-support/cocostudio/FlatBuffersSerialize.h"
 #include "editor-support/cocostudio/LocalizationManager.h"
 
-#include "tinyxml2.h"
+#include "external/tinyxml2/tinyxml2.h"
 #include "flatbuffers/flatbuffers.h"
 
 USING_NS_CC;

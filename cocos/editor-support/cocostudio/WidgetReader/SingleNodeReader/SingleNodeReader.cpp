@@ -29,7 +29,7 @@
 #include "editor-support/cocostudio/ActionTimeline/CCActionTimeline.h"
 #include "editor-support/cocostudio/WidgetReader/NodeReader/NodeReader.h"
 
-#include "tinyxml2.h"
+#include "external/tinyxml2/tinyxml2.h"
 #include "flatbuffers/flatbuffers.h"
 
 

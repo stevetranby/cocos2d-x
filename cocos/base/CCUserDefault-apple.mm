@@ -32,7 +32,7 @@
 #include <string>
 
 #import "base/CCUserDefault.h"
-#import "tinyxml2.h"
+#import "external/tinyxml2/tinyxml2.h"
 #import "platform/CCPlatformConfig.h"
 #import "platform/CCPlatformMacros.h"
 #import "base/base64.h"

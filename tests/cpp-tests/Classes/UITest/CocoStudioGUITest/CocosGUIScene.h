@@ -26,7 +26,7 @@
 #ifndef __TestCpp__CocosGUIScene__
 #define __TestCpp__CocosGUIScene__
 
-#include "BaseTest.h"
+#include "../Classes/BaseTest.h"
 
 DEFINE_TEST_LIST(GUIDynamicCreateTests);
 
