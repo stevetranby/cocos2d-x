@@ -141,7 +141,6 @@ private:
     Map<std::string, Animation*> _animations;
     static AnimationCache* s_sharedAnimationCache;
 
-
     // STEVE
 public:
     void addAnimationWithName(const std::string& animName, const std::string& animFrameName, const std::vector<std::string>& animFrameIndicies, float frameDelay = 0.1f);
