@@ -36,8 +36,9 @@
 #include "audio/include/AudioEngine.h"
 using namespace cocos2d::experimental;
 #elif USE_SIMPLE_AUDIO_ENGINE
-#include "audio/include/SimpleAudioEngine.h"
-using namespace CocosDenshion;
+#error "dont use simple audio engine"
+// #include "audio/include/SimpleAudioEngine.h"
+// using namespace CocosDenshion;
 #endif
 
 USING_NS_CC;
