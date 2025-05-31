@@ -25,14 +25,15 @@
 
 const char* ccETC1ASPositionTextureColor_frag = R"(
 #ifdef GL_ES
-    precision mediump float;
+    // STEVE: precision mediump float;
+precision highp float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 void main() {
-    vec4 texColor = vec4(texture2D(CC_Texture0, v_texCoord).rgb, texture2D(CC_Texture1, v_texCoord).r);
+    vec4 texColor = vec4(texture2D(CC_Texture0, v_texCoord0).rgb, texture2D(CC_Texture1, v_texCoord0).r);
 
     texColor.rgb *= texColor.a; // Premultiply with Alpha channel
 

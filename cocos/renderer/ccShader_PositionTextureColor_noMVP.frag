@@ -25,12 +25,17 @@
 
 const char* ccPositionTextureColor_noMVP_frag = R"(
 
+#ifdef GL_ES
+varying lowp vec4 v_fragmentColor;
+varying highp vec2 v_texCoord0;
+#else
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
+#endif 
 
 void main()
 {
-    gl_FragColor = v_fragmentColor * texture2D(CC_Texture0, v_texCoord);
+    gl_FragColor = v_fragmentColor * texture2D(CC_Texture0, v_texCoord0);
 }
 )";
 

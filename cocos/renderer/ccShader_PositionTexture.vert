@@ -26,17 +26,17 @@
 const char* ccPositionTexture_vert = R"(
 
 attribute vec4 a_position;
-attribute vec2 a_texCoord;
+attribute vec2 a_texCoord0;
 
 #ifdef GL_ES
-varying mediump vec2 v_texCoord;
+varying highp vec2 v_texCoord0;
 #else
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 #endif
 
 void main()
 {
     gl_Position = CC_MVPMatrix * a_position;
-    v_texCoord = a_texCoord;
+    v_texCoord0 = a_texCoord0;
 }
 )";
