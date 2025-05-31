@@ -15,7 +15,7 @@ set(COCOS_2D_HEADER
     2d/CCActionProgressTimer.h
     2d/CCTweenFunction.h
     2d/CCLight.h
-    2d/CCAutoPolygon.h
+#    2d/CCAutoPolygon.h
     2d/CCFontAtlas.h
     2d/CCAtlasNode.h
     2d/CCClippingNode.h
@@ -136,7 +136,7 @@ set(COCOS_2D_SRC
     2d/CCSprite.cpp
     2d/CCSpriteFrameCache.cpp
     2d/CCSpriteFrame.cpp
-    2d/CCAutoPolygon.cpp
+#    2d/CCAutoPolygon.cpp
     2d/CCTextFieldTTF.cpp
     2d/CCTileMapAtlas.cpp
     2d/CCTMXLayer.cpp

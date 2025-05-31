@@ -255,25 +255,25 @@ void Controller::registerListeners()
             }
         };
     }
-    else if (_impl->_gcController.gamepad != nil)
+    else if (_impl->_gcController.extendedGamepad != nil)
     {
-        _impl->_gcController.gamepad.dpad.up.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.up.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_UP, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.down.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.down.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_DOWN, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.left.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.left.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_LEFT, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.dpad.right.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
+        _impl->_gcController.extendedGamepad.dpad.right.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed){
             onButtonEvent(Key::BUTTON_DPAD_RIGHT, pressed, value, button.isAnalog);
         };
         
-        _impl->_gcController.gamepad.valueChangedHandler = ^(GCGamepad *gamepad, GCControllerElement *element){
+        _impl->_gcController.extendedGamepad.valueChangedHandler = ^(GCExtendedGamepad *gamepad, GCControllerElement *element){
             
             if (element == gamepad.buttonA)
             {
@@ -333,9 +333,11 @@ void Controller::registerListeners()
         };
     }
 #endif
-    
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     _impl->_gcController.controllerPausedHandler = ^(GCController* gcCon){
-        
         auto iter = std::find_if(s_allController.begin(), s_allController.end(), [gcCon](Controller* c){ return c->_impl->_gcController == gcCon; });
         
         if(iter == s_allController.end())
@@ -347,6 +349,7 @@ void Controller::registerListeners()
         onButtonEvent(Key::BUTTON_PAUSE, true, 1.0f, false);
         onButtonEvent(Key::BUTTON_PAUSE, false, 0.0f, false);
     };
+#pragma clang diagnostic pop
 }
 
 bool Controller::isConnected() const
@@ -356,6 +359,8 @@ bool Controller::isConnected() const
 
 void Controller::receiveExternalKeyEvent(int externalKeyCode,bool receive)
 {
+    (void)externalKeyCode;
+    (void)receive;
 }
 
 NS_CC_END

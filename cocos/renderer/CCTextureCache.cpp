@@ -207,6 +207,7 @@ void TextureCache::addImageAsync(const std::string &path, const std::function<vo
 
     // check if file exists
     if (fullpath.empty() || !FileUtils::getInstance()->isFileExist(fullpath)) {
+        _imagesNotFound.insert(fullpath); // STEVE
         if (callback) callback(nullptr);
         return;
     }
@@ -358,6 +359,10 @@ void TextureCache::addImageAsyncCallBack(float /*dt*/)
                 // cache the texture file name
                 VolatileTextureMgr::addImageTexture(texture, asyncStruct->filename);
 #endif
+
+                _imagesLoadedAtLeastOnce.insert(asyncStruct->filename); // STEVE
+
+
                 // cache the texture. retain it, since it is added in the map
                 _textures.emplace(asyncStruct->filename, texture);
                 texture->retain();
@@ -432,6 +437,7 @@ Texture2D * TextureCache::addImage(const std::string &path)
                 VolatileTextureMgr::addImageTexture(texture, fullpath);
 #endif
                 // texture already retained, no need to re-retain it
+                _imagesLoadedAtLeastOnce.insert(fullpath); // STEVE
                 _textures.emplace(fullpath, texture);
 
                 //-- ANDROID ETC1 ALPHA SUPPORTS.
@@ -480,7 +486,7 @@ void TextureCache::parseNinePatchImage(cocos2d::Image *image, cocos2d::Texture2D
 Texture2D* TextureCache::addImage(Image *image, const std::string &key)
 {
     CCASSERT(image != nullptr, "TextureCache: image MUST not be nil");
-    CCASSERT(image->getData() != nullptr, "TextureCache: image MUST not be nil");
+    //CCASSERT(image->getData() != nullptr, "TextureCache: image MUST not be nil");
 
     Texture2D * texture = nullptr;
 
@@ -679,21 +685,32 @@ std::string TextureCache::getCachedTextureInfo() const
 
         memset(buftmp, 0, sizeof(buftmp));
 
-
         Texture2D* tex = texture.second;
         unsigned int bpp = tex->getBitsPerPixelForFormat();
         // Each texture takes up width * height * bytesPerPixel bytes.
         auto bytes = tex->getPixelsWide() * tex->getPixelsHigh() * bpp / 8;
         totalBytes += bytes;
         count++;
-        snprintf(buftmp, sizeof(buftmp) - 1, "\"%s\" rc=%lu id=%lu %lu x %lu @ %ld bpp => %lu KB\n",
-            texture.first.c_str(),
+
+        std::string trimmedFilename;
+        auto& filepath = texture.first;
+        std::size_t found = filepath.rfind(".app");
+        if (found != std::string::npos) {
+            trimmedFilename.append(filepath.substr(found + 4));
+        } else {
+            found = filepath.size() > 40 ? filepath.size() - 40 : 0;
+            trimmedFilename.append(filepath.substr(found));
+        }
+
+
+        snprintf(buftmp, sizeof(buftmp) - 1, "rc=%lu id=%lu %lu x %lu @ %ld bpp => %lu KB\t\t\"%s\"\n",
             (long)tex->getReferenceCount(),
             (long)tex->getName(),
             (long)tex->getPixelsWide(),
             (long)tex->getPixelsHigh(),
             (long)bpp,
-            (long)bytes / 1024);
+            (long)bytes / 1024,
+             trimmedFilename.c_str());
 
         buffer += buftmp;
     }

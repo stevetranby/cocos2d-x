@@ -34,7 +34,7 @@ THE SOFTWARE.
 
 
 #include "2d/CCSprite.h"
-#include "2d/CCAutoPolygon.h"
+//#include "2d/CCAutoPolygon.h"
 #include "platform/CCFileUtils.h"
 #include "base/CCNS.h"
 #include "base/ccMacros.h"
@@ -43,6 +43,7 @@ THE SOFTWARE.
 #include "base/CCDirector.h"
 #include "renderer/CCTexture2D.h"
 #include "renderer/CCTextureCache.h"
+#include "renderer/CCTrianglesCommand.h"
 #include "base/CCNinePatchImageParser.h"
 
 using namespace std;
@@ -236,10 +237,12 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dictionary, Textu
 
             // create frame
             spriteFrame = SpriteFrame::createWithTexture(texture,
-                                                         Rect(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
+                                                         Rect(textureRect.origin, spriteSize),
                                                          textureRotated,
                                                          spriteOffset,
                                                          spriteSourceSize);
+
+            CCASSERT(spriteFrame, "spriteFrame create failed!");
 
             if(frameDict.find("vertices") != frameDict.end())
             {
@@ -270,6 +273,7 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dictionary, Textu
         }
         // add sprite frame
         _spriteFramesCache.insertFrame(plist, spriteFrameName, spriteFrame);
+        //STEVE CCLOG("[sctest] spriteFrameName = %s", spriteFrameName.c_str());
     }
     _spriteFramesCache.markPlistFull(plist, true);
     CC_SAFE_DELETE(image);
@@ -538,13 +542,13 @@ SpriteFrame* SpriteFrameCache::getSpriteFrameByName(const std::string& name)
                 frame = _spriteFramesCache.at(key);
                 if (!frame)
                 {
-                    CCLOG("cocos2d: SpriteFrameCache: Frame aliases '%s' isn't found", key.c_str());
+                    CCLOG("cocos2d: SpriteFrameCache: Frame aliases '%s' not in cache.", key.c_str());
                 }
             }
         }
         else
         {
-            CCLOG("cocos2d: SpriteFrameCache: Frame '%s' isn't found", name.c_str());
+            CCLOG("cocos2d: SpriteFrameCache: Frame '%s' not in cache.", name.c_str());
         }
     }
     return frame;

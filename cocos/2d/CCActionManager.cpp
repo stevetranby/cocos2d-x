@@ -69,6 +69,7 @@ ActionManager::~ActionManager()
 
 void ActionManager::deleteHashElement(tHashElement *element)
 {
+    CC_ASSERT(element != nullptr);
     ccArrayFree(element->actions);
     HASH_DEL(_targets, element);
     element->target->release();

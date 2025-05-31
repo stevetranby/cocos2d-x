@@ -154,7 +154,7 @@ namespace cocos2d { namespace network {
     for (NSData* data in _dataArray)
     {
         // check
-        if (bytesReceived + data.length > len)
+        if (bytesReceived + (int64_t)data.length > len)
         {
             break;
         }
@@ -389,6 +389,8 @@ namespace cocos2d { namespace network {
 - (void)URLSession:(NSURLSession *)session task :(NSURLSessionTask *)task
                             didCompleteWithError:(NSError *)error
 {
+    (void)session;
+    
     DLLOG("DownloaderAppleImpl task: \"%s\" didCompleteWithError: %d errDesc: %s"
           , [task.originalRequest.URL.absoluteString cStringUsingEncoding:NSUTF8StringEncoding]
           , (error ? (int)error.code: 0)
@@ -487,6 +489,8 @@ namespace cocos2d { namespace network {
 - (void)URLSession:(NSURLSession *)session dataTask :(NSURLSessionDataTask *)dataTask
                                       didReceiveData:(NSData *)data
 {
+    (void)session;
+    
     DLLOG("DownloaderAppleImpl dataTask: \"%s\" didReceiveDataLen %d",
           [dataTask.originalRequest.URL.absoluteString cStringUsingEncoding:NSUTF8StringEncoding],
           (int)data.length);
@@ -530,6 +534,8 @@ namespace cocos2d { namespace network {
 - (void)URLSession:(NSURLSession *)session downloadTask :(NSURLSessionDownloadTask *)downloadTask
                                didFinishDownloadingToURL:(NSURL *)location
 {
+    (void)session;
+    
     DLLOG("DownloaderAppleImpl downloadTask: \"%s\" didFinishDownloadingToURL %s",
           [downloadTask.originalRequest.URL.absoluteString cStringUsingEncoding:NSUTF8StringEncoding],
           [location.absoluteString cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -612,6 +618,8 @@ namespace cocos2d { namespace network {
                                        totalBytesWritten:(int64_t)totalBytesWritten
                                totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 {
+    (void)session;
+    
 //    NSLog(@"DownloaderAppleImpl downloadTask: \"%@\" received: %lld total: %lld", downloadTask.originalRequest.URL, totalBytesWritten, totalBytesExpectedToWrite);
 
     if (nullptr == _outer || totalBytesExpectedToWrite == NSURLSessionTransferSizeUnknown)
@@ -633,6 +641,9 @@ namespace cocos2d { namespace network {
                                        didResumeAtOffset:(int64_t)fileOffset
                                       expectedTotalBytes:(int64_t)expectedTotalBytes
 {
+    (void)session;
+    (void)expectedTotalBytes;
+    
     NSLog(@"[TODO]DownloaderAppleImpl downloadTask: \"%@\" didResumeAtOffset: %lld", downloadTask.originalRequest.URL, fileOffset);
     // 下载失败
 //    self.downloadFail([self getDownloadRespose:XZDownloadFail identifier:self.identifier progress:0.00 downloadUrl:nil downloadSaveFileUrl:nil downloadData:nil downloadResult:@"下载失败"]);

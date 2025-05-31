@@ -657,7 +657,7 @@ void ListView::interceptTouchEvent(TouchEventType event, Widget *sender, Touch* 
             }
             parent = dynamic_cast<Widget*>(parent->getParent());
         }
-        if (sender->isHighlighted()) {
+        if (parent && parent->isHighlighted()) {
             selectedItemEvent(event);
         }
     }
@@ -892,7 +892,7 @@ ssize_t ListView::getCurSelectedIndex() const
     return _curSelectedIndex;
 }
 
-void ListView::setCurSelectedIndex(int itemIndex)
+void ListView::setCurSelectedIndex(size_t itemIndex)
 {
     Widget* item = getItem(itemIndex);
     if (item == nullptr)

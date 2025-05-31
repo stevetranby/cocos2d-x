@@ -184,7 +184,7 @@ void ScrollView::setInnerContainerSize(const Size &size)
 {
     float innerSizeWidth = _contentSize.width;
     float innerSizeHeight = _contentSize.height;
-    Size originalInnerSize = _innerContainer->getContentSize();
+    
     if (size.width < _contentSize.width)
     {
         CCLOG("Inner width <= scrollview width, it will be force sized!");
@@ -492,6 +492,8 @@ void ScrollView::startAutoScroll(const Vec2& deltaMove, float timeInSec, bool at
         Vec2 afterOutOfBoundary = getHowMuchOutOfBoundary(adjustedDeltaMove);
         if(currentOutOfBoundary.x * afterOutOfBoundary.x > 0 || currentOutOfBoundary.y * afterOutOfBoundary.y > 0)
         {
+            // STEVE: added from https://github.com/cocos2d/cocos2d-x/pull/18650/files
+            _autoScrollBrakingStartPosition = getInnerContainerPosition(); // STEVE
             _autoScrollBraking = true;
         }
     }

@@ -40,18 +40,26 @@ Application* Application::sm_pSharedApplication = nullptr;
 
 Application::Application()
 {
+    NSLog(@"Application()");
+    printf("Application()\n");
     CC_ASSERT(! sm_pSharedApplication);
     sm_pSharedApplication = this;
 }
 
 Application::~Application()
 {
+    NSLog(@"Application::~()");
+    printf("Application::~()\n");
     CC_ASSERT(this == sm_pSharedApplication);
     sm_pSharedApplication = 0;
 }
 
 int Application::run()
 {
+    NSLog(@"Application::run");
+//    printf("Application::run\n");
+//    NSString * version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+//    NSString * build = [[NSBundle mainBundle] objectForInfoDictionaryKey: (NSString *)kCFBundleVersionKey];
     if (applicationDidFinishLaunching())
     {
         [[CCDirectorCaller sharedDirectorCaller] startMainLoop];
@@ -61,7 +69,7 @@ int Application::run()
 
 void Application::setAnimationInterval(float interval)
 {
-    [[CCDirectorCaller sharedDirectorCaller] setAnimationInterval: interval ];
+    [[CCDirectorCaller sharedDirectorCaller] setAnimationInterval: interval];
 }
 
 //----------------------------------------------------------------------
@@ -112,6 +120,9 @@ LanguageType Application::getCurrentLanguage()
 
 Application::Platform Application::getTargetPlatform()
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) // idiom for iOS <= 3.2, otherwise: [UIDevice userInterfaceIdiom] is faster.
     {
         return Platform::OS_IPAD;
@@ -120,6 +131,7 @@ Application::Platform Application::getTargetPlatform()
     {
         return Platform::OS_IPHONE;
     }
+#pragma clang diagnostic pop
 }
 
 std::string Application::getVersion() {
@@ -130,11 +142,38 @@ std::string Application::getVersion() {
     return "";
 }
 
-bool Application::openURL(const std::string &url)
+std::string Application::getBuildVersion() {
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    if (version) {
+        return [version UTF8String];
+    }
+    return "";
+}
+
+// TODO: should maybe move this into STDevice-ios.mm
+std::string Application::getCopyrightString() {
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"NSHumanReadableCopyright"];
+    if (version) {
+        return [version UTF8String];
+    }
+    return "";
+}
+
+// TODO: Need to add a completion handler function parameter to pass to the new API for openURL
+void Application::openURL(const std::string &url, const std::function<void(BOOL)>& completionHandler)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
-    return [[UIApplication sharedApplication] openURL:nsUrl];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
+    //return [[UIApplication sharedApplication] openURL:nsUrl];
+    [[UIApplication sharedApplication] openURL:nsUrl options:@{} completionHandler:^(BOOL success){
+        CCLOG("openURL success: %d", success);
+        completionHandler(success);
+    }];
+#pragma clang diagnostic pop
 }
 
 void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {

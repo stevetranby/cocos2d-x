@@ -116,13 +116,10 @@ bool cocos2d::Image::saveToFile(const std::string& filename, bool isToRGB)
 
     // NOTE: Prevent memory leak. Requires ARC enabled.
     @autoreleasepool {
-        NSData *data;
         if (saveToPNG) {
-            data = UIImagePNGRepresentation(image);
-        } else {
-            data = UIImageJPEGRepresentation(image, 1.0f);
+            NSData *data = UIImagePNGRepresentation(image);
+            [data writeToFile:[NSString stringWithUTF8String:filename.c_str()] atomically:YES];
         }
-        [data writeToFile:[NSString stringWithUTF8String:filename.c_str()] atomically:YES];
     }
 
     [image release];

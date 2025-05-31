@@ -694,6 +694,10 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
         // calculate gid of frame
         animInfo->_frames.emplace_back(TMXTileAnimFrame(info->_firstGid + attributeDict["tileid"].asInt(), attributeDict["duration"].asFloat()));
     }
+    else
+    {
+        CCLOG("Unknown element '%s' while parsing TMX Map.", elementName.c_str());
+    }
 }
 
 void TMXMapInfo::endElement(void* /*ctx*/, const char *name)
@@ -817,6 +821,10 @@ void TMXMapInfo::endElement(void* /*ctx*/, const char *name)
     else if (elementName == "animation")
     {
         tmxMapInfo->setParentElement(TMXPropertyNone);
+    }
+    else
+    {
+        CCLOG("Unknown element '%s' while parsing TMX Map.", elementName.c_str());
     }
 }
 

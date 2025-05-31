@@ -110,9 +110,16 @@ static id s_sharedDirectorCaller;
 {
     // Director::setAnimationInterval() is called, we should invalidate it first
     [self stopMainLoop];
-    
-    displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(doCaller:)];
+
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doCaller:)];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
+    CCLOG("setFrameInterval: %d", self.interval);
     [displayLink setFrameInterval: self.interval];
+#pragma clang diagnostic pop
+
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
@@ -126,11 +133,19 @@ static id s_sharedDirectorCaller;
 {
     // Director::setAnimationInterval() is called, we should invalidate it first
     [self stopMainLoop];
-        
-    self.interval = 60.0 * intervalNew;
-        
+
     displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(doCaller:)];
+
+    // Interval - 1 => Every Frame, 2 => Every other Frame (60 * intervalNew is assuming 60 fps display refresh rate)
+    self.interval = (int)(60.0 * intervalNew);
+    CCLOG("setFrameInterval: %d", self.interval);
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // DEPRECATED NOTE: Ignore because we're moving to Axmol Engine
     [displayLink setFrameInterval: self.interval];
+#pragma clang diagnostic pop
+
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
                       
@@ -144,8 +159,8 @@ static id s_sharedDirectorCaller;
         
         [EAGLContext setCurrentContext: cocos2dxContext];
 
-        CFTimeInterval dt = ((CADisplayLink*)displayLink).timestamp - lastDisplayTime;
-        lastDisplayTime = ((CADisplayLink*)displayLink).timestamp;
+        CFTimeInterval dt = displayLink.timestamp - lastDisplayTime;
+        lastDisplayTime = displayLink.timestamp;
         director->mainLoop(dt);
     }
 }

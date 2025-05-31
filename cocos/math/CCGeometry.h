@@ -54,12 +54,12 @@ public:
 
 public:
     /**
-    @{
-    Constructor.
-    @param width Width of the size.
-    @param height Height of the size.
-    @param other Copy constructor.
-    @param point Conversion from a point.
+     @{
+     Constructor.
+     @param width Width of the size.
+     @param height Height of the size.
+     @param other Copy constructor.
+     @param point Conversion from a point.
      */
     Size();
     Size(float width, float height);

@@ -1,29 +1,49 @@
-apply plugin: 'com.android.library'
+apply plugin: "com.android.library"
 
 android {
-    compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
+    namespace = "org.cocos2dx.lib"
+
+    compileSdk = 35
+    ndkVersion = "27.2.12479018"
+    buildToolsVersion = '35.0.1'
+
+    project.logger.lifecycle("[cocos2d-x] A lifecycle info log message.")
 
     defaultConfig {
-        minSdkVersion PROP_MIN_SDK_VERSION
-        targetSdkVersion PROP_TARGET_SDK_VERSION
-        versionCode 1
-        versionName "1.0"
+        targetSdk = 35
+        minSdk = 21
+        versionCode = 31704
+        versionName = "3.17"
     }
 
-    sourceSets.main {
-        aidl.srcDir "../java/src"
-        java.srcDir "../java/src"
-        manifest.srcFile "AndroidManifest.xml"
+    sourceSets {
+        main {
+            // TODO: these should use a common variable instead of dupe root paths? @deprecated
+            aidl.srcDir("../java/src")
+            java.srcDir("../java/src")
+            manifest.srcFile("AndroidManifest.xml")
+        }
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        aidl = true
     }
 }
 
 dependencies {
-    implementation fileTree(dir: '../java/libs', include: ['*.jar'])
+    implementation(fileTree(dir: "../java/libs", include: ["*.jar"]))
+    implementation("androidx.startup:startup-runtime:1.2.0")
+    implementation("androidx.annotation:annotation:1.9.1")
 }

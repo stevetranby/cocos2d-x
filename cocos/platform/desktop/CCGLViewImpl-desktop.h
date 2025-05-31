@@ -142,7 +142,7 @@ public:
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
     id getCocoaWindow() override { return glfwGetCocoaWindow(_mainWindow); }
-    id getNSGLContext() override { return glfwGetNSGLContext(_mainWindow); } // stevetranby: added
+    id getNSGLContext() override { return glfwGetNSGLContext(_mainWindow); } // STEVE: added
 #endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 
 protected:

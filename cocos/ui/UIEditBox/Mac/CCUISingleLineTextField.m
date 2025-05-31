@@ -208,7 +208,7 @@
 
 - (int)ccui_maxLength
 {
-    return [self.formatter maximumLength];
+    return (int)[self.formatter maximumLength];
 }
 
 @end
