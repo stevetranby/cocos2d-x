@@ -26,9 +26,6 @@ THE SOFTWARE.
 package org.cocos2dx.lib;
 
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
-import android.graphics.Rect;
-import android.media.AudioManager;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -36,16 +33,17 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.AssetFileDescriptor;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.graphics.Rect;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
 import android.os.Vibrator;
 import android.preference.PreferenceManager.OnActivityResultListener;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -56,16 +54,12 @@ import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.android.vending.expansion.zipfile.APKExpansionSupport;
-import com.android.vending.expansion.zipfile.ZipResourceFile;
-
 import com.enhance.gameservice.IGameTuningService;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -79,7 +73,6 @@ public class Cocos2dxHelper {
     // Constants
     // ===========================================================
     private static final String PREFS_NAME = "Cocos2dxPrefsFile";
-    private static final int RUNNABLES_PER_FRAME = 5;
     private static final String TAG = Cocos2dxHelper.class.getSimpleName();
 
     // ===========================================================
@@ -105,9 +98,6 @@ public class Cocos2dxHelper {
 
     // The absolute path to the OBB if it exists, else the absolute path to the APK.
     private static String sAssetsPath = "";
-    
-    // The OBB file
-    private static ZipResourceFile sOBBFile = null;
 
     // ===========================================================
     // Constructors
@@ -131,29 +121,28 @@ public class Cocos2dxHelper {
             int sampleRate = 44100;
             int bufferSizeInFrames = 192;
 
-            if (Build.VERSION.SDK_INT >= 17) {
-                AudioManager am = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-                // use reflection to remove dependence of API 17 when compiling
+            // TODO(steve): no longer need if
+            AudioManager am = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+            // use reflection to remove dependence of API 17 when compiling
 
-                // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
-                final Class audioManagerClass = AudioManager.class;
-                Object[] parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_SAMPLE_RATE")};
-                final String strSampleRate = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
+            // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
+            final Class<AudioManager> audioManagerClass = AudioManager.class;
+            Object[] parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_SAMPLE_RATE")};
+            final String strSampleRate = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
 
-                // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
-                parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_FRAMES_PER_BUFFER")};
-                final String strBufferSizeInFrames = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
+            // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
+            parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_FRAMES_PER_BUFFER")};
+            final String strBufferSizeInFrames = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
 
-                try {
-                    sampleRate = Integer.parseInt(strSampleRate);
-                    bufferSizeInFrames = Integer.parseInt(strBufferSizeInFrames);
-                } catch (NumberFormatException e) {
-                    Log.e(TAG, "parseInt failed", e);
-                }
-                Log.d(TAG, "sampleRate: " + sampleRate + ", framesPerBuffer: " + bufferSizeInFrames);
-            } else {
-                Log.d(TAG, "android version is lower than 17");
+            try {
+                assert strSampleRate != null;
+                assert strBufferSizeInFrames != null;
+                sampleRate = Integer.parseInt(strSampleRate);
+                bufferSizeInFrames = Integer.parseInt(strBufferSizeInFrames);
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "parseInt failed", e);
             }
+            Log.d(TAG, "sampleRate: " + sampleRate + ", framesPerBuffer: " + bufferSizeInFrames);
 
             nativeSetAudioDeviceInfo(isSupportLowLatency, sampleRate, bufferSizeInFrames);
 
@@ -239,25 +228,6 @@ public class Cocos2dxHelper {
             }
             file.delete();
         }
-    }
-    
-    public static ZipResourceFile getObbFile() {
-        if (null == sOBBFile) {
-            int versionCode = 1;
-            try {
-                versionCode = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxHelper.getCocos2dxPackageName(), 0).versionCode;
-            } catch (NameNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                sOBBFile = APKExpansionSupport.getAPKExpansionZipFile(Cocos2dxActivity.getContext(), versionCode, 0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return sOBBFile;
     }
     
     //Enhance API modification begin
@@ -350,7 +320,8 @@ public class Cocos2dxHelper {
     }
 
     public static void vibrate(float duration) {
-        sVibrateService.vibrate((long)(duration * 1000));
+        long milliSeconds = (long)(duration * 1000);
+        sVibrateService.vibrate(milliSeconds);
     }
 
  	public static String getVersion() {
@@ -358,11 +329,74 @@ public class Cocos2dxHelper {
  			String version = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxActivity.getContext().getPackageName(), 0).versionName;
  			return version;
  		} catch(Exception e) {
- 			return "";
+            Log.e(TAG, "Exception: " + e.getMessage());
  		}
+        return "";
  	}
 
-    public static boolean openURL(String url) { 
+ 	public static String getBuildVersion() {
+ 		try {
+ 			int version = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxActivity.getContext().getPackageName(), 0).versionCode;
+ 			return Integer.toString(version);
+ 		} catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+ 		}
+        return "";
+ 	}
+
+    public static String getCopyrightString() {
+        return "Copyright (c) 2017";
+    }
+
+    private static String capitalize(String s) {
+        if (s == null || s.length() == 0) { return ""; }
+
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        }
+        return Character.toUpperCase(first) + s.substring(1);
+    }
+
+    public static String getModelString() {
+        try {
+            String str = Build.MODEL;
+            if (! Build.MODEL.startsWith(Build.MANUFACTURER)) {
+                str = Build.MANUFACTURER + " " + Build.MODEL;
+            }
+            str = capitalize(str);
+            Log.d(TAG, "Device Model: " + str);
+            return str;
+        } catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
+        return "";
+    }
+
+    public static String getPlatformString() {
+        try {
+            Field[] fields = Build.VERSION_CODES.class.getFields();
+            String str = fields[Build.VERSION.SDK_INT + 1].getName();
+            str += " " + Build.VERSION.RELEASE;
+            Log.d(TAG, "Platform String:" + str);
+            return str;
+        } catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
+        return "";
+    }
+
+    public static String getDeviceID() {
+        try {
+            String deviceId = Settings.Secure.getString(Cocos2dxActivity.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            return deviceId;
+        } catch(Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
+        return "";
+    }
+
+    public static boolean openURL(String url) {
         boolean ret = false;
         try {
             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -370,31 +404,38 @@ public class Cocos2dxHelper {
             sActivity.startActivity(i);
             ret = true;
         } catch (Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
         }
         return ret;
     }
-    
-    public static long[] getObbAssetFileDescriptor(final String path) {
-        long[] array = new long[3];
-        if (Cocos2dxHelper.getObbFile() != null) {
-            AssetFileDescriptor descriptor = Cocos2dxHelper.getObbFile().getAssetFileDescriptor(path);
-            if (descriptor != null) {
-                try {
-                    ParcelFileDescriptor parcel = descriptor.getParcelFileDescriptor();
-                    Method method = parcel.getClass().getMethod("getFd", new Class[] {});
-                    array[0] = (Integer)method.invoke(parcel);
-                    array[1] = descriptor.getStartOffset();
-                    array[2] = descriptor.getLength();
-                } catch (NoSuchMethodException e) {
-                    Log.e(Cocos2dxHelper.TAG, "Accessing file descriptor directly from the OBB is only supported from Android 3.1 (API level 12) and above.");
-                } catch (IllegalAccessException e) {
-                    Log.e(Cocos2dxHelper.TAG, e.toString());
-                } catch (InvocationTargetException e) {
-                    Log.e(Cocos2dxHelper.TAG, e.toString());
-                }
-            }
-        }
-        return array;
+
+    public static void sendEmailMessageToSupport(String subj, String msg) {
+
+//        /* Create the Intent */
+//        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SENDTO);
+
+//        /* Fill it with Data */
+//        emailIntent.setType("plain/text");
+//        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"to@email.com"});
+//        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subj);
+//        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, msg);
+
+//        /* Send it off to the Activity-Chooser */
+//        Cocos2dxActivity.getContext().startActivity(Intent.createChooser(emailIntent, "Send feedback email..."));
+
+        // https://stackoverflow.com/questions/3132889/action-sendto-for-sending-an-email
+        // ACTION_SENDTO filters for email apps (discard bluetooth and others)
+        String uriText =
+                "mailto:starcommandhelp+deviceinfo@gmail.com" +
+                        "?subject=" + Uri.encode(subj) +
+                        "&body=" + Uri.encode(msg);
+
+        Uri uri = Uri.parse(uriText);
+
+        Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
+        sendIntent.setData(uri);
+        Cocos2dxActivity.getContext().startActivity(Intent.createChooser(sendIntent, "Send email"));
+
     }
 
     public static void preloadBackgroundMusic(final String pPath) {
@@ -856,11 +897,11 @@ public class Cocos2dxHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             Window cocosWindow = sActivity.getWindow();
             DisplayCutout displayCutout = cocosWindow.getDecorView().getRootWindowInsets().getDisplayCutout();
-            // Judge whether it is cutouts (aka notch) screen phone by judge cutout equle to null
+            // Judge whether it is cutouts (aka notch) screen phone by judge cutout equal to null
             if (displayCutout != null) {
-                List<Rect> rects = displayCutout.getBoundingRects();
+                List<Rect> safeRects = displayCutout.getBoundingRects();
                 // Judge whether it is cutouts (aka notch) screen phone by judge cutout rects is null or zero size
-                if (rects != null && rects.size() != 0) {
+                if (!safeRects.isEmpty()) {
                     safeInsets[0] = displayCutout.getSafeInsetBottom();
                     safeInsets[1] = displayCutout.getSafeInsetLeft();
                     safeInsets[2] = displayCutout.getSafeInsetRight();

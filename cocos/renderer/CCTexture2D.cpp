@@ -108,6 +108,8 @@ namespace {
         PixelFormatInfoMapValue(Texture2D::PixelFormat::ATC_INTERPOLATED_ALPHA, Texture2D::PixelFormatInfo(GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD,
             0xFFFFFFFF, 0xFFFFFFFF, 8, true, false)),
 #endif
+        // STEVE - removed this since merge seemed to remove
+        //PixelFormatInfoMapValue(Texture2D::PixelFormat::NONE, Texture2D::PixelFormatInfo(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 8, false, false)),
     };
 }
 
@@ -498,6 +500,12 @@ GLuint Texture2D::getName() const
     return _name;
 }
 
+// STEVE
+std::string Texture2D::getFilePath() const
+{
+    return _filePath;
+}
+
 GLuint Texture2D::getAlphaTextureName() const
 {
     return _alphaTexture == nullptr ? 0 : _alphaTexture->getName();
@@ -790,7 +798,14 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
 
         pixelFormat = convertDataToFormat(tempData, tempDataLen, renderFormat, pixelFormat, &outTempData, &outTempDataLen);
 
-        initWithData(outTempData, outTempDataLen, pixelFormat, imageWidth, imageHeight, imageSize, image->hasPremultipliedAlpha());
+        if (outTempData && outTempDataLen > 0 && imageWidth > 0 && imageHeight > 0)
+        {
+            initWithData(outTempData, outTempDataLen, pixelFormat, imageWidth, imageHeight, imageSize, image->hasPremultipliedAlpha());
+        }
+        else
+        {
+            CCLOGERROR("cocos2d: Texture2D. Can't initWithData. data is NULL!");
+        }
 
         if (outTempData != nullptr && outTempData != tempData)
         {

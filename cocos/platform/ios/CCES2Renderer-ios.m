@@ -49,14 +49,24 @@
 @synthesize msaaFramebuffer=msaaFramebuffer_;
 
 // Create an OpenGL ES 2.0 context
-- (id) initWithDepthFormat:(unsigned int)depthFormat withPixelFormat:(unsigned int)pixelFormat withSharegroup:(EAGLSharegroup*)sharegroup withMultiSampling:(BOOL) multiSampling withNumberOfSamples:(unsigned int) requestedSamples
+- (id) initWithDepthFormat:(GLuint)depthFormat withPixelFormat:(GLuint)pixelFormat withSharegroup:(EAGLSharegroup*)sharegroup withMultiSampling:(BOOL) multiSampling withNumberOfSamples:(GLuint) requestedSamples
 {
     if (self = [super init])
     {
-        if (! sharegroup)
-                context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-        else
-                context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:sharegroup];
+        if (! sharegroup) {
+            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+//            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+//            if (context_ == nil) {
+//                context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+//            }
+        }
+        else {
+            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:sharegroup];
+//            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3 sharegroup:sharegroup];
+//            if (context_ == nil) {
+//                context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:sharegroup];
+//            }
+        }
 
         if (!context_ || ![EAGLContext setCurrentContext:context_] )
         {
@@ -83,7 +93,8 @@
         {
             GLint maxSamplesAllowed;
             glGetIntegerv(GL_MAX_SAMPLES_APPLE, &maxSamplesAllowed);
-            samplesToUse_ = MIN(maxSamplesAllowed,requestedSamples);
+            NSAssert(maxSamplesAllowed >= 0, @"Negative Value for maxSamplesAllowed!");
+            samplesToUse_ = MIN((GLuint)maxSamplesAllowed,requestedSamples);
             
             /* Create the MSAA framebuffer (offscreen) */
             glGenFramebuffers(1, &msaaFramebuffer_);
@@ -187,7 +198,7 @@
 
 - (NSString*) description
 {
-    return [NSString stringWithFormat:@"<%@ = %08X | size = %ix%i>", [self class], (unsigned int)self, backingWidth_, backingHeight_];
+    return [NSString stringWithFormat:@"<%@ = %p | size = %ix%i>", [self class], self, backingWidth_, backingHeight_];
 }
 
 - (unsigned int) colorRenderBuffer

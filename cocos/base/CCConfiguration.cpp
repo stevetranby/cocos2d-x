@@ -122,6 +122,7 @@ void Configuration::gatherGPUInfo()
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxTextureSize);
 	_valueDict["gl.max_texture_size"] = Value((int)_maxTextureSize);
 
+    // STEVE - NOTE: minimum required for GLES 2.x is 8, and GLES 3.x is 32
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &_maxTextureUnits);
 	_valueDict["gl.max_texture_units"] = Value((int)_maxTextureUnits);
 

@@ -36,6 +36,9 @@ USING_NS_CC;
 NS_TIMELINE_BEGIN
 
 // Frame
+
+void Frame::onApply(float /* percent */) {}
+
 Frame::Frame()
     : _frameIndex(0)
     , _tween(true)

@@ -128,17 +128,19 @@ const char* GLProgram::UNIFORM_NAME_COS_TIME = "CC_CosTime";
 const char* GLProgram::UNIFORM_NAME_RANDOM01 = "CC_Random01";
 const char* GLProgram::UNIFORM_NAME_SAMPLER0 = "CC_Texture0";
 const char* GLProgram::UNIFORM_NAME_SAMPLER1 = "CC_Texture1";
-const char* GLProgram::UNIFORM_NAME_SAMPLER2 = "CC_Texture2";
-const char* GLProgram::UNIFORM_NAME_SAMPLER3 = "CC_Texture3";
+//const char* GLProgram::UNIFORM_NAME_SAMPLER2 = "CC_Texture2";
+//const char* GLProgram::UNIFORM_NAME_SAMPLER3 = "CC_Texture3";
+const char* GLProgram::UNIFORM_NAME_SAMPLER_SIZE_0 = "CC_TextureSize0";
+const char* GLProgram::UNIFORM_NAME_SAMPLER_SIZE_1 = "CC_TextureSize1";
 const char* GLProgram::UNIFORM_NAME_ALPHA_TEST_VALUE = "CC_alpha_value";
 
 // Attribute names
 const char* GLProgram::ATTRIBUTE_NAME_COLOR = "a_color";
 const char* GLProgram::ATTRIBUTE_NAME_POSITION = "a_position";
-const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD = "a_texCoord";
+const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD0 = "a_texCoord0";
 const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD1 = "a_texCoord1";
-const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD2 = "a_texCoord2";
-const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD3 = "a_texCoord3";
+//const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD2 = "a_texCoord2";
+//const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD3 = "a_texCoord3";
 const char* GLProgram::ATTRIBUTE_NAME_NORMAL = "a_normal";
 const char* GLProgram::ATTRIBUTE_NAME_BLEND_WEIGHT = "a_blendWeight";
 const char* GLProgram::ATTRIBUTE_NAME_BLEND_INDEX = "a_blendIndex";
@@ -160,8 +162,10 @@ static const char * COCOS2D_SHADER_UNIFORMS =
         "uniform vec4 CC_Random01;\n"
         "uniform sampler2D CC_Texture0;\n"
         "uniform sampler2D CC_Texture1;\n"
-        "uniform sampler2D CC_Texture2;\n"
-        "uniform sampler2D CC_Texture3;\n"
+//        "uniform sampler2D CC_Texture2;\n"
+//        "uniform sampler2D CC_Texture3;\n"
+        "uniform vec2 CC_TextureSize0;\n"
+        "uniform vec2 CC_TextureSize1;\n"
         "//CC INCLUDES END\n\n";
 
 static const std::string EMPTY_DEFINE;
@@ -327,10 +331,10 @@ void GLProgram::bindPredefinedVertexAttribs()
     {
         {GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION},
         {GLProgram::ATTRIBUTE_NAME_COLOR, GLProgram::VERTEX_ATTRIB_COLOR},
-        {GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORD},
+        {GLProgram::ATTRIBUTE_NAME_TEX_COORD0, GLProgram::VERTEX_ATTRIB_TEX_COORD},
         {GLProgram::ATTRIBUTE_NAME_TEX_COORD1, GLProgram::VERTEX_ATTRIB_TEX_COORD1},
-        {GLProgram::ATTRIBUTE_NAME_TEX_COORD2, GLProgram::VERTEX_ATTRIB_TEX_COORD2},
-        {GLProgram::ATTRIBUTE_NAME_TEX_COORD3, GLProgram::VERTEX_ATTRIB_TEX_COORD3},
+//        {GLProgram::ATTRIBUTE_NAME_TEX_COORD2, GLProgram::VERTEX_ATTRIB_TEX_COORD2},
+//        {GLProgram::ATTRIBUTE_NAME_TEX_COORD3, GLProgram::VERTEX_ATTRIB_TEX_COORD3},
         {GLProgram::ATTRIBUTE_NAME_NORMAL, GLProgram::VERTEX_ATTRIB_NORMAL},
     };
 
@@ -420,11 +424,16 @@ void GLProgram::parseUniforms()
                     GLenum __gl_error_code = glGetError();
                     if (__gl_error_code != GL_NO_ERROR)
                     {
-                        CCLOG("error: 0x%x  uniformName: %s", (int)__gl_error_code, uniformName);
+                        CCLOG("GL Error: 0x%x  uniformName: %s", (int)__gl_error_code, uniformName);
                     }
                     assert(__gl_error_code == GL_NO_ERROR);
 
                     _userUniforms[uniform.name] = uniform;
+                    CCLOGINFO("[steve] [glpg] adding uniform: %d, %s", uniform.location, uniformName);
+                } else {
+                    auto loc = glGetUniformLocation(_program, uniformName);
+                    CC_UNUSED_PARAM(loc);
+                    CCLOGINFO("[steve] [glpg] not adding uniform: %d, %s", loc, uniformName);
                 }
             }
         }
@@ -433,7 +442,7 @@ void GLProgram::parseUniforms()
     {
         GLchar ErrorLog[1024];
         glGetProgramInfoLog(_program, sizeof(ErrorLog), nullptr, ErrorLog);
-        CCLOG("Error linking shader program: '%s'\n", ErrorLog);
+        CCLOG("GL Error linking shader program: '%s'\n", ErrorLog);
 
     }
 
@@ -493,7 +502,8 @@ bool GLProgram::compileShader(GLuint * shader, GLenum type, const GLchar* source
             "#version 100\n precision highp float;\n precision highp int;\n" :
             "#version 100\n precision highp float;\n precision highp int;\n");
 #elif (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32 && CC_TARGET_PLATFORM != CC_PLATFORM_LINUX && CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
-        headersDef = (type == GL_VERTEX_SHADER ? "precision highp float;\n precision highp int;\n" : "precision mediump float;\n precision mediump int;\n");
+                      // STEVE: changed mediump to highp
+        headersDef = (type == GL_VERTEX_SHADER ? "precision highp float;\n precision highp int;\n" : "precision highp float;\n precision highp int;\n");
 #endif
     }else{
         headersDef = compileTimeHeaders;
@@ -522,11 +532,11 @@ bool GLProgram::compileShader(GLuint * shader, GLenum type, const GLchar* source
 
         if (type == GL_VERTEX_SHADER)
         {
-            CCLOG("cocos2d: %s", getVertexShaderLog().c_str());
+            CCLOG("cocos2d: vert shader log: %s", getVertexShaderLog().c_str());
         }
         else
         {
-            CCLOG("cocos2d: %s", getFragmentShaderLog().c_str());
+            CCLOG("cocos2d: frag shader log: %s", getFragmentShaderLog().c_str());
         }
         free(src);
 
@@ -569,8 +579,11 @@ void GLProgram::updateUniforms()
 
     _builtInUniforms[UNIFORM_SAMPLER0] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER0);
     _builtInUniforms[UNIFORM_SAMPLER1] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER1);
-    _builtInUniforms[UNIFORM_SAMPLER2] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER2);
-    _builtInUniforms[UNIFORM_SAMPLER3] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER3);
+//    _builtInUniforms[UNIFORM_SAMPLER2] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER2);
+//    _builtInUniforms[UNIFORM_SAMPLER3] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER3);
+
+    _builtInUniforms[UNIFORM_SAMPLER_SIZE_0] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER_SIZE_0);
+    _builtInUniforms[UNIFORM_SAMPLER_SIZE_1] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER_SIZE_1);
 
     _flags.usesP = _builtInUniforms[UNIFORM_P_MATRIX] != -1;
     _flags.usesMultiViewP = _builtInUniforms[UNIFORM_MULTIVIEW_P_MATRIX] != -1;
@@ -592,10 +605,15 @@ void GLProgram::updateUniforms()
        setUniformLocationWith1i(_builtInUniforms[UNIFORM_SAMPLER0], 0);
     if(_builtInUniforms[UNIFORM_SAMPLER1] != -1)
         setUniformLocationWith1i(_builtInUniforms[UNIFORM_SAMPLER1], 1);
-    if(_builtInUniforms[UNIFORM_SAMPLER2] != -1)
-        setUniformLocationWith1i(_builtInUniforms[UNIFORM_SAMPLER2], 2);
-    if(_builtInUniforms[UNIFORM_SAMPLER3] != -1)
-        setUniformLocationWith1i(_builtInUniforms[UNIFORM_SAMPLER3], 3);
+//    if(_builtInUniforms[UNIFORM_SAMPLER2] != -1)
+//        setUniformLocationWith1i(_builtInUniforms[UNIFORM_SAMPLER2], 2);
+//    if(_builtInUniforms[UNIFORM_SAMPLER3] != -1)
+//        setUniformLocationWith1i(_builtInUniforms[UNIFORM_SAMPLER3], 3);
+
+    if(_builtInUniforms[UNIFORM_SAMPLER_SIZE_0] != -1)
+        setUniformLocationWith1i(_builtInUniforms[UNIFORM_SAMPLER_SIZE_0], 3);
+    if(_builtInUniforms[UNIFORM_SAMPLER_SIZE_1] != -1)
+        setUniformLocationWith1i(_builtInUniforms[UNIFORM_SAMPLER_SIZE_1], 3);
 
     // clear any glErrors created by any not found uniforms
     glGetError();

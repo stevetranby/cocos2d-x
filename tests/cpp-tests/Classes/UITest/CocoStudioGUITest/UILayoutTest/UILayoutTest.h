@@ -170,4 +170,14 @@ public:
     CREATE_FUNC(UILayoutTest_Issue19890);
 };
 
+// STEVE: https://github.com/cocos2d/cocos2d-x/pull/20464/files
+class UILayout_Clipping_Test : public UILayoutComponentTest
+{
+public:
+    virtual bool init() override;
+
+    CREATE_FUNC(UILayout_Clipping_Test);
+};
+
+
 #endif /* defined(__TestCpp__UILayoutTest__) */

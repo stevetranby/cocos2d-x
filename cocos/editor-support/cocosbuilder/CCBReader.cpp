@@ -373,7 +373,7 @@ bool CCBReader::readHeader()
     int magicBytes = *((int*)(this->_bytes + this->_currentByte));
     this->_currentByte += 4;
 
-    if(CC_SWAP_INT32_BIG_TO_HOST(magicBytes) != (*reinterpret_cast<const int*>("ccbi"))) {
+    if(CC_SWAP_INT32_BIG_TO_HOST(magicBytes) != (*reinterpret_cast<const unsigned int*>("ccbi"))) {
         return false; 
     }
 
@@ -559,6 +559,7 @@ Node * CCBReader::readNodeGraph(Node * pParent)
     }
 
     Node *node = ccNodeLoader->loadNode(pParent, this);
+    CC_ASSERT(node != nullptr);
 
     // Set root node
     if (! _animationManager->getRootNode())
@@ -667,6 +668,7 @@ Node * CCBReader::readNodeGraph(Node * pParent)
                     if(!assigned && this->_CCBMemberVariableAssigner != nullptr)
                     {
                         assigned = this->_CCBMemberVariableAssigner->onAssignCCBMemberVariable(target, memberVarAssignmentName.c_str(), node);
+                        if (!assigned) { CCLOG("[WARNING] assigned was not assigned to member variable"); }
                     }
                 }
             }

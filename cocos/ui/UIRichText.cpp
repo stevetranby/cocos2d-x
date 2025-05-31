@@ -1336,13 +1336,16 @@ void RichText::removeTagDescription(const std::string& tag)
     MyXMLVisitor::removeTagDescription(tag);
 }
 
+// TODO(steve): could convert this into an async with completion handler as well
 void RichText::openUrl(const std::string& url)
 {
     if (_handleOpenUrl) {
         _handleOpenUrl(url);
     }
     else {
-        Application::getInstance()->openURL(url);
+        Application::getInstance()->openURL(url, [](bool success){
+            CCLOG("[steve] openUrl completed with success: %d", success);
+        });
     }
 }
 

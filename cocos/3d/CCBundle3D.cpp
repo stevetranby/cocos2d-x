@@ -426,7 +426,7 @@ bool  Bundle3D::loadMeshDatasBinary(MeshDatas& meshdatas)
             meshData->attribs[j].type =  parseGLType(type);
             meshData->attribs[j].vertexAttrib = parseGLProgramAttribute(attribute);
         }
-        unsigned int vertexSizeInFloat = 0;
+        ssize_t vertexSizeInFloat = 0;
         // Read vertex data
         if (_binaryReader.read(&vertexSizeInFloat, 4, 1) != 1 || vertexSizeInFloat == 0)
         {
@@ -450,7 +450,7 @@ bool  Bundle3D::loadMeshDatasBinary(MeshDatas& meshdatas)
             std::vector<unsigned short>      indexArray;
             std:: string meshPartid = _binaryReader.readString();
             meshData->subMeshIds.push_back(meshPartid);
-            unsigned int nIndexCount;
+            ssize_t nIndexCount;
             if (_binaryReader.read(&nIndexCount, 4, 1) != 1)
             {
                 CCLOG("warning: Failed to read meshdata: nIndexCount '%s'.", _path.c_str());
@@ -585,7 +585,7 @@ bool Bundle3D::loadMeshDatasBinary_0_1(MeshDatas& meshdatas)
     unsigned int meshPartCount = 1;
     for (unsigned int i = 0; i < meshPartCount; ++i)
     {
-        unsigned int nIndexCount;
+        ssize_t nIndexCount;
         if (_binaryReader.read(&nIndexCount, 4, 1) != 1)
         {
             CCLOG("warning: Failed to read meshdata: nIndexCount '%s'.", _path.c_str());
@@ -707,7 +707,7 @@ bool Bundle3D::loadMeshDatasBinary_0_2(MeshDatas& meshdatas)
 
     for (unsigned int i = 0; i < submeshCount; ++i)
     {
-        unsigned int nIndexCount;
+        ssize_t nIndexCount;
         if (_binaryReader.read(&nIndexCount, 4, 1) != 1)
         {
             CCLOG("warning: Failed to read meshdata: nIndexCount '%s'.", _path.c_str());

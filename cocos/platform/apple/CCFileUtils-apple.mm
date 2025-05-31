@@ -43,7 +43,7 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 struct FileUtilsApple::IMPL {
-    IMPL(NSBundle* bundle):bundle_([NSBundle mainBundle]) {}
+    IMPL(NSBundle* bundle):bundle_([NSBundle mainBundle]) { (void)bundle; }
     void setBundle(NSBundle* bundle) {
         bundle_ = bundle;
     }
@@ -153,9 +153,9 @@ static cocos2d::Value convertNSObjectToCCValue(id item)
     if ([item isKindOfClass:[NSDictionary class]])
     {
         ValueMap dict;
-        for (id subKey in [item allKeys])
+        for (id subKey in [(NSDictionary*)item allKeys])
         {
-            id subValue = [item objectForKey:subKey];
+            id subValue = [(NSDictionary*)item objectForKey:subKey];
             addNSObjectToCCMap(subKey, subValue, dict);
         }
         
@@ -290,7 +290,7 @@ bool FileUtilsApple::isFileExistInternal(const std::string& filePath) const
     return ret;
 }
 
-static int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
+static int unlink_cb(const char *fpath, const struct stat * /* sb */, int /* typeflag */, struct FTW * /* ftwbuf */)
 {
     auto ret = remove(fpath);
     if (ret)

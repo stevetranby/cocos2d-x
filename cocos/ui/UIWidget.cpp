@@ -165,8 +165,8 @@ _flippedY(false),
 _layoutParameterType(LayoutParameter::Type::NONE),
 _focused(false),
 _focusEnabled(true),
-_touchEventListener(nullptr),
-_touchEventSelector(nullptr),
+//_touchEventListener(nullptr),
+//_touchEventSelector(nullptr),
 _ccEventCallback(nullptr),
 _callbackType(""),
 _callbackName("")
@@ -318,6 +318,7 @@ void Widget::setContentSize(const cocos2d::Size &contentSize)
         }
         else
         {
+            CC_ASSERT(_parent != nullptr);
             pSize = _parent->getContentSize();
         }
         float spx = 0.0f;
@@ -362,6 +363,7 @@ void Widget::setSizePercent(const Vec2 &percent)
             }
             else
             {
+                CC_ASSERT(_parent != nullptr);
                 cSize = Size(_parent->getContentSize().width * percent.x, _parent->getContentSize().height * percent.y);
             }
         }
@@ -884,10 +886,10 @@ void Widget::pushDownEvent()
         _touchEventCallback(this, TouchEventType::BEGAN);
     }
 
-    if (_touchEventListener && _touchEventSelector)
-    {
-        (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_BEGAN);
-    }
+//    if (_touchEventListener && _touchEventSelector)
+//    {
+//        (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_BEGAN);
+//    }
     this->release();
 }
 
@@ -899,10 +901,10 @@ void Widget::moveEvent()
         _touchEventCallback(this, TouchEventType::MOVED);
     }
 
-    if (_touchEventListener && _touchEventSelector)
-    {
-        (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_MOVED);
-    }
+//    if (_touchEventListener && _touchEventSelector)
+//    {
+//        (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_MOVED);
+//    }
     this->release();
 }
 
@@ -920,10 +922,10 @@ void Widget::releaseUpEvent()
         _touchEventCallback(this, TouchEventType::ENDED);
     }
 
-    if (_touchEventListener && _touchEventSelector)
-    {
-        (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_ENDED);
-    }
+//    if (_touchEventListener && _touchEventSelector)
+//    {
+//        (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_ENDED);
+//    }
 
     if (_clickEventListener) {
         _clickEventListener(this);
@@ -939,18 +941,18 @@ void Widget::cancelUpEvent()
         _touchEventCallback(this, TouchEventType::CANCELED);
     }
 
-    if (_touchEventListener && _touchEventSelector)
-    {
-        (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_CANCELED);
-    }
+//    if (_touchEventListener && _touchEventSelector)
+//    {
+//        (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_CANCELED);
+//    }
     this->release();
 }
 
-void Widget::addTouchEventListener(Ref *target, SEL_TouchEvent selector)
-{
-    _touchEventListener = target;
-    _touchEventSelector = selector;
-}
+//void Widget::addTouchEventListener(Ref *target, SEL_TouchEvent selector)
+//{
+//    _touchEventListener = target;
+//    _touchEventSelector = selector;
+//}
 
 void Widget::addTouchEventListener(const ccWidgetTouchCallback& callback)
 {
@@ -1159,6 +1161,9 @@ const Vec2& Widget::getTouchEndPosition()const
     return _touchEndPosition;
 }
 
+void Widget::stupid_steve_stupid(int b) { (void)b; }
+double Widget::steve(int a, float b) { (void)a; (void)b; return 1.1; }
+
 void Widget::setLayoutParameter(LayoutParameter *parameter)
 {
     if (!parameter)
@@ -1257,8 +1262,8 @@ void Widget::copyProperties(Widget *widget)
     setCascadeColorEnabled(widget->isCascadeColorEnabled());
     setCascadeOpacityEnabled(widget->isCascadeOpacityEnabled());
     _touchEventCallback = widget->_touchEventCallback;
-    _touchEventListener = widget->_touchEventListener;
-    _touchEventSelector = widget->_touchEventSelector;
+//    _touchEventListener = widget->_touchEventListener;
+//    _touchEventSelector = widget->_touchEventSelector;
     _clickEventListener = widget->_clickEventListener;
     _focused = widget->_focused;
     _focusEnabled = widget->_focusEnabled;

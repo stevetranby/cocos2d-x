@@ -38,19 +38,15 @@ public class Cocos2dxLocalStorage {
     private static String DATABASE_NAME = "jsb.sqlite";
     private static String TABLE_NAME = "data";
     private static final int DATABASE_VERSION = 1;
-    
-    private static DBOpenHelper mDatabaseOpenHelper = null;
+
     private static SQLiteDatabase mDatabase = null;
-    /**
-     * Constructor
-     * @param context The Context within which to work, used to create the DB
-     * @return 
-     */
+
     public static boolean init(String dbName, String tableName) {
         if (Cocos2dxActivity.getContext() != null) {
             DATABASE_NAME = dbName;
             TABLE_NAME = tableName;
-            mDatabaseOpenHelper = new DBOpenHelper(Cocos2dxActivity.getContext());
+
+            DBOpenHelper mDatabaseOpenHelper = new DBOpenHelper(Cocos2dxActivity.getContext());
             mDatabase = mDatabaseOpenHelper.getWritableDatabase();
             return true;
         }
@@ -63,10 +59,10 @@ public class Cocos2dxLocalStorage {
         }
     }
     
-    public static void setItem(String key, String value) {
+    public static void setItem(String key, String valueString) {
         try {
-            String sql = "replace into "+TABLE_NAME+"(key,value)values(?,?)";
-            mDatabase.execSQL(sql, new Object[] { key, value });
+            String sql = String.format("replace into %s (key,value) values (?,?)", TABLE_NAME);
+            mDatabase.execSQL(sql, new Object[] { key, valueString });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,8 +71,8 @@ public class Cocos2dxLocalStorage {
     public static String getItem(String key) {
         String ret = null;
         try {
-        String sql = "select value from "+TABLE_NAME+" where key=?";
-        Cursor c = mDatabase.rawQuery(sql, new String[]{key});  
+        String sql = String.format("select value from %s where key=?", TABLE_NAME);
+        Cursor c = mDatabase.rawQuery(sql, new String[]{key});
         while (c.moveToNext()) {
             // only return the first value
             if (ret != null) 
@@ -84,7 +80,10 @@ public class Cocos2dxLocalStorage {
                 Log.e(TAG, "The key contains more than one value.");
                 break;
             }
-            ret = c.getString(c.getColumnIndex("value"));  
+            int index = c.getColumnIndex("value");
+            if (index >= 0) {
+                ret = c.getString(index);
+            }
         }  
         c.close();
         } catch (Exception e) {
@@ -95,8 +94,8 @@ public class Cocos2dxLocalStorage {
     
     public static void removeItem(String key) {
         try {
-            String sql = "delete from "+TABLE_NAME+" where key=?";
-            mDatabase.execSQL(sql, new Object[] {key});
+            String sql = String.format("delete from %s where key=?", TABLE_NAME);
+            mDatabase.execSQL(sql, new Object[] { key });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +103,7 @@ public class Cocos2dxLocalStorage {
     
     public static void clear() {
         try {
-            String sql = "delete from "+TABLE_NAME;
+            String sql = String.format("delete from %s", TABLE_NAME);
             mDatabase.execSQL(sql);
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,15 +122,22 @@ public class Cocos2dxLocalStorage {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE IF NOT EXISTS "+TABLE_NAME+"(key TEXT PRIMARY KEY,value TEXT);");
+            String sql = String.format("CREATE TABLE IF NOT EXISTS %s(key TEXT PRIMARY KEY,value TEXT);", TABLE_NAME);
+            db.execSQL(sql);
         }
         
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
-            //db.execSQL("DROP TABLE IF EXISTS " + VIRTUAL_TABLE);
-            //onCreate(db);
+            Log.w(TAG, String.format("Upgrading database from version %d to %d, which will destroy all old data", oldVersion, newVersion));
+
+            // STEVE
+            // TODO(steve): This method is only when you alter a database table and need to migrate old data (e.g. added column => set all old data with default value for that new column)
+            // - https://stackoverflow.com/questions/19793004/android-sqlite-database-why-drop-table-and-recreate-on-upgrade
+            // - https://stackoverflow.com/questions/20277410/why-does-sqliteopenhelper-drop-the-table-in-onupgrade-method
+
+//            String sql = String.format("DROP TABLE IF EXISTS %s", VIRTUAL_TABLE);
+//            db.execSQL(sql);
+//            onCreate(db);
         }
     }
 }

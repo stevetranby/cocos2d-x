@@ -61,7 +61,7 @@ std::string format(const char* format, ...)
             nret = vsnprintf(&buffer.front(), buffer.length() + 1, format, args);
             va_end(args);
 
-            assert(nret == buffer.length());
+            assert(nret == (int)buffer.length());
         }
         // else equals, do nothing.
     }

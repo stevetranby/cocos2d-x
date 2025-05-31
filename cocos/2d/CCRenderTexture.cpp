@@ -522,17 +522,20 @@ bool RenderTexture::saveToFileAsNonPMA(const std::string& filename, bool isRGBA,
     {
         return saveToFileAsNonPMA(filename, Image::Format::PNG, isRGBA, callback);
     }
-    else if (basename.find(".jpg") != std::string::npos)
-    {
-        if (isRGBA) CCLOG("RGBA is not supported for JPG format.");
-        return saveToFileAsNonPMA(filename, Image::Format::JPG, false, callback);
-    }
+    // STEVE
+//    else if (basename.find(".jpg") != std::string::npos)
+//    {
+//        if (isRGBA) CCLOG("RGBA is not supported for JPG format.");
+//        return saveToFileAsNonPMA(filename, Image::Format::JPG, false, callback);
+//    }
     else
     {
-        CCLOG("Only PNG and JPG format are supported now!");
+        CCLOG("Only PNG format are supported now!");
     }
 
-    return saveToFileAsNonPMA(filename, Image::Format::JPG, false, callback);
+    // STEVE
+    //return saveToFileAsNonPMA(filename, Image::Format::JPG, false, callback);
+    return false;
 }
 
 bool RenderTexture::saveToFile(const std::string& filename, bool isRGBA, const std::function<void (RenderTexture*, const std::string&)>& callback)
@@ -544,24 +547,27 @@ bool RenderTexture::saveToFile(const std::string& filename, bool isRGBA, const s
     {
         return saveToFile(filename, Image::Format::PNG, isRGBA, callback);
     }
-    else if (basename.find(".jpg") != std::string::npos)
-    {
-        if (isRGBA) CCLOG("RGBA is not supported for JPG format.");
-        return saveToFile(filename, Image::Format::JPG, false, callback);
-    }
+//    else if (basename.find(".jpg") != std::string::npos)
+//    {
+//        if (isRGBA) CCLOG("RGBA is not supported for JPG format.");
+//        return saveToFile(filename, Image::Format::JPG, false, callback);
+//    }
     else
     {
-        CCLOG("Only PNG and JPG format are supported now!");
+        CCLOG("Only PNG format are supported now!");
+        //CCLOG("Only PNG and JPG format are supported now!");
     }
     
-    return saveToFile(filename, Image::Format::JPG, false, callback);
+    return saveToFile(filename, Image::Format::PNG, false, callback);
 }
 
 bool RenderTexture::saveToFileAsNonPMA(const std::string& fileName, Image::Format format, bool isRGBA, const std::function<void(RenderTexture*, const std::string&)>& callback)
 {
-    CCASSERT(format == Image::Format::JPG || format == Image::Format::PNG,
-        "the image can only be saved as JPG or PNG format");
-    if (isRGBA && format == Image::Format::JPG) CCLOG("RGBA is not supported for JPG format");
+    // STEVE
+        CCASSERT(format == Image::Format::PNG, "the image can only be saved as PNG format");
+//    CCASSERT(format == Image::Format::JPG || format == Image::Format::PNG,
+//        "the image can only be saved as JPG or PNG format");
+//    if (isRGBA && format == Image::Format::JPG) CCLOG("RGBA is not supported for JPG format");
 
     _saveFileCallback = callback;
 
@@ -575,10 +581,12 @@ bool RenderTexture::saveToFileAsNonPMA(const std::string& fileName, Image::Forma
 
 bool RenderTexture::saveToFile(const std::string& fileName, Image::Format format, bool isRGBA, const std::function<void (RenderTexture*, const std::string&)>& callback)
 {
-    CCASSERT(format == Image::Format::JPG || format == Image::Format::PNG,
-             "the image can only be saved as JPG or PNG format");
-    if (isRGBA && format == Image::Format::JPG) CCLOG("RGBA is not supported for JPG format");
-    
+//    CCASSERT(format == Image::Format::JPG || format == Image::Format::PNG,
+//             "the image can only be saved as JPG or PNG format");
+    CCASSERT(format == Image::Format::PNG, "the image can only be saved as PNG format");
+//    if (isRGBA && format == Image::Format::JPG)
+//        CCLOG("RGBA is not supported for JPG format");
+
     _saveFileCallback = callback;
     
     std::string fullpath = FileUtils::getInstance()->getWritablePath() + fileName;

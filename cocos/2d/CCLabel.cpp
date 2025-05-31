@@ -795,7 +795,7 @@ void Label::setString(const std::string& text)
         CCASSERT(_utf32Text.length() <= CC_LABEL_MAX_LENGTH, "Length of text should be less then 16384");
         if (_utf32Text.length() > CC_LABEL_MAX_LENGTH)
         {
-            cocos2d::log("Error: Label text is too long %d > %d and it will be truncated!", _utf32Text.length(), CC_LABEL_MAX_LENGTH);
+            cocos2d::log("Error: Label text is too long %d > %d and it will be truncated!", (int)_utf32Text.length(), CC_LABEL_MAX_LENGTH);
             _utf32Text = _utf32Text.substr(0, CC_LABEL_MAX_LENGTH);
         }
     }
@@ -1279,7 +1279,9 @@ void Label::enableShadow(const Color4B& shadowColor /* = Color4B::BLACK */,
 
     if (_currentLabelType == LabelType::BMFONT || _currentLabelType == LabelType::CHARMAP)
     {
-        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(_shadowEnabled ? GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR : GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
+        auto prog = _shadowEnabled ? GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR : GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP;
+        auto tex = _getTexture(this);
+        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(prog, tex));
     }
 }
 
@@ -2154,7 +2156,7 @@ void Label::updateColor()
 std::string Label::getDescription() const
 {
     char tmp[50];
-    sprintf(tmp, "<Label | Tag = %d, Label = >", _tag);
+    snprintf(tmp, 50, "<Label | Tag = %d, Label = >", _tag);
     std::string ret = tmp;
     ret += _utf8Text;
 

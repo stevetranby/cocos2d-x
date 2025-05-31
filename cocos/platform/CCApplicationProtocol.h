@@ -93,6 +93,15 @@ public:
     */
     virtual void applicationWillEnterForeground() = 0;
 
+
+    /**
+     * @brief  This function will be called when the application enters foreground.
+     * @js NA
+     * @lua NA
+     */
+    //virtual void applicationWasOpenedWithUrl(std::string url);
+    virtual void applicationWasOpenedWithUrl(std::string scheme, std::string host, std::string path) { CC_UNUSED_PARAM(scheme); CC_UNUSED_PARAM(host); CC_UNUSED_PARAM(path); }
+
     /**
     * @brief    Callback by Director for limit FPS.
     * @param interval The time, expressed in seconds, between current frame and next.
@@ -135,12 +144,26 @@ public:
     virtual Platform getTargetPlatform() = 0;
     
     /**
-     @brief Get application version.
+     @brief Get application version (Store version e.g. 1.2).
      * @js NA
      * @lua NA
      */
     virtual std::string getVersion() = 0;
-    
+
+    /**
+     @brief Get build version (sub-version, build number, etc e.g. 12064).
+     * @js NA
+     * @lua NA
+     */
+    virtual std::string getBuildVersion() = 0;
+
+    /**
+     @brief Get build version (sub-version, build number, etc e.g. 12064).
+     * @js NA
+     * @lua NA
+     */
+    virtual std::string getCopyrightString() = 0;
+
     /**
      @brief Open url in default browser.
      @param String with url to open.
@@ -148,7 +171,8 @@ public:
      * @js NA
      * @lua NA
      */
-    virtual bool openURL(const std::string &url) = 0;
+    //virtual bool openURL(const std::string &url) = 0;
+    virtual void openURL(const std::string &url, const std::function<void(bool)>& completionHandler) = 0;
 };
 
 // end of platform group

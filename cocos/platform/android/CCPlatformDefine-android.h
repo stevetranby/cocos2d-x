@@ -54,14 +54,56 @@ THE SOFTWARE.
 
 #define CC_UNUSED_PARAM(unusedparam) (void)unusedparam
 
+////////////////////////////////////////////////////////////
+
+// c++11/14/17 attributes
+#if defined(__has_cpp_attribute)
+    #if __has_cpp_attribute(maybe_unused)
+        #define MAYBE_UNUSED [[maybe_unused]]
+        //#warning MAYBE_UNUSED is [[maybe_unused]]
+    #elif __has_cpp_attribute(gnu::unused)
+        #define MAYBE_UNUSED [[gnu::unused]]
+        #warning MAYBE_UNUSED is GNU:unused
+	#else
+		#define MAYBE_UNUSED
+        #warning MAYBE_UNUSED is NOT DEFINED!!!!!!
+    #endif
+
+    // no discard
+	#if __has_cpp_attribute(nodiscard)
+		#define NODISCARD [[nodiscard]]
+	#elif __has_cpp_attribute(gnu::warn_unused_result)
+		#define NODISCARD [[gnu::warn_unused_result]]
+	#else
+		#define NODISCARD
+    #endif
+
+    // fallthrough
+	#if __has_cpp_attribute(fallthrough)
+		#define FALLTHROUGH [[fallthrough]]
+	#elif __has_cpp_attribute(clang::fallthrough)
+		#define FALLTHROUGH [[clang::fallthrough]]
+	#else
+		#define FALLTHROUGH
+	#endif
+#else
+    #warning MAYBE_UNUSED is NOT DEFINED!!!!!!
+	#define MAYBE_UNUSED
+    #define NODISCARD
+    #define FALLTHROUGH
+#endif // __has_cpp_attribute
+
+
+////////////////////////////////////////////////////////////
+
 /* Define NULL pointer value */
 #ifndef NULL
-#ifdef __cplusplus
-#define NULL    0
-#else
-#define NULL    ((void *)0)
-#endif
-#endif
+    #ifdef __cplusplus
+        #define NULL    0
+    #else
+        #define NULL    ((void *)0)
+    #endif
+#endif // null
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 

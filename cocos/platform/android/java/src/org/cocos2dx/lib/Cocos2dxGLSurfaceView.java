@@ -115,7 +115,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                             Cocos2dxGLSurfaceView.this.mCocos2dxEditText.addTextChangedListener(Cocos2dxGLSurfaceView.sCocos2dxTextInputWraper);
                             final InputMethodManager imm = (InputMethodManager) Cocos2dxGLSurfaceView.mCocos2dxGLSurfaceView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.showSoftInput(Cocos2dxGLSurfaceView.this.mCocos2dxEditText, 0);
-                            Log.d("GLSurfaceView", "showSoftInput");
+                            Log.d(TAG, "showSoftInput");
                         }
                         break;
 
@@ -127,7 +127,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                             Cocos2dxGLSurfaceView.this.requestFocus();
                             // can take effect after GLSurfaceView has focus
                             ((Cocos2dxActivity)Cocos2dxGLSurfaceView.mCocos2dxGLSurfaceView.getContext()).hideVirtualButton();
-                            Log.d("GLSurfaceView", "HideSoftInput");
+                            Log.d(TAG, "HideSoftInput");
                         }
                         break;
                 }
