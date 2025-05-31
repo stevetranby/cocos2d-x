@@ -33,9 +33,9 @@ THE SOFTWARE.
 // 00   03 08 00
 #define COCOS2D_VERSION 0x00031702
 
-//
+//----------------------------------------------------------------------
 // all cocos2d include files
-//
+
 #include "base/ccConfig.h"
 
 // base

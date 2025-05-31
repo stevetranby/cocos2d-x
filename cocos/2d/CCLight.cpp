@@ -80,7 +80,7 @@ BaseLight::~BaseLight()
 }
 
 
-////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 DirectionLight* DirectionLight::create(const Vec3 &direction, const Color3B &color)
 {
     auto light = new (std::nothrow) DirectionLight();
@@ -113,7 +113,7 @@ DirectionLight::~DirectionLight()
     
 }
 
-//////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 PointLight* PointLight::create(const Vec3 &position, const Color3B &color, float range)
 {
     auto light = new (std::nothrow) PointLight();
@@ -133,7 +133,7 @@ PointLight::~PointLight()
     
 }
 
-//////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 SpotLight* SpotLight::create(const Vec3 &direction, const Vec3 &position, const Color3B &color, float innerAngle, float outerAngle, float range)
 {
     auto light = new (std::nothrow) SpotLight();
@@ -186,7 +186,7 @@ SpotLight::~SpotLight()
 
 }
 
-/////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 AmbientLight* AmbientLight::create( const Color3B &color )
 {

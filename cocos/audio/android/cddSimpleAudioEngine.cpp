@@ -36,7 +36,7 @@ namespace CocosDenshion {
         if (! s_pEngine) {
             s_pEngine = new CocosDenshion::android::AndroidJavaEngine();
         }
-    
+
         return s_pEngine;
     }
 

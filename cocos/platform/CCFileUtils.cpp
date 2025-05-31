@@ -1582,9 +1582,9 @@ void FileUtils::listFilesRecursively(const std::string& dirPath, std::vector<std
 
 #endif
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // Notification support when getFileData from invalid file path.
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 static bool s_popupNotify = true;
 
 void FileUtils::setPopupNotify(bool notify)

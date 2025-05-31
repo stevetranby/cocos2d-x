@@ -89,7 +89,7 @@ public:
      */
     EventListenerCustom* addCustomEventListener(const std::string &eventName, const std::function<void(EventCustom*)>& callback);
 
-    /////////////////////////////////////////////
+    //----------------------------------------------------------------------
     
     // Removes event listener
     
@@ -122,7 +122,7 @@ public:
      */
     void removeAllEventListeners();
 
-    /////////////////////////////////////////////
+    //----------------------------------------------------------------------
     
     // Pauses / Resumes event listener
     
@@ -140,7 +140,7 @@ public:
      */
     void resumeEventListenersForTarget(Node* target, bool recursive = false);
     
-    /////////////////////////////////////////////
+    //----------------------------------------------------------------------
     
     /** Sets listener's priority with fixed value.
      * 
@@ -161,7 +161,7 @@ public:
      */
     bool isEnabled() const;
 
-    /////////////////////////////////////////////
+    //----------------------------------------------------------------------
     
     /** Dispatches the event.
      *  Also removes all EventListeners marked for deletion from the
@@ -186,7 +186,7 @@ public:
      */
     bool hasEventListener(const EventListener::ListenerID& listenerID) const;
 
-    /////////////////////////////////////////////
+    //----------------------------------------------------------------------
     
     /** Constructor of EventDispatcher.
      */

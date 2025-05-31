@@ -31,9 +31,10 @@ THE SOFTWARE.
 #include "platform/CCStdC.h"
 
 NS_CC_BEGIN
-//
+
+//----------------------------------------------------------------------
 // CameraAction
-//
+
 ActionCamera::ActionCamera()
 : _center(0, 0, 0)
 , _eye(0, 0, FLT_EPSILON)
@@ -131,9 +132,8 @@ void ActionCamera::updateTransform()
     _target->setAdditionalTransform(&mv);
 }
 
-//
+//----------------------------------------------------------------------
 // OrbitCamera
-//
 
 OrbitCamera::OrbitCamera()
 : _radius(0.0)

@@ -723,7 +723,7 @@ public class Cocos2dxHelper {
         editor.putString(key, value);
         editor.apply();
     }
-    
+
     public static void deleteValueForKey(String key) {
         SharedPreferences settings = sActivity.getSharedPreferences(Cocos2dxHelper.PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();

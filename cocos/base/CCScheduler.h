@@ -211,7 +211,7 @@ public:
      */
     void update(float dt);
 
-    /////////////////////////////////////
+    //----------------------------------------------------------------------
     
     // schedule
     
@@ -297,7 +297,7 @@ public:
      */
     unsigned int scheduleScriptFunc(unsigned int handler, float interval, bool paused);
 #endif
-    /////////////////////////////////////
+    //----------------------------------------------------------------------
     
     // unschedule
 
@@ -354,7 +354,7 @@ public:
     void unscheduleScriptEntry(unsigned int scheduleScriptEntryID);
 #endif
     
-    /////////////////////////////////////
+    //----------------------------------------------------------------------
     
     // isScheduled
     
@@ -374,7 +374,7 @@ public:
      */
     bool isScheduled(SEL_SCHEDULE selector, const Ref *target) const;
     
-    /////////////////////////////////////
+    //----------------------------------------------------------------------
     
     /** Pauses the target.
      All scheduled selectors/update for a given target won't be 'ticked' until the target is resumed.
@@ -438,7 +438,7 @@ public:
      */
     void removeAllFunctionsToBePerformedInCocosThread();
     
-    /////////////////////////////////////
+    //----------------------------------------------------------------------
     
     // Deprecated methods:
     

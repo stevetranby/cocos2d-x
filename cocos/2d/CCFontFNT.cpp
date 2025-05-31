@@ -51,9 +51,9 @@ enum {
 
 struct _FontDefHashElement;
 
-//
-//FNTConfig Cache - free functions
-//
+//----------------------------------------------------------------------
+// FNTConfig Cache - free functions
+
 static Map<std::string, BMFontConfiguration*>* s_configurations = nullptr;
 
 BMFontConfiguration* FNTConfigLoadFile(const std::string& fntFile)
@@ -78,9 +78,8 @@ BMFontConfiguration* FNTConfigLoadFile(const std::string& fntFile)
     return ret;
 }
 
-//
-//BitmapFontConfiguration
-//
+//----------------------------------------------------------------------
+// BitmapFontConfiguration
 
 BMFontConfiguration * BMFontConfiguration::create(const std::string& FNTfile)
 {
@@ -385,10 +384,10 @@ std::set<unsigned int>* BMFontConfiguration::parseBinaryConfigFile(unsigned char
 
 void BMFontConfiguration::parseImageFileName(const char* line, const std::string& fntFile)
 {
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
     // line to parse:
     // page id=0 file="bitmapFontTest.png"
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
 
     // page ID. Sanity check
     int pageId;
@@ -403,11 +402,11 @@ void BMFontConfiguration::parseImageFileName(const char* line, const std::string
 
 void BMFontConfiguration::parseInfoArguments(const char* line)
 {
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
     // possible lines to parse:
     // info face="Script" size=32 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=1,4,3,2 spacing=0,0 outline=0
     // info face="Cracked" size=36 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
     sscanf(strstr(line, "size=") + 5, "%d", &_fontSize);
     // padding
     sscanf(strstr(line,"padding=") + 8, "%d,%d,%d,%d", &_padding.top, &_padding.right, &_padding.bottom, &_padding.left);
@@ -416,10 +415,10 @@ void BMFontConfiguration::parseInfoArguments(const char* line)
 
 void BMFontConfiguration::parseCommonArguments(const char* line)
 {
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
     // line to parse:
     // common lineHeight=104 base=26 scaleW=1024 scaleH=512 pages=1 packed=0
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
   
     // Height
     auto tmp = strstr(line, "lineHeight=") + 11;
@@ -451,10 +450,10 @@ unsigned int BMFontConfiguration::parseCharacterDefinition(const char* line)
 {
     unsigned int charID = 0;
     
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
     // line to parse:
     // char id=32   x=0     y=0     width=0     height=0     xoffset=0     yoffset=44    xadvance=14     page=0  chnl=0 
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
 
     // Character ID
     auto tmp = strstr(line, "id=") + 3;
@@ -490,10 +489,10 @@ unsigned int BMFontConfiguration::parseCharacterDefinition(const char* line)
 
 void BMFontConfiguration::parseKerningEntry(const char* line)
 {        
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
     // line to parse:
     // kerning first=121  second=44  amount=-7
-    //////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------
 
     int first, second, amount;
     auto tmp = strstr(line, "first=") + 6;

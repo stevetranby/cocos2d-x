@@ -122,7 +122,7 @@ bool StencilStateManager::isInverted()const
 
 void StencilStateManager::onBeforeVisit()
 {
-    ///////////////////////////////////
+    //----------------------------------------------------------------------
     // INIT
     
     // increment the current layer
@@ -171,7 +171,7 @@ void StencilStateManager::onBeforeVisit()
     glDepthMask(GL_FALSE);
     RenderState::StateBlock::_defaultState->setDepthWrite(false);
     
-    ///////////////////////////////////
+    //----------------------------------------------------------------------
     // CLEAR STENCIL BUFFER
     
     // manually clear the stencil buffer by drawing a fullscreen rectangle on it
@@ -187,7 +187,7 @@ void StencilStateManager::onBeforeVisit()
     //ccDrawSolidRect(Vec2::ZERO, ccpFromSize([[Director sharedDirector] winSize]), Color4F(1, 1, 1, 1));
     drawFullScreenQuadClearStencil();
     
-    ///////////////////////////////////
+    //----------------------------------------------------------------------
     // DRAW CLIPPING STENCIL
     
     // setup the stencil test func like this:
@@ -250,7 +250,7 @@ void StencilStateManager::onAfterDrawStencil()
     //    glEnable(GL_DEPTH_TEST);
     //}
     
-    ///////////////////////////////////
+    //----------------------------------------------------------------------
     // DRAW CONTENT
     
     // setup the stencil test function like this:
@@ -271,7 +271,7 @@ void StencilStateManager::onAfterDrawStencil()
 
 void StencilStateManager::onAfterVisit()
 {
-    ///////////////////////////////////
+    //----------------------------------------------------------------------
     // CLEANUP
     
     // manually restore the stencil state

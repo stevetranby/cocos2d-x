@@ -92,7 +92,9 @@ extern "C"
 #include "jpeglib.h"
 #include <setjmp.h>
 #endif // CC_USE_JPEG
+
 }
+
 #include "base/s3tc.h"
 #include "base/atitc.h"
 #include "base/pvr.h"
@@ -119,8 +121,8 @@ extern "C"
 
 NS_CC_BEGIN
 
-//////////////////////////////////////////////////////////////////////////
-//struct and data for pvr structure
+//----------------------------------------------------------------------
+// struct and data for pvr structure
 
 namespace
 {
@@ -305,7 +307,7 @@ namespace
 }
 //pvr structure end
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 //struct and data for s3tc(dds) struct
 namespace
@@ -400,7 +402,7 @@ namespace
 }
 //s3tc struct end
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 //struct and data for atitc(ktx) struct
 namespace
@@ -426,7 +428,7 @@ namespace
 }
 //atitc struct end
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 namespace
 {
@@ -476,9 +478,9 @@ Texture2D::PixelFormat getDevicePixelFormat(Texture2D::PixelFormat format)
     }
 }
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 // Implement Image
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 bool Image::PNG_PREMULTIPLIED_ALPHA_ENABLED = true;
 
 Image::Image()
@@ -798,19 +800,19 @@ namespace
         struct jpeg_error_mgr pub;  /* "public" fields */
         jmp_buf setjmp_buffer;  /* for return to caller */
     };
-    
+
     typedef struct MyErrorMgr * MyErrorPtr;
-    
+
     /*
      * Here's the routine that will replace the standard error_exit method:
      */
-    
+
     METHODDEF(void)
     myErrorExit(j_common_ptr cinfo)
     {
         /* cinfo->err really points to a MyErrorMgr struct, so coerce pointer */
         MyErrorPtr myerr = (MyErrorPtr) cinfo->err;
-        
+
         /* Always display the message. */
         /* We could postpone this until after returning, if we chose. */
         /* internal message function can't show error message in some platforms, so we rewrite it here.
@@ -820,7 +822,7 @@ namespace
         char buffer[JMSG_LENGTH_MAX];
         (*cinfo->err->format_message) (cinfo, buffer);
         CCLOG("jpeg error: %s", buffer);
-        
+
         /* Return control to the setjmp point */
         longjmp(myerr->setjmp_buffer, 1);
     }
@@ -939,7 +941,7 @@ bool Image::initWithJpgData(const unsigned char * data, ssize_t dataLen)
     unsigned long location = 0;
 
     bool ret = false;
-    do 
+    do
     {
         /* We set up the normal JPEG error routines, then override error_exit. */
         cinfo.err = jpeg_std_error(&jerr.pub);
@@ -1006,7 +1008,7 @@ bool Image::initWithJpgData(const unsigned char * data, ssize_t dataLen)
      */
     //jpeg_finish_decompress( &cinfo );
         jpeg_destroy_decompress( &cinfo );
-        /* wrap up decompression, destroy objects, free pointers and close open files */        
+        /* wrap up decompression, destroy objects, free pointers and close open files */
         ret = true;
     } while (0);
 
@@ -2372,7 +2374,7 @@ bool Image::saveImageToJPG(const std::string& filePath)
     return encodeWithWIC(filePath, false, GUID_ContainerFormatJpeg);
 #elif CC_USE_JPEG
     bool ret = false;
-    do 
+    do
     {
         struct jpeg_compress_struct cinfo;
         struct jpeg_error_mgr jerr;
@@ -2385,7 +2387,7 @@ bool Image::saveImageToJPG(const std::string& filePath)
         jpeg_create_compress(&cinfo);
 
         CC_BREAK_IF((outfile = fopen(FileUtils::getInstance()->getSuitableFOpen(filePath).c_str(), "wb")) == nullptr);
-        
+
         jpeg_stdio_dest(&cinfo, outfile);
 
         cinfo.image_width = _width;    /* image width and height, in pixels */
@@ -2395,7 +2397,7 @@ bool Image::saveImageToJPG(const std::string& filePath)
 
         jpeg_set_defaults(&cinfo);
         jpeg_set_quality(&cinfo, 90, TRUE);
-        
+
         jpeg_start_compress(&cinfo, TRUE);
 
         row_stride = _width * 3; /* JSAMPLEs per row in image_buffer */
@@ -2425,26 +2427,26 @@ bool Image::saveImageToJPG(const std::string& filePath)
             while (cinfo.next_scanline < cinfo.image_height)
             {
                 row_pointer[0] = & tempData[cinfo.next_scanline * row_stride];
-                (void)jpeg_write_scanlines(&cinfo, row_pointer, 1);
+                (void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
             }
 
             if (tempData != nullptr)
             {
                 free(tempData);
             }
-        } 
+        }
         else
         {
             while (cinfo.next_scanline < cinfo.image_height) {
                 row_pointer[0] = & _data[cinfo.next_scanline * row_stride];
-                (void)jpeg_write_scanlines(&cinfo, row_pointer, 1);
+                (void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
             }
         }
 
         jpeg_finish_compress(&cinfo);
         fclose(outfile);
         jpeg_destroy_compress(&cinfo);
-        
+
         ret = true;
     } while (0);
     return ret;

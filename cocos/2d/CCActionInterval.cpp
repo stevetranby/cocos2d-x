@@ -162,9 +162,8 @@ void ActionInterval::startWithTarget(Node *target)
     _done = false;
 }
 
-//
+//----------------------------------------------------------------------
 // Sequence
-//
 
 Sequence* Sequence::createWithTwoActions(FiniteTimeAction *actionOne, FiniteTimeAction *actionTwo)
 {
@@ -555,9 +554,9 @@ Repeat* Repeat::reverse() const
     return Repeat::create(_innerAction->reverse(), _times);
 }
 
-//
+//----------------------------------------------------------------------
 // RepeatForever
-//
+
 RepeatForever::~RepeatForever()
 {
     CC_SAFE_RELEASE(_innerAction);
@@ -845,9 +844,8 @@ Spawn* Spawn::reverse() const
     return nullptr;
 }
 
-//
+//----------------------------------------------------------------------
 // RotateTo
-//
 
 RotateTo* RotateTo::create(float duration, float dstAngle)
 {
@@ -1304,9 +1302,9 @@ MoveTo* MoveTo::reverse() const
     return nullptr;
 }
 
-//
+//----------------------------------------------------------------------
 // SkewTo
-//
+
 SkewTo* SkewTo::create(float t, float sx, float sy)
 {
     SkewTo *skewTo = new (std::nothrow) SkewTo();
@@ -2168,9 +2166,8 @@ void FadeIn::startWithTarget(cocos2d::Node *target)
         _fromOpacity = target->getOpacity();
 }
 
-//
+//----------------------------------------------------------------------
 // FadeOut
-//
 
 FadeOut* FadeOut::create(float d)
 {
@@ -2275,9 +2272,9 @@ void FadeTo::update(float time)
     }
 }
 
-//
+//----------------------------------------------------------------------
 // TintTo
-//
+
 TintTo* TintTo::create(float duration, GLubyte red, GLubyte green, GLubyte blue)
 {
     TintTo *tintTo = new (std::nothrow) TintTo();
@@ -2403,9 +2400,9 @@ TintBy* TintBy::reverse() const
     return TintBy::create(_duration, -_deltaR, -_deltaG, -_deltaB);
 }
 
-//
+//----------------------------------------------------------------------
 // DelayTime
-//
+
 DelayTime* DelayTime::create(float d)
 {
     DelayTime* action = new (std::nothrow) DelayTime();
@@ -2434,9 +2431,8 @@ DelayTime* DelayTime::reverse() const
     return DelayTime::create(_duration);
 }
 
-//
+//----------------------------------------------------------------------
 // ReverseTime
-//
 
 ReverseTime* ReverseTime::create(FiniteTimeAction *action)
 {
@@ -2519,9 +2515,9 @@ ReverseTime* ReverseTime::reverse() const
     return (ReverseTime*)_other->clone();
 }
 
-//
+//----------------------------------------------------------------------
 // Animate
-//
+
 Animate* Animate::create(Animation *animation)
 {
     Animate *animate = new (std::nothrow) Animate();

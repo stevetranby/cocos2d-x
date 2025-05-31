@@ -103,9 +103,9 @@ Show* Show::clone() const
     return Show::create();
 }
 
-//
+//----------------------------------------------------------------------
 // Hide
-//
+
 Hide * Hide::create() 
 {
     Hide *ret = new (std::nothrow) Hide();
@@ -135,9 +135,9 @@ Hide* Hide::clone() const
     return Hide::create();
 }
 
-//
+//----------------------------------------------------------------------
 // ToggleVisibility
-//
+
 ToggleVisibility * ToggleVisibility::create()
 {
     ToggleVisibility *ret = new (std::nothrow) ToggleVisibility();
@@ -167,9 +167,9 @@ ToggleVisibility * ToggleVisibility::clone() const
     return ToggleVisibility::create();
 }
 
-//
+//----------------------------------------------------------------------
 // Remove Self
-//
+
 RemoveSelf * RemoveSelf::create(bool isNeedCleanUp /*= true*/) 
 {
     RemoveSelf *ret = new (std::nothrow) RemoveSelf();
@@ -205,9 +205,8 @@ RemoveSelf * RemoveSelf::clone() const
     return RemoveSelf::create(_isNeedCleanUp);
 }
 
-//
+//----------------------------------------------------------------------
 // FlipX
-//
 
 FlipX *FlipX::create(bool x)
 {
@@ -286,9 +285,8 @@ FlipY * FlipY::clone() const
     return FlipY::create(_flipY);
 }
 
-//
+//----------------------------------------------------------------------
 // Place
-//
 
 Place* Place::create(const Vec2& pos)
 {
@@ -328,9 +326,8 @@ void Place::update(float time)
     _target->setPosition(_position);
 }
 
-//
+//----------------------------------------------------------------------
 // CallFunc
-//
 
 CallFunc * CallFunc::create(const std::function<void()> &func)
 {
@@ -430,9 +427,8 @@ void CallFunc::execute()
     }
 }
 
-//
+//----------------------------------------------------------------------
 // CallFuncN
-//
 
 CallFuncN * CallFuncN::create(const std::function<void(Node*)> &func)
 {
@@ -509,9 +505,8 @@ CallFuncN * CallFuncN::clone() const
     return a;
 }
 
-//
+//----------------------------------------------------------------------
 // CallFuncND
-//
 
 __CCCallFuncND * __CCCallFuncND::create(Ref* selectorTarget, SEL_CallFuncND selector, void* d)
 {
@@ -561,9 +556,9 @@ __CCCallFuncND * __CCCallFuncND::clone() const
     return a;
 }
 
-//
+//----------------------------------------------------------------------
 // CallFuncO
-//
+
 __CCCallFuncO::__CCCallFuncO() :
 _object(nullptr)
 {

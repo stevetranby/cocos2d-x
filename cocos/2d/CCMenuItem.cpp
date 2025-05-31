@@ -651,9 +651,8 @@ void MenuItemSprite::updateImagesVisibility()
     }
 }
 
-///
-/// MenuItemImage
-///
+//----------------------------------------------------------------------
+// MenuItemImage
 
 MenuItemImage* MenuItemImage::create()
 {

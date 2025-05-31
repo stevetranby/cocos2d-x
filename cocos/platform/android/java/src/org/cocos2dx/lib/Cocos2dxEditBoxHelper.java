@@ -438,7 +438,7 @@ public class Cocos2dxEditBoxHelper {
             Log.e(TAG, "closeKeyboardOnUiThread doesn't run on UI thread!");
             return;
         }
-        
+
         final InputMethodManager imm = (InputMethodManager) mCocos2dxActivity.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         Cocos2dxEditBox editBox = mEditBoxArray.get(index);
         if (null != editBox) {

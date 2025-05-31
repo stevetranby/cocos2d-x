@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 #include <assert.h>
 
-#define CC_DLL 
+#define CC_DLL
 
 #define CC_ASSERT(cond) assert(cond)
 
@@ -46,7 +46,6 @@ THE SOFTWARE.
 #define NULL    ((void *)0)
 #endif
 #endif
-
 
 #endif // CC_PLATFORM_IOS
 

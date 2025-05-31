@@ -56,7 +56,6 @@
     GLuint colorRenderbuffer_;
     GLuint depthBuffer_;
 
-
     //buffers for MSAA
     GLuint msaaFramebuffer_;
     GLuint msaaColorbuffer_;
