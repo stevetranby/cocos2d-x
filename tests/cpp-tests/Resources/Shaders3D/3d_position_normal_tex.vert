@@ -6,7 +6,7 @@ uniform vec3 u_SpotLightSourcePosition[MAX_SPOT_LIGHT_NUM];
 #endif
 
 attribute vec4 a_position;
-attribute vec2 a_texCoord;
+attribute vec2 a_texCoord0;
 attribute vec3 a_normal;
 varying vec2 TextureCoordOut;
 
@@ -41,7 +41,7 @@ void main(void)
     v_normal = CC_NormalMatrix * a_normal;
 #endif
 
-    TextureCoordOut = a_texCoord;
+    TextureCoordOut = a_texCoord0;
     TextureCoordOut.y = 1.0 - TextureCoordOut.y;
     gl_Position = CC_PMatrix * ePosition;
 }

@@ -4,7 +4,7 @@
 precision lowp float;
 #endif
 
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 vec4 colors[10];
 
@@ -23,5 +23,5 @@ void main(void)
 	
 	// inline to prevent "float" loss and keep using lowp
 	int y = int( mod(gl_FragCoord.y / 3.0, 10.0 ) );
-	gl_FragColor = colors[y] * texture2D(CC_Texture0, v_texCoord);
+	gl_FragColor = colors[y] * texture2D(CC_Texture0, v_texCoord0);
 }

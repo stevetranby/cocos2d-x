@@ -3,7 +3,7 @@
 http://www.idevgames.com/forums/thread-3010.html
 */
 
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 varying vec4 v_fragmentColor;
 
 uniform vec3 u_outlineColor;
@@ -16,12 +16,12 @@ void main()
     vec4 accum = vec4(0.0);
     vec4 normal = vec4(0.0);
     
-    normal = texture2D(CC_Texture0, vec2(v_texCoord.x, v_texCoord.y));
+    normal = texture2D(CC_Texture0, vec2(v_texCoord0.x, v_texCoord0.y));
     
-    accum += texture2D(CC_Texture0, vec2(v_texCoord.x - radius, v_texCoord.y - radius));
-    accum += texture2D(CC_Texture0, vec2(v_texCoord.x + radius, v_texCoord.y - radius));
-    accum += texture2D(CC_Texture0, vec2(v_texCoord.x + radius, v_texCoord.y + radius));
-    accum += texture2D(CC_Texture0, vec2(v_texCoord.x - radius, v_texCoord.y + radius));
+    accum += texture2D(CC_Texture0, vec2(v_texCoord0.x - radius, v_texCoord0.y - radius));
+    accum += texture2D(CC_Texture0, vec2(v_texCoord0.x + radius, v_texCoord0.y - radius));
+    accum += texture2D(CC_Texture0, vec2(v_texCoord0.x + radius, v_texCoord0.y + radius));
+    accum += texture2D(CC_Texture0, vec2(v_texCoord0.x - radius, v_texCoord0.y + radius));
     
     accum *= u_threshold;
     accum.rgb =  u_outlineColor * accum.a;

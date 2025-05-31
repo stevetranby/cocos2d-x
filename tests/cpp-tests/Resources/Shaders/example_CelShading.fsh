@@ -3,7 +3,7 @@ precision mediump float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 uniform vec2 resolution;
 
@@ -20,7 +20,7 @@ vec4 edgeFilter(in int px, in int py)
 	{
 		for (int x = -EDGE_FILTER_SIZE; x <= EDGE_FILTER_SIZE; ++x)
 		{
-			color += texture2D(CC_Texture0, v_texCoord + vec2(px + x, py + y) / resolution.xy);
+			color += texture2D(CC_Texture0, v_texCoord0 + vec2(px + x, py + y) / resolution.xy);
 		}
 	}
 
@@ -38,7 +38,7 @@ void main(void)
 	{
 		for (int x = -FILTER_SIZE; x <= FILTER_SIZE; ++x)
 		{
-			color += texture2D(CC_Texture0, v_texCoord + vec2(x, y) / resolution.xy);
+			color += texture2D(CC_Texture0, v_texCoord0 + vec2(x, y) / resolution.xy);
 		}
 	}
 
