@@ -53,7 +53,7 @@ set(COCOS_CS_HEADER
     editor-support/cocostudio/WidgetReader/Node3DReader/Node3DReader.h
     editor-support/cocostudio/WidgetReader/WidgetReaderProtocol.h
     editor-support/cocostudio/WidgetReader/ButtonReader/ButtonReader.h
-    editor-support/cocostudio/WidgetReader/Light3DReader/Light3DReader.h
+#    editor-support/cocostudio/WidgetReader/Light3DReader/Light3DReader.h
     editor-support/cocostudio/WidgetReader/TabControlReader/TabControlReader.h
     editor-support/cocostudio/WidgetReader/TabControlReader/CSTabControl_generated.h
     editor-support/cocostudio/WidgetReader/TextReader/TextReader.h
@@ -70,10 +70,10 @@ set(COCOS_CS_HEADER
     editor-support/cocostudio/WidgetReader/SliderReader/SliderReader.h
     editor-support/cocostudio/WidgetReader/ComAudioReader/ComAudioReader.h
     editor-support/cocostudio/WidgetReader/ParticleReader/ParticleReader.h
-    editor-support/cocostudio/WidgetReader/Particle3DReader/Particle3DReader.h
-    editor-support/cocostudio/WidgetReader/SkeletonReader/CSBoneBinary_generated.h
-    editor-support/cocostudio/WidgetReader/SkeletonReader/SkeletonNodeReader.h
-    editor-support/cocostudio/WidgetReader/SkeletonReader/BoneNodeReader.h
+#    editor-support/cocostudio/WidgetReader/Particle3DReader/Particle3DReader.h
+#    editor-support/cocostudio/WidgetReader/SkeletonReader/CSBoneBinary_generated.h
+#    editor-support/cocostudio/WidgetReader/SkeletonReader/SkeletonNodeReader.h
+#    editor-support/cocostudio/WidgetReader/SkeletonReader/BoneNodeReader.h
     editor-support/cocostudio/WidgetReader/ScrollViewReader/ScrollViewReader.h
     editor-support/cocostudio/WidgetReader/TextFieldReader/TextFieldReader.h
     editor-support/cocostudio/WidgetReader/NodeReaderProtocol.h
@@ -155,10 +155,10 @@ set(COCOS_CS_SRC
     editor-support/cocostudio/WidgetReader/TextReader/TextReader.cpp
     editor-support/cocostudio/WidgetReader/Node3DReader/Node3DReader.cpp
     editor-support/cocostudio/WidgetReader/UserCameraReader/UserCameraReader.cpp
-    editor-support/cocostudio/WidgetReader/Particle3DReader/Particle3DReader.cpp
+#    editor-support/cocostudio/WidgetReader/Particle3DReader/Particle3DReader.cpp
     editor-support/cocostudio/WidgetReader/Sprite3DReader/Sprite3DReader.cpp
-    editor-support/cocostudio/WidgetReader/SkeletonReader/BoneNodeReader.cpp
-    editor-support/cocostudio/WidgetReader/SkeletonReader/SkeletonNodeReader.cpp
+#    editor-support/cocostudio/WidgetReader/SkeletonReader/BoneNodeReader.cpp
+#    editor-support/cocostudio/WidgetReader/SkeletonReader/SkeletonNodeReader.cpp
     editor-support/cocostudio/WidgetReader/TextAtlasReader/TextAtlasReader.cpp
     editor-support/cocostudio/WidgetReader/LayoutReader/LayoutReader.cpp
     editor-support/cocostudio/WidgetReader/TextBMFontReader/TextBMFontReader.cpp
@@ -166,7 +166,7 @@ set(COCOS_CS_SRC
     editor-support/cocostudio/WidgetReader/ButtonReader/ButtonReader.cpp
     editor-support/cocostudio/WidgetReader/ScrollViewReader/ScrollViewReader.cpp
     editor-support/cocostudio/WidgetReader/GameNode3DReader/GameNode3DReader.cpp
-    editor-support/cocostudio/WidgetReader/Light3DReader/Light3DReader.cpp
+#    editor-support/cocostudio/WidgetReader/Light3DReader/Light3DReader.cpp
     editor-support/cocostudio/ActionTimeline/CCActionTimelineCache.cpp
     editor-support/cocostudio/ActionTimeline/CCActionTimeline.cpp
     editor-support/cocostudio/ActionTimeline/CCActionTimelineNode.cpp
