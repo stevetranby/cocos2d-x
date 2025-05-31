@@ -183,3 +183,9 @@ temp/
 # external libs zip
 *.zip
 **/simulator/
+
+# misc additions
+prebuilt-20150920
+.d
+android-backup.zip
+cocos/platform/android/libcocos2dx/.cxx/
