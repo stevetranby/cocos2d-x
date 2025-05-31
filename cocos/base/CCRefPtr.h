@@ -108,7 +108,7 @@ public:
     RefPtr(std::nullptr_t ptr)
         : _ptr(nullptr)
     {
-        
+        CC_UNUSED_PARAM(ptr);
     }
     
     RefPtr(const RefPtr<T> & other)
@@ -160,6 +160,7 @@ public:
     
     RefPtr<T> & operator = (std::nullptr_t other)
     {
+        CC_UNUSED_PARAM(other);
         CC_REF_PTR_SAFE_RELEASE_NULL(_ptr);
         return *this;
     }
