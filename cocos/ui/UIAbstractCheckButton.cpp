@@ -205,8 +205,8 @@ void AbstractCheckButton::setupBackgroundSelectedTexture()
 void AbstractCheckButton::loadTextureFrontCross(const std::string& cross,TextureResType texType)
 {
     _frontCrossFileName = cross;
-
     _frontCrossTexType = texType;
+
     switch (_frontCrossTexType)
     {
         case TextureResType::LOCAL:

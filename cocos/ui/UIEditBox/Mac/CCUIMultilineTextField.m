@@ -124,8 +124,10 @@
 {
     //noop
 }
+
 -(int)ccui_maxLength
 {
     return 0;
 }
+
 @end

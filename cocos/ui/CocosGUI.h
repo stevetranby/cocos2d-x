@@ -68,7 +68,6 @@ THE SOFTWARE.
 NS_CC_BEGIN
 namespace ui {
 
-
 /**
  * Get current cocos GUI module version string.
  *@return A string representation of GUI module version number

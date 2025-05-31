@@ -35,7 +35,7 @@
 */
 class TestScene : public cocos2d::Scene
 {
-public: 
+public:
     TestScene(bool bPortrait = false, bool physics = false){}
     virtual void onEnter() override {}
 

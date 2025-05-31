@@ -121,7 +121,7 @@ const Texture2D::PixelFormatInfoMap Texture2D::_pixelFormatInfoTables(TexturePix
 // Default is: RGBA8888 (32-bit textures)
 static Texture2D::PixelFormat g_defaultAlphaPixelFormat = Texture2D::PixelFormat::DEFAULT;
 
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 //convertor function
 
 // IIIIIIII -> RRRRRRRRGGGGGGGGGBBBBBBBB
@@ -431,7 +431,7 @@ void Texture2D::convertRGBA8888ToRGB5A1(const unsigned char* data, ssize_t dataL
     }
 }
 // converter function end
-//////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
 
 Texture2D::Texture2D()
 : _pixelFormat(Texture2D::PixelFormat::DEFAULT)
