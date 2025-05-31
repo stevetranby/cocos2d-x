@@ -3,7 +3,7 @@ precision mediump float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 uniform vec2 resolution;
 
@@ -13,7 +13,7 @@ const float intensity = 0.35;
 void main()
 {
    vec4 sum = vec4(0);
-   vec2 texcoord = v_texCoord.xy;
+   vec2 texcoord = v_texCoord0.xy;
    int j;
    int i;
 

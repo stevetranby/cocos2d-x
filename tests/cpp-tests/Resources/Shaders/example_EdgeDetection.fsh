@@ -3,7 +3,7 @@ precision mediump float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 uniform vec2 resolution;
 
@@ -16,7 +16,7 @@ float lookup(vec2 p, float dx, float dy)
 
 void main(void)
 {
-    vec2 p = v_texCoord.xy;
+    vec2 p = v_texCoord0.xy;
     // simple sobel edge detection
     float gx = 0.0;
     gx += -1.0 * lookup(p, -1.0, -1.0);

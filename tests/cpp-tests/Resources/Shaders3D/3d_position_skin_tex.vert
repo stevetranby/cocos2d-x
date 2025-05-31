@@ -3,7 +3,7 @@ attribute vec3 a_position;
 attribute vec4 a_blendWeight;
 attribute vec4 a_blendIndex;
 
-attribute vec2 a_texCoord;
+attribute vec2 a_texCoord0;
 
 const int SKINNING_JOINT_COUNT = 60;
 // Uniforms
@@ -64,6 +64,6 @@ void main()
     vec4 position = getPosition();
     gl_Position = CC_MVPMatrix * position;
     
-    TextureCoordOut = a_texCoord;
+    TextureCoordOut = a_texCoord0;
     TextureCoordOut.y = 1.0 - TextureCoordOut.y;
 }
