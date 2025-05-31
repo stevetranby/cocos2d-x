@@ -5,12 +5,16 @@ precision mediump float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
+uniform float CC_alpha_value;
 
 void main(void)
 {
-    vec4 c = texture2D(CC_Texture0, v_texCoord);
-     c = v_fragmentColor * c;
+    vec4 c = texture2D(CC_Texture0, v_texCoord0);
+    if(c.a < 0.1)
+        discard;
+    //c = v_fragmentColor * c; // STEVE: I'm setting color (fragColor) as HSV for some buttons
+    c.a = v_fragmentColor.a * c.a;
     gl_FragColor.xyz = vec3(0.2126*c.r + 0.7152*c.g + 0.0722*c.b);
     gl_FragColor.w = c.w;
 }

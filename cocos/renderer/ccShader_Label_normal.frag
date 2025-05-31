@@ -25,18 +25,19 @@
 
 const char* ccLabelNormal_frag = R"(
 #ifdef GL_ES
-precision lowp float;
+// STEVE: precision lowp float;
+precision highp float;
 #endif
 
 varying vec4 v_fragmentColor;
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 
 uniform vec4 u_textColor;
 
 void main()
 {
     gl_FragColor =  v_fragmentColor * vec4(u_textColor.rgb,// RGB from uniform
-        u_textColor.a * texture2D(CC_Texture0, v_texCoord).a// A from texture & uniform
+        u_textColor.a * texture2D(CC_Texture0, v_texCoord0).a// A from texture & uniform
     );
 }
 )";

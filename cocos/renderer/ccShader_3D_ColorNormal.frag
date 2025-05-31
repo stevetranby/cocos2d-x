@@ -19,7 +19,7 @@ uniform float u_SpotLightSourceRangeInverse[MAX_SPOT_LIGHT_NUM];
 uniform vec3 u_AmbientLightSourceColor;
 
 #ifdef GL_ES
-varying mediump vec2 TextureCoordOut;
+varying highp vec2 TextureCoordOut;
 #if MAX_POINT_LIGHT_NUM
 varying mediump vec3 v_vertexToPointLightDirection[MAX_POINT_LIGHT_NUM];
 #endif

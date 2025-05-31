@@ -2,11 +2,12 @@
 const char* cc3D_ColorTex_frag = R"(
 
 #ifdef GL_ES
-varying mediump vec2 TextureCoordOut;
+varying highp vec2 TextureCoordOut;
+uniform lowp vec4 u_color;
 #else
 varying vec2 TextureCoordOut;
-#endif
 uniform vec4 u_color;
+#endif
 
 void main(void)
 {

@@ -4,13 +4,13 @@ const char* ccCameraClearVert = R"(
 uniform float depth;
 
 attribute vec4 a_position;
-attribute vec2 a_texCoord;
+attribute vec2 a_texCoord0;
 attribute vec4 a_color;
 #ifdef GL_ES
-varying mediump vec2 v_texCoord;
-varying mediump vec4 v_color;
+varying highp vec2 v_texCoord0;
+varying lowp vec4 v_color;
 #else
-varying vec2 v_texCoord;
+varying vec2 v_texCoord0;
 varying vec4 v_color;
 #endif
 void main()
@@ -18,7 +18,7 @@ void main()
     gl_Position = a_position;
     gl_Position.z = depth;
     gl_Position.w = 1.0;
-    v_texCoord = a_texCoord;
+    v_texCoord0 = a_texCoord0;
     v_color = a_color;
 }
 )";
