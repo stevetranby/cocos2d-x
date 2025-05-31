@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 #include "ui/UIHelper.h"
 #include <algorithm>
-#include "editor-support/cocostudio/CocosStudioExtension.h"
+//TODO: remove unless needed - #include "editor-support/cocostudio/CocosStudioExtension.h"
 
 NS_CC_BEGIN
 
@@ -72,7 +72,9 @@ _disabledFileName(""),
 _normalTexType(TextureResType::LOCAL),
 _pressedTexType(TextureResType::LOCAL),
 _disabledTexType(TextureResType::LOCAL),
-_fontName("")
+_fontName(""),
+_buttonScale(1.0f),
+_titleScale(1.0f)
 {
     setTouchEnabled(true);
 }
@@ -120,7 +122,7 @@ bool Button::init(const std::string &normalImage,
     }
 
     loadTextures(normalImage, selectedImage, disableImage, texType);
-    
+
     return true;
 }
 
@@ -146,13 +148,13 @@ void Button::initRenderer()
     addProtectedChild(_buttonClickedRenderer, PRESSED_RENDERER_Z, -1);
     addProtectedChild(_buttonDisabledRenderer, DISABLED_RENDERER_Z, -1);
 }
-    
+
 bool Button::createTitleRendererIfNull() {
     if( !_titleRenderer ) {
         createTitleRenderer();
         return true;
     }
-    
+
     return false;
 }
 
@@ -198,7 +200,7 @@ void Button::setScale9Enabled(bool able)
         _buttonClickedRenderer->setRenderingType(Scale9Sprite::RenderingType::SIMPLE);
         _buttonDisabledRenderer->setRenderingType(Scale9Sprite::RenderingType::SIMPLE);
     }
-    
+
 
     if (_scale9Enabled)
     {
@@ -480,13 +482,13 @@ void Button::onPressStateChangedToNormal()
                 _titleRenderer->stopAllActions();
                 if (_unifySize)
                 {
-                    Action *zoomTitleAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP, 1.0f, 1.0f);
+                    Action *zoomTitleAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP, _titleScale, _titleScale);
                     _titleRenderer->runAction(zoomTitleAction);
                 }
                 else
                 {
-                    _titleRenderer->setScaleX(1.0f);
-                    _titleRenderer->setScaleY(1.0f);
+                    _titleRenderer->setScaleX(_titleScale);
+                    _titleRenderer->setScaleY(_titleScale);
                 }
             }
         }
@@ -499,8 +501,8 @@ void Button::onPressStateChangedToNormal()
         if (nullptr != _titleRenderer)
         {
             _titleRenderer->stopAllActions();
-            _titleRenderer->setScaleX(1.0f);
-            _titleRenderer->setScaleY(1.0f);
+            _titleRenderer->setScaleX(_titleScale);
+            _titleRenderer->setScaleY(_titleScale);
         }
 
     }
@@ -522,18 +524,18 @@ void Button::onPressStateChangedToPressed()
             _buttonClickedRenderer->stopAllActions();
 
             Action *zoomAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP,
-                                                 1.0f + _zoomScale,
-                                                 1.0f + _zoomScale);
+                                                 _buttonScale + _zoomScale,
+                                                 _buttonScale + _zoomScale);
             _buttonClickedRenderer->runAction(zoomAction);
 
-            _buttonNormalRenderer->setScale(1.0f + _zoomScale,
-                                            1.0f + _zoomScale);
+            _buttonNormalRenderer->setScale(_buttonScale + _zoomScale,
+                                            _buttonScale + _zoomScale);
 
             if (nullptr != _titleRenderer)
             {
                 _titleRenderer->stopAllActions();
                 Action *zoomTitleAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP,
-                                                          1.0f + _zoomScale, 1.0f + _zoomScale);
+                                                          _titleScale + _zoomScale, _titleScale + _zoomScale);
                 _titleRenderer->runAction(zoomTitleAction);
             }
         }
@@ -545,13 +547,13 @@ void Button::onPressStateChangedToPressed()
         _buttonDisabledRenderer->setVisible(false);
 
         _buttonNormalRenderer->stopAllActions();
-        _buttonNormalRenderer->setScale(1.0f +_zoomScale, 1.0f + _zoomScale);
+        _buttonNormalRenderer->setScale(_buttonScale +_zoomScale, _buttonScale + _zoomScale);
 
         if (nullptr != _titleRenderer)
         {
             _titleRenderer->stopAllActions();
-            _titleRenderer->setScaleX(1.0f + _zoomScale);
-            _titleRenderer->setScaleY(1.0f + _zoomScale);
+            _titleRenderer->setScaleX(_titleScale + _zoomScale);
+            _titleRenderer->setScaleY(_titleScale + _zoomScale);
         }
     }
 }
@@ -693,7 +695,7 @@ void Button::pressedTextureScaleChangedWithSize()
 void Button::disabledTextureScaleChangedWithSize()
 {
     _buttonDisabledRenderer->setPreferredSize(_contentSize);
-    
+
     _buttonDisabledRenderer->setPosition(_contentSize.width / 2.0f, _contentSize.height / 2.0f);
 }
 
@@ -719,9 +721,9 @@ void Button::setTitleText(const std::string& text)
     if (text == getTitleText()) {
         return;
     }
-    
+
     createTitleRendererIfNull();
-    
+
     if(getTitleFontSize() <= 0) {
         setTitleFontSize(CC_DEFAULT_FONT_LABEL_SIZE);
     }
@@ -736,7 +738,7 @@ std::string Button::getTitleText() const
     if(!_titleRenderer) {
         return "";
     }
-    
+
     return _titleRenderer->getString();
 }
 
@@ -768,7 +770,7 @@ void Button::setTitleFontSize(float size)
         // the system font
         _titleRenderer->setSystemFontSize(size);
     }
-    
+
     //we can't change font size of BMFont.
     if(titleLabelType != Label::LabelType::BMFONT) {
         updateContentSize();
@@ -779,7 +781,7 @@ float Button::getTitleFontSize() const {
     if(_titleRenderer) {
         return _titleRenderer->getRenderingFontSize();
     }
-    
+
     return -1;
 }
 
@@ -796,7 +798,7 @@ float Button::getZoomScale()const
 void Button::setTitleFontName(const std::string& fontName)
 {
     createTitleRendererIfNull();
-    
+
     if(FileUtils::getInstance()->isFileExist(fontName)) {
         std::string lowerCasedFontName = fontName;
         std::transform(lowerCasedFontName.begin(), lowerCasedFontName.end(), lowerCasedFontName.begin(), ::tolower);
@@ -831,7 +833,7 @@ std::string Button::getTitleFontName() const
             return _titleRenderer->getBMFontFilePath();
         }
     }
-    
+
     return "";
 }
 
@@ -982,7 +984,9 @@ void Button::setPositionZ(float z)
     _buttonDisabledRenderer->setPositionZ(z);
     _buttonClickedRenderer->setPositionZ(z);
 
-    if(_titleRenderer) _titleRenderer->setPositionZ(z + .1f);
+    if(_titleRenderer) {
+        _titleRenderer->setPositionZ(z + .1f);
+    }
 }
 
 }

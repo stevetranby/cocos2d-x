@@ -84,12 +84,12 @@ namespace cocostudio
 
         
         stExpCocoNode *stChildArray = cocoNode->GetChildArray(cocoLoader);
-        Widget::TextureResType type;
+        Widget::TextureResType type { Widget::TextureResType::LOCAL };
         std::string charMapFileName;
         std::string stringValue;
         std::string startCharMap;
-        float itemWidth;
-        float itemHeight;
+        float itemWidth {0};
+        float itemHeight {0};
         for (int i = 0; i < cocoNode->GetChildNum(); ++i) {
             std::string key = stChildArray[i].GetName(cocoLoader);
             std::string value = stChildArray[i].GetValue(cocoLoader);

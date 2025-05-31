@@ -57,7 +57,7 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 // FIXME:: Yes, nodes might have a sort problem once every 30 days if the game runs at 60 FPS and each frame sprites are reordered.
-std::uint32_t Node::s_globalOrderOfArrival = 0;
+unsigned int Node::s_globalOrderOfArrival = 0;
 int Node::__attachedNodeCount = 0;
 
 // MARK: Constructor, Destructor, Init
@@ -85,7 +85,8 @@ Node::Node()
 , _transformUpdated(true)
 // children (lazy allocs)
 // lazy alloc
-, _localZOrder$Arrival(0LL)
+, _localZOrderAndArrival(0)
+, _localZOrder(0)
 , _globalZOrder(0)
 , _parent(nullptr)
 // "whole screen" objects. like Scenes and Layers, should set _ignoreAnchorPointForPosition to true
@@ -267,7 +268,7 @@ void Node::setSkewY(float skewY)
     _transformUpdated = _transformDirty = _inverseDirty = true;
 }
 
-void Node::setLocalZOrder(std::int32_t z)
+void Node::setLocalZOrder(int z)
 {
     if (getLocalZOrder() == z)
         return;
@@ -283,14 +284,16 @@ void Node::setLocalZOrder(std::int32_t z)
 
 /// zOrder setter : private method
 /// used internally to alter the zOrder variable. DON'T call this method manually
-void Node::_setLocalZOrder(std::int32_t z)
+void Node::_setLocalZOrder(int z)
 {
+    auto tmpZ = static_cast<std::uint64_t>(z) << 32;
+    _localZOrderAndArrival = static_cast<std::int64_t>(tmpZ) | (_localZOrderAndArrival & 0xffffffff);
     _localZOrder = z;
 }
 
 void Node::updateOrderOfArrival()
 {
-    _orderOfArrival = (++s_globalOrderOfArrival);
+    _localZOrderAndArrival = (_localZOrderAndArrival & 0xffffffff00000000) | (++s_globalOrderOfArrival);
 }
 
 void Node::setGlobalZOrder(float globalZOrder)
@@ -646,6 +649,7 @@ void Node::setContentSize(const Size & size)
         _contentSize = size;
 
         _anchorPointInPoints.set(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y);
+
         _transformUpdated = _transformDirty = _inverseDirty = _contentSizeDirty = true;
     }
 }
@@ -1062,7 +1066,7 @@ void Node::removeChildByTag(int tag, bool cleanup/* = true */)
 
     if (child == nullptr)
     {
-        CCLOG("cocos2d: removeChildByTag(tag = %d): child not found!", tag);
+        CCLOGINFO("cocos2d: removeChildByTag(tag = %d): child not found!", tag);
     }
     else
     {
@@ -1078,7 +1082,7 @@ void Node::removeChildByName(const std::string &name, bool cleanup)
     
     if (child == nullptr)
     {
-        CCLOG("cocos2d: removeChildByName(name = %s): child not found!", name.c_str());
+        CCLOGINFO("cocos2d: removeChildByName(name = %s): child not found!", name.c_str());
     }
     else
     {
@@ -1547,6 +1551,9 @@ void Node::scheduleUpdateWithPriority(int priority)
 
 void Node::scheduleUpdateWithPriorityLua(int nHandler, int priority)
 {
+#if !(CC_ENABLE_SCRIPT_BINDING)
+    CC_UNUSED_PARAM(nHandler);
+#endif
     unscheduleUpdate();
     
 #if CC_ENABLE_SCRIPT_BINDING
@@ -1714,13 +1721,13 @@ const Mat4& Node::getNodeToParentTransform() const
         float x = _position.x;
         float y = _position.y;
         float z = _positionZ;
-        
+
         if (_ignoreAnchorPointForPosition)
         {
             x += _anchorPointInPoints.x;
             y += _anchorPointInPoints.y;
         }
-        
+
         bool needsSkewMatrix = ( _skewX || _skewY );
 
         // Build Transform Matrix = translation * rotation * scale
@@ -1737,28 +1744,46 @@ const Mat4& Node::getNodeToParentTransform() const
             // If we skew with the exact same value for both x and y then we're simply just rotating
             float radiansX = -CC_DEGREES_TO_RADIANS(_rotationZ_X);
             float radiansY = -CC_DEGREES_TO_RADIANS(_rotationZ_Y);
+
             float cx = cosf(radiansX);
             float sx = sinf(radiansX);
             float cy = cosf(radiansY);
             float sy = sinf(radiansY);
             
-            float m0 = _transform.m[0], m1 = _transform.m[1], m4 = _transform.m[4], m5 = _transform.m[5], m8 = _transform.m[8], m9 = _transform.m[9];
-            _transform.m[0] = cy * m0 - sx * m1, _transform.m[4] = cy * m4 - sx * m5, _transform.m[8] = cy * m8 - sx * m9;
-            _transform.m[1] = sy * m0 + cx * m1, _transform.m[5] = sy * m4 + cx * m5, _transform.m[9] = sy * m8 + cx * m9;
+            float m0 = _transform.m[0];
+            float m1 = _transform.m[1];
+            float m4 = _transform.m[4];
+            float m5 = _transform.m[5];
+            float m8 = _transform.m[8];
+            float m9 = _transform.m[9];
+
+            _transform.m[0] = cy * m0 - sx * m1;
+            _transform.m[4] = cy * m4 - sx * m5;
+            _transform.m[8] = cy * m8 - sx * m9;
+
+            _transform.m[1] = sy * m0 + cx * m1;
+            _transform.m[5] = sy * m4 + cx * m5;
+            _transform.m[9] = sy * m8 + cx * m9;
         }
         _transform = translation * _transform;
 
         if (_scaleX != 1.f)
         {
-            _transform.m[0] *= _scaleX, _transform.m[1] *= _scaleX, _transform.m[2] *= _scaleX;
+            _transform.m[0] *= _scaleX;
+            _transform.m[1] *= _scaleX;
+            _transform.m[2] *= _scaleX;
         }
         if (_scaleY != 1.f)
         {
-            _transform.m[4] *= _scaleY, _transform.m[5] *= _scaleY, _transform.m[6] *= _scaleY;
+            _transform.m[4] *= _scaleY;
+            _transform.m[5] *= _scaleY;
+            _transform.m[6] *= _scaleY;
         }
         if (_scaleZ != 1.f)
         {
-            _transform.m[8] *= _scaleZ, _transform.m[9] *= _scaleZ, _transform.m[10] *= _scaleZ;
+            _transform.m[8] *= _scaleZ;
+            _transform.m[9] *= _scaleZ;
+            _transform.m[10] *= _scaleZ;
         }
         
         // FIXME:: Try to inline skew

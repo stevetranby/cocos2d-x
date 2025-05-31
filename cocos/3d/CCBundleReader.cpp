@@ -162,7 +162,7 @@ bool BundleReader::rewind()
 
 std::string BundleReader::readString()
 {
-    unsigned int length;
+    ssize_t length;
     if(read(&length, 4, 1) != 1)
     {
         return std::string();

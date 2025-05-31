@@ -108,6 +108,7 @@ private:
 
 public: // STEVE (allow public access to lighting shader macros)
     /**Get macro define for lights in current openGL driver.*/
+public:
     std::string getShaderMacrosForLight() const;
 
 private:

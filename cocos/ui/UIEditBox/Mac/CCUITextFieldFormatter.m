@@ -29,13 +29,11 @@
 {
 }
 
-@synthesize maximumLength = _maximumLength;
-
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        _maximumLength = INT_MAX;
+        _maximumLength = NSIntegerMax;
     }
     
     return self;

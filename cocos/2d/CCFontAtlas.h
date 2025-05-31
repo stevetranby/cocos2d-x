@@ -36,6 +36,13 @@
 #include "base/CCRef.h"
 #include "platform/CCStdC.h" // ssize_t on windows
 
+// STEVE - iconv.h (libiconv) now declares a specific tagged type in Apple platform SDKs
+#if CC_TARGET_PLATFORM != CC_PLATFORM_WIN32 && CC_TARGET_PLATFORM != CC_PLATFORM_WINRT && CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID
+#include <iconv.h>
+#else
+typedef void* iconv_t;
+#endif
+
 NS_CC_BEGIN
 
 class Font;
@@ -135,7 +142,9 @@ protected:
     float _lineHeight;
     Font* _font;
     FontFreeType* _fontFreeType;
-    void* _iconv;
+    
+    // STEVE - iconv.h (libiconv) now declares a specific tagged type in Apple platform SDKs
+    iconv_t _iconv;
 
     // Dynamic GlyphCollection related stuff
     int _currentPage;

@@ -80,17 +80,17 @@ Sprite* Sprite::create(const std::string& filename)
     return nullptr;
 }
 
-Sprite* Sprite::create(const PolygonInfo& info)
-{
-    Sprite *sprite = new (std::nothrow) Sprite();
-    if(sprite && sprite->initWithPolygon(info))
-    {
-        sprite->autorelease();
-        return sprite;
-    }
-    CC_SAFE_DELETE(sprite);
-    return nullptr;
-}
+//Sprite* Sprite::create(const PolygonInfo& info)
+//{
+//    Sprite *sprite = new (std::nothrow) Sprite();
+//    if(sprite && sprite->initWithPolygon(info))
+//    {
+//        sprite->autorelease();
+//        return sprite;
+//    }
+//    CC_SAFE_DELETE(sprite);
+//    return nullptr;
+//}
 
 Sprite* Sprite::create(const std::string& filename, const Rect& rect)
 {
@@ -122,7 +122,7 @@ Sprite* Sprite::createWithSpriteFrameName(const std::string& spriteFrameName)
 
 #if COCOS2D_DEBUG > 0
     char msg[256] = {0};
-    sprintf(msg, "Invalid spriteFrameName: %s", spriteFrameName.c_str());
+    snprintf(msg, 256, "Invalid spriteFrameName: %s", spriteFrameName.c_str());
     CCASSERT(frame != nullptr, msg);
 #endif
 
@@ -242,21 +242,21 @@ bool Sprite::initWithSpriteFrame(SpriteFrame *spriteFrame)
     return ret;
 }
 
-bool Sprite::initWithPolygon(const cocos2d::PolygonInfo &info)
-{
-    bool ret = false;
-
-    Texture2D *texture = _director->getTextureCache()->addImage(info.getFilename());
-    if(texture && initWithTexture(texture))
-    {
-        _polyInfo = info;
-        _renderMode = RenderMode::POLYGON;
-        Node::setContentSize(_polyInfo.getRect().size / _director->getContentScaleFactor());
-        ret = true;
-    }
-
-    return ret;
-}
+//bool Sprite::initWithPolygon(const cocos2d::PolygonInfo &info)
+//{
+//    bool ret = false;
+//
+//    Texture2D *texture = _director->getTextureCache()->addImage(info.getFilename());
+//    if(texture && initWithTexture(texture))
+//    {
+//        _polyInfo = info;
+//        _renderMode = RenderMode::POLYGON;
+//        Node::setContentSize(_polyInfo.getRect().size / _director->getContentScaleFactor());
+//        ret = true;
+//    }
+//
+//    return ret;
+//}
 
 // designated initializer
 bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
@@ -285,6 +285,10 @@ bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
         _quad.br.colors = Color4B::WHITE;
         _quad.tl.colors = Color4B::WHITE;
         _quad.tr.colors = Color4B::WHITE;
+
+        // STEVE: check!
+        // shader state
+        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP));
 
         // update texture (calls updateBlendFunc)
         setTexture(texture);
@@ -1559,6 +1563,7 @@ void Sprite::setSpriteFrame(const std::string &spriteFrameName)
     CCASSERT(!spriteFrameName.empty(), "spriteFrameName must not be empty");
     if (spriteFrameName.empty())
     {
+        CCLOG("sprite frame empty!!!");
         return;
     }
 
@@ -1586,6 +1591,7 @@ void Sprite::setSpriteFrame(SpriteFrame *spriteFrame)
     // update texture before updating texture rect
     if (texture != _texture)
     {
+        CCLOGINFO("setting texture to: %p", texture);
         setTexture(texture);
     }
 

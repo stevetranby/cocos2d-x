@@ -164,15 +164,15 @@ public:
      *
      * @param localZOrder The local Z order value.
      */
-    virtual void setLocalZOrder(std::int32_t localZOrder);
+    virtual void setLocalZOrder(int localZOrder);
 
-    CC_DEPRECATED_ATTRIBUTE virtual void setZOrder(std::int32_t localZOrder) { setLocalZOrder(localZOrder); }
+    CC_DEPRECATED_ATTRIBUTE virtual void setZOrder(int localZOrder) { setLocalZOrder(localZOrder); }
     
     /* 
      Helper function used by `setLocalZOrder`. Don't use it unless you know what you are doing.
      @js NA
      */
-    virtual void _setLocalZOrder(std::int32_t z);
+    virtual void _setLocalZOrder(int z);
 
     /** !!! ONLY FOR INTERNAL USE
     * Sets the arrival order when this node has a same ZOrder with other children.
@@ -181,8 +181,6 @@ public:
     * If two children have the same Z order, the child with larger arrival order will be drawn later.
     *
     * @warning This method is used internally for localZOrder sorting, don't change this manually
-    *
-    * @param orderOfArrival   The arrival order.
     */
     void updateOrderOfArrival();
 
@@ -194,9 +192,9 @@ public:
      * @return The local (relative to its siblings) Z order.
      */
 
-    virtual std::int32_t getLocalZOrder() const { return _localZOrder; }
+    virtual int getLocalZOrder() const { return _localZOrder; }
 
-    CC_DEPRECATED_ATTRIBUTE virtual std::int32_t getZOrder() const { return getLocalZOrder(); }
+    CC_DEPRECATED_ATTRIBUTE virtual int getZOrder() const { return getLocalZOrder(); }
 
     /**
      Defines the order in which the nodes are renderer.
@@ -866,8 +864,8 @@ public:
     virtual Node* getParent() { return _parent; }
     virtual const Node* getParent() const { return _parent; }
 
-
-    ////// REMOVES //////
+    //----------------------------------------------------------------------
+    // REMOVES
 
     /**
      * Removes this node itself from its parent node with a cleanup.
@@ -948,11 +946,11 @@ public:
         static_assert(std::is_base_of<Node, _T>::value, "Node::sortNodes: Only accept derived of Node!");
 #if CC_64BITS
         std::sort(std::begin(nodes), std::end(nodes), [](_T* n1, _T* n2) {
-            return (n1->_localZOrder$Arrival < n2->_localZOrder$Arrival);
+            return (n1->_localZOrderAndArrival < n2->_localZOrderAndArrival);
         });
 #else
-        std::sort(std::begin(nodes), std::end(nodes), [](_T* n1, _T* n2) {
-            return (n1->_localZOrder == n2->_localZOrder && n1->_orderOfArrival < n2->_orderOfArrival) || n1->_localZOrder < n2->_localZOrder;
+        std::stable_sort(std::begin(nodes), std::end(nodes), [](_T* n1, _T* n2) {
+            return n1->_localZOrder < n2->_localZOrder;
         });
 #endif
     }
@@ -1927,6 +1925,11 @@ protected:
     Vec2 _anchorPointInPoints;      ///< anchor point in points
     Vec2 _anchorPoint;              ///< anchor point normalized (NOT in points)
 
+    Vec2 _positionAnchor;           ///<
+
+    Vec2 _positionBasis;            ///<
+    Vec2 _positionBasisInPoints;    ///<
+
     Size _contentSize;              ///< untransformed size of the node
     bool _contentSizeDirty;         ///< whether or not the contentSize is dirty
 
@@ -1941,27 +1944,12 @@ protected:
     mutable bool _additionalTransformDirty; ///< transform dirty ?
     bool _transformUpdated;         ///< Whether or not the Transform object was updated since the last frame
 
-#if CC_LITTLE_ENDIAN
-    union {
-        struct {
-            std::uint32_t _orderOfArrival;
-            std::int32_t _localZOrder;
-        };
-        std::int64_t _localZOrder$Arrival;
-    };
-#else
-    union {
-        struct {
-            std::int32_t _localZOrder;
-            std::uint32_t _orderOfArrival;
-        };
-        std::int64_t _localZOrder$Arrival;
-    };
-#endif
+    std::int64_t _localZOrderAndArrival; /// cache, for 64bits compress optimize.
+    int _localZOrder; /// < Local order (relative to its siblings) used to sort the node
 
     float _globalZOrder;            ///< Global order used to sort the node
 
-    static std::uint32_t s_globalOrderOfArrival;
+    static unsigned int s_globalOrderOfArrival;
 
     Vector<Node*> _children;        ///< array of children nodes
     Node *_parent;                  ///< weak reference to parent node

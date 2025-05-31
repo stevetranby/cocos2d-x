@@ -31,6 +31,13 @@
 #include <cctype>
 #include <locale>
 #include <sstream>
+
+// STEVE
+//#include <iostream>
+#include <chrono>
+#include <fstream>
+// ENDSTEVE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -80,6 +87,7 @@ static const size_t SEND_BUFSIZ = 512;
 
 /** private functions */
 namespace {
+
 #if defined(__MINGW32__)
     // inet
     const char* inet_ntop(int af, const void* src, char* dst, int cnt)
@@ -103,6 +111,7 @@ namespace {
     //
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+
     void SendLogToWindow(const char *log)
     {
         static const int CCLOG_STRING_TAG = 1;
@@ -120,62 +129,170 @@ namespace {
                         (LPARAM)(LPVOID)&myCDS);
         }
     }
+
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
+
     void SendLogToWindow(const char *log)
     {
     }
+
 #endif
-}
 
-void log(const char * format, ...)
-{
-    int bufferSize = MAX_LOG_LENGTH;
-    char* buf = nullptr;
-    int nret = 0;
-    va_list args;
-    do
+//    //----------------------------------------------------------------------
+//    //----------------------------------------------------------------------
+//    // (original repo version 2017-11-21)
+//
+//    void cc_log_original(const char * format, ...)
+//    {
+//        int bufferSize = MAX_LOG_LENGTH;
+//        char* buf = nullptr;
+//        int nret = 0;
+//        va_list args;
+//        do
+//        {
+//            buf = new (std::nothrow) char[bufferSize];
+//            if (buf == nullptr)
+//                return;
+//            /*
+//             pitfall: The behavior of vsnprintf between VS2013 and VS2015/2017 is different
+//             VS2013 or Unix-Like System will return -1 when buffer not enough, but VS2015/2017 will return the actural needed length for buffer at this station
+//             The _vsnprintf behavior is compatible API which always return -1 when buffer isn't enough at VS2013/2015/2017
+//             Yes, The vsnprintf is more efficient implemented by MSVC 19.0 or later, AND it's also standard-compliant, see reference: http://www.cplusplus.com/reference/cstdio/vsnprintf/
+//             */
+//            va_start(args, format);
+//            nret = vsnprintf(buf, bufferSize - 3, format, args);
+//            va_end(args);
+//
+//            if (nret >= 0)
+//            { // VS2015/2017
+//                if (nret <= bufferSize - 3)
+//                {// success, so don't need to realloc
+//                    break;
+//                }
+//                else
+//                {
+//                    bufferSize = nret + 3;
+//                    delete[] buf;
+//                }
+//            }
+//            else // < 0
+//            {    // VS2013 or Unix-like System(GCC)
+//                bufferSize *= 2;
+//                delete[] buf;
+//            }
+//        } while (true);
+//        buf[nret] = '\n';
+//        buf[++nret] = '\0';
+//
+//#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+//        __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "%s", buf);
+//
+//#elif CC_TARGET_PLATFORM ==  CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
+//
+//        int pos = 0;
+//        int len = nret;
+//        char tempBuf[MAX_LOG_LENGTH + 1] = { 0 };
+//        WCHAR wszBuf[MAX_LOG_LENGTH + 1] = { 0 };
+//
+//        do
+//        {
+//            std::copy(buf + pos, buf + pos + MAX_LOG_LENGTH, tempBuf);
+//
+//            tempBuf[MAX_LOG_LENGTH] = 0;
+//
+//            MultiByteToWideChar(CP_UTF8, 0, tempBuf, -1, wszBuf, sizeof(wszBuf));
+//            OutputDebugStringW(wszBuf);
+//            WideCharToMultiByte(CP_ACP, 0, wszBuf, -1, tempBuf, sizeof(tempBuf), nullptr, FALSE);
+//            printf("%s", tempBuf);
+//
+//            pos += MAX_LOG_LENGTH;
+//
+//        } while (pos < len);
+//        SendLogToWindow(buf);
+//        fflush(stdout);
+//#else
+//        // Linux, Mac, iOS, etc
+//        fprintf(stdout, "%s", buf);
+//        fflush(stdout);
+//#endif
+//
+//        Director::getInstance()->getConsole()->log(buf);
+//        delete[] buf;
+//    }
+//
+//    //----------------------------------------------------------------------
+//    //----------------------------------------------------------------------
+
+
+    //
+    // Free functions to log
+    //
+
+    void STLog(const char *format, va_list args)
     {
-        buf = new (std::nothrow) char[bufferSize];
-        if (buf == nullptr)
-            return;
-        /*
-        pitfall: The behavior of vsnprintf between VS2013 and VS2015/2017 is different
-        VS2013 or Unix-Like System will return -1 when buffer not enough, but VS2015/2017 will return the actural needed length for buffer at this station
-        The _vsnprintf behavior is compatible API which always return -1 when buffer isn't enough at VS2013/2015/2017
-        Yes, The vsnprintf is more efficient implemented by MSVC 19.0 or later, AND it's also standard-compliant, see reference: http://www.cplusplus.com/reference/cstdio/vsnprintf/
-        */
-        va_start(args, format);
-        nret = vsnprintf(buf, bufferSize - 3, format, args);
-        va_end(args);
 
-        if (nret >= 0)
-        { // VS2015/2017
-            if (nret <= bufferSize - 3)
-            {// success, so don't need to realloc
-                break;
-            }
-            else
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+       // __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "steve", 0);
+#endif
+
+        int bufferSize = MAX_LOG_LENGTH;
+        char* buf = nullptr;
+        int nret = 0;
+        do
+        {
+            buf = new (std::nothrow) char[bufferSize];
+            if (buf == nullptr)
             {
-                bufferSize = nret + 3;
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+                __android_log_print(ANDROID_LOG_DEBUG, "[ST]", "format: %s", format);
+#endif
+                return;
+            }
+            /*
+             pitfall: The behavior of vsnprintf between VS2013 and VS2015/2017 is different
+             VS2013 or Unix-Like System will return -1 when buffer not enough, but VS2015/2017 will return the actural needed length for buffer at this station
+             The _vsnprintf behavior is compatible API which always return -1 when buffer isn't enough at VS2013/2015/2017
+             Yes, The vsnprintf is more efficient implemented by MSVC 19.0 or later, AND it's also standard-compliant, see reference: http://www.cplusplus.com/reference/cstdio/vsnprintf/
+             */
+            // STEVE: added va_list, va_copy, va_end in case the buffer is too small
+            //        and vsnprintf is called twice
+            va_list args2;
+            va_copy(args2, args);
+            nret = vsnprintf(buf, bufferSize - 3, format, args2);
+            va_end(args2);
+
+            if (nret >= 0)
+            {
+                // VS2015/2017
+                if (nret <= bufferSize - 3)
+                {
+                    // success, so don't need to realloc
+                    break;
+                }
+                else
+                {
+                    bufferSize = nret + 3;
+                    delete[] buf;
+                }
+            }
+            else // < 0
+            {
+                // VS2013 or Unix-like System(GCC)
+                bufferSize *= 2;
                 delete[] buf;
             }
-        }
-        else // < 0
-        {	// VS2013 or Unix-like System(GCC)
-            bufferSize *= 2;
-            delete[] buf;
-        }
-    } while (true);
+        } while (true);
+        
 #if CC_TARGET_PLATFORM != CC_PLATFORM_WIN32
-    buf[nret] = '\n';
-    buf[++nret] = '\0';
+        buf[nret] = '\n';
+        buf[++nret] = '\0';
 #else
-    buf[nret] = '\0';
+        buf[nret] = '\0';
 #endif
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-    __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "%s", buf);
-
+        __android_log_print(ANDROID_LOG_DEBUG, "cocos2d-x debug info", "%s", buf);
+        
 #elif CC_TARGET_PLATFORM ==  CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
 
     int pos = 0;
@@ -205,17 +322,32 @@ void log(const char * format, ...)
     SendLogToWindow(buf);
     fflush(stdout);
 #else
-    // Linux, Mac, iOS, etc
-    fprintf(stdout, "%s", buf);
-    fflush(stdout);
+        // Linux, Mac, iOS, etc
+        fprintf(stdout, "%s", buf);
+        fflush(stdout);
 #endif
-
-    Director::getInstance()->getConsole()->log(buf);
-    delete[] buf;
+        
+        Director::getInstance()->getConsole()->log(buf);
+        delete [] buf;
+    }
 }
 
 // FIXME: Deprecated
-// void CCLog(const char * format, ...);
+void CCLog(const char * format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    STLog(format, args);
+    va_end(args);
+}
+
+void log(const char * format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    STLog(format, args);
+    va_end(args);
+}
 
 //
 //  Utility code
@@ -270,7 +402,7 @@ bool Console::Utility::isFloat(const std::string& myString) {
     std::istringstream iss(myString);
     float f;
     iss >> std::noskipws >> f; // noskipws considers leading whitespace invalid
-    // Check the entire string was consumed and if either failbit or badbit is set
+                               // Check the entire string was consumed and if either failbit or badbit is set
     return iss.eof() && !iss.fail();
 }
 
@@ -582,7 +714,7 @@ bool Console::listenOnTCP(int port)
         if (bind(listenfd, res->ai_addr, res->ai_addrlen) == 0)
             break;          /* success */
 
-/* bind error, close and try next one */
+        /* bind error, close and try next one */
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
         closesocket(listenfd);
 #else
@@ -1259,17 +1391,17 @@ void Console::commandProjection(int fd, const std::string& /*args*/)
     auto proj = director->getProjection();
     switch (proj) {
         case cocos2d::Director::Projection::_2D:
-            sprintf(buf,"2d");
+            snprintf(buf,20,"2d");
             break;
         case cocos2d::Director::Projection::_3D:
-            sprintf(buf,"3d");
+            snprintf(buf,20,"3d");
             break;
         case cocos2d::Director::Projection::CUSTOM:
-            sprintf(buf,"custom");
+            snprintf(buf,20,"custom");
             break;
             
         default:
-            sprintf(buf,"unknown");
+            snprintf(buf,20,"unknown");
             break;
     }
     Console::Utility::mydprintf(fd, "Current projection: %s\n", buf);
@@ -1317,20 +1449,20 @@ void Console::commandResolutionSubCommandEmpty(int fd, const std::string& /*args
     Rect visibleRect = glview->getVisibleRect();
     
     Console::Utility::mydprintf(fd, "Window Size:\n"
-              "\t%d x %d (points)\n"
-              "\t%d x %d (pixels)\n"
-              "\t%d x %d (design resolution)\n"
-              "Resolution Policy: %d\n"
-              "Visible Rect:\n"
-              "\torigin: %d x %d\n"
-              "\tsize: %d x %d\n",
-              (int)points.width, (int)points.height,
-              (int)pixels.width, (int)pixels.height,
-              (int)design.width, (int)design.height,
-              (int)res,
-              (int)visibleRect.origin.x, (int)visibleRect.origin.y,
-              (int)visibleRect.size.width, (int)visibleRect.size.height
-              );
+                                "\t%d x %d (points)\n"
+                                "\t%d x %d (pixels)\n"
+                                "\t%d x %d (design resolution)\n"
+                                "Resolution Policy: %d\n"
+                                "Visible Rect:\n"
+                                "\torigin: %d x %d\n"
+                                "\tsize: %d x %d\n",
+                                (int)points.width, (int)points.height,
+                                (int)pixels.width, (int)pixels.height,
+                                (int)design.width, (int)design.height,
+                                (int)res,
+                                (int)visibleRect.origin.x, (int)visibleRect.origin.y,
+                                (int)visibleRect.size.width, (int)visibleRect.size.height
+                                );
 }
 
 void Console::commandSceneGraph(int fd, const std::string& /*args*/)
@@ -1482,7 +1614,8 @@ static char invalid_filename_char[] = {':', '/', '\\', '?', '%', '*', '<', '>', 
 
 void Console::commandUpload(int fd)
 {
-    ssize_t n, rc;
+    size_t n;
+    ssize_t rc;
     char buf[512] = {0};
     char c = 0;
     char *ptr = buf;
@@ -1505,16 +1638,16 @@ void Console::commandUpload(int fd)
                 break;
             }
             *ptr++ = c;
-        } 
-        else if( rc == 0 ) 
+        }
+        else if( rc == 0 )
         {
             break;
-        } 
-        else if( errno == EINTR ) 
+        }
+        else if( errno == EINTR )
         {
             continue;
-        } 
-        else 
+        }
+        else
         {
             break;
         }

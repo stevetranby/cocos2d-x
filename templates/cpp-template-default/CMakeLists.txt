@@ -23,6 +23,8 @@
 # THE SOFTWARE.
 # ****************************************************************************/
 
+# STEVE: need 3.9.4+ for setting standards
+# cmake_minimum_required(VERSION 3.9.4)
 cmake_minimum_required(VERSION 3.6)
 
 set(APP_NAME HelloCpp)

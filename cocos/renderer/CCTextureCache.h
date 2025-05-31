@@ -36,6 +36,7 @@ THE SOFTWARE.
 #include <string>
 #include <unordered_map>
 #include <functional>
+#include <set>
 
 #include "base/CCRef.h"
 #include "renderer/CCTexture2D.h"
@@ -246,6 +247,11 @@ protected:
     std::unordered_map<std::string, Texture2D*> _textures;
 
     static std::string s_etc1AlphaFileSuffix;
+
+    // STEVE
+public:
+    std::set<std::string> _imagesLoadedAtLeastOnce;
+    std::set<std::string> _imagesNotFound;
 };
 
 #if CC_ENABLE_CACHE_TEXTURE_DATA

@@ -122,9 +122,20 @@ std::string Application::getVersion()
     return JniHelper::callStaticStringMethod(helperClassName, "getVersion");
 }
 
-bool Application::openURL(const std::string &url)
+std::string Application::getBuildVersion()
 {
-    return JniHelper::callStaticBooleanMethod(helperClassName, "openURL", url);
+    return JniHelper::callStaticStringMethod(helperClassName, "getBuildVersion");
+}
+
+std::string Application::getCopyrightString()
+{
+    return JniHelper::callStaticStringMethod(helperClassName, "getCopyrightString");
+}
+
+void Application::openURL(const std::string &url, const std::function<void(bool)>& completionHandler)
+{
+    bool success = JniHelper::callStaticBooleanMethod(helperClassName, "openURL", url);
+    completionHandler(success);
 }
 
 void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {

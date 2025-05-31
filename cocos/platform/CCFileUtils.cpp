@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 
 #include <stack>
+#include <set>
 
 #include "base/CCData.h"
 #include "base/ccMacros.h"
@@ -626,10 +627,20 @@ void FileUtils::purgeCachedEntries()
     _fullPathCacheDir.clear();
 }
 
-std::string FileUtils::getStringFromFile(const std::string& filename) const
+std::string FileUtils::getStringFromFile(const std::string& filename) // STEVE const
 {
     std::string s;
-    getContents(filename, &s);
+    auto status = getContents(filename, &s);
+    if(status == Status::NotExists) {
+        //std::string test {filename};
+        std::string test = std::string("test");
+        _fileAsStringPathsNotFound.insert(test); // STEVE
+        CCLOGERROR("[steve] file does not exist: %s", filename.c_str());
+    }
+    if(status == Status::OK) {
+        _fileAsStringLoadedAtLeastOnce.insert(std::string(filename)); // STEVE
+    }
+    CCLOGINFO("[steve] status = %d", status);
     return s;
 }
 
@@ -643,7 +654,7 @@ void FileUtils::getStringFromFile(const std::string &path, std::function<void (s
     }, std::move(callback));
 }
 
-Data FileUtils::getDataFromFile(const std::string& filename) const
+Data FileUtils::getDataFromFile(const std::string& filename) // STEVE const
 {
     Data d;
     getContents(filename, &d);
@@ -658,7 +669,7 @@ void FileUtils::getDataFromFile(const std::string& filename, std::function<void(
     }, std::move(callback));
 }
 
-FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableBuffer* buffer) const
+FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableBuffer* buffer) // STEVE const
 {
     if (filename.empty())
         return Status::NotExists;
@@ -666,8 +677,10 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
     auto fs = FileUtils::getInstance();
 
     std::string fullPath = fs->fullPathForFilename(filename);
-    if (fullPath.empty())
+    if (fullPath.empty()) {
+        _fileContentsNotFound.insert(fullPath); // STEVE
         return Status::NotExists;
+    }
 
     std::string suitableFullPath = fs->getSuitableFOpen(fullPath);
 
@@ -681,10 +694,12 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
     }
 
     FILE *fp = fopen(suitableFullPath.c_str(), "rb");
-    if (!fp)
+    if (!fp) {
+        CCLOG("[steve] Error opening file: %d (%s)\n", errno, strerror(errno));
         return Status::OpenFailed;
+    }
 
-    size_t size = statBuf.st_size;
+    size_t size = (size_t)statBuf.st_size;
 
     buffer->resize(size);
     size_t readsize = fread(buffer->buffer(), 1, size, fp);
@@ -695,10 +710,11 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
         return Status::ReadFailed;
     }
 
+    _fileContentsLoadedAtLeastOnce.insert(fullPath); // STEVE
     return Status::OK;
 }
 
-unsigned char* FileUtils::getFileData(const std::string& filename, const char* mode, ssize_t *size) const
+unsigned char* FileUtils::getFileData(const std::string& filename, const char* mode, ssize_t *size) // STEVE const
 {
     CCASSERT(!filename.empty() && size != nullptr && mode != nullptr, "Invalid parameters.");
     (void)(mode); // mode is unused, as we do not support text mode any more...
@@ -791,6 +807,7 @@ std::string FileUtils::getNewFilename(const std::string &filename) const
 
 std::string FileUtils::getPathForFilename(const std::string& filename, const std::string& resolutionDirectory, const std::string& searchPath) const
 {
+    CCLOGINFO("searchPath = %s", searchPath.c_str());
     std::string file = filename;
     std::string file_path = "";
     size_t pos = filename.find_last_of('/');
