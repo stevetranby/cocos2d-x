@@ -48,21 +48,24 @@
 
 - (BOOL)getObjectValue:(id *)object forString:(NSString *)string errorDescription:(NSString **)error
 {
+    (void)error;
     *object = string;
     return YES;
 }
 
-- (BOOL)isPartialStringValid:(NSString **)partialStringPtr
-       proposedSelectedRange:(NSRangePointer)proposedSelRangePtr
-              originalString:(NSString *)origString
-       originalSelectedRange:(NSRange)origSelRange
-            errorDescription:(NSString **)error
+- (BOOL)isPartialStringValid:(NSString **) partialStringPtr
+       proposedSelectedRange:(NSRangePointer) __unused proposedSelRangePtr
+              originalString:(NSString *) __unused origString
+       originalSelectedRange:(NSRange) __unused origSelRange
+            errorDescription:(NSString **) __unused error
 {
     return (*partialStringPtr).length <= self.maximumLength;
 }
 
 - (NSAttributedString *)attributedStringForObjectValue:(id)anObject withDefaultAttributes:(NSDictionary *)attributes
 {
+    (void)anObject;
+    (void)attributes;
     return nil;
 }
 @end
