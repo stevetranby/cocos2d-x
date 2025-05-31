@@ -69,10 +69,11 @@ struct AudioFileIndicator
     int smallSizeIndicator;
 };
 
+        // Note(steve): higher values will preload larger files, often better to preload them during game load or level load
 static AudioFileIndicator __audioFileIndicator[] = {
         {"default", 128000}, // If we could not handle the audio format, return default value, the position should be first.
         {".wav",    1024000},
-        {".ogg",    128000},
+        {".ogg",    512000}, // Note(steve): Changes these values bigger than your background music size to ensure only PcmAudioPlayer work for all audios.
         {".mp3",    160000}
 };
 
@@ -84,9 +85,15 @@ AudioPlayerProvider::AudioPlayerProvider(SLEngineItf engineItf, SLObjectItf outp
           _deviceSampleRate(deviceSampleRate), _bufferSizeInFrames(bufferSizeInFrames),
           _fdGetterCallback(fdGetterCallback), _callerThreadUtils(callerThreadUtils),
           _pcmAudioService(nullptr), _mixController(nullptr),
+          // STEVE: apparently multi-threading is botched??
+          // https://github.com/cocos2d/cocos2d-x/issues/16849#issuecomment-264671802
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+          _threadPool(ThreadPool::newSingleThreadPool())
+#else
           _threadPool(ThreadPool::newCachedThreadPool(1, 8, 5, 2, 2))
+#endif
 {
-    ALOGI("deviceSampleRate: %d, bufferSizeInFrames: %d", _deviceSampleRate, _bufferSizeInFrames);
+    ALOGI("steve: deviceSampleRate: %d, bufferSizeInFrames: %d", _deviceSampleRate, _bufferSizeInFrames);
     if (getSystemAPILevel() >= 17)
     {
         _mixController = new (std::nothrow) AudioMixerController(_bufferSizeInFrames, _deviceSampleRate, 2);

@@ -35,6 +35,8 @@
 #include <mutex>
 #include <string>
 #include <thread>
+
+#define OPENAL_DEPRECATED // STEVE - This silences all OpenAL deprecated warnings @cleanup
 #include <OpenAL/al.h>
 
 NS_CC_BEGIN
@@ -65,6 +67,7 @@ protected:
     AudioCache* _audioCache;
 
     float _volume;
+    float _startTime;
     bool _loop;
     std::function<void (int, const std::string &)> _finishCallbak;
 

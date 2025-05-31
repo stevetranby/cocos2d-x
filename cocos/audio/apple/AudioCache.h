@@ -28,6 +28,7 @@
 #include "platform/CCPlatformConfig.h"
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC
 
+#define OPENAL_DEPRECATED // STEVE - This silences all OpenAL deprecated warnings @cleanup
 #import <OpenAL/al.h>
 
 #include <string>

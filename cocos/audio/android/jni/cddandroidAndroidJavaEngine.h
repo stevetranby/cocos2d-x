@@ -26,7 +26,7 @@ THE SOFTWARE.
 #ifndef __CDDANDROIDANDROIDJAVAENGINE_H__
 #define __CDDANDROIDANDROIDJAVAENGINE_H__
 
-#include "audio/include/SimpleAudioEngine.h"
+//STEVE -  #include "audio/include/SimpleAudioEngine.h"
 #include "platform/android/jni/JniHelper.h"
 #include <list>
 

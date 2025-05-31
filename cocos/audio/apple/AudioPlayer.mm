@@ -162,7 +162,8 @@ void AudioPlayer::setCache(AudioCache* cache)
 bool AudioPlayer::play2d()
 {
     _play2dMutex.lock();
-    ALOGVV("AudioPlayer::play2d, _alSource: %u", _alSource);
+
+    ALOGV("AudioPlayer::play2d, _alSource: %u", _alSource);
 
     /*********************************************************************/
     /*       Note that it may be in sub thread or in main thread.       **/
@@ -170,16 +171,18 @@ bool AudioPlayer::play2d()
     bool ret = false;
     do
     {
+        if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); break; }
+
         if (_audioCache->_state != AudioCache::State::READY)
         {
             ALOGE("alBuffer isn't ready for play!");
             break;
         }
 
-        alSourcei(_alSource, AL_BUFFER, 0);CHECK_AL_ERROR_DEBUG();
-        alSourcef(_alSource, AL_PITCH, 1.0f);CHECK_AL_ERROR_DEBUG();
-        alSourcef(_alSource, AL_GAIN, _volume);CHECK_AL_ERROR_DEBUG();
-        alSourcei(_alSource, AL_LOOPING, AL_FALSE);CHECK_AL_ERROR_DEBUG();
+        alSourcei(_alSource, AL_BUFFER, 0); CHECK_AL_ERROR_DEBUG();
+        alSourcef(_alSource, AL_PITCH, 1.0f); CHECK_AL_ERROR_DEBUG();
+        alSourcef(_alSource, AL_GAIN, _volume); CHECK_AL_ERROR_DEBUG();
+        alSourcei(_alSource, AL_LOOPING, AL_FALSE); CHECK_AL_ERROR_DEBUG();
 
         if (_audioCache->_queBufferFrames == 0)
         {
@@ -239,7 +242,20 @@ bool AudioPlayer::play2d()
 
         ALint state;
         alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
-        assert(state == AL_PLAYING);
+
+#if COCOS2D_DEBUG >= 1
+        // TODO: need to probably define or -D this NS_BLOCK_ASSERTIONS
+        // http://nshipster.com/nsassertionhandler/
+        // ENABLE_NS_ASSERTIONS seems to be the newer one
+        // - see: https://stackoverflow.com/questions/6445222/ns-block-assertions-in-objective-c
+        //NSCAssert(state == AL_PLAYING, @"Audio failed to play ????");
+
+        if(state != AL_PLAYING) {
+            CCLOGERROR("Audio failed to play ????");
+            // TODO: retry???
+        }
+#endif
+
         _ready = true;
         ret = true;
     } while (false);
@@ -253,6 +269,23 @@ bool AudioPlayer::play2d()
     return ret;
 }
 
+// STEVE: Issues with rotateBufferThread and other OpenAL Crash reports
+// - https://github.com/cocos/engine-native/pull/4254/files
+// - https://github.com/cocos2d/cocos2d-x/issues/20062
+//
+// Pull Requests (PRs) That May be of interest:
+// - https://github.com/axmolengine/axmol/commit/facba25f12907583042f6e9f8f253bd265897de6
+// - https://github.com/cocos2d/cocos2d-x/issues/18597
+// - https://github.com/cocos2d/cocos2d-x/issues/19480
+// - https://github.com/cocos2d/cocos2d-x/pull/18865/files
+// - https://github.com/simdsoft/x-studio/commit/75e6c0c
+//
+// Suggestions:
+// - Increase PCMDATA_CACHEMAXSIZE value to 10485760
+// - Increase buffer count from 3 to 4 (not sure this does anything)
+// - Possibly need to null check all the internal fields (or eventually correctly synchronize reads/writes)
+// - e.g. _audioCache, _alSource, etc
+//
 // rotateBufferThread is used to rotate alBufferData for _alSource when playing big audio file
 void AudioPlayer::rotateBufferThread(int offsetFrame)
 {
@@ -261,6 +294,8 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
     long long rotateSleepTime = static_cast<long long>(QUEUEBUFFER_TIME_STEP * 1000) / 2;
     do
     {
+        if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); break; }
+
         BREAK_IF(!decoder.open(_audioCache->_fileFullPath.c_str()));
 
         uint32_t framesRead = 0;
@@ -279,7 +314,20 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
 
         while (!_isDestroyed) {
             alGetSourcei(_alSource, AL_SOURCE_STATE, &sourceState);
-            if (sourceState == AL_PLAYING) {
+
+            // STEVE: Here's a fix to add check if PAUSED as well as PLAYING
+            //
+            // On IOS, audio state will lie,
+            // when the system is not fully foreground,
+            // openAl will process the buffer in queue,
+            // but our condition cannot make sure that the audio is playing as it's too short.
+            //
+            // Interesting IOS system.
+            //
+            // Solution [may be] to load buffer even if it's paused, just make sure that there's no bufferProcessed in
+            //
+            //if (sourceState == AL_PLAYING) {}
+            if (sourceState == AL_PLAYING || sourceState == AL_PAUSED) {
                 alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &bufferProcessed);
                 while (bufferProcessed > 0) {
                     bufferProcessed--;
@@ -362,6 +410,8 @@ bool AudioPlayer::setLoop(bool loop)
 
 bool AudioPlayer::setTime(float time)
 {
+    if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); return false; }
+
     if (!_isDestroyed && time >= 0.0f && time < _audioCache->_duration) {
 
         _currTime = time;

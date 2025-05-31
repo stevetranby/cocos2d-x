@@ -80,46 +80,21 @@ static ALenum alSourceAddNotificationExt(ALuint sid, ALuint notificationID, alSo
 
 @implementation AudioEngineSessionHandler
 
-// only enable it on iOS. Disable it on tvOS
-#if !defined(CC_TARGET_OS_TVOS)
-void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruption_state)
-{
-    if (kAudioSessionBeginInterruption == interruption_state)
-    {
-      alcMakeContextCurrent(nullptr);
-    }
-    else if (kAudioSessionEndInterruption == interruption_state)
-    {
-      OSStatus result = AudioSessionSetActive(true);
-      if (result) NSLog(@"Error setting audio session active! %d\n", static_cast<int>(result));
-
-      alcMakeContextCurrent(s_ALContext);
-    }
-}
-#endif
-
 -(id) init
 {
     if (self = [super init])
     {
-      if ([[[UIDevice currentDevice] systemVersion] intValue] > 5) {
-          [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:[AVAudioSession sharedInstance]];
-          [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:UIApplicationDidBecomeActiveNotification object:nil];
-          [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:UIApplicationWillResignActiveNotification object:nil];
-      }
-    // only enable it on iOS. Disable it on tvOS
-    // AudioSessionInitialize removed from tvOS
-#if !defined(CC_TARGET_OS_TVOS)
-      else {
-        AudioSessionInitialize(NULL, NULL, AudioEngineInterruptionListenerCallback, self);
-      }
-#endif
-    
-    BOOL success = [[AVAudioSession sharedInstance]
-                    setCategory: AVAudioSessionCategoryAmbient
-                    error: nil];
-    if (!success)
-        ALOGE("Fail to set audio session.");
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:[AVAudioSession sharedInstance]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:UIApplicationWillResignActiveNotification object:nil];
+
+        BOOL success = [[AVAudioSession sharedInstance]
+                        setCategory: AVAudioSessionCategoryAmbient
+                        error: nil];
+        if (!success)
+            ALOGE("Fail to set audio session.");
+        else
+            ALOGI("Audio Session created!");
     }
     return self;
 }
@@ -162,8 +137,14 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
                     ALOGE("AVAudioSessionInterruptionTypeEnded, AVAudioSession setActive fail, %d",(int)error.code);
                     return;
                 }
-                
+
+                // STEVE:
+                // - 
+                if (alcGetCurrentContext() != nullptr) {
+                    alcMakeContextCurrent(nullptr);
+                }
                 alcMakeContextCurrent(s_ALContext);
+
                 if (Director::getInstance()->isPaused())
                 {
                     ALOGD("AVAudioSessionInterruptionTypeEnded, director was paused, try to resume it.");
@@ -204,6 +185,10 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             if(error != nil){
                 ALOGE("UIApplicationDidBecomeActiveNotification, AVAudioSession setActive fail, %d",(int)error.code);
                 return;
+            }
+
+            if (alcGetCurrentContext() != nullptr) {
+                alcMakeContextCurrent(nullptr);
             }
             alcMakeContextCurrent(s_ALContext);
         }
@@ -408,14 +393,14 @@ AudioCache* AudioEngineImpl::preload(const std::string& filePath, std::function<
     return audioCache;
 }
 
-int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume)
+int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume, float seekToTime)
 {
     if (s_ALDevice == nullptr) {
         return AudioEngine::INVALID_AUDIO_ID;
     }
 
     ALuint alSource = findValidSource();
-    if (alSource == AL_INVALID)
+    if (alSource == (ALuint)AL_INVALID)
     {
         return AudioEngine::INVALID_AUDIO_ID;
     }
@@ -440,7 +425,7 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
     _audioPlayers[_currentAudioID] = player;
     _threadMutex.unlock();
 
-    audioCache->addPlayCallback(std::bind(&AudioEngineImpl::_play2d,this,audioCache,_currentAudioID));
+    audioCache->addPlayCallback(std::bind(&AudioEngineImpl::_play2d, this, audioCache, _currentAudioID, seekToTime));
 
     if (_lazyInitLoop) {
         _lazyInitLoop = false;
@@ -450,20 +435,32 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
     return _currentAudioID++;
 }
 
-void AudioEngineImpl::_play2d(AudioCache *cache, int audioID)
+void AudioEngineImpl::_play2d(AudioCache *cache, int audioID, float seekToTime)
 {
     //Note: It maybe in sub thread or main thread :(
     if (!*cache->_isDestroyed && cache->_state == AudioCache::State::READY)
     {
         _threadMutex.lock();
         auto playerIt = _audioPlayers.find(audioID);
-        if (playerIt != _audioPlayers.end() && playerIt->second->play2d()) {
-            _scheduler->performFunctionInCocosThread([audioID](){
-
-                if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
-                    AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;
-                }
-            });
+        if (playerIt != _audioPlayers.end()) {
+            ALOGV("found player for audioId [%d]", audioID);
+            if(playerIt->second->play2d()) {
+                ALOGV("play successful, seekToTime = %f", seekToTime);
+                _scheduler->performFunctionInCocosThread([audioID,seekToTime](){
+                    if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
+                        AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;
+                        if(seekToTime > FLT_EPSILON) {
+                            ALOGV("[steve] seekToTime = %f\n", seekToTime);
+                            float a = seekToTime;
+                            AudioEngine::setCurrentTime(audioID, a);
+                        }
+                    }
+                });
+            } else {
+                ALOGE("tried to play, got error....???");
+            }
+        } else {
+            ALOGE("didn't find player for aid: %d", audioID);
         }
         _threadMutex.unlock();
     }
@@ -493,6 +490,13 @@ ALuint AudioEngineImpl::findValidSource()
 void AudioEngineImpl::setVolume(int audioID,float volume)
 {
     auto player = _audioPlayers[audioID];
+
+    // EARLY RETURN
+    if (player == nullptr) {
+        ALOGE("NULL player for audioID: %d", audioID);
+        return;
+    }
+
     player->_volume = volume;
 
     if (player->_ready) {
@@ -508,6 +512,12 @@ void AudioEngineImpl::setVolume(int audioID,float volume)
 void AudioEngineImpl::setLoop(int audioID, bool loop)
 {
     auto player = _audioPlayers[audioID];
+
+    // EARLY RETURN
+    if (player == nullptr) {
+        ALOGE("NULL player for audioID: %d", audioID);
+        return;
+    }
 
     if (player->_ready) {
         if (player->_streamingSource) {
@@ -532,36 +542,52 @@ void AudioEngineImpl::setLoop(int audioID, bool loop)
 
 bool AudioEngineImpl::pause(int audioID)
 {
-    bool ret = true;
-    alSourcePause(_audioPlayers[audioID]->_alSource);
+    auto player = _audioPlayers[audioID];
+
+    // EARLY RETURN
+    if (player == nullptr) {
+        ALOGE("NULL player for audioID: %d", audioID);
+        return false;
+    }
+
+    alSourcePause(player->_alSource);
 
     auto error = alGetError();
     if (error != AL_NO_ERROR) {
-        ret = false;
         ALOGE("%s: audio id = %d, error = %x", __PRETTY_FUNCTION__,audioID,error);
+        return false;
     }
 
-    return ret;
+    return true;
 }
 
 bool AudioEngineImpl::resume(int audioID)
 {
-    bool ret = true;
-    alSourcePlay(_audioPlayers[audioID]->_alSource);
+    auto player = _audioPlayers[audioID];
+
+    // EARLY RETURN
+    if (player == nullptr) {
+        ALOGE("NULL player for audioID: %d", audioID);
+        return false;
+    }
+
+    alSourcePlay(player->_alSource);
 
     auto error = alGetError();
     if (error != AL_NO_ERROR) {
-        ret = false;
         ALOGE("%s: audio id = %d, error = %x", __PRETTY_FUNCTION__,audioID,error);
+        return false;
     }
 
-    return ret;
+    return true;
 }
 
 void AudioEngineImpl::stop(int audioID)
 {
     auto player = _audioPlayers[audioID];
-    player->destroy();
+    if (player != nullptr) {
+        player->destroy();
+    }
 
     // Call 'update' method to cleanup immediately since the schedule may be cancelled without any notification.
     update(0.0f);
@@ -571,7 +597,9 @@ void AudioEngineImpl::stopAll()
 {
     for(auto&& player : _audioPlayers)
     {
-        player.second->destroy();
+        if (player.second != nullptr) {
+            player.second->destroy();
+        }
     }
 
     // Call 'update' method to cleanup immediately since the schedule may be cancelled without any notification.
@@ -581,17 +609,25 @@ void AudioEngineImpl::stopAll()
 float AudioEngineImpl::getDuration(int audioID)
 {
     auto player = _audioPlayers[audioID];
-    if(player->_ready){
-        return player->_audioCache->_duration;
-    } else {
-        return AudioEngine::TIME_UNKNOWN;
+    if (player != nullptr) {
+        if(player->_ready){
+            return player->_audioCache->_duration;
+        }
     }
+    return AudioEngine::TIME_UNKNOWN;
 }
 
 float AudioEngineImpl::getCurrentTime(int audioID)
 {
-    float ret = 0.0f;
     auto player = _audioPlayers[audioID];
+
+    // EARLY RETURN
+    if (player == nullptr) {
+        ALOGE("NULL player for audioID: %d", audioID);
+        return 0.0f;
+    }
+
+    float ret = 0.0f;
     if(player->_ready){
         if (player->_streamingSource) {
             ret = player->getTime();
@@ -604,7 +640,6 @@ float AudioEngineImpl::getCurrentTime(int audioID)
             }
         }
     }
-
     return ret;
 }
 
@@ -614,26 +649,33 @@ bool AudioEngineImpl::setCurrentTime(int audioID, float time)
     auto player = _audioPlayers[audioID];
 
     do {
-        if (!player->_ready) {
+        if (player == nullptr || ! player->_ready) {
             break;
         }
 
-        if (player->_streamingSource) {
+        if (player != nullptr && player->_streamingSource) {
             ret = player->setTime(time);
             break;
         }
         else {
-            if (player->_audioCache->_framesRead != player->_audioCache->_totalFrames &&
-                (time * player->_audioCache->_sampleRate) > player->_audioCache->_framesRead) {
+            if (player != nullptr && player->_audioCache->_framesRead != player->_audioCache->_totalFrames
+                                  && (time * player->_audioCache->_sampleRate) > player->_audioCache->_framesRead)
+            {
                 ALOGE("%s: audio id = %d", __PRETTY_FUNCTION__,audioID);
                 break;
             }
 
-            alSourcef(player->_alSource, AL_SEC_OFFSET, time);
+            if (player != nullptr) {
+                alSourcef(player->_alSource, AL_SEC_OFFSET, time);
+            }
 
             auto error = alGetError();
             if (error != AL_NO_ERROR) {
                 ALOGE("%s: audio id = %d, error = %x", __PRETTY_FUNCTION__,audioID,error);
+            }
+            // STEVE
+            else {
+                ALOGV("audio [%d] seeking to time: %f", audioID, time);
             }
             ret = true;
         }
@@ -647,7 +689,7 @@ void AudioEngineImpl::setFinishCallback(int audioID, const std::function<void (i
     _audioPlayers[audioID]->_finishCallbak = callback;
 }
 
-void AudioEngineImpl::update(float dt)
+void AudioEngineImpl::update(float dt MAYBE_UNUSED)
 {
     ALint sourceState;
     int audioID;
@@ -659,10 +701,12 @@ void AudioEngineImpl::update(float dt)
     for (auto it = _audioPlayers.begin(); it != _audioPlayers.end(); ) {
         audioID = it->first;
         player = it->second;
-        alSource = player->_alSource;
-        alGetSourcei(alSource, AL_SOURCE_STATE, &sourceState);
+        if (player != nullptr) {
+            alSource = player->_alSource;
+            alGetSourcei(alSource, AL_SOURCE_STATE, &sourceState);
+        }
 
-        if (player->_removeByAudioEngine)
+        if (player != nullptr && player->_removeByAudioEngine)
         {
             AudioEngine::remove(audioID);
             _threadMutex.lock();
@@ -671,8 +715,8 @@ void AudioEngineImpl::update(float dt)
             delete player;
             _unusedSourcesPool.push_back(alSource);
         }
-        else if (player->_ready && sourceState == AL_STOPPED) {
-
+        else if (player != nullptr && player->_ready && sourceState == AL_STOPPED)
+        {
             std::string filePath;
             if (player->_finishCallbak) {
                 auto& audioInfo = AudioEngine::_audioIDInfoMap[audioID];
@@ -713,8 +757,10 @@ void AudioEngineImpl::uncacheAll()
     _audioCaches.clear();
     for(auto&& player : _audioPlayers)
     {
-        // prevent player hold invalid AudioCache* pointer, since all audio caches purged
-        player.second->setCache(nullptr);
+        if (player.second != nullptr) {
+            // prevent player hold invalid AudioCache* pointer, since all audio caches purged
+            player.second->setCache(nullptr);
+        }
     }
 }
 

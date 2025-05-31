@@ -25,13 +25,22 @@
 
 #pragma once
 
-#define QUEUEBUFFER_NUM (3)
+
+// STEVE: Original
+//#define QUEUEBUFFER_NUM (3)
+//#define QUEUEBUFFER_TIME_STEP (0.05f)
+
+// STEVE: other options to help mitigage thread crashing on rotateBufferThread
+// STEVE: https://github.com/cocos/engine-native/pull/4254
+// STEVE: - QUEUEBUFFER_NUM - adds an extra buffer according to PR
+// STEVE: - QUEUEBUFFER_TIME_STEP - how much time of duration of audio is desired to be buffered (larger may cause latency)
+#define QUEUEBUFFER_NUM (4)
 #define QUEUEBUFFER_TIME_STEP (0.05f)
 
 #define QUOTEME_(x) #x
 #define QUOTEME(x) QUOTEME_(x)
 
-#if defined(COCOS2D_DEBUG) && COCOS2D_DEBUG > 0
+#if defined(COCOS2D_DEBUG) && COCOS2D_DEBUG > 1
 #define ALOGV(fmt, ...) printf("V/" LOG_TAG " (" QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
 #else
 #define ALOGV(fmt, ...) do {} while(false)

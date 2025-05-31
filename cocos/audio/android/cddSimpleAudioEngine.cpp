@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "audio/include/SimpleAudioEngine.h"
+//STEVE - #include "audio/include/SimpleAudioEngine.h"
 #include "audio/android/jni/cddandroidAndroidJavaEngine.h"
 #include "audio/android/ccdandroidUtils.h"
 
