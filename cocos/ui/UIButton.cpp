@@ -984,6 +984,7 @@ void Button::setPositionZ(float z)
 
     _titleRenderer->setPositionZ(z + .1f);
 }
+
 }
 
 NS_CC_END
