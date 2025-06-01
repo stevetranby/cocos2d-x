@@ -982,7 +982,7 @@ void Button::setPositionZ(float z)
     _buttonDisabledRenderer->setPositionZ(z);
     _buttonClickedRenderer->setPositionZ(z);
 
-    _titleRenderer->setPositionZ(z + .1f);
+    if(_titleRenderer) _titleRenderer->setPositionZ(z + .1f);
 }
 
 }
