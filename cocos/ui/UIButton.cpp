@@ -122,7 +122,7 @@ bool Button::init(const std::string &normalImage,
     }
 
     loadTextures(normalImage, selectedImage, disableImage, texType);
-    
+
     return true;
 }
 
@@ -148,13 +148,13 @@ void Button::initRenderer()
     addProtectedChild(_buttonClickedRenderer, PRESSED_RENDERER_Z, -1);
     addProtectedChild(_buttonDisabledRenderer, DISABLED_RENDERER_Z, -1);
 }
-    
+
 bool Button::createTitleRendererIfNull() {
     if( !_titleRenderer ) {
         createTitleRenderer();
         return true;
     }
-    
+
     return false;
 }
 
@@ -200,7 +200,7 @@ void Button::setScale9Enabled(bool able)
         _buttonClickedRenderer->setRenderingType(Scale9Sprite::RenderingType::SIMPLE);
         _buttonDisabledRenderer->setRenderingType(Scale9Sprite::RenderingType::SIMPLE);
     }
-    
+
 
     if (_scale9Enabled)
     {
@@ -695,7 +695,7 @@ void Button::pressedTextureScaleChangedWithSize()
 void Button::disabledTextureScaleChangedWithSize()
 {
     _buttonDisabledRenderer->setPreferredSize(_contentSize);
-    
+
     _buttonDisabledRenderer->setPosition(_contentSize.width / 2.0f, _contentSize.height / 2.0f);
 }
 
@@ -721,9 +721,9 @@ void Button::setTitleText(const std::string& text)
     if (text == getTitleText()) {
         return;
     }
-    
+
     createTitleRendererIfNull();
-    
+
     if(getTitleFontSize() <= 0) {
         setTitleFontSize(CC_DEFAULT_FONT_LABEL_SIZE);
     }
@@ -738,7 +738,7 @@ std::string Button::getTitleText() const
     if(!_titleRenderer) {
         return "";
     }
-    
+
     return _titleRenderer->getString();
 }
 
@@ -770,7 +770,7 @@ void Button::setTitleFontSize(float size)
         // the system font
         _titleRenderer->setSystemFontSize(size);
     }
-    
+
     //we can't change font size of BMFont.
     if(titleLabelType != Label::LabelType::BMFONT) {
         updateContentSize();
@@ -781,7 +781,7 @@ float Button::getTitleFontSize() const {
     if(_titleRenderer) {
         return _titleRenderer->getRenderingFontSize();
     }
-    
+
     return -1;
 }
 
@@ -798,7 +798,7 @@ float Button::getZoomScale()const
 void Button::setTitleFontName(const std::string& fontName)
 {
     createTitleRendererIfNull();
-    
+
     if(FileUtils::getInstance()->isFileExist(fontName)) {
         std::string lowerCasedFontName = fontName;
         std::transform(lowerCasedFontName.begin(), lowerCasedFontName.end(), lowerCasedFontName.begin(), ::tolower);
@@ -833,7 +833,7 @@ std::string Button::getTitleFontName() const
             return _titleRenderer->getBMFontFilePath();
         }
     }
-    
+
     return "";
 }
 
