@@ -975,17 +975,19 @@ ResourceData Button::getDisabledFile()
     return rData;
 }
 
-    // STEVE
-    void Button::setPositionZ(float z)
-    {
-        Node::setPositionZ(z);
+// STEVE
+void Button::setPositionZ(float z)
+{
+    Node::setPositionZ(z);
 
-        _buttonNormalRenderer->setPositionZ(z);
-        _buttonDisabledRenderer->setPositionZ(z);
-        _buttonClickedRenderer->setPositionZ(z);
+    _buttonNormalRenderer->setPositionZ(z);
+    _buttonDisabledRenderer->setPositionZ(z);
+    _buttonClickedRenderer->setPositionZ(z);
 
-        if(_titleRenderer) _titleRenderer->setPositionZ(z + .1f);
+    if(_titleRenderer) {
+        _titleRenderer->setPositionZ(z + .1f);
     }
+}
 
 }
 
