@@ -256,7 +256,7 @@ public:
         }
         
         FILE* fp = fopen(_cookieFileName.c_str(), "w");
-        if (nullptr == fp)
+        if (! fp)
         {
             CCLOG("can't create or open response cookie files");
             return 0;

@@ -582,7 +582,6 @@ void FileUtils::writeStringToFile(std::string dataStr, const std::string& fullPa
 
 bool FileUtils::writeDataToFile(const Data& data, const std::string& fullPath) const
 {
-    size_t size = 0;
     const char* mode = "wb";
 
     CCASSERT(!fullPath.empty() && data.getSize() != 0, "Invalid parameters.");
@@ -591,14 +590,22 @@ bool FileUtils::writeDataToFile(const Data& data, const std::string& fullPath) c
     do
     {
         // Read the file from hardware
-        FILE *fp = fopen(fileutils->getSuitableFOpen(fullPath).c_str(), mode);
-        CC_BREAK_IF(!fp);
-        size = data.getSize();
+        auto path = fileutils->getSuitableFOpen(fullPath);
 
-        fwrite(data.getBytes(), size, 1, fp);
+        FILE *fp = fopen(path.c_str(), mode);
+        if (! fp) {
+            CCLOGERROR("[STEVE] Error trying to open for writing. path: %s", path.c_str());
+            CCLOGERROR("[STEVE] Errno: %d, (%s)\n", errno, strerror(errno));
+            break;
+        }
 
+        size_t data_record_size = data.getSize();
+        size_t data_records_count = 1;
+        auto data_records_count_written = fwrite(data.getBytes(), data_record_size, data_records_count, fp);
+        if (data_records_count_written > 0) {
+            CCLOGINFO("File successfully written! size: %ld, size_written: %ld", data_record_size, data_records_count_written);
+        }
         fclose(fp);
-
         return true;
     } while (0);
 
@@ -694,8 +701,8 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
     }
 
     FILE *fp = fopen(suitableFullPath.c_str(), "rb");
-    if (!fp) {
-        CCLOG("[steve] Error opening file: %d (%s)\n", errno, strerror(errno));
+    if (! fp) {
+        CCLOG("[STEVE] Error opening file: %d (%s)\n", errno, strerror(errno));
         return Status::OpenFailed;
     }
 
