@@ -171,7 +171,9 @@ bool AudioPlayer::play2d()
     bool ret = false;
     do
     {
-        if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); break; }
+        if (_audioCache == nullptr) {
+            ALOGV("_audioCache is NULL!"); break;
+        }
 
         if (_audioCache->_state != AudioCache::State::READY)
         {
@@ -295,7 +297,7 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
     do
     {
         if (_audioCache == nullptr) {
-            ALOGE("audioCache is not initialized!");
+            ALOGV("_audioCache is NULL!");
             break;
         }
 
@@ -360,7 +362,7 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
                                 }
                             }
                         } else {
-                            ALOGE("audioCache is not initialized!");
+                            ALOGV("_audioCache is NULL!");
                             // TODO: should we clear out _currTime to 0?
                         }
                     }
@@ -432,7 +434,10 @@ bool AudioPlayer::setLoop(bool loop)
 
 bool AudioPlayer::setTime(float time)
 {
-    if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); return false; }
+    if (_audioCache == nullptr) {
+        ALOGV("_audioCache is NULL!");
+        return false;
+    }
 
     if (!_isDestroyed && time >= 0.0f && time < _audioCache->_duration) {
 
