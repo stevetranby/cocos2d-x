@@ -301,7 +301,15 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
         uint32_t framesRead = 0;
         const uint32_t framesToRead = _audioCache->_queBufferFrames;
         const uint32_t bufferSize = framesToRead * decoder.getBytesPerFrame();
+
+        BREAK_IF(0 == bufferSize);
+
         tmpBuffer = (char*)malloc(bufferSize);
+        if (! tmpBuffer) {
+            ALOGE("ABORT: Failure to malloc bufferSize: %d", bufferSize);
+            return;
+        }
+
         memset(tmpBuffer, 0, bufferSize);
 
         if (offsetFrame != 0) {
@@ -338,12 +346,19 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
                     }
                     else {
                         _currTime += QUEUEBUFFER_TIME_STEP;
-                        if (_currTime > _audioCache->_duration) {
-                            if (_loop) {
-                                _currTime = 0.0f;
-                            } else {
-                                _currTime = _audioCache->_duration;
+
+                        // STEVE: paranoia null check
+                        if (_audioCache != nullptr) {
+                            if (_currTime > _audioCache->_duration) {
+                                if (_loop) {
+                                    _currTime = 0.0f;
+                                } else {
+                                    _currTime = _audioCache->_duration;
+                                }
                             }
+                        } else {
+                            ALOGV("_audioCache is NULL!");
+                            // TODO: should we clear out _currTime to 0?
                         }
                     }
 
@@ -366,7 +381,11 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
                      */
                     ALuint bid;
                     alSourceUnqueueBuffers(_alSource, 1, &bid);
-                    alBufferData(bid, _audioCache->_format, tmpBuffer, framesRead * decoder.getBytesPerFrame(), decoder.getSampleRate());
+                    if (_audioCache != nullptr) {
+                        alBufferData(bid, _audioCache->_format, tmpBuffer, framesRead * decoder.getBytesPerFrame(), decoder.getSampleRate());
+                    } else {
+                        ALOGV("_audioCache is NULL!");
+                    }
                     alSourceQueueBuffers(_alSource, 1, &bid);
                 }
             }

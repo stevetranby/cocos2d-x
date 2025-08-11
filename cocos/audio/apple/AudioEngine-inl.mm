@@ -610,9 +610,15 @@ float AudioEngineImpl::getDuration(int audioID)
 {
     auto player = _audioPlayers[audioID];
     if (player != nullptr) {
-        if(player->_ready){
-            return player->_audioCache->_duration;
+        if (player->_audioCache != nullptr) {
+            if(player->_ready){
+                return player->_audioCache->_duration;
+            }
+        } else {
+            ALOGV("_audioCache is NULL!");
         }
+    } else {
+        ALOGV("player (audio) is NULL!");
     }
     return AudioEngine::TIME_UNKNOWN;
 }
@@ -622,13 +628,13 @@ float AudioEngineImpl::getCurrentTime(int audioID)
     auto player = _audioPlayers[audioID];
 
     // EARLY RETURN
-    if (player == nullptr) {
+    if (! player) {
         ALOGE("NULL player for audioID: %d", audioID);
         return 0.0f;
     }
 
     float ret = 0.0f;
-    if(player->_ready){
+    if(player && player->_ready){
         if (player->_streamingSource) {
             ret = player->getTime();
         } else {
@@ -658,7 +664,8 @@ bool AudioEngineImpl::setCurrentTime(int audioID, float time)
             break;
         }
         else {
-            if (player != nullptr && player->_audioCache->_framesRead != player->_audioCache->_totalFrames
+            if (player != nullptr && player->_audioCache != nullptr
+                                  && player->_audioCache->_framesRead != player->_audioCache->_totalFrames
                                   && (time * player->_audioCache->_sampleRate) > player->_audioCache->_framesRead)
             {
                 ALOGE("%s: audio id = %d", __PRETTY_FUNCTION__,audioID);
@@ -672,9 +679,8 @@ bool AudioEngineImpl::setCurrentTime(int audioID, float time)
             auto error = alGetError();
             if (error != AL_NO_ERROR) {
                 ALOGE("%s: audio id = %d, error = %x", __PRETTY_FUNCTION__,audioID,error);
-            }
-            // STEVE
-            else {
+            } else {
+                // STEVE
                 ALOGV("audio [%d] seeking to time: %f", audioID, time);
             }
             ret = true;
