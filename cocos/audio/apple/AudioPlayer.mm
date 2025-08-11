@@ -294,7 +294,10 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
     long long rotateSleepTime = static_cast<long long>(QUEUEBUFFER_TIME_STEP * 1000) / 2;
     do
     {
-        if (_audioCache == nullptr) { ALOGE("audioCache is not initialized!"); break; }
+        if (_audioCache == nullptr) {
+            ALOGE("audioCache is not initialized!");
+            break;
+        }
 
         BREAK_IF(!decoder.open(_audioCache->_fileFullPath.c_str()));
 
@@ -357,7 +360,7 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
                                 }
                             }
                         } else {
-                            ALOGV("_audioCache is NULL!");
+                            ALOGE("audioCache is not initialized!");
                             // TODO: should we clear out _currTime to 0?
                         }
                     }
