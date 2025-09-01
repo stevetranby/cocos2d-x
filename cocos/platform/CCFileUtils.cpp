@@ -603,7 +603,7 @@ bool FileUtils::writeDataToFile(const Data& data, const std::string& fullPath) c
         size_t data_records_count = 1;
         auto data_records_count_written = fwrite(data.getBytes(), data_record_size, data_records_count, fp);
         if (data_records_count_written > 0) {
-            CCLOGINFO("File successfully written! size: %ld, size_written: %ld", data_record_size, data_records_count_written);
+            CCLOG("File successfully written! size: %ld, count_written: %ld", data_record_size, data_records_count_written);
         }
         fclose(fp);
         return true;
