@@ -61,20 +61,20 @@ extern "C" {
     }
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesCancel(JNIEnv * env, jobject thiz, jintArray ids, jfloatArray xs, jfloatArray ys) {
-        int size = env->GetArrayLength(ids);
-        jint id[size];
-        jfloat x[size];
-        jfloat y[size];
+        const int size = env->GetArrayLength(ids);
+        std::vector<jint> id(size);
+        std::vector<jfloat> x(size);
+        std::vector<jfloat> y(size);
 
-        env->GetIntArrayRegion(ids, 0, size, id);
-        env->GetFloatArrayRegion(xs, 0, size, x);
-        env->GetFloatArrayRegion(ys, 0, size, y);
+        env->GetIntArrayRegion(ids, 0, size, id.data());
+        env->GetFloatArrayRegion(xs, 0, size, x.data());
+        env->GetFloatArrayRegion(ys, 0, size, y.data());
 
-        intptr_t idlong[size];
+        std::vector<intptr_t> idlong(size);
         for(int i = 0; i < size; i++)
             idlong[i] = id[i];
 
-        cocos2d::Director::getInstance()->getOpenGLView()->handleTouchesCancel(size, idlong, x, y);
+        cocos2d::Director::getInstance()->getOpenGLView()->handleTouchesCancel(size, idlong.data(), x.data(), y.data());
     }
 
 #define KEYCODE_BACK 0x04
