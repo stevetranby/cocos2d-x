@@ -3,19 +3,16 @@ apply plugin: "com.android.library"
 android {
     namespace = "org.cocos2dx.lib"
 
-    compileSdk = 35
-    //compileSdk = 36
+    compileSdk = 36
+    buildToolsVersion('36.1.0')
 
-    buildToolsVersion = '35.0.1'
-    //buildToolsVersion = '36.1.0'
-
-    ndkVersion = "27.3.13750724"
-    //ndkVersion = "28.2.13676358"
+    // https://github.com/android/ndk/wiki/Changelog-r28
+    ndkVersion = "28.2.13676358"
 
     project.logger.lifecycle("[cocos2d-x] A lifecycle info log message.")
 
     defaultConfig {
-        targetSdk = 35
+        targetSdk = 36
         minSdk = 21
         versionCode = 31704
         versionName = "3.17"
